@@ -55,19 +55,17 @@ class DataTable extends \dependency\html\AbstractHtmlClass
         $this->element->setAttribute('data-table-id', $dataTableId);
         $parameters = json_encode($this->parameters);
 
-        $scriptText =
-            <<<EOS
-                var dataTableObjects = {};
-                $(document).ready(function() {
-                    dataTableObjects['$dataTableId'] = $('*[data-table-id="$dataTableId"]').DataTable($parameters)
-            EOS;
+        $scriptText = <<<EOS
+var dataTableObjects = {};
+$(document).ready(function() {
+dataTableObjects['$dataTableId'] = $('*[data-table-id="$dataTableId"]').DataTable($parameters)
+EOS;
 
         if ($this->columnFilter) {
             $columnFilterParams = json_encode($this->columnFilter);
-            $scriptText .=
-                <<<EOS
-                    .columnFilter($columnFilterParams)
-                EOS;
+            $scriptText .= <<<EOS
+.columnFilter($columnFilterParams)
+EOS;
         }
 
         $scriptText .= ";
@@ -75,17 +73,15 @@ class DataTable extends \dependency\html\AbstractHtmlClass
 
         if (!empty($this->toolbars)) {
             foreach ($this->toolbars as $class => $html) {
-                $scriptText .=
-                    <<<EOS
-                        $('div.$class').html('$html');
-                    EOS;
+                $scriptText .= <<<EOS
+$('div.$class').html('$html');
+EOS;
             }
         }
 
-        $scriptText .=
-            <<<EOS
-                $('[title]').tooltip();
-            EOS;
+        $scriptText .= <<<EOS
+$('[title]').tooltip();
+EOS;
 
         $script = $this->element->ownerDocument->createElement('script');
         $CdataSection = $this->element->ownerDocument->createCDataSection($scriptText);
@@ -301,8 +297,9 @@ class DataTable extends \dependency\html\AbstractHtmlClass
 
     public function setLanguageFile($langfile)
     {
-        if (!isset($this->parameters->oLanguage))
+        if (!isset($this->parameters->oLanguage)) {
             $this->parameters->oLanguage = new \StdClass();
+        }
 
         $this->parameters->oLanguage->sUrl = $langfile;
     }
