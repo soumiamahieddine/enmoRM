@@ -175,7 +175,7 @@ trait ForgotAccountTrait
      */
     private function checkOldToken($userAccount, $token)
     {
-        if (empty($userAccount->tokenDate) || $userAccount->tokenDate != $token->data->tokenDate) {
+        if (empty($userAccount->tokenDate) || $userAccount->tokenDate->getTimestamp() != $token->data->tokenDate->getTimestamp()) {
             throw new \core\Exception\ForbiddenException("Expired link");
         }
     }
