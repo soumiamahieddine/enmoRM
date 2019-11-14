@@ -28,6 +28,8 @@ class DataTable extends \dependency\html\AbstractHtmlClass
 
     protected $columnFilter;
 
+    protected $exportOptions;
+
     protected $toolbars;
 
     /* -------------------------------------------------------------------------
@@ -37,6 +39,7 @@ class DataTable extends \dependency\html\AbstractHtmlClass
     {
         parent::__construct($element);
         $this->parameters = new \StdClass();
+        $this->exportOptions = new \StdClass();
 
         // init sDom parameters
         $this->parameters->sDom = '<"dataTable-footer clearfix"<"pull-left"f>><"table-responsive"t><"dataTable-footer"<"pull-left"li><"pull-right"p><"clearfix">>';
@@ -333,14 +336,18 @@ EOS;
     /**
      * Add possibility to export datatable resuls in different formats
      *
-     * @param array   $exportType       array containing ine of following export format (copy, csv, excel, pdf, print)
+     * @param array   $exportType       array containing one of following export format (copy, csv, excel, pdf, print)
      * @param boolean $onlyExportButton Either returning dom only consists of export button or full dataTable display
      *
      */
-    public function setExport($exportType, $onlyExportButton = false)
+    public function setExport($exportType = array(), $onlyExportButton = false)
     {
         if (!is_array($exportType) || empty($exportType)) {
-            return;
+            $exportType = [
+                "csv" => "export csv",
+                "excel" => "export xls",
+                "pdf" => "export PDF"
+            ];
         }
 
         // dom is a datatable parameter allowing to control displayed elements of table
@@ -372,11 +379,30 @@ EOS;
         }
 
         $this->parameters->buttons = [];
-        foreach ($exportType as $key => $type) {
-            $this->parameters->buttons[$key] = new \stdClass();
-            $this->parameters->buttons[$key]->extend = $type['exportType'];
-            $this->parameters->buttons[$key]->text = $type['text'];
-            $this->parameters->buttons[$key]->className = 'btn btn-warning';
+
+        foreach ($exportType as $type => $text) {
+            $button = new \stdClass();
+            $button->extend = $type;
+            $button->text = $text;
+            if (!empty($this->exportOptions)) {
+                $button->exportOptions = $this->exportOptions;
+            }
+            $button->className = 'btn btn-warning';
+            array_push($this->parameters->buttons, $button);
         }
+    }
+
+    /**
+     * Add possibility to set which columns are exported
+     *
+     * @param array   $columns       array containing the columns number to export in file
+     *
+     */
+    public function setColumnsToExport($columns)
+    {
+        if (!is_array($columns) || empty($columns)) {
+            return;
+        }
+        $this->exportOptions->columns = $columns;
     }
 }
