@@ -86,6 +86,11 @@ EOS;
 $('[title]').tooltip();
 EOS;
 
+        $scriptText .=
+<<<EOS
+    $('[title]').tooltip();
+EOS;
+
         $script = $this->element->ownerDocument->createElement('script');
         $CdataSection = $this->element->ownerDocument->createCDataSection($scriptText);
         $script->appendChild($CdataSection);
