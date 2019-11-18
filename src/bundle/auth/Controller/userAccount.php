@@ -684,17 +684,17 @@ class userAccount
 
         foreach ($securitiesLevel as $securityLevel) {
             switch ($securityLevel) {
-                case 'gen_admin':
+                case $account::SECLEVEL_GENADMIN:
                     if ($account->isAdmin && !$account->ownerOrgId) {
                         return true;
                     }
                     break;
-                case 'fonc_admin':
+                case $account::SECLEVEL_FONCADMIN:
                     if ($account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }
                     break;
-                case 'user':
+                case $account::SECLEVEL_USER:
                     if (!$account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }
