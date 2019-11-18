@@ -46,9 +46,42 @@ class role
      *
      * @return array Array of auth/role object
      */
+    public function getAll() {
+        return $this->sdoFactory->find("auth/role");
+    }
+
+    /**
+     * List roles
+     *
+     * @return array Array of auth/role object
+     */
     public function index()
     {
-        return $this->sdoFactory->find("auth/role");
+        $roleMemberController = \laabs::newController("auth/roleMember");
+        $roleMembers = $roleMemberController->readByUserAccount(\laabs::getToken("AUTH")->accountId);
+
+        $query = [];
+        foreach ($roleMembers as $roleMember) {
+            $role = $this->sdoFactory->read("auth/role", $roleMember->roleId);
+            switch ($role->securityLevel) {
+                case $role::SECLEVEL_GENADMIN:
+                    $query[] = "securityLevel ='". $role::SECLEVEL_GENADMIN ."'";
+                    $query[] = "securityLevel ='". $role::SECLEVEL_FONCADMIN ."'";
+                    $query[] = "securityLevel = null";
+                    break;
+                case $role::SECLEVEL_FONCADMIN:
+                    $query[] = "securityLevel ='". $role::SECLEVEL_FONCADMIN ."'";
+                    $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
+                    $query[] = "securityLevel = null";
+                    break;
+                case $role::SECLEVEL_USER:
+                    $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
+                    $query[] = "securityLevel = null";
+            }
+        }
+        $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)));
+
+        return $roles;
     }
 
     /**
@@ -104,6 +137,7 @@ class role
             $roleInstance->roleId = \laabs::newId();
             $roleInstance->roleName = $role->roleName;
             $roleInstance->description = $role->description;
+            $roleInstance->securityLevel = $role->securityLevel;
             $roleInstance->enabled = $role->enabled;
 
             $this->sdoFactory->create($roleInstance);
