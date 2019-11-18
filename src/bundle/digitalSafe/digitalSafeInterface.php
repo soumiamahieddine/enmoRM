@@ -49,16 +49,14 @@ interface digitalSafeInterface
      *
      * @param string $fromDate
      * @param string $toDate
-     * @param string $fromOriginatorArchiveId
-     * @param string $toOriginatorArchiveId
+     * @param string $originatorArchiveId
      *
      * @action digitalSafe/digitalSafe/counting
      */
     public function read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_Count(
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null
+        $originatorArchiveId = null
     );
 
     /**
@@ -88,8 +86,7 @@ interface digitalSafeInterface
      *
      * @param string $fromDate
      * @param string $toDate
-     * @param string $fromOriginatorArchiveId
-     * @param string $toOriginatorArchiveId
+     * @param string $originatorArchiveId
      * @param string $archiveId
      *
      * @action digitalSafe/digitalSafe/listing
@@ -97,8 +94,7 @@ interface digitalSafeInterface
     public function read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_(
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null,
+        $originatorArchiveId = null,
         $archiveId = null
     );
 
