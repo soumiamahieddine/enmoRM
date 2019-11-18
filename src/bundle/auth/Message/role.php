@@ -70,7 +70,14 @@ class role
      * @var id[]
      */
     public $roleMembers;
-    
+
+    /**
+     *  The security level of role
+     *
+     * @var string
+     */
+    public $securityLevel;
+
     public function __toString()
     {
         return json_encode(get_object_vars($this));
