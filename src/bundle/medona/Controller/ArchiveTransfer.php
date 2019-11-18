@@ -204,7 +204,7 @@ class ArchiveTransfer extends abstractMessage
         try {
             $zip->extract($zipfile, $tmpdir);
         } catch (\Exception $e) {
-            $this->sendError("404", "An error occurred during the opening of the zip");
+            $this->sendError("400", "An error occurred during the opening of the zip");
             $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
             $exception->errors = $this->errors;
 
