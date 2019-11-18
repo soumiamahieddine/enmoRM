@@ -9,6 +9,10 @@
 
 - `Fixed` Correctif concernant les demandes de restitution d'archives.
 
+### Thesaurus
+
+- `Added` Ajout de la possiblité d'utiliser des fichiers CSV ou SKOS personnalisés comme référentiels de thesaurus (fonctionnalité de l'extension *archives publiques*).
+
 ## Version 2.5.1
 
 - `Fixed` Correctif sur la vérification de validité du token de 'Mot de passe oublié'
