@@ -59,6 +59,18 @@ class adminRole
      */
     public function index(array $roles)
     {
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $roleMembers = \laabs::callService("auth/roleMember/readByuseraccount_userAccountId_", $accountId);
+
+        $manageRoleRights = false;
+        foreach ($roleMembers as $roleMember) {
+            $role = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
+            if ($role->securityLevel != \bundle\auth\Model\role::SECLEVEL_USER) {
+                $manageRoleRights = true;
+                continue;
+            }
+        }
+
         $this->view->addContentFile("auth/authorization/index.html");
 
         $table = $this->view->getElementById("list");
@@ -70,6 +82,7 @@ class adminRole
         $dataTable->setUnsearchableColumns(3);
 
         $this->view->setSource('roles', $roles);
+        $this->view->setSource('manageRoleRights', $manageRoleRights);
         $this->view->translate();
         $this->view->merge();
 

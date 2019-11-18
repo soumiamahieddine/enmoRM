@@ -67,7 +67,7 @@ class roleMember
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
 
         $roleController = \laabs::newController("auth/role");
-        $roles = $roleController->index();
+        $roles = $roleController->getAll();
 
         $rolesId = [];
         foreach ($roles as $role) {
