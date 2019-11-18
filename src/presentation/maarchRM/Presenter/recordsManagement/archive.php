@@ -452,7 +452,7 @@ class archive
         if (isset($conf['refDirectory']) || is_dir($conf['refDirectory'])) {
             $refDirectory = $conf['refDirectory'];
             foreach ($thesaurusNames as $thesaurusName) {
-                if (is_file($conf['refDirectory'].'/'.$thesaurusName.'.csv')) {
+                if (glob($conf['refDirectory'].'/'.$thesaurusName.'.*')) {
                     $thesaurusList->$thesaurusName = $thesaurusName;
                 }
             }
