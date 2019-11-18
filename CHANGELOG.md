@@ -7,7 +7,9 @@
 
 ## Version 2.5.2
 
-- `Fixed` Correctif concernant les demandes de restitution d'archives.
+### Thesaurus
+
+- `Added` Ajout de la possiblité d'utiliser des fichiers CSV ou SKOS personnalisés comme référentiels de thesaurus (fonctionnalité de l'extension *archives publiques*).
 
 ### Thesaurus
 
