@@ -115,6 +115,23 @@ class adminRole
      */
     public function edit($role = null, $publicUserStories = array())
     {
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $roleMembers = \laabs::callService("auth/roleMember/readByuseraccount_userAccountId_", $accountId);
+
+        $genAdmin = $funcAdmin = false;
+        foreach ($roleMembers as $roleMember) {
+            $r = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
+            if (!$r->securityLevel) {
+                $genAdmin = $funcAdmin = true;
+            } else if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_GENADMIN) {
+                $genAdmin = true;
+            } else if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
+                $funcAdmin = true;
+            }
+        }
+
+
+
         if (isset(\laabs::configuration('auth')['blacklistUserStories'])) {
             $blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
         } else {
@@ -142,6 +159,9 @@ class adminRole
         $userStoryDomains = array();
         $userStories = \laabs::presentation()->getUserStories();
         $userStoryNames = array();
+
+        $privileges = \laabs::configuration('auth')['privileges'];
+        $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
 
         foreach ($userStories as $userStory) {
             if (is_array($blacklistUserStories)) {
@@ -194,6 +214,32 @@ class adminRole
                 }
             }
 
+            $securityLevel = [];
+            foreach ($privilegesSecurityLevel as $key => $value) {
+                if ($value === '0') {
+                    $bitmask = ['1', '2', '4'];
+                } else if ($value === '3') {
+                    $bitmask = ['1', '2'];
+                } else if ($value === '6') {
+                    $bitmask = ['4', '2'];
+                } else {
+                    $bitmask = [$value];
+                }
+
+                foreach ($bitmask as $i) {
+                    if (in_array($domain.'/', $privileges[$i]) || in_array($domain.'/*', $privileges[$i])) {
+                        $securityLevel[] = $key;
+                    }
+
+                    foreach ($privileges[$i] as $privilege) {
+                        if (fnmatch($privilege, $userStoryName)) {
+                            $securityLevel[] = $key;
+                        }
+                    }
+                }
+            }
+
+            $interface->securityLevel = \laabs\implode(" ", array_unique($securityLevel));
             $interface->parentStatus = $userStoryDomains[$domain]->privilegeStatus;
 
             $userStoryDomains[$domain]->userStory[] = $interface;
@@ -206,6 +252,8 @@ class adminRole
         
         $this->view->setSource('hideUsers', $publicArchives || $restrictUserRoles);
         $this->view->setSource('role', $role);
+        $this->view->setSource('genAdmin', $genAdmin);
+        $this->view->setSource('funcAdmin', $funcAdmin);
         $this->view->merge();
         
         $this->view->translate();
