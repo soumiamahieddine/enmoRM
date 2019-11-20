@@ -208,6 +208,12 @@ class archive
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setSorting(array(array(5, 'desc')));
 
+        $dataTable->setColumnsToExport([1, 2, 3, 4, 5, 6, 7]);
+        $dataTable->setExport([
+                "csv" => "<i class='fa fa-download'></i> CSV",
+                "pdf" => "<i class='fa fa-download'></i> PDF"
+            ], false);
+
         $this->readPrivilegesOnArchives();
 
         $this->view->setSource("accessRules", $accessRules);

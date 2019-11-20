@@ -387,7 +387,8 @@ EOS;
             if (!empty($this->exportOptions)) {
                 $button->exportOptions = $this->exportOptions;
             }
-            $button->className = 'btn btn-warning';
+            $button->orientation = 'landscape';
+            $button->className = 'btn btn-default btn-sm';
             array_push($this->parameters->buttons, $button);
         }
     }
