@@ -548,15 +548,11 @@
 
         //privileges
         $('#privileges').find('.selectAll').each(function(){
-            if($(this).hasClass('active') && $(this).is(':visible')) {
-                jsonObject.privileges.push($(this).find('input').val());
-            } else {
-                $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
-                    if ($(this).is(':visible')) {
-                        jsonObject.privileges.push($(this).val());
-                    }
-                });
-            }
+            $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
+                if ($(this).is(':visible')) {
+                    jsonObject.privileges.push($(this).val());
+                }
+            });
         });
 
         return jsonObject;

@@ -21,6 +21,8 @@
 
 namespace bundle\auth\Controller;
 
+use bundle\digitalSafe\Exception\Exception;
+
 /**
  * Controler for the role
  *
@@ -66,11 +68,11 @@ class role
             switch ($role->securityLevel) {
                 case $role::SECLEVEL_GENADMIN:
                     $query[] = "securityLevel ='". $role::SECLEVEL_GENADMIN ."'";
-                    $query[] = "securityLevel ='". $role::SECLEVEL_FONCADMIN ."'";
+                    $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
                     $query[] = "securityLevel = null";
                     break;
-                case $role::SECLEVEL_FONCADMIN:
-                    $query[] = "securityLevel ='". $role::SECLEVEL_FONCADMIN ."'";
+                case $role::SECLEVEL_FUNCADMIN:
+                    $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
                     $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
                     $query[] = "securityLevel = null";
                     break;
@@ -144,7 +146,7 @@ class role
 
             if (!empty($role->privileges)) {
                 foreach ($role->privileges as $userStory) {
-                    $this->addPrivilege($roleInstance->roleId, $userStory);
+                    $this->addPrivilege($roleInstance, $userStory);
                 }
             }
 
@@ -187,7 +189,7 @@ class role
             $this->sdoFactory->deleteChildren("auth/privilege", $role, "auth/role");
             if (!empty($role->privileges)) {
                 foreach ($role->privileges as $userStory) {
-                    $this->addPrivilege($roleId, $userStory);
+                    $this->addPrivilege($role, $userStory);
                 }
             }
 
@@ -307,11 +309,40 @@ class role
      *
      * @return boolean The operation result
      */
-    public function addPrivilege($roleId, $userStory)
+    public function addPrivilege($role, $userStory)
     {
+        $privileges = \laabs::configuration('auth')['privileges'];
+        $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
+
+
+        if ($privilegesSecurityLevel[$role->securityLevel] === '0') {
+            $bitmask = ['1', '2', '4'];
+        } else if ($privilegesSecurityLevel[$role->securityLevel] === '3') {
+            $bitmask = ['1', '2'];
+        } else if ($privilegesSecurityLevel[$role->securityLevel] === '6') {
+            $bitmask = ['4', '2'];
+        } else {
+            $bitmask = [$privilegesSecurityLevel[$role->securityLevel]];
+        }
+
+        $domain = strtok($userStory, LAABS_URI_SEPARATOR);
+        foreach ($bitmask as $i) {
+            if (in_array($domain . '/', $privileges[$i]) || in_array($domain . '/*', $privileges[$i])) {
+                continue;
+            }
+
+            foreach ($privileges[$i] as $privilege) {
+                if (fnmatch($privilege, $userStory)) {
+                    continue 2;
+                }
+            }
+
+            throw \laabs::newException("auth/adminRoleException", "Role privileges do not correspond to the security level");
+        }
+
         $privilege = \laabs::newInstance("auth/privilege");
         $privilege->userStory = $userStory;
-        $privilege->roleId = $roleId;
+        $privilege->roleId = $role->roleId;
 
         return $this->sdoFactory->create($privilege);
     }

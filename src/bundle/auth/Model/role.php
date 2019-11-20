@@ -37,7 +37,7 @@ class role
      * @notempty
      */
     const SECLEVEL_GENADMIN = "gen_admin";
-    const SECLEVEL_FONCADMIN = "fonc_admin";
+    const SECLEVEL_FUNCADMIN = "func_admin";
     const SECLEVEL_USER = "user";
 
     /**
