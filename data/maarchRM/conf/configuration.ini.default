@@ -310,6 +310,8 @@ menu = "[
 ]"
 
 [auth]
+@include securityLevel.ini
+
 ; Encryption algorithm (MD5, SHA256, SHA512...)
 passwordEncryption = SHA256
 
