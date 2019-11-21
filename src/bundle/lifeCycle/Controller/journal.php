@@ -373,26 +373,26 @@ class journal
                     || $eventType = 'recordsManagement/restitution'
                     || $eventType = 'recordsManagement/restitutionRequest'
                     || $eventType = 'recordsManagement/restitutionRequestCanceling') {
-                    $businessIdQueryParts[] = '"eventInfo"::jsonb->7 = :objectId';
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->>7 = :objectId';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/consultation'
                     || $eventType = 'recordsManagement/periodicIntegrityCheck') {
-                    $businessIdQueryParts[] = '"eventInfo"::jsonb->5 = :objectId';
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->>5 = :objectId';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/conversion'
                     || $eventType = 'recordsManagement/depositOfLinkedResource'
                     || $eventType = 'recordsManagement/accessRuleModification') {
-                    $businessIdQueryParts[] = '"eventInfo"::jsonb->10 = :objectId';
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->>10 = :objectId';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/freeze'
                     || $eventType = 'recordsManagement/unfreeze'
                     || $eventType = 'recordsManagement/integrityCheck'
                     || $eventType = 'recordsManagement/metadataModification'
                     || $eventType = 'recordsManagement/resourceDestruction') {
-                    $businessIdQueryParts[] = '"eventInfo"::jsonb->6 = :objectId';
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->>6 = :objectId';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/retentionRuleModification') {
-                    $businessIdQueryParts[] = '"eventInfo"::jsonb->12 = :objectId';
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->>12 = :objectId';
                 }
             }
 
