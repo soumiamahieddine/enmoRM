@@ -313,7 +313,8 @@ class journal
      * @param string    $objectId       The identifier of the object
      * @param timestamp $minDate        The minimum date of the event
      * @param timestamp $maxDate        The maximum date of the event
-     * @param sring     $sortBy         The event sorting request
+     * @param string    $org            An org reg number on one of the event header or info 
+     * @param string    $sortBy         The event sorting request
      * @param int       $numberOfResult The number of result
      *
      * @throws \Exception
@@ -326,6 +327,7 @@ class journal
         $objectId = null,
         $minDate = null,
         $maxDate = null,
+        $org = null,
         $sortBy = ">timestamp",
         $numberOfResult = null
     ) {
@@ -350,6 +352,24 @@ class journal
         if ($objectId) {
             $queryParams['objectId'] = $objectId;
             $query['objectId'] = "objectId = :objectId";
+
+            // Use on event info, depending on object class and eventType
+            $businessIdQueryParts = [];
+            // Query parts for archive or global
+            if (empty($objectClass) || $objectClass == 'recordsManagement/archive') {
+                // Query parts for archive deposit or global
+                if (empty($eventType) || $eventType = 'recordsManagement/deposit') {
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->>9 = :objectId';
+                }
+            }
+
+            if (empty($objectClass) || $objectClass == 'medona/message') {
+                $businessIdQueryParts[] = '"eventInfo"::jsonb->>5 = :objectId';
+            }
+
+            if (!empty($businessIdQueryParts)) {
+                $query['businessId'].= '<?SQL '.implode(' OR ', $businessIdQueryParts) .' ?>';
+            }
         }
 
         if ($minDate) {
@@ -360,6 +380,32 @@ class journal
         if ($maxDate) {
             $queryParams['maxDate'] = $maxDate->add(new \DateInterval('PT23H59M59S'));
             $query['maxDate'] = "timestamp <= :maxDate";
+        }
+
+        if ($org) {
+            $queryParams['org'] = $org;
+            $query['org'] = "orgRegNumber = :org OR orgUnitRegNumber = :org";
+
+            // Use on event info, depending on object class and eventType
+            $orgQueryParts = [];
+            // Query parts for archive or global
+            if (empty($objectClass) || $objectClass == 'recordsManagement/archive') {
+                // Query parts for archive deposit or global
+                if (empty($eventType) || $eventType = 'recordsManagement/deposit') {
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>6 = :org';
+                }
+            }
+
+            if (empty($objectClass) || $objectClass == 'medona/message') {
+                $orgQueryParts[] = '"eventInfo"::jsonb->>1 = :org';
+                $orgQueryParts[] = '"eventInfo"::jsonb->>3 = :org';
+            }
+
+            if (!empty($orgQueryParts)) {
+                $query['org'].= '<?SQL '.implode(' OR ', $orgQueryParts) .' ?>';
+            }
         }
 
         $queryString = implode(' AND ', $query);
