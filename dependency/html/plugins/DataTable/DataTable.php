@@ -336,7 +336,7 @@ EOS;
     /**
      * Add possibility to export datatable resuls in different formats
      *
-     * @param array   $exportType       array containing one of following export format (copy, csv, excel, pdf, print)
+     * @param array   $exportType       array containing button objects to set
      * @param boolean $onlyExportButton Either returning dom only consists of export button or full dataTable display
      *
      */
@@ -380,12 +380,16 @@ EOS;
 
         $this->parameters->buttons = [];
 
-        foreach ($exportType as $type => $text) {
+        foreach ($exportType as $exportButton) {
             $button = new \stdClass();
-            $button->extend = $type;
-            $button->text = $text;
+            $button->extend = $exportButton['exportType'];
+            $button->text = $exportButton['text'];
             if (!empty($this->exportOptions)) {
                 $button->exportOptions = $this->exportOptions;
+            }
+            $button->titleAttr = 'Export to '.$type;
+            if (isset($exportButton['titleAttr'])) {
+                $button->titleAttr = $exportButton['titleAttr'];
             }
             $button->orientation = 'landscape';
             $button->className = 'btn btn-default btn-sm';

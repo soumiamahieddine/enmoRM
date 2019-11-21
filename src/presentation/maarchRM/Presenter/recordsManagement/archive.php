@@ -208,11 +208,28 @@ class archive
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setSorting(array(array(5, 'desc')));
 
+        $titleExport = $this->view->translator->getText(
+            "Export to ",
+            false,
+            "recordsManagement/messages"
+        );
+
         $dataTable->setColumnsToExport([1, 2, 3, 4, 5, 6, 7]);
-        $dataTable->setExport([
-                "csv" => "<i class='fa fa-download'></i> CSV",
-                "pdf" => "<i class='fa fa-download'></i> PDF"
-            ], false);
+        $dataTable->setExport(
+            [
+                [
+                    "exportType" => "csv",
+                    "text" => "<i class='fa fa-download'></i> CSV",
+                    "titleAttr" => $titleExport . "CSV"
+                ],
+                [
+                    "exportType" => "pdf",
+                    "text" => "<i class='fa fa-download'></i> PDF",
+                    "titleAttr" => $titleExport . "PDF"
+                ]
+            ],
+            false
+        );
 
         $this->readPrivilegesOnArchives();
 
