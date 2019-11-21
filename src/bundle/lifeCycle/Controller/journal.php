@@ -390,11 +390,34 @@ class journal
             $orgQueryParts = [];
             // Query parts for archive or global
             if (empty($objectClass) || $objectClass == 'recordsManagement/archive') {
-                // Query parts for archive deposit or global
-                if (empty($eventType) || $eventType = 'recordsManagement/deposit') {
+                // Bind org query parts according to type of event
+                if (empty($eventType) || $eventType = 'recordsManagement/deposit' || $eventType = 'recordsManagement/depositNewResource'
+                    || $eventType = 'recordsManagement/depositOfLinkedResource') {
                     $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
                     $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
                     $orgQueryParts[] = '"eventInfo"::jsonb->>6 = :org';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/delivery' || $eventType = 'recordsManagement/destruction'
+                    || $eventType = 'recordsManagement/deleteRelationship' || $eventType = 'recordsManagement/addRelationship'
+                    || $eventType = 'recordsManagement/destruction' || $eventType = 'recordsManagement/destructionRequest'
+                    || $eventType = 'recordsManagement/destructionRequestCanceling' || $eventType = 'recordsManagement/elimination'
+                    || $eventType = 'recordsManagement/freeze' || $eventType = 'recordsManagement/unfreeze'
+                    || $eventType = 'recordsManagement/outgoingTransfer' || $eventType = 'recordsManagement/restitution'
+                    || $eventType = 'recordsManagement/restitutionRequest' || $eventType = 'recordsManagement/restitutionRequestCanceling'
+                    || $eventType = 'recordsManagement/metadataModification') {
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/accessRuleModification') {
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>8 = :org';
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>9 = :org';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/integrityCheck') {
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/retentionRuleModification') {
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>10 = :org';
+                    $orgQueryParts[] = '"eventInfo"::jsonb->>11 = :org';
                 }
             }
 
