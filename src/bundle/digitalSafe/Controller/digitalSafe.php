@@ -319,8 +319,7 @@ class digitalSafe
      * @param  string $originatorOrgRegNumber      ID_CONT
      * @param  string $fromDate                    starting date
      * @param  string $toDate                      ending date
-     * @param  string $fromOriginatorArchiveId     ?
-     * @param  string $toOriginatorArchiveId       ?
+     * @param  string $originatorArchiveId         orgRegNumber
      * @param  string $archiveId                   IDU
      *
      * @return object $replyMesage                 Numerical object metadata
@@ -330,8 +329,7 @@ class digitalSafe
         $originatorOrgRegNumber = null,
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null,
+        $originatorArchiveId = null,
         $archiveId = null
     ) {
         $replyMessage = new \stdClass();
@@ -360,6 +358,10 @@ class digitalSafe
             if ($originatorOrgRegNumber) {
                 $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
                 $query['originatorOrgRegNumber'] = "orgUnitRegNumber = :originatorOrgRegNumber";
+            }
+            if ($originatorArchiveId) {
+                $queryParams['originatorArchiveId'] = $originatorArchiveId;
+                $query['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
             }
 
             if ($fromDate) {

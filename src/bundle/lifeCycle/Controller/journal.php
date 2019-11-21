@@ -357,9 +357,42 @@ class journal
             $businessIdQueryParts = [];
             // Query parts for archive or global
             if (empty($objectClass) || $objectClass == 'recordsManagement/archive') {
-                // Query parts for archive deposit or global
-                if (empty($eventType) || $eventType = 'recordsManagement/deposit') {
+                // Bind originatorArchiveId to the right column for each event
+                if (empty($eventType) || $eventType = 'recordsManagement/deposit'
+                    || $eventType = 'recordsManagement/depositNewResource') {
                     $businessIdQueryParts[] = '"eventInfo"::jsonb->>9 = :objectId';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/addRelationship'
+                    || $eventType = 'recordsManagement/deleteRelationship'
+                    || $eventType = 'recordsManagement/delivery'
+                    || $eventType = 'recordsManagement/destruction'
+                    || $eventType = 'recordsManagement/destructionRequest'
+                    || $eventType = 'recordsManagement/destructionRequestCanceling'
+                    || $eventType = 'recordsManagement/elimination'
+                    || $eventType = 'recordsManagement/outgoingTransfer'
+                    || $eventType = 'recordsManagement/restitution'
+                    || $eventType = 'recordsManagement/restitutionRequest'
+                    || $eventType = 'recordsManagement/restitutionRequestCanceling') {
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->7 = :objectId';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/consultation'
+                    || $eventType = 'recordsManagement/periodicIntegrityCheck') {
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->5 = :objectId';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/conversion'
+                    || $eventType = 'recordsManagement/depositOfLinkedResource'
+                    || $eventType = 'recordsManagement/accessRuleModification') {
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->10 = :objectId';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/freeze'
+                    || $eventType = 'recordsManagement/unfreeze'
+                    || $eventType = 'recordsManagement/integrityCheck'
+                    || $eventType = 'recordsManagement/metadataModification'
+                    || $eventType = 'recordsManagement/resourceDestruction') {
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->6 = :objectId';
+                }
+                if (empty($eventType) || $eventType = 'recordsManagement/retentionRuleModification') {
+                    $businessIdQueryParts[] = '"eventInfo"::jsonb->12 = :objectId';
                 }
             }
 
@@ -391,19 +424,27 @@ class journal
             // Query parts for archive or global
             if (empty($objectClass) || $objectClass == 'recordsManagement/archive') {
                 // Bind org query parts according to type of event
-                if (empty($eventType) || $eventType = 'recordsManagement/deposit' || $eventType = 'recordsManagement/depositNewResource'
+                if (empty($eventType) || $eventType = 'recordsManagement/deposit'
+                    || $eventType = 'recordsManagement/depositNewResource'
                     || $eventType = 'recordsManagement/depositOfLinkedResource') {
                     $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
                     $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
                     $orgQueryParts[] = '"eventInfo"::jsonb->>6 = :org';
                 }
-                if (empty($eventType) || $eventType = 'recordsManagement/delivery' || $eventType = 'recordsManagement/destruction'
-                    || $eventType = 'recordsManagement/deleteRelationship' || $eventType = 'recordsManagement/addRelationship'
-                    || $eventType = 'recordsManagement/destruction' || $eventType = 'recordsManagement/destructionRequest'
-                    || $eventType = 'recordsManagement/destructionRequestCanceling' || $eventType = 'recordsManagement/elimination'
-                    || $eventType = 'recordsManagement/freeze' || $eventType = 'recordsManagement/unfreeze'
-                    || $eventType = 'recordsManagement/outgoingTransfer' || $eventType = 'recordsManagement/restitution'
-                    || $eventType = 'recordsManagement/restitutionRequest' || $eventType = 'recordsManagement/restitutionRequestCanceling'
+                if (empty($eventType) || $eventType = 'recordsManagement/delivery'
+                    || $eventType = 'recordsManagement/destruction'
+                    || $eventType = 'recordsManagement/deleteRelationship'
+                    || $eventType = 'recordsManagement/addRelationship'
+                    || $eventType = 'recordsManagement/destruction'
+                    || $eventType = 'recordsManagement/destructionRequest'
+                    || $eventType = 'recordsManagement/destructionRequestCanceling'
+                    || $eventType = 'recordsManagement/elimination'
+                    || $eventType = 'recordsManagement/freeze'
+                    || $eventType = 'recordsManagement/unfreeze'
+                    || $eventType = 'recordsManagement/outgoingTransfer'
+                    || $eventType = 'recordsManagement/restitution'
+                    || $eventType = 'recordsManagement/restitutionRequest'
+                    || $eventType = 'recordsManagement/restitutionRequestCanceling'
                     || $eventType = 'recordsManagement/metadataModification') {
                     $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
                     $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';

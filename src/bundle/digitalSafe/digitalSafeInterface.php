@@ -65,8 +65,7 @@ interface digitalSafeInterface
      * @param string $originatorOrgRegNumber
      * @param string $fromDate
      * @param string $toDate
-     * @param string $fromOriginatorArchiveId
-     * @param string $toOriginatorArchiveId
+     * @param string $originatorArchiveId
      * @param string $archiveId
      *
      * @action digitalSafe/digitalSafe/journal
@@ -76,8 +75,7 @@ interface digitalSafeInterface
         $originatorOrgRegNumber = null,
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null,
+        $originatorArchiveId = null,
         $archiveId = null
     );
 
