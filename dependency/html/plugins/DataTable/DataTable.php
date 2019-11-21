@@ -86,9 +86,8 @@ EOS;
 $('[title]').tooltip();
 EOS;
 
-        $scriptText .=
-<<<EOS
-    $('[title]').tooltip();
+        $scriptText .=<<<EOS
+$('[title]').tooltip();
 EOS;
 
         $script = $this->element->ownerDocument->createElement('script');
