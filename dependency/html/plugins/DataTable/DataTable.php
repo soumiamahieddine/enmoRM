@@ -342,25 +342,26 @@ EOS;
     public function setExport($exportType = array(), $onlyExportButton = false)
     {
         if (!is_array($exportType) || empty($exportType)) {
-            $exportType = [[
-                "exportType" => "csv",
-                "text" => "export csv"
+            $exportType = [
+                [
+                    "exportType" => "csv",
+                    "text" => "export csv"
                 ],
                 [
-                "exportType" => "excel",
-                "text" => "export xls"
+                    "exportType" => "excel",
+                    "text" => "export xls"
                 ],
                 [
-                "exportType" => "pdf",
-                "text" => "export pdf"
+                    "exportType" => "pdf",
+                    "text" => "export pdf"
                 ],
                 [
-                "exportType" => "copy",
-                "text" => "copy to clipboard"
+                    "exportType" => "copy",
+                    "text" => "copy to clipboard"
                 ],
                 [
-                "exportType" => "print",
-                "text" => "print the table"
+                    "exportType" => "print",
+                    "text" => "print table"
                 ]
             ];
         }
