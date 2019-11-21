@@ -139,7 +139,7 @@ class archivalProfile
     public $retentionRule;
 
     /**
-     * The retention rule
+     * The access rule
      *
      * @var recordsManagement/accessRule
      */

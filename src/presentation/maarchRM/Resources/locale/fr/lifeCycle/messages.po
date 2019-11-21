@@ -528,8 +528,6 @@ msgstr "Réception d'une archive"
 msgid "recordsManagement/validation"
 msgstr "Validation d'une archive"
 
-msgid "recordsManagement/descriptionModification"
-msgstr "Modification de la description d'archive"
 
 msgid "recordsManagement/outgoingTransfer"
 msgstr "Transfert sortant"
