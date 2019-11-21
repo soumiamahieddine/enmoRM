@@ -342,10 +342,26 @@ EOS;
     public function setExport($exportType = array(), $onlyExportButton = false)
     {
         if (!is_array($exportType) || empty($exportType)) {
-            $exportType = [
-                "csv" => "export csv",
-                "excel" => "export xls",
-                "pdf" => "export PDF"
+            $exportType = [[
+                "exportType" => "csv",
+                "text" => "export csv"
+                ],
+                [
+                "exportType" => "excel",
+                "text" => "export xls"
+                ],
+                [
+                "exportType" => "pdf",
+                "text" => "export pdf"
+                ],
+                [
+                "exportType" => "copy",
+                "text" => "copy to clipboard"
+                ],
+                [
+                "exportType" => "print",
+                "text" => "print the table"
+                ]
             ];
         }
 
@@ -386,7 +402,7 @@ EOS;
             if (!empty($this->exportOptions)) {
                 $button->exportOptions = $this->exportOptions;
             }
-            $button->titleAttr = 'Export to '.$type;
+            $button->titleAttr = 'Export to '. $exportButton['exportType'];
             if (isset($exportButton['titleAttr'])) {
                 $button->titleAttr = $exportButton['titleAttr'];
             }
