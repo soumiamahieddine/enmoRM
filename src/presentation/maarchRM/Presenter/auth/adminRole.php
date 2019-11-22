@@ -121,12 +121,12 @@ class adminRole
         $genAdmin = $funcAdmin = false;
         foreach ($roleMembers as $roleMember) {
             $r = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
-            if (!$r->securityLevel) {
-                $genAdmin = $funcAdmin = true;
-            } else if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_GENADMIN) {
+            if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_GENADMIN) {
                 $genAdmin = true;
             } else if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
                 $funcAdmin = true;
+            } else if (!$r->securityLevel == \bundle\auth\Model\role::SECLEVEL_USER) {
+                $genAdmin = $funcAdmin = true;
             }
         }
 
