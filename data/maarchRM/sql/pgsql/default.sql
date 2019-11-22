@@ -4,8 +4,8 @@ INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountTyp
 
 -- ROLE
 INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
-('ADMING', 'Administrateur Général', 'Groupe administrateur général', true),
-('ADMINF', 'Administrateur Fonctionnel', 'Groupe administrateur fonctionnel', true);
+('ADMING', 'Administrateur Général', 'Groupe administrateur général', 'gen_admin', true),
+('ADMINF', 'Administrateur Fonctionnel', 'Groupe administrateur fonctionnel', 'func_admin', true);
 
 -- roleMember
 INSERT INTO "auth"."roleMember"("roleId", "userAccountId") VALUES

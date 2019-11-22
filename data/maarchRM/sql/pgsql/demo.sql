@@ -41,12 +41,12 @@ INSERT INTO "auth"."account" VALUES ('sstone', 'sstone', 'Sharon STONE', 'user',
 INSERT INTO "auth"."account" VALUES ('ttule', 'ttule', 'Thierry TULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Thierry', 'TULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
 INSERT INTO "auth"."account" VALUES ('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
 
-INSERT INTO "auth"."role" VALUES ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', true);
-INSERT INTO "auth"."role" VALUES ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', true);
-INSERT INTO "auth"."role" VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', true);
-INSERT INTO "auth"."role" VALUES ('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', true);
-INSERT INTO "auth"."role" VALUES ('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', true);
-INSERT INTO "auth"."role" VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', true);
+INSERT INTO "auth"."role" VALUES ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', 'func_admin', true);
+INSERT INTO "auth"."role" VALUES ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', 'gen_admin', true);
+INSERT INTO "auth"."role" VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', 'user', true);
+INSERT INTO "auth"."role" VALUES ('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', 'user', true);
+INSERT INTO "auth"."role" VALUES ('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', 'user', true);
+INSERT INTO "auth"."role" VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', 'user', true);
 
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminAuthorization');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrganization');
@@ -56,6 +56,7 @@ INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminServ
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminUseraccount');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/batchScheduling');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminOrganization');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminAuthorization');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminUseraccount');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminTech/*');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'journal/audit');
