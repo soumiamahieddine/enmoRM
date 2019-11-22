@@ -143,26 +143,7 @@ trait archiveEntryTrait
             throw new \core\Exception("The container file is non-compliant");
         }
 
-        $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
-
-        foreach ($scannedDirectory as $filename) {
-            if (is_link($directory . DIRECTORY_SEPARATOR . $filename)) {
-                throw new \core\Exception("The container file contains symbolic links");
-            }
-
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
-                $resource = $this->extractResource($directory, $filename);
-                $resource->setContents(base64_encode($resource->getContents()));
-                $archive->digitalResources[] = $resource;
-            } else {
-                $archiveUnit = $this->extractArchiveUnit($filename);
-                $archiveUnit->archiveId = \laabs::newId();
-                $resource = $this->extractResource($directory, $filename);
-                $resource->setContents(base64_encode($resource->getContents()));
-                $archiveUnit->digitalResources[] = $resource;
-                $archive->contents[] = $archiveUnit;
-            }
-        }
+        $this->extractDir($directory, $archive);
 
         return $archive;
     }
@@ -197,6 +178,47 @@ trait archiveEntryTrait
     }
 
     /**
+     * Process a zip directory
+     * @var string                    $directory
+     * @var recordsManagement/archive $archive
+     */
+    protected function extractDir($directory, $archive)
+    {
+        $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
+
+        foreach ($scannedDirectory as $filename) {
+            if (is_link($directory . DIRECTORY_SEPARATOR . $filename)) {
+                throw new \core\Exception("The container file contains symbolic links");
+            }
+
+            if (is_file($directory . DIRECTORY_SEPARATOR . $filename)) {
+                if (!empty($archive->archivalProfileReference) && \laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
+                    $resource = $this->extractResource($directory, $filename);
+                    $resource->setContents(base64_encode($resource->getContents()));
+                    $archive->digitalResources[] = $resource;
+                } else {
+                    $archiveUnit = $this->extractArchiveUnit($filename);
+                    $archiveUnit->archiveId = \laabs::newId();
+                    $archiveUnit->fileplanLevel = 'item';
+                    $archive->contents[] = $archiveUnit;
+
+                    $resource = $this->extractResource($directory, $filename);
+                    $resource->setContents(base64_encode($resource->getContents()));
+                    $archiveUnit->digitalResources[] = $resource;
+                }
+            }
+
+            if (is_dir($directory . DIRECTORY_SEPARATOR . $filename)) {
+                $archiveUnit = $this->extractArchiveUnit($filename);
+                $archiveUnit->archiveId = \laabs::newId();
+                $archive->contents[] = $archiveUnit;
+
+                $this->extractDir($directory . DIRECTORY_SEPARATOR . $filename, $archiveUnit);
+            }
+        }
+    }
+
+    /**
      * Extract the archive unit
      *
      * @param string $filename The filename
@@ -209,16 +231,25 @@ trait archiveEntryTrait
             $filename = utf8_encode($filename);
         }
 
-        $archivalProfileReference = strtok($filename, " ");
-        $archiveName = substr($filename, strlen($archivalProfileReference)+1);
-        $archiveName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $archiveName);
-
         $archive = \laabs::newInstance("recordsManagement/archive");
         $archive->archiveId = \laabs::newId();
-        $archive->archivalProfileReference = $archivalProfileReference;
-        $this->useArchivalProfile($archivalProfileReference);
-        $archive->archiveName = $archiveName . " _ " . $this->currentArchivalProfile->name;
 
+        if (strpos($filename, " ") !== false) {
+            $archivalProfileReference = strtok($filename, " ");
+
+            try {
+                $this->useArchivalProfile($archivalProfileReference);
+                $archiveName = substr($filename, strlen($archivalProfileReference)+1);
+                $archiveName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $archiveName);
+                $archive->archiveName = $archiveName . " _ " . $this->currentArchivalProfile->name;
+                $archive->archivalProfileReference = $archivalProfileReference;
+            } catch (\Exception $e) {
+                $archive->archiveName = $filename;
+            }
+        } else {
+            $archive->archiveName = $filename;
+        }
+        
         return $archive;
     }
 
