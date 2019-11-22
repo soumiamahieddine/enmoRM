@@ -47,6 +47,9 @@ msgid "From"
 msgstr "Depuis"
 msgctxt "date"
 
+msgid "Organization"
+msgstr "Organisation"
+
 msgid "to"
 msgstr "jusqu'au"
 msgctxt "date"
@@ -420,6 +423,10 @@ msgctxt "eventInfo"
 
 msgid "ownerOrgId"
 msgstr "Identifiant de l'organisation"
+msgctxt "eventInfo"
+
+msgid "originatorArchiveId"
+msgstr "Identifiant du Producteur"
 msgctxt "eventInfo"
 
 # ---------------------------------------------------------

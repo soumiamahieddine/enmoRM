@@ -351,7 +351,7 @@ class journal
 
         if ($objectId) {
             $queryParams['objectId'] = $objectId;
-            $query['objectId'] = "objectId = :objectId";
+            $objectIdQueryParts['objectId'] = "objectId = :objectId";
 
             // Use on event info, depending on object class and eventType
             $businessIdQueryParts = [];
@@ -401,8 +401,10 @@ class journal
             }
 
             if (!empty($businessIdQueryParts)) {
-                $query['businessId'].= '<?SQL '.implode(' OR ', $businessIdQueryParts) .' ?>';
+                $objectIdQueryParts['businessId'] = '<?SQL ('.implode(' OR ', $businessIdQueryParts) .' ) ?>';
             }
+
+            $query['objectId'] = '('.implode(' OR ', $objectIdQueryParts).')';
         }
 
         if ($minDate) {
@@ -417,19 +419,19 @@ class journal
 
         if ($org) {
             $queryParams['org'] = $org;
-            $query['org'] = "orgRegNumber = :org OR orgUnitRegNumber = :org";
+            $orgQueryParts['org'] = "orgRegNumber = :org OR orgUnitRegNumber = :org";
 
             // Use on event info, depending on object class and eventType
-            $orgQueryParts = [];
+            $infoOrgQueryParts = [];
             // Query parts for archive or global
             if (empty($objectClass) || $objectClass == 'recordsManagement/archive') {
                 // Bind org query parts according to type of event
                 if (empty($eventType) || $eventType = 'recordsManagement/deposit'
                     || $eventType = 'recordsManagement/depositNewResource'
                     || $eventType = 'recordsManagement/depositOfLinkedResource') {
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>6 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>6 = :org';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/delivery'
                     || $eventType = 'recordsManagement/destruction'
@@ -446,30 +448,32 @@ class journal
                     || $eventType = 'recordsManagement/restitutionRequest'
                     || $eventType = 'recordsManagement/restitutionRequestCanceling'
                     || $eventType = 'recordsManagement/metadataModification') {
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>5 = :org';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/accessRuleModification') {
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>8 = :org';
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>9 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>8 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>9 = :org';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/integrityCheck') {
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>4 = :org';
                 }
                 if (empty($eventType) || $eventType = 'recordsManagement/retentionRuleModification') {
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>10 = :org';
-                    $orgQueryParts[] = '"eventInfo"::jsonb->>11 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>10 = :org';
+                    $infoOrgQueryParts[] = '"eventInfo"::jsonb->>11 = :org';
                 }
             }
 
             if (empty($objectClass) || $objectClass == 'medona/message') {
-                $orgQueryParts[] = '"eventInfo"::jsonb->>1 = :org';
-                $orgQueryParts[] = '"eventInfo"::jsonb->>3 = :org';
+                $infoOrgQueryParts[] = '"eventInfo"::jsonb->>1 = :org';
+                $infoOrgQueryParts[] = '"eventInfo"::jsonb->>3 = :org';
             }
 
-            if (!empty($orgQueryParts)) {
-                $query['org'].= '<?SQL '.implode(' OR ', $orgQueryParts) .' ?>';
+            if (!empty($infoOrgQueryParts)) {
+                $orgQueryParts['otherOrg'] = '<?SQL ('.implode(' OR ', $infoOrgQueryParts) .') ?>';
             }
+
+            $query['org'] = '('.implode(' OR ', $orgQueryParts).')';
         }
 
         $queryString = implode(' AND ', $query);
