@@ -19,8 +19,7 @@
  */
 namespace dependency\html\plugins\DataTable;
 
-class DataTable
-    extends \dependency\html\AbstractHtmlClass
+class DataTable extends \dependency\html\AbstractHtmlClass
 {
     /* -------------------------------------------------------------------------
     - Properties
@@ -28,6 +27,8 @@ class DataTable
     protected $parameters;
 
     protected $columnFilter;
+
+    protected $exportOptions;
 
     protected $toolbars;
 
@@ -38,13 +39,16 @@ class DataTable
     {
         parent::__construct($element);
         $this->parameters = new \StdClass();
+        $this->exportOptions = new \StdClass();
 
         // init sDom parameters
         $this->parameters->sDom = '<"dataTable-footer clearfix"<"pull-left"f>><"table-responsive"t><"dataTable-footer"<"pull-left"li><"pull-right"p><"clearfix">>';
 
         $element->addHtmlClass("dataTable");
 
-        $this->element->ownerDocument->addScript('/public/js/dataTables_1.10.5/dataTables.min.js');
+        // $this->element->ownerDocument->addScript('/public/js/dataTables_1.10.5/dataTables.min.js');
+        $this->element->ownerDocument->addScript('/public/js/DataTables/datatables.js');
+
         $this->parameters->sPaginationType = "full_numbers";
     }
 
@@ -53,39 +57,36 @@ class DataTable
         $dataTableId = \laabs\uniqid();
         $this->element->setAttribute('data-table-id', $dataTableId);
         $parameters = json_encode($this->parameters);
-        //var_dump($this->parameters->aoColumnDefs);
 
-        $scriptText =
-<<<EOS
+        $scriptText = <<<EOS
 var dataTableObjects = {};
 $(document).ready(function() {
-    dataTableObjects['$dataTableId'] = $('*[data-table-id="$dataTableId"]').DataTable($parameters)
+dataTableObjects['$dataTableId'] = $('*[data-table-id="$dataTableId"]').DataTable($parameters)
 EOS;
 
         if ($this->columnFilter) {
             $columnFilterParams = json_encode($this->columnFilter);
-            $scriptText .=
-<<<EOS
+            $scriptText .= <<<EOS
 .columnFilter($columnFilterParams)
 EOS;
-
         }
 
         $scriptText .= ";
-});";
-
-        
+                        });";
 
         if (!empty($this->toolbars)) {
             foreach ($this->toolbars as $class => $html) {
-                $scriptText .=
-<<<EOS
+                $scriptText .= <<<EOS
 $('div.$class').html('$html');
 EOS;
             }
         }
-$scriptText .=
-<<<EOS
+
+        $scriptText .= <<<EOS
+$('[title]').tooltip();
+EOS;
+
+        $scriptText .=<<<EOS
 $('[title]').tooltip();
 EOS;
 
@@ -121,17 +122,16 @@ EOS;
         $this->parameters->oLanguage->sLoadingRecords = $translator->getText("Loading...", false, $catalog);
         $this->parameters->oLanguage->sZeroRecords  = $translator->getText("No matching records found", false, $catalog);
         $this->parameters->oLanguage->sEmptyTable   = $translator->getText("No data available in table", false, $catalog);
-        
+
         $this->parameters->oLanguage->oPaginate = new \stdClass();
         $this->parameters->oLanguage->oPaginate->sFirst   = $translator->getText("First", false, $catalog);
         $this->parameters->oLanguage->oPaginate->sPrevious= $translator->getText("Previous", false, $catalog);
         $this->parameters->oLanguage->oPaginate->sNext    = $translator->getText("Next", false, $catalog);
         $this->parameters->oLanguage->oPaginate->sLast    = $translator->getText("Last", false, $catalog);
-        
+
         $this->parameters->oLanguage->oAria = new \stdClass();
         $this->parameters->oLanguage->oAria->sSortAscending      = $translator->getText(": activate to sort column ascending", false, $catalog);
         $this->parameters->oLanguage->oAria->sSortDescending    = $translator->getText(": activate to sort column descending", false, $catalog);
-
     }
 
     public function setPaginationType($paginationType)
@@ -191,7 +191,7 @@ EOS;
     }
 
     public function setSortingColumn($index, $sortingBy)
-    {        
+    {
         if (!isset($this->parameters->aoColumnDefs)) {
             $this->parameters->aoColumnDefs = array();
         }
@@ -199,11 +199,12 @@ EOS;
         $object = new \StdClass();
         $object->iDataSort = (int)$sortingBy;
         $object->aTargets = array((int)$index);
-        
+
         $this->parameters->aoColumnDefs[] = $object;
     }
 
-    public function setColumnType($type, $indexes) {
+    public function setColumnType($type, $indexes)
+    {
         if (!is_array($indexes)) {
             $indexes = array($indexes);
         }
@@ -215,9 +216,8 @@ EOS;
         $object = new \StdClass();
         $object->type = $type;
         $object->aTargets = $indexes;
-        
-        $this->parameters->columnDefs[] = $object;
 
+        $this->parameters->columnDefs[] = $object;
     }
 
     public function setUnvisibleColumns($indexes)
@@ -245,7 +245,7 @@ EOS;
         $this->parameters->aoColumnDefs[] = $object;
     }
 
-    public function enableColumnFilter($placeHolder=false) 
+    public function enableColumnFilter($placeHolder = false)
     {
         $this->columnFilter = new \stdClass();
         if ($placeHolder) {
@@ -255,7 +255,7 @@ EOS;
         $this->element->ownerDocument->addScript('/public/js/dataTables_1.10.5/dataTables.columnFilter.js');
     }
 
-    public function setColumnFilter($index, $type, $values=array()) 
+    public function setColumnFilter($index, $type, $values = array())
     {
         if (!isset($this->columnFilter)) {
             $this->enableColumnFilter();
@@ -274,7 +274,7 @@ EOS;
         }
 
         for ($i=0, $l=$index; $i<$l; $i++) {
-            if (!isset($this->columnFilter->aoColumns[$i] )) {
+            if (!isset($this->columnFilter->aoColumns[$i])) {
                 $this->columnFilter->aoColumns[$i] = null;
             }
         }
@@ -304,8 +304,9 @@ EOS;
 
     public function setLanguageFile($langfile)
     {
-        if (!isset($this->parameters->oLanguage))
+        if (!isset($this->parameters->oLanguage)) {
             $this->parameters->oLanguage = new \StdClass();
+        }
 
         $this->parameters->oLanguage->sUrl = $langfile;
     }
@@ -313,15 +314,15 @@ EOS;
     /**
      * Add a custom toolbar
      * @param string The toolbar html
-     * 
-     * 
+     *
+     *
      */
     public function addCustomToolbar($class, $html)
     {
         $this->toolbars[$class] = $html;
     }
 
-    protected function serializeDomStyle($arr=false, $dom=false)
+    protected function serializeDomStyle($arr = false, $dom = false)
     {
         if (!$arr) {
             $arr = $this->domStyle;
@@ -329,5 +330,100 @@ EOS;
         foreach ($arr as $item) {
             $dom .= "<";
         }
+    }
+
+    /**
+     * Add possibility to export datatable resuls in different formats
+     *
+     * @param array   $exportType       array containing button objects to set
+     * @param boolean $onlyExportButton Either returning dom only consists of export button or full dataTable display
+     *
+     */
+    public function setExport($exportType = array(), $onlyExportButton = false)
+    {
+        if (!is_array($exportType) || empty($exportType)) {
+            $exportType = [
+                [
+                    "exportType" => "csv",
+                    "text" => "export csv"
+                ],
+                [
+                    "exportType" => "excel",
+                    "text" => "export xls"
+                ],
+                [
+                    "exportType" => "pdf",
+                    "text" => "export pdf"
+                ],
+                [
+                    "exportType" => "copy",
+                    "text" => "copy to clipboard"
+                ],
+                [
+                    "exportType" => "print",
+                    "text" => "print table"
+                ]
+            ];
+        }
+
+        // dom is a datatable parameter allowing to control displayed elements of table
+        // t referers to the table
+        // l referers to the length changing input control
+        // f referers to the filtering input
+        // i refers to the information summary
+        // p refers to the pagination control
+        // r refers to the processing of display element
+        // see https://datatables.net/reference/option/dom for more detailed informations
+        $this->parameters->dom = "
+            <'dataTable-footer clearfix'
+                <'col-sm-6 no_padding'f>
+                <'col-sm-6 no_padding'
+                    <'pull-right' B>
+                >
+            >
+            tr
+            <'dataTable-footer clearfix'
+                <'col-sm-6 no_padding'l>
+                <'col-sm-6 no_padding'
+                    <'pull-right' p>
+                >
+                i
+            >";
+
+        if ($onlyExportButton) {
+            $this->parameters->dom = "<<'no_padding' B>>";
+        }
+
+        $this->parameters->buttons = [];
+
+        foreach ($exportType as $exportButton) {
+            $button = new \stdClass();
+            $button->extend = $exportButton['exportType'];
+            $button->text = $exportButton['text'];
+            if (!empty($this->exportOptions)) {
+                $button->exportOptions = $this->exportOptions;
+            }
+            $button->titleAttr = 'Export to '. $exportButton['exportType'];
+            if (isset($exportButton['titleAttr'])) {
+                $button->titleAttr = $exportButton['titleAttr'];
+            }
+            $button->orientation = 'landscape';
+            $button->className = 'btn btn-default btn-sm';
+            array_push($this->parameters->buttons, $button);
+        }
+    }
+
+    /**
+     * Add possibility to set which columns are exported
+     *
+     * @param array   $columns       array containing the columns number to export in file
+     *
+     */
+    public function setColumnsToExport($columns)
+    {
+        if (!is_array($columns) || empty($columns)) {
+            return;
+        }
+        $this->exportOptions->columns = $columns;
     }
 }
