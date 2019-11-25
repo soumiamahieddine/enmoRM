@@ -643,10 +643,11 @@ class userAccount
     /**
      * Search user account
      * @param string $query The query
+     * @param string $securityLevel The security level
      *
      * @return array The list of found users
      */
-    public function queryUserAccounts($query = "")
+    public function queryUserAccounts($query = "", $securityLevel = null)
     {
         $queryTokens = \laabs\explode(" ", $query);
         $queryTokens = array_unique($queryTokens);
@@ -659,12 +660,51 @@ class userAccount
             }
         }
         $userAccountQueryString = implode(" OR ", $userAccountQueryPredicats);
-        if (!$userAccountQueryString) {
-            $userAccountQueryString = "1=1";
-        }
-        $userAccountQueryString .= "(".$userAccountQueryString.") AND accountType='user'";
 
-        $userAccounts = $this->sdoFactory->find('auth/account', $userAccountQueryString);
+        $organizationController = \laabs::newController('organization/organization');
+        $accountId = \laabs::getToken("AUTH")->accountId;
+
+        $queryAssert = [];
+        $queryAssert[] = "accountType='user'";
+
+        if ($query) {
+            $queryAssert[] = "$userAccountQueryString";
+        }
+
+        $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+        $queryAssert[] = "accountId!=['".$accountId."']";
+
+        if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
+            $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";
+        }
+
+        if ($securityLevel) {
+            switch ($securityLevel) {
+                case \bundle\auth\Model\role::SECLEVEL_GENADMIN:
+                    $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId=null)";
+                    break;
+                case \bundle\auth\Model\role::SECLEVEL_FUNCADMIN:
+                    $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId!=null)";
+                    break;
+                case \bundle\auth\Model\role::SECLEVEL_USER:
+                    $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                    $organizations = $organizationController->readDescendantOrg($organization->orgId);
+                    $organizations[] = $organization;
+                    $organizationsIds = [];
+                    foreach ($organizations as $key => $organization) {
+                        $organizationsIds[] = (string) $organization->orgId;
+                    }
+
+                    $queryAssert[] = "((isAdmin!=TRUE 
+                AND ownerOrgId=['" .
+                        implode("', '", $organizationsIds) .
+                        "'])";
+            }
+            $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
+        } else {
+            $userAccounts = $this->userList($queryAssert[1]);
+        }
+
 
         return $userAccounts;
     }
@@ -684,17 +724,17 @@ class userAccount
 
         foreach ($securitiesLevel as $securityLevel) {
             switch ($securityLevel) {
-                case 'gen_admin':
+                case $account::SECLEVEL_GENADMIN:
                     if ($account->isAdmin && !$account->ownerOrgId) {
                         return true;
                     }
                     break;
-                case 'fonc_admin':
+                case $account::SECLEVEL_FONCADMIN:
                     if ($account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }
                     break;
-                case 'user':
+                case $account::SECLEVEL_USER:
                     if (!$account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }

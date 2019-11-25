@@ -53,10 +53,11 @@ interface userAccountInterface
     /**
      * Search the user account for typehead
      * @param string $query The query string
+     * @param string $securityLevel The security level
      *
      * @action auth/userAccount/queryUserAccounts
      */
-    public function readQuery_query_($query = null);
+    public function readQuery_query_($query = null, $securityLevel = null);
 
     /**
      * Prepare an empty user Account object
