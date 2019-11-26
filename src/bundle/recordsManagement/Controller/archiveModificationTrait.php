@@ -164,6 +164,10 @@ trait archiveModificationTrait
                 $retentionRule->previousDuration = $archive->retentionDuration;
                 $retentionRule->previousFinalDisposition = $archive->finalDisposition;
 
+                $archive->retentionStartDate = $retentionRule->retentionStartDate;
+                $archive->retentionDuration = $retentionRule->retentionDuration;
+                $archive->finalDisposition = $retentionRule->finalDisposition;
+
                 array_push($res['success'], $archiveId);
 
                 $operationResult = true;
