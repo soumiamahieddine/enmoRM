@@ -426,8 +426,11 @@ msgstr "Identifiant de l'organisation"
 msgctxt "eventInfo"
 
 msgid "originatorArchiveId"
-msgstr "Identifiant du Producteur"
+msgstr "Identifiant métier"
 msgctxt "eventInfo"
+
+msgid "No originator found"
+msgstr "Aucun producteur trouvé"
 
 # ---------------------------------------------------------
 # Event types
