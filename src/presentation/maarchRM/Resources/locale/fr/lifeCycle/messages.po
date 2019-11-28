@@ -430,7 +430,7 @@ msgstr "Identifiant métier"
 msgctxt "eventInfo"
 
 msgid "No originator found"
-msgstr "Aucun producteur trouvé"
+msgstr "Aucune organisation ou service correspondant"
 
 # ---------------------------------------------------------
 # Event types
