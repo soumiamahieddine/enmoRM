@@ -55,7 +55,7 @@ push:
     - docker tag "$CI_REGISTRY_IMAGE_TEST" "$CI_REGISTRY_IMAGE"
     - docker push "$CI_REGISTRY_IMAGE"
   only:
-    - feat/autopush_dockerhub
+    - master
   except:
     - schedules
 
