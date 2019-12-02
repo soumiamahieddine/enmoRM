@@ -347,10 +347,10 @@ trait archiveLifeCycleTrait
         $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'retentionStartDate' => (string) $retentionRule->retentionStartDate,
+            'retentionStartDate' => $retentionRule->retentionStartDate,
             'retentionDuration' => (string) $retentionRule->retentionDuration,
             'finalDisposition' => (string) $retentionRule->finalDisposition,
-            'previousStartDate' => (string) $retentionRule->previousStartDate,
+            'previousStartDate' => $retentionRule->previousStartDate,
             'previousDuration' => (string) $retentionRule->previousDuration,
             'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
         );
@@ -377,9 +377,9 @@ trait archiveLifeCycleTrait
         $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'accessRuleStartDate' => (string) $accessRule->accessRuleStartDate,
+            'accessRuleStartDate' => $accessRule->accessRuleStartDate,
             'accessRuleDuration' => (string) $accessRule->accessRuleDuration,
-            'previousAccessRuleStartDate' => (string) $accessRule->previousAccessRuleStartDate,
+            'previousAccessRuleStartDate' => $accessRule->previousAccessRuleStartDate,
             'previousAccessRuleDuration' => (string) $accessRule->previousAccessRuleDuration,
         );
 
