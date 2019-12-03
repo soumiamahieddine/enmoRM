@@ -30,6 +30,8 @@ class authorization
     
     protected $userAccountController;
     protected $blacklistUserStories;
+    protected $securityLevelUserStories;
+    protected $securityLevel;
 
     /**
      * Constructor
@@ -44,6 +46,15 @@ class authorization
             $this->blacklistUserStories = null;
         }
 
+        if (isset(\laabs::configuration('auth')['privileges'])
+            && isset(\laabs::configuration('auth')['securityLevel']))
+        {
+            $this->securityLevelUserStories = \laabs::configuration('auth')['privileges'];
+            $this->securityLevel = \laabs::configuration('auth')['securityLevel'];
+        } else {
+            $this->securityLevel = null;
+            $this->securityLevelUserStories = null;
+        }
     }
 
     /**
@@ -58,6 +69,8 @@ class authorization
     public function filterPrivilege(&$userStories, array &$args=null)
     {
 
+        $account = \laabs::getToken('AUTH');
+        $accountSecurityLevels = $this->getAccountSecurityRole($account);
         foreach ($userStories as $i => $userStory) {
             if (is_array($this->blacklistUserStories)) {
                 foreach ($this->blacklistUserStories as $blacklistUserStory) {
@@ -80,10 +93,66 @@ class authorization
             if (!$hasPrivilege) {
                 unset($userStories[$i]);
             }
+
+            if (!$this->securityLevelUserStories
+                && !is_null($account)
+            ) {
+                $hasPrivilege = false;
+                $domain = strtok($userStory->uri, LAABS_URI_SEPARATOR);
+                foreach ($accountSecurityLevels as $accountSecurityLevel) {
+                    $value = $this->securityLevel[$accountSecurityLevel];
+                    if ($value === '0') {
+                        $bitmask = ['1', '2', '4'];
+                    } else if ($value === '3') {
+                        $bitmask = ['1', '2'];
+                    } else if ($value === '6') {
+                        $bitmask = ['4', '2'];
+                    } else {
+                        $bitmask = [$value];
+                    }
+
+                    foreach ($bitmask as $j) {
+                        if ($domain === 'app') {
+                            $hasPrivilege = true;
+                            continue 2;
+                        }
+
+                        if (in_array($domain . '/', $this->securityLevelUserStories[$j])) {
+                            $hasPrivilege = true;
+                            continue 2;
+                        }
+
+                        foreach ($this->securityLevelUserStories[$j] as $securityLevelUserStory) {
+                            if (fnmatch($securityLevelUserStory, $userStory->uri)) {
+                                $hasPrivilege = true;
+                                continue 3;
+                            }
+                        }
+                    }
+                }
+                if (!$hasPrivilege) {
+                    unset($userStories[$i]);
+                }
+            }
         }
     }
 
+    private function getAccountSecurityRole($account) {
+        if (!$account) {
+            return false;
+        }
 
+        $securityRole = [];
+        $roleMembers = \laabs::callService("auth/roleMember/readByuseraccount_userAccountId_", $account->accountId);
+        foreach ($roleMembers as $roleMember) {
+            $r = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
+            if ($r->securityLevel) {
+                $securityRole[] = $r->securityLevel;
+            }
+        }
+
+        return $securityRole;
+    }
     /**
      * Check user privilege against requested route
      * @param \core\Reflection\Command &$userCommand The reflection of requested user story command
