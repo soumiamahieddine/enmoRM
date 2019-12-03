@@ -72,7 +72,7 @@
             $("#retentionRuleFinalDisposition").prop("disabled",false);
         }
     });
-    // On retourne l'état du bouton 'OK' en fonction de la saisie de l'utilisateur dans le champ 'commentaire'
+    // State of button 'save' will change according to value of comment's field
     $("#comment").on('change keyup', function () {
         if ($("#comment").val() !== "") {
             $("#save").prop("disabled",false);
