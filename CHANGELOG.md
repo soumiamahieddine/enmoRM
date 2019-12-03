@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 2.6
+
+- `Added` Ajout d'un champ organisation dans la recherche d'évènement de journal, il assistera l'utilisateur avec une autocompletion regroupant l'ensemble des services et des organisations auxquels l'utilisateur est rattaché.
+- `Added` Ajout de la possibilité de rechercher selon l'identifiant métier (renseigné par le client) en plus de l'identifiant technique dans la recherche d'évènement de journal.
+
 ## Version 2.5
 
 ### Sécurité
