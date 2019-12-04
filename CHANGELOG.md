@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## Version 2.5.2
+
+- `Fixed` Correctif concernant les demandes de restitution d'archives.
+
+## Version 2.5.1
+
+- `Fixed` Correctif sur la vérification de validité du token de 'Mot de passe oublié'
+
 ## Version 2.5
 
 ### Sécurité

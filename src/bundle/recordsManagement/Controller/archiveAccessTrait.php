@@ -962,6 +962,10 @@ trait archiveAccessTrait
 
         if (!is_array($archiveIds)) {
             $archiveIds = array((string) $archiveIds);
+        } else {
+            foreach ($archiveIds as $key => $archiveId) {
+                $archiveIds[$key] = (string) $archiveId;
+            }
         }
 
         $res = array('success' => array(), 'error' => array());
