@@ -5,6 +5,14 @@
 - `Added` Ajout d'un champ organisation dans la recherche d'évènement de journal, il assistera l'utilisateur avec une autocompletion regroupant l'ensemble des services et des organisations auxquels l'utilisateur est rattaché.
 - `Added` Ajout de la possibilité de rechercher selon l'identifiant métier (renseigné par le client) en plus de l'identifiant technique dans la recherche d'évènement de journal.
 
+## Version 2.5.2
+
+- `Fixed` Correctif concernant les demandes de restitution d'archives.
+
+## Version 2.5.1
+
+- `Fixed` Correctif sur la vérification de validité du token de 'Mot de passe oublié'
+
 ## Version 2.5
 
 ### Sécurité
