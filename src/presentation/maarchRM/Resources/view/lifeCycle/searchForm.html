@@ -91,6 +91,7 @@
     </div>
     <span id="emptyForm_text" class="hide">The form is empty.</span>
     <span id="eventType_text" class="hide">Event Type</span>
+    <span id="noOriginatorFound" class="hide">No originator found</span>
 </div>
 
 <!-- Modal -->
@@ -169,6 +170,61 @@
             gritter.show($('#emptyForm_text').html(), false);
         }
     })
+
+
+var organizations = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    prefetch: {url: '/organizations/todisplay?orgUnit=true&ownerOrg=true', ttl: '0'},
+    limit: 100
+});
+
+window.localStorage.clear();
+organizations.initialize();
+
+// initialize typeahead
+$('#org').typeahead(
+    {
+        hint: true,
+        highlight: true,
+        minLength: 1
+    },
+    {
+        name: 'organizations',
+        displayKey: 'orgId',
+        templates: {
+            empty: function() {
+                return "<span class='well well-sm'>"+$('#noOriginatorFound').html()+"</span>";
+            },
+            suggestion: function(organization) {
+                var display =
+                    "<span>"
+                    + "<span style='font-family:Helvetica, sans-serif;'>";
+
+                if(organization.orgId) {
+                    display += organization.displayName + "</span></span><br>";
+                }
+
+                return display;
+            }
+        },
+        source: function(query, cb) {
+            organizations.search(query, function(suggestions) {
+                var i = suggestions.length
+                while (i--) {
+                    if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
+                        suggestions.splice(i, 1);
+                }
+                cb(suggestions);
+            });
+        },
+        skipCache: true
+    }
+).on('typeahead:selected', function($event, suggestion, source) {
+
+    $("#org").prop('org', suggestion);
+});
+
 
 $("#searchResult").on('click', '.showEvent', function () {
     eventInfo.load($(this).data('eventid'));
