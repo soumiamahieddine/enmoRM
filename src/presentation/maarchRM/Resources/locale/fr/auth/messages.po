@@ -810,3 +810,12 @@ msgstr "Aucune organisation choisie"
 
 msgid "Admin Rights"
 msgstr "Droits Administrateur"
+
+msgid "Security level"
+msgstr "Niveau de sécurité"
+
+msgid "General administrator"
+msgstr "Administrateur général"
+
+msgid "Functional administrator"
+msgstr "Administrateur fonctionnel"

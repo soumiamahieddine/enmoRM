@@ -31,6 +31,16 @@ namespace bundle\auth\Model;
 class role
 {
     /**
+     * The security level (about NF_Z42020)
+     *
+     * @var string
+     * @notempty
+     */
+    const SECLEVEL_GENADMIN = "gen_admin";
+    const SECLEVEL_FUNCADMIN = "func_admin";
+    const SECLEVEL_USER = "user";
+
+    /**
      * The role identifier
      *
      * @var id
@@ -71,4 +81,11 @@ class role
      * @var auth/roleMember[]
      */
     public $roleMembers;
+
+    /**
+     *  The security level of role
+     *
+     * @var string
+     */
+    public $securityLevel;
 }

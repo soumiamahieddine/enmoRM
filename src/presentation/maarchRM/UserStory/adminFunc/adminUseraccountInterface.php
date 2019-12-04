@@ -114,9 +114,11 @@ interface adminUseraccountInterface
     /**
      * Get the list of available users
      *
+     * @param string $securityLevel The security level
+     *
      * @uses auth/userAccount/readQuery_query_
      */
-    public function readUseraccounts_query_();
+    public function readUseraccounts_query_($securityLevel = null);
 
     /**
      * List all users to display

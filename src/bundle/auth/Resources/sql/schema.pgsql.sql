@@ -8,6 +8,7 @@ CREATE TABLE "auth"."role"
   "roleId" text,
   "roleName" text NOT NULL,
   "description" text,
+  "securityLevel" text,
   "enabled" boolean DEFAULT true,
   
   PRIMARY KEY ("roleId")

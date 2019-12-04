@@ -319,8 +319,7 @@ class digitalSafe
      * @param  string $originatorOrgRegNumber      ID_CONT
      * @param  string $fromDate                    starting date
      * @param  string $toDate                      ending date
-     * @param  string $fromOriginatorArchiveId     ?
-     * @param  string $toOriginatorArchiveId       ?
+     * @param  string $originatorArchiveId         orgRegNumber
      * @param  string $archiveId                   IDU
      *
      * @return object $replyMesage                 Numerical object metadata
@@ -330,8 +329,7 @@ class digitalSafe
         $originatorOrgRegNumber = null,
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null,
+        $originatorArchiveId = null,
         $archiveId = null
     ) {
         $replyMessage = new \stdClass();
@@ -360,6 +358,10 @@ class digitalSafe
             if ($originatorOrgRegNumber) {
                 $queryParams['originatorOrgRegNumber'] = $originatorOrgRegNumber;
                 $query['originatorOrgRegNumber'] = "orgUnitRegNumber = :originatorOrgRegNumber";
+            }
+            if ($originatorArchiveId) {
+                $queryParams['originatorArchiveId'] = $originatorArchiveId;
+                $query['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
             }
 
             if ($fromDate) {
@@ -408,8 +410,7 @@ class digitalSafe
      * @param  string  $originatorOrgRegNumber      ID_CONT
      * @param  string  $fromDate                    starting date
      * @param  string  $toDate                      ending date
-     * @param  string  $fromOriginatorArchiveId     ?
-     * @param  string  $toOriginatorArchiveId       ?
+     * @param  string  $originatorArchiveId
      * @param  string  $archiveId                   IDU
      * @param  boolean $hasLog                      log events in lifecycle (Y/N)
      *
@@ -420,8 +421,7 @@ class digitalSafe
         $originatorOrgRegNumber,
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null,
+        $originatorArchiveId = null,
         $archiveId = null,
         $hasLog = true
     ) {
@@ -501,6 +501,10 @@ class digitalSafe
             $queryParts['archiveId'] = "archiveId = :archiveId";
         }
 
+        if ($originatorArchiveId) {
+            $queryParams['originatorArchiveId'] = $originatorArchiveId;
+            $queryParts['originatorArchiveId'] = "originatorArchiveId = :originatorArchiveId";
+        }
         $queryParts['archive'] = "status != 'disposed'";
 
         $queryString = \laabs\implode(' AND ', $queryParts);
@@ -536,8 +540,7 @@ class digitalSafe
      * @param  string $originatorOrgRegNumber      ID_CONT
      * @param  string $fromDate                    starting date
      * @param  string $toDate                      ending date
-     * @param  string $fromOriginatorArchiveId     ?
-     * @param  string $toOriginatorArchiveId       ?
+     * @param  string $originatorArchiveId
      *
      * @return object $replyMesage                 Numerical object metadata
      */
@@ -546,16 +549,14 @@ class digitalSafe
         $originatorOrgRegNumber,
         $fromDate = null,
         $toDate = null,
-        $fromOriginatorArchiveId = null,
-        $toOriginatorArchiveId = null
+        $originatorArchiveId = null
     ) {
         $replyMessage = $this->listing(
             $originatorOwnerOrgRegNumber,
             $originatorOrgRegNumber,
             $fromDate,
             $toDate,
-            $fromOriginatorArchiveId,
-            $toOriginatorArchiveId,
+            $originatorArchiveId,
             null,
             false
         );
