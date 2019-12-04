@@ -94,7 +94,7 @@ class authorization
                 unset($userStories[$i]);
             }
 
-            if (!$this->securityLevelUserStories
+            if (!is_null($this->securityLevelUserStories)
                 && !is_null($account)
             ) {
                 $hasPrivilege = false;
