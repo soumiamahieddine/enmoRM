@@ -34,11 +34,11 @@ msgstr "Administration fonctionnelle"
 msgctxt "userStoryGroup"
 
 msgid "adminOrganization"
-msgstr "Gérer l'organisation fonctionnelle"
+msgstr "Gérer l'organigramme"
 msgctxt "userStory"
 
 msgid "AdminArchivalProfileAccess"
-msgstr "Gérer les profils d'archive des producteurs"
+msgstr "Rattacher des profils d'archive à des activités"
 msgctxt "userStory"
 
 msgid "adminAuthorization"
@@ -50,7 +50,7 @@ msgstr "Gérer les contacts de l'organisation"
 msgctxt "userStory"
 
 msgid "adminOrgUser"
-msgstr "Gérer les utilisateurs de l'organisation"
+msgstr "Rattacher les utilisateurs à l'organigramme"
 msgctxt "userStory"
 
 msgid "adminServiceaccount"

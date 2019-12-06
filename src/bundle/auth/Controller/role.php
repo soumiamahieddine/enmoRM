@@ -304,42 +304,50 @@ class role
 
     /**
      * Create privileges
-     * @param id     $roleId    The roel to add privilege
+     * @param role     $role   The role where privilege is added
      * @param string $userStory Privilege userStory
      *
      * @return boolean The operation result
      */
     public function addPrivilege($role, $userStory)
     {
-        $privileges = \laabs::configuration('auth')['privileges'];
-        $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
+        if (isset(\laabs::configuration('auth')['privileges'])
+            && isset(\laabs::configuration('auth')['securityLevel']))
+        {
+            $privileges = \laabs::configuration('auth')['privileges'];
+            $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
 
-
-        if ($privilegesSecurityLevel[$role->securityLevel] === '0') {
-            $bitmask = ['1', '2', '4'];
-        } else if ($privilegesSecurityLevel[$role->securityLevel] === '3') {
-            $bitmask = ['1', '2'];
-        } else if ($privilegesSecurityLevel[$role->securityLevel] === '6') {
-            $bitmask = ['4', '2'];
-        } else {
-            $bitmask = [$privilegesSecurityLevel[$role->securityLevel]];
-        }
-
-        $domain = strtok($userStory, LAABS_URI_SEPARATOR);
-        foreach ($bitmask as $i) {
-            if (in_array($domain . '/', $privileges[$i]) || in_array($domain . '/*', $privileges[$i])) {
-                continue;
+            if ($privilegesSecurityLevel[$role->securityLevel] === '0') {
+                $bitmask = ['1', '2', '4'];
+            } else if ($privilegesSecurityLevel[$role->securityLevel] === '3') {
+                $bitmask = ['1', '2'];
+            } else if ($privilegesSecurityLevel[$role->securityLevel] === '6') {
+                $bitmask = ['4', '2'];
+            } else {
+                $bitmask = [$privilegesSecurityLevel[$role->securityLevel]];
             }
 
-            foreach ($privileges[$i] as $privilege) {
-                if (fnmatch($privilege, $userStory)) {
-                    continue 2;
+            $domain = strtok($userStory, LAABS_URI_SEPARATOR);
+            foreach ($bitmask as $i) {
+                if (in_array($domain . '/', $privileges[$i])) {
+                    continue;
                 }
+
+                foreach ($privileges[$i] as $privilege) {
+                    if (fnmatch($privilege, $userStory)) {
+                        continue 2;
+                    }
+
+                    $domainPrivileges = strtok($privilege, LAABS_URI_SEPARATOR);
+                    if ($domain . '/*' == $userStory
+                        && $domain == $domainPrivileges
+                    ) {
+                        continue 2;
+                    }
+                }
+                return false;
             }
-
-            throw \laabs::newException("auth/adminRoleException", "Role privileges do not correspond to the security level");
         }
-
         $privilege = \laabs::newInstance("auth/privilege");
         $privilege->userStory = $userStory;
         $privilege->roleId = $role->roleId;
