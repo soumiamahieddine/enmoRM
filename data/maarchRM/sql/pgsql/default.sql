@@ -3,7 +3,7 @@ INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountTyp
 ('superadmin', 'superadmin', 'super admin', 'user', 'info@maarch.org', true, '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Admin', 'Super', 'M.', NULL, NULL, NULL, NULL, NULL, true);
 
 -- ROLE
-INSERT INTO "auth"."role"("roleId", "roleName", "description", "enabled") VALUES
+INSERT INTO "auth"."role"("roleId", "roleName", "description", "securityLevel", "enabled") VALUES
 ('ADMING', 'Administrateur Général', 'Groupe administrateur général', 'gen_admin', true),
 ('ADMINF', 'Administrateur Fonctionnel', 'Groupe administrateur fonctionnel', 'func_admin', true);
 
