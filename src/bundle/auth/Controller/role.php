@@ -304,7 +304,7 @@ class role
 
     /**
      * Create privileges
-     * @param role     $role   The role to add privilege
+     * @param role     $role   The role where privilege is added
      * @param string $userStory Privilege userStory
      *
      * @return boolean The operation result
