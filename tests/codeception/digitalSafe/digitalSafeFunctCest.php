@@ -4,7 +4,7 @@ namespace tests\digitalSafe;
 
 class DigitalSafeCest
 {
-    private $token = "RJpzB36bmR%2Biuz%2FaHN9Zl9PDn8tZEvA%2B3Mr7PAM%2FSYnIjGu8hUw1Usd2IWmcEVtwxQT6l7HTxd7pYwCfYR3jvArkv0QKgcy51MKAzuodnnA6GlnsQaqXnfbI7f1isQDSIL6Kr82aL4pKFuAjmQ%3D%3D";
+    private $token = "RJpzB36bmR%2Biuz%2FaHN9Zl9PDn8tZEs4mzsz9ORUXZpbMim%2FilUMpE9FzYG3TW0Eii0Oy1PaFyJ35aBqcMU3gvAq4v0ZY0Z%2Fr0cPVzbAaymd1UEnsAe3MjqGLt7BxvxiHJQ%3D%3D";
     private $archiveId;
 
     public function _before(\ApiTester $I)
