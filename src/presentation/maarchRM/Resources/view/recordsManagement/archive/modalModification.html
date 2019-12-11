@@ -51,8 +51,9 @@
 </style>
 
 <script>
-    // empty description / reference fields when the user press cancel
+    // empty description / reference fields / button state when the user press cancel
     $("#cancelEdit").on('click', function () {
+        $('#save').prop("disabled",false);
         ModificationModal.modal.find('input, textarea').val('');
     });
 
@@ -71,15 +72,16 @@
             $("#retentionRuleFinalDisposition").prop("disabled",false);
         }
     });
-
-    $("#comment").bind('input propertychange', function () {
-        if ($("#comment").val() == "") {
-            $("#save").prop("disabled",true);
-        } else {
+    // State of button 'save' will change according to value of comment's field
+    $("#comment").on('change keyup', function () {
+        if ($("#comment").val() !== "") {
             $("#save").prop("disabled",false);
+        } 
+        else{
+            $("#save").prop("disabled",true);
         }
     });
-    
+
     $("#save").on('click', function (e) {
         e.preventDefault();
         ModificationModal.save(); 
