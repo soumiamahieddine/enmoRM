@@ -119,16 +119,23 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
-            $view->setSource('whatAmI', 'adminF');
-        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
-            $view->setSource('whatAmI', 'adminG');
-        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
-            $view->setSource('whatAmI', 'user');
+        if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
+            $whatAmI = $account->securityLevel;
         } else {
-            $view->setSource('whatAmI', 'oldUser');
+            $whatAmI = 'oldUser';
         }
 
+        $sizeRoles = count($roles);
+        for ($i = 0; $i < $sizeRoles; $i++) {
+            if (is_null($user->securityLevel) ||  $user->securityLevel == "") {
+                continue;
+            }
+            if ($roles[$i]->securityLevel != $user->securityLevel) {
+                unset($roles[$i]);
+            }
+        }
+
+        $view->setSource('whatAmI', $whatAmI);
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('user', $user);
@@ -194,16 +201,27 @@ class user
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
-            $view->setSource('whatAmI', 'adminF');
-        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
-            $view->setSource('whatAmI', 'adminG');
-        } else if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
-            $view->setSource('whatAmI', 'user');
+        if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
+            $whatAmI = $account->securityLevel;
         } else {
-            $view->setSource('whatAmI', 'oldUser');
+            $whatAmI = 'oldUser';
         }
-        
+
+        $sizeRoles = count($roles);
+        for ($i = 0; $i < $sizeRoles; $i++) {
+            if (is_null($account->securityLevel) ||  $account->securityLevel == "") {
+                continue;
+            }
+            if ($whatAmI == \bundle\auth\Model\account::SECLEVEL_GENADMIN
+                && $roles[$i]->securityLevel !== \bundle\auth\Model\account::SECLEVEL_FUNCADMIN) {
+                unset($roles[$i]);
+            } else if ($whatAmI == \bundle\auth\Model\account::SECLEVEL_FUNCADMIN
+                && $roles[$i]->securityLevel !== \bundle\auth\Model\account::SECLEVEL_USER) {
+                unset($roles[$i]);
+            }
+        }
+
+        $view->setSource('whatAmI', $whatAmI);
         $view->setSource('allowUserModification', true);
         $view->setSource('roles', $roles);
         $view->setSource('restrictRoles', $publicArchives || $restrictUserRoles);

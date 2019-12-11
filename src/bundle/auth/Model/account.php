@@ -38,7 +38,7 @@ class account
      * @notempty
      */
     const SECLEVEL_GENADMIN = "gen_admin";
-    const SECLEVEL_FONCADMIN = "fonc_admin";
+    const SECLEVEL_FUNCADMIN = "func_admin";
     const SECLEVEL_USER = "user";
 
     /**
@@ -186,7 +186,7 @@ class account
         if ($this->isAdmin && !$this->ownerOrgId) {
             return $this::SECLEVEL_GENADMIN;
         } elseif ($this->isAdmin && $this->ownerOrgId) {
-            return $this::SECLEVEL_FONCADMIN;
+            return $this::SECLEVEL_FUNCADMIN;
         } elseif (!$this->isAdmin && $this->ownerOrgId) {
             return $this::SECLEVEL_USER;
         }

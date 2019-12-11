@@ -102,7 +102,7 @@ class userAccount
                 $queryAssert[] = "(isAdmin=TRUE AND ownerOrgId!=null)";
                 break;
 
-            case $account::SECLEVEL_FONCADMIN:
+            case $account::SECLEVEL_FUNCADMIN:
                 $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
                 $organizations = $organizationController->readDescendantOrg($organization->orgId);
                 $organizations[] = $organization;
@@ -201,7 +201,7 @@ class userAccount
             if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
             if (!$organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
@@ -325,7 +325,7 @@ class userAccount
             if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
             if (!$userAccount->organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
@@ -729,7 +729,7 @@ class userAccount
                         return true;
                     }
                     break;
-                case $account::SECLEVEL_FONCADMIN:
+                case $account::SECLEVEL_FUNCADMIN:
                     if ($account->isAdmin && $account->ownerOrgId) {
                         return true;
                     }

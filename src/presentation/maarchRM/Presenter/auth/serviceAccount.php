@@ -139,7 +139,7 @@ class serviceAccount
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
+        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FUNCADMIN) {
             $this->view->setSource('whatAmI', 'adminF');
         } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
             $this->view->setSource('whatAmI', 'adminG');
