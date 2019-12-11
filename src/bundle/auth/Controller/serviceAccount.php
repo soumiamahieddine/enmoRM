@@ -83,7 +83,7 @@ class serviceAccount
                 $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
                 break;
 
-            case $account::SECLEVEL_FONCADMIN:
+            case $account::SECLEVEL_FUNCADMIN:
                 $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
                 break;
 
@@ -169,7 +169,7 @@ class serviceAccount
             if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
             if (!$orgId || $serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
@@ -289,7 +289,7 @@ class serviceAccount
             if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        } elseif ($securityLevel == $account::SECLEVEL_FONCADMIN) {
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
             if (!$orgId || $serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
