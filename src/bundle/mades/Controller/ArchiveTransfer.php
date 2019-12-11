@@ -285,6 +285,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                         "Le producteur de l'archive identifié par '$archiveOriginator' n'est pas indiqué dans l'accord de versement."
                     );
                 }
+
+                if (!$orgUnit->enabled) {
+                    $this->sendError("302", "Le service producteur '$archiveOriginator' est désactivé : veuillez le réactiver pour y verser des archives");
+                }
             }
 
             if (!empty($archiveUnit->archiveUnits)) {
