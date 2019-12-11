@@ -19,6 +19,8 @@
  */
 namespace presentation\maarchRM\UserStory\adminFunc;
 
+use bundle\organization\Model\organization;
+
 /**
  * User story admin organization
  * @author Alexis Ragot <alexis.ragot@maarch.org>
@@ -146,5 +148,11 @@ interface AdminOrganizationInterface
     public function readExportfileplan();
 
 
-
+    /**
+     * Change status of organization
+     *
+     * @return organization/orgTree/changeStatus
+     * @uses organization/organization/read_orgId_ChangeStatus_status_
+     */
+    public function updateOrganization_orgId_Status_status_();
 }

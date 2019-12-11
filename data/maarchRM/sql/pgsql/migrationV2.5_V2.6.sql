@@ -2,3 +2,5 @@
 
 -- add columns for Digital Safe in auth.role
 ALTER TABLE "auth"."role" ADD COLUMN "securityLevel" text;
+
+ALTER TABLE "organization"."organization" ADD COLUMN "enabled" boolean default true;

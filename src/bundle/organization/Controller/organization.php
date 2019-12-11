@@ -500,6 +500,22 @@ class organization
         return $res;
     }
 
+    public function changeStatus($orgId, $status) {
+        $organization = $this->sdoFactory->read('organization/organization', $orgId);
+
+        if (!$organization->isOrgUnit) {
+            throw new \core\Exception("An organization can't be disabled.");
+        }
+
+        if ($status == "true") {
+            $organization->enabled = 1;
+        } else {
+            $organization->enabled = 0;
+        }
+
+        return $this->sdoFactory->update($organization);
+    }
+
     /**
      * Move an organization to a new ownerOrg
      * @param string $orgId          The organization identifier
