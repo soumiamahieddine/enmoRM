@@ -277,7 +277,7 @@
             })
         },
 
-        checkRights: function (archivalProfiles, withoutProfile, fileplanLevel){
+        checkRights: function (archivalProfiles, withoutProfile, fileplanLevel) {
           var button = this.selected.closest('.archive').find('.addChildrenArchive');
           var archiveStatus = button.closest('.archive').find('.status').text();
           if (archiveStatus == 'disposed' || fileplanLevel == 'item' || (!archivalProfiles.length && withoutProfile !== 1)) {

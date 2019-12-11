@@ -208,7 +208,11 @@
             return userAccesses
         },
 
-        removeFromList: function(li, removeFromSelect = true) {
+        removeFromList: function(li, removeFromSelect) {
+            // to inititate default value and avoid bug on IE 11
+            if (removeFromSelect === undefined) {
+                removeFromSelect = true;
+            }
             if (removeFromSelect) {
                 $('#profileReference').val('').find('option[value="'+li.data('json').archivalProfileReference+'"]').removeClass('hide');
             }

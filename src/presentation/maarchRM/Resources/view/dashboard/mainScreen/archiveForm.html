@@ -333,7 +333,12 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        syncSerialize : function(action = "add") {
+        syncSerialize : function(action) {
+            // to inititate default value and avoid bug on IE 11
+            if (action === undefined)
+            {
+                action = "add";
+            }
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {
