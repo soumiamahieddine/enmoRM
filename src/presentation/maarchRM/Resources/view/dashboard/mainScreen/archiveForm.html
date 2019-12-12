@@ -84,9 +84,11 @@
 
 
     FilePlanLevelToggle = {
-        load: function (isWithoutProfile = true) {
+        load: function (isWithoutProfile) {
+            if (isWithoutProfile === undefined) {
+                isWithoutProfile = true;
+            }
             if(isWithoutProfile == true) {
-
                 if($('#fileplanLevelDiv').is(":hidden")) {
                     $('#fileplanLevelDiv').show();
                 }
