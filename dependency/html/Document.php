@@ -403,7 +403,6 @@ class Document extends \dependency\xml\Document
      */
     public function addPlugins($node = null)
     {
-        //var_dump("addPlugins($node->nodeType)");
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
             $element->addPlugins();
