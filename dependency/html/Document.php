@@ -415,7 +415,6 @@ class Document extends \dependency\xml\Document
      */
     public function savePlugins($node = null)
     {
-        $parameters = [];
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
             $element->savePlugins();

@@ -253,11 +253,7 @@ trait LocalisationTrait
     {
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
-            foreach ($element->plugin as $name => $plugin) {
-                if (method_exists($plugin, 'translate')) {
-                    $plugin->translate();
-                }
-            }
+            $element->translatePlugins();
         }
     }
 

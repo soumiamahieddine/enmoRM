@@ -121,13 +121,28 @@ class Element
      */
     public function addPlugins()
     {
-        if (!isset($this->plugin)) {
-            $this->plugin = new PluginContainer($this);
-        }
-
         foreach (explode(' ', $this->getAttribute('class')) as $htmlClass) {
             if (isset($this->ownerDocument->plugins[$htmlClass])) {
+                if (!isset($this->plugin)) {
+                    $this->plugin = new PluginContainer($this);
+                }
                 $this->plugin->add($htmlClass);
+            }
+        }
+    }
+
+    /**
+     * Translate plugins
+     */
+    public function translatePlugins()
+    {
+        if (!isset($this->plugin)) {
+            return;
+        }
+
+        foreach ($this->plugin as $name => $plugin) {
+            if (method_exists($plugin, 'translate')) {
+                $plugin->translate();
             }
         }
     }
@@ -137,15 +152,17 @@ class Element
      */
     public function savePlugins()
     {
+        if (!isset($this->plugin)) {
+            return;
+        }
+
         foreach ($this->plugin as $name => $plugin) {
             if (method_exists($plugin, 'saveHtml')) {
                 $plugin->saveHtml();
             }
 
-            if (method_exists($plugin, 'saveParameters') && !isset($this->ownerDocument->pluginsParameters[$name])) {
+            if (method_exists($plugin, 'saveParameters')) {
                 $plugin->saveParameters();
-
-                $this->ownerDocument->pluginsParameters[$name] = $plugin;
             }
         }
     }
