@@ -7,10 +7,10 @@
 
 ## Version 2.5.2
 
-- `Fixed` Correctif concernant les demandes de restitution d'archives.
-- `Fixed` Correctif de compatibilité à Internet Explorer 11.
-- `Fixed` Correctif sur l'affichage de tableau lors d'un trop grand nombre d'entrée.
-- `Fixed` Correctif sur la navigation des archives liées.
+- `Fixed` Rétablissement des demandes de restitution d'archives.
+- `Fixed` Les valeurs par défaut des paramètres de fonction dans JavaScript ont été retirées pour compatibilité à Internet Explorer 11.
+- `Fixed` Les tableaux s'initialisent correctement lorsqu'un nombre important d'entrées doit être affiché.
+- `Fixed` Rétablissement de la navigation entre archives liées.
 
 ### Thesaurus
 
