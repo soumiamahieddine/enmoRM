@@ -7,9 +7,10 @@
 
 ## Version 2.5.2
 
-### Thesaurus
-
-- `Added` Ajout de la possiblité d'utiliser des fichiers CSV ou SKOS personnalisés comme référentiels de thesaurus (fonctionnalité de l'extension *archives publiques*).
+- `Fixed` Correctif concernant les demandes de restitution d'archives.
+- `Fixed` Correctif de compatibilité à Internet Explorer 11.
+- `Fixed` Correctif sur l'affichage de tableau lors d'un trop grand nombre d'entrée.
+- `Fixed` Correctif sur la navigation des archives liées.
 
 ### Thesaurus
 
