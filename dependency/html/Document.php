@@ -37,12 +37,13 @@ class Document extends \dependency\xml\Document
     ------------------------------------------------------------------------- */
     protected $layout;
     protected $classes;
-    protected $plugins;
+    public $plugins;
     protected $headers;
     protected $layoutData;
     public $XPath;
     public $translator;
     public $dateTimeFormatter;
+    public $pluginsParameters = [];
     /**
      *   -- document --
      *   <html>
@@ -405,12 +406,7 @@ class Document extends \dependency\xml\Document
         //var_dump("addPlugins($node->nodeType)");
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
-            foreach (explode(' ', $element->getAttribute('class')) as $htmlClass) {
-                if (isset($this->plugins[$htmlClass])) {
-                    $pluginClass = $this->plugins[$htmlClass];
-                    $element->plugin[$htmlClass] = new $pluginClass($element);
-                }
-            }
+            $element->addPlugins();
         }
     }
 
@@ -423,16 +419,7 @@ class Document extends \dependency\xml\Document
         $parameters = [];
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
-            foreach ($element->plugin as $name => $plugin) {
-                if (method_exists($plugin, 'saveHtml')) {
-                    $plugin->saveHtml();
-                }
-
-                if (!isset($parameters[$name]) && method_exists($plugin, 'saveParameters')) {
-                    $parameters[$name]=$plugin;
-                    $plugin->saveParameters();
-                }
-            }
+            $element->savePlugins();
         }
     }
 

@@ -24,7 +24,7 @@ class Element
     /* -------------------------------------------------------------------------
     - Properties
     ------------------------------------------------------------------------- */
-    public $plugin = array();
+    protected $plugin;
     /* -------------------------------------------------------------------------
     - Methods
     ------------------------------------------------------------------------- */
@@ -98,5 +98,55 @@ class Element
     public function stringify(array $array)
     {
         return implode(" ", $array);
+    }
+
+    /**
+     * Returns the requested property
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if ($name == 'plugin' && empty($this->plugin)) {
+            $this->plugin = new PluginContainer($this);
+        }
+
+        return $this->{$name};
+    }
+
+    /**
+     * Add plugins
+     */
+    public function addPlugins()
+    {
+        if (!isset($this->plugin)) {
+            $this->plugin = new PluginContainer($this);
+        }
+
+        foreach (explode(' ', $this->getAttribute('class')) as $htmlClass) {
+            if (isset($this->ownerDocument->plugins[$htmlClass])) {
+                $this->plugin->add($htmlClass);
+            }
+        }
+    }
+
+    /**
+     * Save plugins
+     */
+    public function savePlugins()
+    {
+        foreach ($this->plugin as $name => $plugin) {
+            if (method_exists($plugin, 'saveHtml')) {
+                $plugin->saveHtml();
+            }
+
+            if (method_exists($plugin, 'saveParameters') && !isset($this->ownerDocument->pluginsParameters[$name])) {
+                $plugin->saveParameters();
+
+                $this->ownerDocument->pluginsParameters[$name] = $plugin;
+            }
+        }
     }
 }
