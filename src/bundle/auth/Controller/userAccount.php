@@ -186,7 +186,7 @@ class userAccount
      */
     public function addUserAccount($userAccount)
     {
-        $this->isAuthorized(['gen_admin', 'fonc_admin']);
+        $this->isAuthorized(['gen_admin', 'func_admin']);
 
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
@@ -315,7 +315,7 @@ class userAccount
      */
     public function update($userAccountId, $userAccount)
     {
-        $this->isAuthorized(['gen_admin', 'fonc_admin']);
+        $this->isAuthorized(['gen_admin', 'func_admin']);
 
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);

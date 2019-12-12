@@ -158,7 +158,7 @@ class serviceAccount
      */
     public function addService($serviceAccount, $orgId, $servicesURI = [])
     {
-        $this->userAccountController->isAuthorized(['gen_admin', 'fonc_admin']);
+        $this->userAccountController->isAuthorized(['gen_admin', 'func_admin']);
         $organizationController = \laabs::newController("organization/organization");
 
         $accountToken = \laabs::getToken('AUTH');
@@ -278,7 +278,7 @@ class serviceAccount
      */
     public function updateServiceInformation($serviceAccount, $orgId = null, $servicesURI = [])
     {
-        $this->userAccountController->isAuthorized(['gen_admin', 'fonc_admin']);
+        $this->userAccountController->isAuthorized(['gen_admin', 'func_admin']);
 
         $organizationController = \laabs::newController("organization/organization");
         $accountToken = \laabs::getToken('AUTH');
