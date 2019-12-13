@@ -369,3 +369,6 @@ msgstr "Liaison supprimée"
 
 msgid "Select a profile"
 msgstr "Selectionnez un profil"
+
+msgid "Status changed"
+msgstr "Statut de l'activité modifié"

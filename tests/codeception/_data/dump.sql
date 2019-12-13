@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.5.12
--- Dumped by pg_dump version 9.5.12
+-- Dumped by pg_dump version 11.5 (Ubuntu 11.5-1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -204,7 +204,7 @@ DROP SCHEMA "batchProcessing";
 DROP SCHEMA auth;
 DROP SCHEMA audit;
 --
--- TOC entry 8 (class 2615 OID 536305)
+-- TOC entry 7 (class 2615 OID 602484)
 -- Name: audit; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -214,7 +214,7 @@ CREATE SCHEMA audit;
 ALTER SCHEMA audit OWNER TO maarch;
 
 --
--- TOC entry 9 (class 2615 OID 536317)
+-- TOC entry 8 (class 2615 OID 602496)
 -- Name: auth; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -224,7 +224,7 @@ CREATE SCHEMA auth;
 ALTER SCHEMA auth OWNER TO maarch;
 
 --
--- TOC entry 10 (class 2615 OID 536385)
+-- TOC entry 9 (class 2615 OID 602564)
 -- Name: batchProcessing; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -234,7 +234,7 @@ CREATE SCHEMA "batchProcessing";
 ALTER SCHEMA "batchProcessing" OWNER TO maarch;
 
 --
--- TOC entry 11 (class 2615 OID 536412)
+-- TOC entry 10 (class 2615 OID 602591)
 -- Name: contact; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -244,7 +244,7 @@ CREATE SCHEMA contact;
 ALTER SCHEMA contact OWNER TO maarch;
 
 --
--- TOC entry 14 (class 2615 OID 536697)
+-- TOC entry 13 (class 2615 OID 602876)
 -- Name: digitalResource; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -254,7 +254,7 @@ CREATE SCHEMA "digitalResource";
 ALTER SCHEMA "digitalResource" OWNER TO maarch;
 
 --
--- TOC entry 15 (class 2615 OID 536827)
+-- TOC entry 14 (class 2615 OID 603006)
 -- Name: filePlan; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -264,7 +264,7 @@ CREATE SCHEMA "filePlan";
 ALTER SCHEMA "filePlan" OWNER TO maarch;
 
 --
--- TOC entry 16 (class 2615 OID 536855)
+-- TOC entry 15 (class 2615 OID 603034)
 -- Name: lifeCycle; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -274,7 +274,7 @@ CREATE SCHEMA "lifeCycle";
 ALTER SCHEMA "lifeCycle" OWNER TO maarch;
 
 --
--- TOC entry 12 (class 2615 OID 536467)
+-- TOC entry 11 (class 2615 OID 602646)
 -- Name: medona; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
@@ -284,7 +284,7 @@ CREATE SCHEMA medona;
 ALTER SCHEMA medona OWNER TO postgres;
 
 --
--- TOC entry 17 (class 2615 OID 536879)
+-- TOC entry 16 (class 2615 OID 603058)
 -- Name: organization; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -294,7 +294,7 @@ CREATE SCHEMA organization;
 ALTER SCHEMA organization OWNER TO maarch;
 
 --
--- TOC entry 13 (class 2615 OID 536529)
+-- TOC entry 12 (class 2615 OID 602708)
 -- Name: recordsManagement; Type: SCHEMA; Schema: -; Owner: maarch
 --
 
@@ -308,7 +308,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 191 (class 1259 OID 536306)
+-- TOC entry 190 (class 1259 OID 602485)
 -- Name: event; Type: TABLE; Schema: audit; Owner: maarch
 --
 
@@ -331,7 +331,7 @@ CREATE TABLE audit.event (
 ALTER TABLE audit.event OWNER TO maarch;
 
 --
--- TOC entry 193 (class 1259 OID 536327)
+-- TOC entry 192 (class 1259 OID 602506)
 -- Name: account; Type: TABLE; Schema: auth; Owner: maarch
 --
 
@@ -366,7 +366,7 @@ CREATE TABLE auth.account (
 ALTER TABLE auth.account OWNER TO maarch;
 
 --
--- TOC entry 195 (class 1259 OID 536359)
+-- TOC entry 194 (class 1259 OID 602538)
 -- Name: privilege; Type: TABLE; Schema: auth; Owner: maarch
 --
 
@@ -379,7 +379,7 @@ CREATE TABLE auth.privilege (
 ALTER TABLE auth.privilege OWNER TO maarch;
 
 --
--- TOC entry 192 (class 1259 OID 536318)
+-- TOC entry 191 (class 1259 OID 602497)
 -- Name: role; Type: TABLE; Schema: auth; Owner: maarch
 --
 
@@ -387,6 +387,7 @@ CREATE TABLE auth.role (
                            "roleId" text NOT NULL,
                            "roleName" text NOT NULL,
                            description text,
+                           "securityLevel" text,
                            enabled boolean DEFAULT true
 );
 
@@ -394,7 +395,7 @@ CREATE TABLE auth.role (
 ALTER TABLE auth.role OWNER TO maarch;
 
 --
--- TOC entry 194 (class 1259 OID 536341)
+-- TOC entry 193 (class 1259 OID 602520)
 -- Name: roleMember; Type: TABLE; Schema: auth; Owner: maarch
 --
 
@@ -407,7 +408,7 @@ CREATE TABLE auth."roleMember" (
 ALTER TABLE auth."roleMember" OWNER TO maarch;
 
 --
--- TOC entry 196 (class 1259 OID 536372)
+-- TOC entry 195 (class 1259 OID 602551)
 -- Name: servicePrivilege; Type: TABLE; Schema: auth; Owner: maarch
 --
 
@@ -420,7 +421,7 @@ CREATE TABLE auth."servicePrivilege" (
 ALTER TABLE auth."servicePrivilege" OWNER TO maarch;
 
 --
--- TOC entry 198 (class 1259 OID 536394)
+-- TOC entry 197 (class 1259 OID 602573)
 -- Name: logScheduling; Type: TABLE; Schema: batchProcessing; Owner: maarch
 --
 
@@ -438,7 +439,7 @@ CREATE TABLE "batchProcessing"."logScheduling" (
 ALTER TABLE "batchProcessing"."logScheduling" OWNER TO maarch;
 
 --
--- TOC entry 199 (class 1259 OID 536403)
+-- TOC entry 198 (class 1259 OID 602582)
 -- Name: notification; Type: TABLE; Schema: batchProcessing; Owner: maarch
 --
 
@@ -458,7 +459,7 @@ CREATE TABLE "batchProcessing".notification (
 ALTER TABLE "batchProcessing".notification OWNER TO maarch;
 
 --
--- TOC entry 197 (class 1259 OID 536386)
+-- TOC entry 196 (class 1259 OID 602565)
 -- Name: scheduling; Type: TABLE; Schema: batchProcessing; Owner: maarch
 --
 
@@ -478,7 +479,7 @@ CREATE TABLE "batchProcessing".scheduling (
 ALTER TABLE "batchProcessing".scheduling OWNER TO maarch;
 
 --
--- TOC entry 201 (class 1259 OID 536422)
+-- TOC entry 200 (class 1259 OID 602601)
 -- Name: address; Type: TABLE; Schema: contact; Owner: maarch
 --
 
@@ -503,7 +504,7 @@ CREATE TABLE contact.address (
 ALTER TABLE contact.address OWNER TO maarch;
 
 --
--- TOC entry 203 (class 1259 OID 536447)
+-- TOC entry 202 (class 1259 OID 602626)
 -- Name: communication; Type: TABLE; Schema: contact; Owner: maarch
 --
 
@@ -520,7 +521,7 @@ CREATE TABLE contact.communication (
 ALTER TABLE contact.communication OWNER TO maarch;
 
 --
--- TOC entry 202 (class 1259 OID 536437)
+-- TOC entry 201 (class 1259 OID 602616)
 -- Name: communicationMean; Type: TABLE; Schema: contact; Owner: maarch
 --
 
@@ -534,7 +535,7 @@ CREATE TABLE contact."communicationMean" (
 ALTER TABLE contact."communicationMean" OWNER TO maarch;
 
 --
--- TOC entry 200 (class 1259 OID 536413)
+-- TOC entry 199 (class 1259 OID 602592)
 -- Name: contact; Type: TABLE; Schema: contact; Owner: maarch
 --
 
@@ -554,7 +555,7 @@ CREATE TABLE contact.contact (
 ALTER TABLE contact.contact OWNER TO maarch;
 
 --
--- TOC entry 224 (class 1259 OID 536741)
+-- TOC entry 223 (class 1259 OID 602920)
 -- Name: address; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -572,7 +573,7 @@ CREATE TABLE "digitalResource".address (
 ALTER TABLE "digitalResource".address OWNER TO maarch;
 
 --
--- TOC entry 221 (class 1259 OID 536698)
+-- TOC entry 220 (class 1259 OID 602877)
 -- Name: cluster; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -586,7 +587,7 @@ CREATE TABLE "digitalResource".cluster (
 ALTER TABLE "digitalResource".cluster OWNER TO maarch;
 
 --
--- TOC entry 225 (class 1259 OID 536760)
+-- TOC entry 224 (class 1259 OID 602939)
 -- Name: clusterRepository; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -602,7 +603,7 @@ CREATE TABLE "digitalResource"."clusterRepository" (
 ALTER TABLE "digitalResource"."clusterRepository" OWNER TO maarch;
 
 --
--- TOC entry 228 (class 1259 OID 536807)
+-- TOC entry 227 (class 1259 OID 602986)
 -- Name: contentType; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -621,7 +622,7 @@ CREATE TABLE "digitalResource"."contentType" (
 ALTER TABLE "digitalResource"."contentType" OWNER TO maarch;
 
 --
--- TOC entry 229 (class 1259 OID 536815)
+-- TOC entry 228 (class 1259 OID 602994)
 -- Name: conversionRule; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -636,7 +637,7 @@ CREATE TABLE "digitalResource"."conversionRule" (
 ALTER TABLE "digitalResource"."conversionRule" OWNER TO maarch;
 
 --
--- TOC entry 222 (class 1259 OID 536706)
+-- TOC entry 221 (class 1259 OID 602885)
 -- Name: digitalResource; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -662,7 +663,7 @@ CREATE TABLE "digitalResource"."digitalResource" (
 ALTER TABLE "digitalResource"."digitalResource" OWNER TO maarch;
 
 --
--- TOC entry 226 (class 1259 OID 536778)
+-- TOC entry 225 (class 1259 OID 602957)
 -- Name: package; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -675,7 +676,7 @@ CREATE TABLE "digitalResource".package (
 ALTER TABLE "digitalResource".package OWNER TO maarch;
 
 --
--- TOC entry 227 (class 1259 OID 536791)
+-- TOC entry 226 (class 1259 OID 602970)
 -- Name: packedResource; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -689,7 +690,7 @@ CREATE TABLE "digitalResource"."packedResource" (
 ALTER TABLE "digitalResource"."packedResource" OWNER TO maarch;
 
 --
--- TOC entry 223 (class 1259 OID 536729)
+-- TOC entry 222 (class 1259 OID 602908)
 -- Name: repository; Type: TABLE; Schema: digitalResource; Owner: maarch
 --
 
@@ -708,7 +709,7 @@ CREATE TABLE "digitalResource".repository (
 ALTER TABLE "digitalResource".repository OWNER TO maarch;
 
 --
--- TOC entry 230 (class 1259 OID 536828)
+-- TOC entry 229 (class 1259 OID 603007)
 -- Name: folder; Type: TABLE; Schema: filePlan; Owner: maarch
 --
 
@@ -725,7 +726,7 @@ CREATE TABLE "filePlan".folder (
 ALTER TABLE "filePlan".folder OWNER TO maarch;
 
 --
--- TOC entry 231 (class 1259 OID 536843)
+-- TOC entry 230 (class 1259 OID 603022)
 -- Name: position; Type: TABLE; Schema: filePlan; Owner: maarch
 --
 
@@ -738,7 +739,7 @@ CREATE TABLE "filePlan"."position" (
 ALTER TABLE "filePlan"."position" OWNER TO maarch;
 
 --
--- TOC entry 232 (class 1259 OID 536856)
+-- TOC entry 231 (class 1259 OID 603035)
 -- Name: event; Type: TABLE; Schema: lifeCycle; Owner: maarch
 --
 
@@ -761,7 +762,7 @@ CREATE TABLE "lifeCycle".event (
 ALTER TABLE "lifeCycle".event OWNER TO maarch;
 
 --
--- TOC entry 233 (class 1259 OID 536864)
+-- TOC entry 232 (class 1259 OID 603043)
 -- Name: eventFormat; Type: TABLE; Schema: lifeCycle; Owner: maarch
 --
 
@@ -776,7 +777,7 @@ CREATE TABLE "lifeCycle"."eventFormat" (
 ALTER TABLE "lifeCycle"."eventFormat" OWNER TO maarch;
 
 --
--- TOC entry 204 (class 1259 OID 536468)
+-- TOC entry 203 (class 1259 OID 602647)
 -- Name: archivalAgreement; Type: TABLE; Schema: medona; Owner: maarch
 --
 
@@ -809,7 +810,7 @@ CREATE TABLE medona."archivalAgreement" (
 ALTER TABLE medona."archivalAgreement" OWNER TO maarch;
 
 --
--- TOC entry 208 (class 1259 OID 536516)
+-- TOC entry 207 (class 1259 OID 602695)
 -- Name: controlAuthority; Type: TABLE; Schema: medona; Owner: maarch
 --
 
@@ -822,7 +823,7 @@ CREATE TABLE medona."controlAuthority" (
 ALTER TABLE medona."controlAuthority" OWNER TO maarch;
 
 --
--- TOC entry 205 (class 1259 OID 536478)
+-- TOC entry 204 (class 1259 OID 602657)
 -- Name: message; Type: TABLE; Schema: medona; Owner: maarch
 --
 
@@ -863,7 +864,7 @@ CREATE TABLE medona.message (
 ALTER TABLE medona.message OWNER TO maarch;
 
 --
--- TOC entry 206 (class 1259 OID 536488)
+-- TOC entry 205 (class 1259 OID 602667)
 -- Name: messageComment; Type: TABLE; Schema: medona; Owner: maarch
 --
 
@@ -877,7 +878,7 @@ CREATE TABLE medona."messageComment" (
 ALTER TABLE medona."messageComment" OWNER TO maarch;
 
 --
--- TOC entry 207 (class 1259 OID 536503)
+-- TOC entry 206 (class 1259 OID 602682)
 -- Name: unitIdentifier; Type: TABLE; Schema: medona; Owner: maarch
 --
 
@@ -891,7 +892,7 @@ CREATE TABLE medona."unitIdentifier" (
 ALTER TABLE medona."unitIdentifier" OWNER TO maarch;
 
 --
--- TOC entry 239 (class 1259 OID 536949)
+-- TOC entry 238 (class 1259 OID 603128)
 -- Name: archivalProfileAccess; Type: TABLE; Schema: organization; Owner: maarch
 --
 
@@ -907,7 +908,7 @@ CREATE TABLE organization."archivalProfileAccess" (
 ALTER TABLE organization."archivalProfileAccess" OWNER TO maarch;
 
 --
--- TOC entry 238 (class 1259 OID 536936)
+-- TOC entry 237 (class 1259 OID 603115)
 -- Name: orgContact; Type: TABLE; Schema: organization; Owner: maarch
 --
 
@@ -921,7 +922,7 @@ CREATE TABLE organization."orgContact" (
 ALTER TABLE organization."orgContact" OWNER TO maarch;
 
 --
--- TOC entry 234 (class 1259 OID 536880)
+-- TOC entry 233 (class 1259 OID 603059)
 -- Name: orgType; Type: TABLE; Schema: organization; Owner: maarch
 --
 
@@ -934,7 +935,7 @@ CREATE TABLE organization."orgType" (
 ALTER TABLE organization."orgType" OWNER TO maarch;
 
 --
--- TOC entry 235 (class 1259 OID 536888)
+-- TOC entry 234 (class 1259 OID 603067)
 -- Name: organization; Type: TABLE; Schema: organization; Owner: maarch
 --
 
@@ -954,14 +955,15 @@ CREATE TABLE organization.organization (
                                            "taxIdentifier" text,
                                            "parentOrgId" text,
                                            "ownerOrgId" text,
-                                           "isOrgUnit" boolean
+                                           "isOrgUnit" boolean,
+                                           enabled boolean
 );
 
 
 ALTER TABLE organization.organization OWNER TO maarch;
 
 --
--- TOC entry 237 (class 1259 OID 536928)
+-- TOC entry 236 (class 1259 OID 603107)
 -- Name: servicePosition; Type: TABLE; Schema: organization; Owner: maarch
 --
 
@@ -974,7 +976,7 @@ CREATE TABLE organization."servicePosition" (
 ALTER TABLE organization."servicePosition" OWNER TO maarch;
 
 --
--- TOC entry 236 (class 1259 OID 536915)
+-- TOC entry 235 (class 1259 OID 603094)
 -- Name: userPosition; Type: TABLE; Schema: organization; Owner: maarch
 --
 
@@ -989,7 +991,7 @@ CREATE TABLE organization."userPosition" (
 ALTER TABLE organization."userPosition" OWNER TO maarch;
 
 --
--- TOC entry 209 (class 1259 OID 536530)
+-- TOC entry 208 (class 1259 OID 602709)
 -- Name: accessRule; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1003,7 +1005,7 @@ CREATE TABLE "recordsManagement"."accessRule" (
 ALTER TABLE "recordsManagement"."accessRule" OWNER TO maarch;
 
 --
--- TOC entry 211 (class 1259 OID 536546)
+-- TOC entry 210 (class 1259 OID 602725)
 -- Name: archivalProfile; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1027,7 +1029,7 @@ CREATE TABLE "recordsManagement"."archivalProfile" (
 ALTER TABLE "recordsManagement"."archivalProfile" OWNER TO maarch;
 
 --
--- TOC entry 212 (class 1259 OID 536568)
+-- TOC entry 211 (class 1259 OID 602747)
 -- Name: archivalProfileContents; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1040,7 +1042,7 @@ CREATE TABLE "recordsManagement"."archivalProfileContents" (
 ALTER TABLE "recordsManagement"."archivalProfileContents" OWNER TO maarch;
 
 --
--- TOC entry 216 (class 1259 OID 536621)
+-- TOC entry 215 (class 1259 OID 602800)
 -- Name: archive; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1100,7 +1102,7 @@ CREATE TABLE "recordsManagement".archive (
 ALTER TABLE "recordsManagement".archive OWNER TO maarch;
 
 --
--- TOC entry 214 (class 1259 OID 536595)
+-- TOC entry 213 (class 1259 OID 602774)
 -- Name: archiveDescription; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1118,7 +1120,7 @@ CREATE TABLE "recordsManagement"."archiveDescription" (
 ALTER TABLE "recordsManagement"."archiveDescription" OWNER TO maarch;
 
 --
--- TOC entry 217 (class 1259 OID 536646)
+-- TOC entry 216 (class 1259 OID 602825)
 -- Name: archiveRelationship; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1133,7 +1135,7 @@ CREATE TABLE "recordsManagement"."archiveRelationship" (
 ALTER TABLE "recordsManagement"."archiveRelationship" OWNER TO maarch;
 
 --
--- TOC entry 219 (class 1259 OID 536672)
+-- TOC entry 218 (class 1259 OID 602851)
 -- Name: descriptionClass; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1146,7 +1148,7 @@ CREATE TABLE "recordsManagement"."descriptionClass" (
 ALTER TABLE "recordsManagement"."descriptionClass" OWNER TO maarch;
 
 --
--- TOC entry 213 (class 1259 OID 536586)
+-- TOC entry 212 (class 1259 OID 602765)
 -- Name: descriptionField; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1169,7 +1171,7 @@ CREATE TABLE "recordsManagement"."descriptionField" (
 ALTER TABLE "recordsManagement"."descriptionField" OWNER TO maarch;
 
 --
--- TOC entry 218 (class 1259 OID 536664)
+-- TOC entry 217 (class 1259 OID 602843)
 -- Name: log; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1187,7 +1189,7 @@ CREATE TABLE "recordsManagement".log (
 ALTER TABLE "recordsManagement".log OWNER TO maarch;
 
 --
--- TOC entry 210 (class 1259 OID 536538)
+-- TOC entry 209 (class 1259 OID 602717)
 -- Name: retentionRule; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1204,7 +1206,7 @@ CREATE TABLE "recordsManagement"."retentionRule" (
 ALTER TABLE "recordsManagement"."retentionRule" OWNER TO maarch;
 
 --
--- TOC entry 215 (class 1259 OID 536611)
+-- TOC entry 214 (class 1259 OID 602790)
 -- Name: serviceLevel; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1222,7 +1224,7 @@ CREATE TABLE "recordsManagement"."serviceLevel" (
 ALTER TABLE "recordsManagement"."serviceLevel" OWNER TO maarch;
 
 --
--- TOC entry 220 (class 1259 OID 536680)
+-- TOC entry 219 (class 1259 OID 602859)
 -- Name: storageRule; Type: TABLE; Schema: recordsManagement; Owner: maarch
 --
 
@@ -1237,998 +1239,872 @@ CREATE TABLE "recordsManagement"."storageRule" (
 ALTER TABLE "recordsManagement"."storageRule" OWNER TO maarch;
 
 --
--- TOC entry 2600 (class 0 OID 536306)
--- Dependencies: 191
+-- TOC entry 2599 (class 0 OID 602485)
+-- Dependencies: 190
 -- Data for Name: event; Type: TABLE DATA; Schema: audit; Owner: maarch
 --
 
-COPY audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") FROM stdin;
-maarchRM_pwoozk-02ae-n5osla	2019-08-23 09:57:20.068655	bblier	ACME	GIC	organization/organization/readTree	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozk-033b-m3fz9y	2019-08-23 09:57:20.082692	bblier	ACME	GIC	organization/orgType/readList	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozn-15a2-pb2snw	2019-08-23 09:57:23.553839	bblier	ACME	GIC	organization/organization/readTree	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozn-0236-qjbh5h	2019-08-23 09:57:23.566018	bblier	ACME	GIC	organization/orgType/readList	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozo-1a39-3xf5nc	2019-08-23 09:57:24.671346	bblier	ACME	GIC	auth/userAccount/readUserlist	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozo-208f-9pdnr4	2019-08-23 09:57:24.833559	bblier	ACME	GIC	organization/organization/readTree	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozr-0d27-ywesre	2019-08-23 09:57:27.336713	bblier	ACME	GIC	organization/organization/read_orgId_	{"orgId":"RH"}	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozu-1d33-tnna32	2019-08-23 09:57:30.74752	bblier	ACME	GIC	organization/organization/deleteArchivalprofileaccess	\N	{"orgId":"RH","archivalProfileReference":"NOTSER"}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoozx-03da-ws32k8	2019-08-23 09:57:33.098621	bblier	ACME	GIC	organization/organization/createArchivalprofileaccess	\N	[]	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop01-0ef4-qhvsc8	2019-08-23 09:57:37.382837	bblier	ACME	GIC	auth/role/readIndex	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop05-1f16-i77i3s	2019-08-23 09:57:41.795858	bblier	ACME	GIC	auth/role/read_roleId_	{"roleId":"CORRESPONDANT_ARCHIVES"}	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop05-1f6d-p14uf9	2019-08-23 09:57:41.804566	bblier	ACME	GIC	auth/publicUserStory/read	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop06-0211-71s23b	2019-08-23 09:57:42.05292	bblier	ACME	GIC	auth/userAccount/readUserlist	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0b-25db-xwsgn6	2019-08-23 09:57:47.969171	bblier	ACME	GIC	auth/role/update_roleId_	{"roleId":"CORRESPONDANT_ARCHIVES"}	{"role":"{\\"roleId\\":\\"CORRESPONDANT_ARCHIVES\\",\\"roleName\\":\\"Correspondant d'archives\\",\\"description\\":\\"Groupe des archivistes \\\\/ records managers \\\\/ r\\\\u00e9f\\\\u00e9rents d'archives \\\\/ administrateur fonctionnels\\",\\"enabled\\":true,\\"privileges\\":[\\"adminArchive\\\\/*\\",\\"adminFunc\\\\/AdminArchivalProfileAccess\\",\\"adminFunc\\\\/adminAuthorization\\",\\"adminFunc\\\\/adminOrgContact\\",\\"adminFunc\\\\/adminOrgUser\\",\\"adminFunc\\\\/adminOrganization\\",\\"adminFunc\\\\/adminServiceaccount\\",\\"adminFunc\\\\/adminUseraccount\\",\\"archiveDeposit\\\\/*\\",\\"archiveManagement\\\\/*\\",\\"destruction\\\\/*\\",\\"journal\\\\/lifeCycleJournal\\",\\"journal\\\\/searchLogArchive\\"],\\"roleMembers\\":[\\"bblier\\",\\"ccharles\\",\\"ddenis\\"]}"}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0c-045b-mpf1ib	2019-08-23 09:57:48.111544	bblier	ACME	GIC	auth/role/readIndex	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0e-0231-s0tljr	2019-08-23 09:57:50.561039	bblier	ACME	GIC	auth/role/readIndex	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0h-2351-f0vqir	2019-08-23 09:57:53.904158	bblier	ACME	GIC	auth/serviceAccount/readSearch	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0j-119a-xasojb	2019-08-23 09:57:55.450639	bblier	ACME	GIC	auth/serviceAccount/readNewservice	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0j-1b47-uwwh4c	2019-08-23 09:57:55.698277	bblier	ACME	GIC	organization/organization/readTodisplay	\N	{"ownerOrg":false,"orgUnit":true}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0j-1f70-u560i3	2019-08-23 09:57:55.804808	bblier	ACME	GIC	organization/organization/readTodisplay	\N	{"ownerOrg":true,"orgUnit":false}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0t-268a-8o834k	2019-08-23 09:58:05.986632	bblier	ACME	GIC	auth/serviceAccount/create	\N	[]	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0u-06bc-jhc43j	2019-08-23 09:58:06.172448	bblier	ACME	GIC	auth/serviceAccount/readSearch	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0v-1890-jsl5ed	2019-08-23 09:58:07.628796	bblier	ACME	GIC	auth/serviceAccount/readNewservice	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop0v-22c5-964gxw	2019-08-23 09:58:07.890094	bblier	ACME	GIC	organization/organization/readTodisplay	\N	{"ownerOrg":true,"orgUnit":false}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop1b-0d1d-if19pn	2019-08-23 09:58:23.335704	bblier	ACME	GIC	auth/serviceAccount/create	\N	{"orgId":"RH"}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwop1b-13f3-w9yjxw	2019-08-23 09:58:23.510727	bblier	ACME	GIC	auth/serviceAccount/readSearch	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwopg2-1a8b-wemnr3	2019-08-23 10:07:14.679478	bblier	ACME	GIC	auth/serviceAccount/read_serviceAccountId_	{"serviceAccountId":"maarchRM_pwop0t-2658-1s2whn"}	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwopg2-2691-esfsux	2019-08-23 10:07:14.987315	bblier	ACME	GIC	organization/organization/readTodisplay	\N	{"ownerOrg":false,"orgUnit":true}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwopg3-0445-jsq7co	2019-08-23 10:07:15.10933	bblier	ACME	GIC	organization/organization/readTodisplay	\N	{"ownerOrg":true,"orgUnit":false}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwopg7-0332-yvlpjr	2019-08-23 10:07:19.818012	bblier	ACME	GIC	auth/serviceAccount/updateServicetoken_serviceAccountId_	{"serviceAccountId":"maarchRM_pwop0t-2658-1s2whn"}	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwopgv-0689-sbaq64	2019-08-23 10:07:43.167316	bblier	ACME	GIC	auth/serviceAccount/update	\N	[]	Object of class organization/organization identified by  was not found	f	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwousp-0c15-16466w	2019-08-23 12:02:49.309286	bblier	\N	\N	auth/authentication/createUserlogin	\N	{"userName":"bblier"}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwousu-0486-7tk1w9	2019-08-23 12:02:54.115788	bblier	ACME	GIC	auth/serviceAccount/readSearch	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwousx-0c60-aqe6yy	2019-08-23 12:02:57.316835	bblier	ACME	GIC	auth/serviceAccount/read_serviceAccountId_	{"serviceAccountId":"maarchRM_pwop1b-0ced-pmp8jy"}	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwousx-1773-uv6jn8	2019-08-23 12:02:57.600293	bblier	ACME	GIC	organization/organization/readTodisplay	\N	{"ownerOrg":true,"orgUnit":false}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwout3-17be-xy4zxy	2019-08-23 12:03:03.607796	bblier	ACME	GIC	auth/serviceAccount/updateServicetoken_serviceAccountId_	{"serviceAccountId":"maarchRM_pwop1b-0ced-pmp8jy"}	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoutb-09a4-6qaczy	2019-08-23 12:03:11.246791	bblier	ACME	GIC	auth/serviceAccount/update	\N	{"orgId":"RH"}	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-maarchRM_pwoutb-102d-8277o1	2019-08-23 12:03:11.414084	bblier	ACME	GIC	auth/serviceAccount/readSearch	\N	\N	\N	t	{"remoteIp":"127.0.0.1"}	maarchRM
-\.
+INSERT INTO audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") VALUES ('maarchRM_q2cezf-1a9b-azwrml', '2019-12-11 10:11:39.681147', 'maarchRM_pwop1b-0ced-pmp8jy', NULL, NULL, 'digitalSafe/digitalSafe/create_originatorOwnerOrgRegNumber__originatorOrgRegNumber_', '{"originatorOwnerOrgRegNumber":"ACME","originatorOrgRegNumber":"RH"}', NULL, 'Object of class auth/account identified by maarchRM_pwop1b-0ced-pmp8jy was not found', false, '{"remoteIp":"127.0.0.1"}', 'maarchRM');
+INSERT INTO audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") VALUES ('maarchRM_q2cezf-1bd4-tf69fo', '2019-12-11 10:11:39.712418', 'maarchRM_pwop1b-0ced-pmp8jy', NULL, NULL, 'digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_', '{"originatorOwnerOrgRegNumber":"ACME","originatorOrgRegNumber":"RH","archiveId":"Metadata"}', NULL, 'Object of class auth/account identified by maarchRM_pwop1b-0ced-pmp8jy was not found', false, '{"remoteIp":"127.0.0.1"}', 'maarchRM');
+INSERT INTO audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") VALUES ('maarchRM_q2cezf-1ebf-l4v59c', '2019-12-11 10:11:39.787195', 'maarchRM_pwop1b-0ced-pmp8jy', NULL, NULL, 'digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber__archiveId_', '{"originatorOwnerOrgRegNumber":"ACME","originatorOrgRegNumber":"RH","archiveId":"Integritycheck"}', NULL, 'Object of class auth/account identified by maarchRM_pwop1b-0ced-pmp8jy was not found', false, '{"remoteIp":"127.0.0.1"}', 'maarchRM');
+INSERT INTO audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") VALUES ('maarchRM_q2cezf-1ff9-ecimy9', '2019-12-11 10:11:39.818575', 'maarchRM_pwop1b-0ced-pmp8jy', NULL, NULL, 'digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_Count', '{"originatorOwnerOrgRegNumber":"ACME","originatorOrgRegNumber":"RH"}', NULL, 'Object of class auth/account identified by maarchRM_pwop1b-0ced-pmp8jy was not found', false, '{"remoteIp":"127.0.0.1"}', 'maarchRM');
+INSERT INTO audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") VALUES ('maarchRM_q2cezf-213a-bhtwgz', '2019-12-11 10:11:39.850639', 'maarchRM_pwop1b-0ced-pmp8jy', NULL, NULL, 'digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber__originatorOrgRegNumber_', '{"originatorOwnerOrgRegNumber":"ACME","originatorOrgRegNumber":"RH"}', NULL, 'Object of class auth/account identified by maarchRM_pwop1b-0ced-pmp8jy was not found', false, '{"remoteIp":"127.0.0.1"}', 'maarchRM');
+INSERT INTO audit.event ("eventId", "eventDate", "accountId", "orgRegNumber", "orgUnitRegNumber", path, variables, input, output, status, info, "instanceName") VALUES ('maarchRM_q2cezf-232a-xcgetl', '2019-12-11 10:11:39.900222', 'maarchRM_pwop1b-0ced-pmp8jy', NULL, NULL, 'digitalSafe/digitalSafe/read_originatorOwnerOrgRegNumber_events', '{"originatorOwnerOrgRegNumber":"ACME"}', NULL, 'Object of class auth/account identified by maarchRM_pwop1b-0ced-pmp8jy was not found', false, '{"remoteIp":"127.0.0.1"}', 'maarchRM');
 
 
 --
--- TOC entry 2602 (class 0 OID 536327)
--- Dependencies: 193
+-- TOC entry 2601 (class 0 OID 602506)
+-- Dependencies: 192
 -- Data for Name: account; Type: TABLE DATA; Schema: auth; Owner: maarch
 --
 
-COPY auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") FROM stdin;
-ccordy	ccordy	Chloé CORDY	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Chloé	CORDY	Mme.	\N	\N	\N	\N	\N	f
-ccox	ccox	Courtney COX	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Courtney	COX	Mme.	\N	\N	\N	\N	\N	f
-ddur	ddur	Dominique DUR	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Dominique	DUR	M.	\N	\N	\N	\N	\N	f
-eerina	eerina	Edith ERINA	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Edith	ERINA	Mme.	\N	\N	\N	\N	\N	f
-jjane	jjane	Jenny JANE	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Jenny	JANE	Mme.	\N	\N	\N	\N	\N	f
-kkaar	kkaar	Katy KAAR	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Katy	KAAR	Mme.	\N	\N	\N	\N	\N	f
-aastier	aastier	Alexandre ASTIER	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 10:19:10.46925	127.0.0.1	\N	Alexandre	ASTIER	M.	\N	\N	\N	\N	\N	f
-aackermann	aackermann	Amanda ACKERMANN	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Amanda	ACKERMANN	Mme.	\N	\N	\N	\N	\N	f
-aadams	aadams	Amy ADAMS	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 10:20:33.964708	127.0.0.1	\N	Amy	ADAMS	Mme.	\N	\N	\N	\N	\N	f
-cchaplin	cchaplin	Charlie CHAPLIN	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Charlie	CHAPLIN	M.	\N	\N	\N	\N	\N	f
-ppetit	ppetit	Patricia PETIT	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Patricia	PETIT	Mme.	\N	\N	\N	\N	\N	f
-ppreboist	ppreboist	Paul PREBOIST	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Paul	PREBOIST	M.	\N	\N	\N	\N	\N	f
-ppruvost	ppruvost	Pierre PRUVOST	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Pierre	PRUVOST	M.	\N	\N	\N	\N	\N	f
-rrenaud	rrenaud	Robert RENAUD	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Robert	RENAUD	M.	\N	\N	\N	\N	\N	f
-rreynolds	rreynolds	Ryan REYNOLDS	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Ryan	REYNOLDS	M.	\N	\N	\N	\N	\N	f
-ssaporta	ssaporta	Sabrina SAPORTA	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Sabrina	SAPORTA	Mme.	\N	\N	\N	\N	\N	f
-ssissoko	ssissoko	Sylvain SISSOKO	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Sylvain	SISSOKO	M.	\N	\N	\N	\N	\N	f
-sstallone	sstallone	Sylvester STALLONE	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Sylvester	STALLONE	M.	\N	\N	\N	\N	\N	f
-sstar	sstar	Suzanne STAR	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Suzanne	STAR	Mme.	\N	\N	\N	\N	\N	f
-ttong	ttong	Tony TONG	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Tony	TONG	M.	\N	\N	\N	\N	\N	f
-ccharles	ccharles	Charlotte CHARLES	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Charlotte	CHARLES	Mme.	\N	\N	\N	\N	\N	f
-nnataly	nnataly	Nancy NATALY	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 11:07:45.462923	127.0.0.1	\N	Nancy	NATALY	Mme.	\N	\N	\N	\N	\N	f
-sstone	sstone	Sharon STONE	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 08:30:27.732025	127.0.0.1	\N	Sharon	STONE	Mme.	\N	\N	\N	\N	\N	f
-superadmin	superadmin	super admin	user	info@maarch.org	t	186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae	f	\N	f	\N	0	2019-03-15 07:43:51.395555	127.0.0.1	\N	Admin	Super	M.	\N	\N	\N	\N	\N	t
-ttule	ttule	Thierry TULE	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Thierry	TULE	M.	\N	\N	\N	\N	\N	f
-vvictoire	vvictoire	Victor VICTOIRE	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Victor	VICTOIRE	M.	\N	\N	\N	\N	\N	f
-SystemDepositor	Systeme versant	Systeme versant	service		t	RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9ORUXZpbMim/ilUMpE9FzYG3TW0Eii0Oy1PaFyJ35aBqcMU3gvAq4v0ZY0Z/r0cPVzbAaymd1UEnsAe3MjqGLt7BxvxiHJQ==	t	\N	f	\N	0	\N	\N	\N	\N	\N	\N	87eda47a7218326af0e3f4eaad7c2c22	2019-03-19 07:56:55.287696	\N	\N	\N	f
-System	Systeme	Systeme	service		t	RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9OXNeNIrej2+v3UMzAsF3PSzDUlZ73kPvgqbQmZvza0eZO062uQu57Rdah9z3mdbTh6NBiiR8FQTnW6eVgQ==	t	\N	f	\N	0	\N	\N	\N	\N	\N	\N	63ce15235abe97db0182e6857c1da763	2019-03-19 07:54:33.464846	\N	\N	\N	f
-ggrand	ggrand	George GRAND	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 07:57:01.613677	127.0.0.1	\N	George	GRAND	M.	\N	\N	\N	\N	\N	f
-bbain	bbain	Barbara BAIN	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Barbara	BAIN	Mme.	\N	\N	\N	\N	\N	f
-workflow_pod5l0-232e-0aggqt	bbardot	Brigitte BARDOT	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	t	2019-03-14 15:55:48.901327	f	\N	0	\N	\N	\N	Brigitte	BARDOT	Mme	\N	\N	\N	\N	\N	f
-bboule	bboule	Bruno BOULE	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Bruno	BOULE	M.	\N	\N	\N	\N	\N	f
-ccamus	ccamus	Cyril CAMUS	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Cyril	CAMUS	M.	\N	\N	\N	\N	\N	f
-ddaull	ddaull	Denis DAULL	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Denis	DAULL	M.	\N	\N	\N	\N	\N	f
-ddenis	ddenis	Didier DENIS	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Didier	DENIS	M.	\N	\N	\N	\N	\N	f
-aalambic	aalambic	Alain ALAMBIC	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 13:32:20.964652	127.0.0.1	\N	Alain	ALAMBIC	M.	\N	\N	\N	\N	\N	f
-hhier	hhier	Hubert HIER	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Hubert	HIER	M.	\N	\N	\N	\N	\N	f
-jjonasz	jjonasz	Jean JONASZ	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Jean	JONASZ	M.	\N	\N	\N	\N	\N	f
-mmanfred	mmanfred	Martin MANFRED	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Martin	MANFRED	M.	\N	\N	\N	\N	\N	f
-ppacioli	ppacioli	Paolo PACIOLI	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	\N	\N	\N	Paolo	PACIOLI	M.	\N	\N	\N	\N	\N	f
-kkrach	kkrach	Kevin KRACH	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-03-15 08:30:03.559857	127.0.0.1	\N	Kevin	KRACH	M.	\N	\N	\N	\N	\N	f
-maarchRM_pwop0t-2658-1s2whn	CCFN	CCFN	service		t	RJpzB36bmR+iuz/aHN9Zl9PDn8tZEvA+3Mr7PAM/SYnIjGu9k0w3B5cqISiCUxRy0gT6l7HTxd7pYwDJM0y1vwy76EMP0cu5gcWFmeBLwHMwGF7qTa3Dnvib7f1isQDSIL6Kr82aL4pKFuAjmQ==	f	\N	f	\N	0	\N	\N	\N	\N	\N	\N	f074e6fdcce53413f3c868d5c40fb8d3	2019-08-23 10:07:19.813807	\N	\N	ACME	t
-maarchRM_pwop1b-0ced-pmp8jy	CCFN USER	CCFN USER	service		t	RJpzB36bmR+iuz/aHN9Zl9PDn8tZEvA+3Mr7PAM/SYnIjGu8hUw1Usd2IWmcEVtwxQT6l7HTxd7pYwCfYR3jvArkv0QKgcy51MKAzuodnnA6GlnsQaqXnfbI7f1isQDSIL6Kr82aL4pKFuAjmQ==	f	\N	f	\N	0	\N	\N	\N	\N	\N	\N	0bfbf093df523a66195f52f2e872a673	2019-08-23 12:03:03.603355	\N	\N	ACME	f
-bblier	bblier	Bernard BLIER	user	info@maarch.org	t	fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d	f	\N	f	\N	0	2019-08-23 12:02:49.300653	127.0.0.1	\N	Bernard	BLIER	M.	\N	\N	{"csrf": {"2019-08-23T12:03:11,207066Z": "cbe2f4d3cef4d0768b73aba7381958a442dbaf2efaefc8447de605d1dfe05522"}}	\N	\N	f
-\.
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('aackermann', 'aackermann', 'Amanda ACKERMANN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Amanda', 'ACKERMANN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('aadams', 'aadams', 'Amy ADAMS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:20:33.964708', '127.0.0.1', NULL, 'Amy', 'ADAMS', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('aalambic', 'aalambic', 'Alain ALAMBIC', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-23 14:00:29.059065', '127.0.0.1', NULL, 'Alain', 'ALAMBIC', 'M.', NULL, NULL, '{"csrf": {"2019-09-23T14:05:44,406456Z": "a45c4a7784bd8ed0d7c25f74ce3029e24693f112e03fd606f38f508a61f9554b"}}', NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('aastier', 'aastier', 'Alexandre ASTIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:19:10.46925', '127.0.0.1', NULL, 'Alexandre', 'ASTIER', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('bbain', 'bbain', 'Barbara BAIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Barbara', 'BAIN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('bbardot', 'bbardot', 'Brigitte BARDOT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', true, '2019-03-14 15:55:48.901327', false, NULL, 0, NULL, NULL, NULL, 'Brigitte', 'BARDOT', 'Mme', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('bblier', 'bblier', 'Bernard BLIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-25 15:16:30.662578', '127.0.0.1', NULL, 'Bernard', 'BLIER', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T15:17:12,323803Z": "ce9030d24aceabfb1f1ba14895f7231822efdd979281ccf699b71c23a9ace679"}}', NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('bboule', 'bboule', 'Bruno BOULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Bruno', 'BOULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ccamus', 'ccamus', 'Cyril CAMUS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Cyril', 'CAMUS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('cchaplin', 'cchaplin', 'Charlie CHAPLIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlie', 'CHAPLIN', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ccharles', 'ccharles', 'Charlotte CHARLES', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlotte', 'CHARLES', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ccordy', 'ccordy', 'Chloé CORDY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-18 16:09:53.920859', '127.0.0.1', NULL, 'Chloé', 'CORDY', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ccox', 'ccox', 'Courtney COX', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Courtney', 'COX', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ddaull', 'ddaull', 'Denis DAULL', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Denis', 'DAULL', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ddenis', 'ddenis', 'Didier DENIS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Didier', 'DENIS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ddur', 'ddur', 'Dominique DUR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Dominique', 'DUR', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('eerina', 'eerina', 'Edith ERINA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Edith', 'ERINA', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ggrand', 'ggrand', 'George GRAND', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-25 12:07:44.170506', '127.0.0.1', NULL, 'George', 'GRAND', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T12:07:45,573625Z": "ba8478523dd582f81bd42c3052b7f5ce32db1245e3b2b9cf2b0226dd4baa428c"}}', NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('hhier', 'hhier', 'Hubert HIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Hubert', 'HIER', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('jjane', 'jjane', 'Jenny JANE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jenny', 'JANE', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('jjonasz', 'jjonasz', 'Jean JONASZ', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jean', 'JONASZ', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('kkaar', 'kkaar', 'Katy KAAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Katy', 'KAAR', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('kkrach', 'kkrach', 'Kevin KRACH', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:03.559857', '127.0.0.1', NULL, 'Kevin', 'KRACH', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('mmanfred', 'mmanfred', 'Martin MANFRED', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Martin', 'MANFRED', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('nnataly', 'nnataly', 'Nancy NATALY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 11:07:45.462923', '127.0.0.1', NULL, 'Nancy', 'NATALY', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', true);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ppacioli', 'ppacioli', 'Paolo PACIOLI', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paolo', 'PACIOLI', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ppetit', 'ppetit', 'Patricia PETIT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Patricia', 'PETIT', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ppreboist', 'ppreboist', 'Paul PREBOIST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paul', 'PREBOIST', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ppruvost', 'ppruvost', 'Pierre PRUVOST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Pierre', 'PRUVOST', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('rrenaud', 'rrenaud', 'Robert RENAUD', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Robert', 'RENAUD', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('rreynolds', 'rreynolds', 'Ryan REYNOLDS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Ryan', 'REYNOLDS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ssaporta', 'ssaporta', 'Sabrina SAPORTA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sabrina', 'SAPORTA', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ssissoko', 'ssissoko', 'Sylvain SISSOKO', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvain', 'SISSOKO', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('sstallone', 'sstallone', 'Sylvester STALLONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvester', 'STALLONE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('sstar', 'sstar', 'Suzanne STAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Suzanne', 'STAR', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('superadmin', 'superadmin', 'super admin', 'user', 'info@maarch.org', true, '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, NULL, false, NULL, 0, '2019-09-25 15:17:16.573215', '127.0.0.1', NULL, 'SUPERAdmin', 'Super', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T15:17:21,027830Z": "68989a4ec19ac24a18ae116f229da4760f10b74f038237c79ffcdc35be259012"}}', NULL, NULL, true);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('System', 'Systeme', 'Systeme', 'service', '', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9OXNeNIrej2+v3UMzAsF3PSzDUlZ73kPvgqbQmZvza0eZO062uQu57Rdah9z3mdbTh6NBiiR8FQTnW6eVgQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '63ce15235abe97db0182e6857c1da763', '2019-03-19 07:54:33.464846', NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('SystemDepositor', 'Systeme versant', 'Systeme versant', 'service', '', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9ORUXZpbMim/ilUMpE9FzYG3TW0Eii0Oy1PaFyJ35aBqcMU3gvAq4v0ZY0Z/r0cPVzbAaymd1UEnsAe3MjqGLt7BxvxiHJQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '87eda47a7218326af0e3f4eaad7c2c22', '2019-03-19 07:56:55.287696', NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ttong', 'ttong', 'Tony TONG', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Tony', 'TONG', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('sstone', 'sstone', 'Sharon STONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:27.732025', '127.0.0.1', NULL, 'Sharon', 'STONE', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('ttule', 'ttule', 'Thierry TULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Thierry', 'TULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO auth.account ("accountId", "accountName", "displayName", "accountType", "emailAddress", enabled, password, "passwordChangeRequired", "passwordLastChange", locked, "lockDate", "badPasswordCount", "lastLogin", "lastIp", "replacingUserAccountId", "firstName", "lastName", title, salt, "tokenDate", authentication, preferences, "ownerOrgId", "isAdmin") VALUES ('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
 
 
 --
--- TOC entry 2604 (class 0 OID 536359)
--- Dependencies: 195
+-- TOC entry 2603 (class 0 OID 602538)
+-- Dependencies: 194
 -- Data for Name: privilege; Type: TABLE DATA; Schema: auth; Owner: maarch
 --
 
-COPY auth.privilege ("roleId", "userStory") FROM stdin;
-workflow_pod3au-0037-nz1f8t	workflow/*
-workflow_pod3au-0037-nz1f8t	archiveDeposit/*
-workflow_pod3au-0037-nz1f8t	archiveManagement/checkIntegrity
-workflow_pod3au-0037-nz1f8t	archiveManagement/filePlan
-workflow_pod3au-0037-nz1f8t	archiveManagement/modifyDescription
-workflow_pod3au-0037-nz1f8t	archiveManagement/modify
-workflow_pod3au-0037-nz1f8t	archiveManagement/retrieve
-workflow_pod3au-0037-nz1f8t	destruction/*
-workflow_pod3c1-1bc0-zh5adq	workflow/*
-workflow_pod3c1-1bc0-zh5adq	archiveDeposit/*
-workflow_pod3c1-1bc0-zh5adq	archiveManagement/filePlan
-workflow_pod3c1-1bc0-zh5adq	archiveManagement/modify
-ADMIN	adminFunc/adminAuthorization
-ADMIN	adminFunc/adminOrgUser
-ADMIN	adminFunc/adminOrganization
-ADMIN	adminFunc/adminServiceaccount
-ADMIN	adminFunc/adminUseraccount
-ADMIN	adminFunc/batchScheduling
-ADMIN	adminTech/*
-ADMIN	journal/audit
-CORRESPONDANT_ARCHIVES	adminArchive/*
-CORRESPONDANT_ARCHIVES	adminFunc/AdminArchivalProfileAccess
-CORRESPONDANT_ARCHIVES	adminFunc/adminAuthorization
-CORRESPONDANT_ARCHIVES	adminFunc/adminOrgContact
-CORRESPONDANT_ARCHIVES	adminFunc/adminOrgUser
-CORRESPONDANT_ARCHIVES	adminFunc/adminOrganization
-CORRESPONDANT_ARCHIVES	adminFunc/adminServiceaccount
-CORRESPONDANT_ARCHIVES	adminFunc/adminUseraccount
-CORRESPONDANT_ARCHIVES	archiveDeposit/*
-CORRESPONDANT_ARCHIVES	archiveManagement/*
-CORRESPONDANT_ARCHIVES	destruction/*
-CORRESPONDANT_ARCHIVES	journal/lifeCycleJournal
-CORRESPONDANT_ARCHIVES	journal/searchLogArchive
-\.
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminAuthorization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrganization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgContact');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgUser');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminServiceaccount');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminUseraccount');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/batchScheduling');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_GENERAL', 'adminFunc/adminOrganization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_GENERAL', 'adminFunc/adminAuthorization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_GENERAL', 'adminFunc/adminUseraccount');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_GENERAL', 'adminTech/*');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('ADMIN_GENERAL', 'journal/audit');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/adminAccessRule');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/adminRetentionRule');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/archivalProfile');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/descriptionField');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/AdminArchivalProfileAccess');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgContact');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'adminTech/adminFormat');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveDeposit/deposit');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/addResource');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/checkIntegrity');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/filePlan');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/migration');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modifyDescription');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modify');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/retrieve');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'destruction/destructionRequest');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/certificate');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('PRODUCTEUR', 'archiveDeposit/deposit');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('PRODUCTEUR', 'archiveManagement/filePlan');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('PRODUCTEUR', 'archiveManagement/modifyDescription');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'archiveDeposit/deposit');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/checkIntegrity');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/filePlan');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modifyDescription');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modify');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/retrieve');
+INSERT INTO auth.privilege ("roleId", "userStory") VALUES ('RESPONSABLE_ACTIVITE', 'destruction/destructionRequest');
 
 
 --
--- TOC entry 2601 (class 0 OID 536318)
--- Dependencies: 192
+-- TOC entry 2600 (class 0 OID 602497)
+-- Dependencies: 191
 -- Data for Name: role; Type: TABLE DATA; Schema: auth; Owner: maarch
 --
 
-COPY auth.role ("roleId", "roleName", description, enabled) FROM stdin;
-ADMIN	Administrateur technique	Groupe des administrateurs techniques du système	t
-UTILISATEUR	Utilisateur	Groupe des utilisateurs, consultation et navigation	t
-workflow_pod3au-0037-nz1f8t	Responsable d'activité	Groupe des responsables de service et des activités	t
-workflow_pod3c1-1bc0-zh5adq	Producteur	Groupe des producteurs, versants	t
-CORRESPONDANT_ARCHIVES	Correspondant d'archives	Groupe des archivistes / records managers / référents d'archives / administrateur fonctionnels	t
-\.
+INSERT INTO auth.role ("roleId", "roleName", description, "securityLevel", enabled) VALUES ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', 'func_admin', true);
+INSERT INTO auth.role ("roleId", "roleName", description, "securityLevel", enabled) VALUES ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', 'gen_admin', true);
+INSERT INTO auth.role ("roleId", "roleName", description, "securityLevel", enabled) VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', 'user', true);
+INSERT INTO auth.role ("roleId", "roleName", description, "securityLevel", enabled) VALUES ('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', 'user', true);
+INSERT INTO auth.role ("roleId", "roleName", description, "securityLevel", enabled) VALUES ('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', 'user', true);
+INSERT INTO auth.role ("roleId", "roleName", description, "securityLevel", enabled) VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', 'user', true);
 
 
 --
--- TOC entry 2603 (class 0 OID 536341)
--- Dependencies: 194
+-- TOC entry 2602 (class 0 OID 602520)
+-- Dependencies: 193
 -- Data for Name: roleMember; Type: TABLE DATA; Schema: auth; Owner: maarch
 --
 
-COPY auth."roleMember" ("roleId", "userAccountId") FROM stdin;
-workflow_pod3c1-1bc0-zh5adq	aalambic
-workflow_pod3c1-1bc0-zh5adq	bbain
-workflow_pod3c1-1bc0-zh5adq	ccamus
-workflow_pod3c1-1bc0-zh5adq	ddaull
-workflow_pod3c1-1bc0-zh5adq	ddur
-workflow_pod3c1-1bc0-zh5adq	ggrand
-workflow_pod3c1-1bc0-zh5adq	hhier
-workflow_pod3c1-1bc0-zh5adq	jjane
-workflow_pod3c1-1bc0-zh5adq	jjonasz
-workflow_pod3c1-1bc0-zh5adq	kkaar
-workflow_pod3c1-1bc0-zh5adq	kkrach
-workflow_pod3c1-1bc0-zh5adq	mmanfred
-workflow_pod3c1-1bc0-zh5adq	ppacioli
-workflow_pod3c1-1bc0-zh5adq	ppetit
-workflow_pod3c1-1bc0-zh5adq	ppreboist
-workflow_pod3c1-1bc0-zh5adq	rrenaud
-workflow_pod3c1-1bc0-zh5adq	rreynolds
-workflow_pod3c1-1bc0-zh5adq	ssaporta
-workflow_pod3c1-1bc0-zh5adq	ssissoko
-workflow_pod3c1-1bc0-zh5adq	sstar
-workflow_pod3c1-1bc0-zh5adq	ttong
-workflow_pod3c1-1bc0-zh5adq	ttule
-workflow_pod3c1-1bc0-zh5adq	vvictoire
-workflow_pod3c1-1bc0-zh5adq	workflow_pod5l0-232e-0aggqt
-ADMIN	superadmin
-workflow_pod3au-0037-nz1f8t	aackermann
-workflow_pod3au-0037-nz1f8t	aadams
-workflow_pod3au-0037-nz1f8t	aastier
-UTILISATEUR	bboule
-UTILISATEUR	cchaplin
-UTILISATEUR	ccordy
-workflow_pod3au-0037-nz1f8t	ccox
-workflow_pod3au-0037-nz1f8t	eerina
-workflow_pod3au-0037-nz1f8t	nnataly
-UTILISATEUR	ppruvost
-UTILISATEUR	sstallone
-workflow_pod3au-0037-nz1f8t	sstone
-CORRESPONDANT_ARCHIVES	bblier
-CORRESPONDANT_ARCHIVES	ccharles
-CORRESPONDANT_ARCHIVES	ddenis
-\.
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('ADMIN_FONCTIONNEL', 'nnataly');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('ADMIN_GENERAL', 'superadmin');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'bblier');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'ccharles');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('CORRESPONDANT_ARCHIVES', 'ddenis');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'aalambic');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'bbain');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'bbardot');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ccamus');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ccordy');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ddaull');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ddur');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ggrand');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'hhier');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'jjane');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'jjonasz');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'kkaar');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'kkrach');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'mmanfred');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ppacioli');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ppetit');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ppreboist');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'rrenaud');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'rreynolds');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ssaporta');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ssissoko');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'sstar');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ttong');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'ttule');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('PRODUCTEUR', 'vvictoire');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'aackermann');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'aadams');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'aastier');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'ccox');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'eerina');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'nnataly');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('RESPONSABLE_ACTIVITE', 'sstone');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'bboule');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'cchaplin');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'ccordy');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'ppruvost');
+INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR', 'sstallone');
 
 
 --
--- TOC entry 2605 (class 0 OID 536372)
--- Dependencies: 196
+-- TOC entry 2604 (class 0 OID 602551)
+-- Dependencies: 195
 -- Data for Name: servicePrivilege; Type: TABLE DATA; Schema: auth; Owner: maarch
 --
 
-COPY auth."servicePrivilege" ("accountId", "serviceURI") FROM stdin;
-SystemDepositor	recordsManagement/archive/createArchiveBatch
-SystemDepositor	recordsManagement/archive/create
-System	audit/event/createChainjournal
-System	batchProcessing/scheduling/updateProcess
-System	lifeCycle/journal/createChainjournal
-System	recordsmanagement/archivecompliance/readperiodic
-System	recordsManagement/archives/deleteDisposablearchives
-System	recordsManagement/archives/updateArchivesretentionrule
-System	recordsManagement/archives/updateIndexfulltext
-maarchRM_pwop0t-2658-1s2whn	*
-maarchRM_pwop1b-0ced-pmp8jy	*
-\.
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'audit/event/createChainjournal');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'batchProcessing/scheduling/updateProcess');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'lifeCycle/journal/createChainjournal');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsmanagement/archivecompliance/readperiodic');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/deleteDisposablearchives');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateArchivesretentionrule');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateIndexfulltext');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('SystemDepositor', '*');
 
 
 --
--- TOC entry 2607 (class 0 OID 536394)
--- Dependencies: 198
+-- TOC entry 2606 (class 0 OID 602573)
+-- Dependencies: 197
 -- Data for Name: logScheduling; Type: TABLE DATA; Schema: batchProcessing; Owner: maarch
 --
 
-COPY "batchProcessing"."logScheduling" ("logId", "schedulingId", "executedBy", "launchedBy", "logDate", status, info) FROM stdin;
-\.
+INSERT INTO "batchProcessing"."logScheduling" ("logId", "schedulingId", "executedBy", "launchedBy", "logDate", status, info) VALUES ('maarchRM_5k7cwmpb4-0000-7v4gda', 'chainJournalAudit', 'System', 'superadmin', '2019-09-19 09:24:29.660848', true, '[{"message":"Timestamp file generated","fullMessage":"Timestamp file generated"},{"message":"New journal identifier : %s","variables":"maarchRM_py2ngt-16cc-ylua9s","fullMessage":"New journal identifier : maarchRM_py2ngt-16cc-ylua9s"}]');
 
 
 --
--- TOC entry 2608 (class 0 OID 536403)
--- Dependencies: 199
+-- TOC entry 2607 (class 0 OID 602582)
+-- Dependencies: 198
 -- Data for Name: notification; Type: TABLE DATA; Schema: batchProcessing; Owner: maarch
 --
 
-COPY "batchProcessing".notification ("notificationId", receivers, message, title, "createdDate", "createdBy", status, "sendDate", "sendBy") FROM stdin;
-\.
 
 
 --
--- TOC entry 2606 (class 0 OID 536386)
--- Dependencies: 197
+-- TOC entry 2605 (class 0 OID 602565)
+-- Dependencies: 196
 -- Data for Name: scheduling; Type: TABLE DATA; Schema: batchProcessing; Owner: maarch
 --
 
-COPY "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) FROM stdin;
-chainJournalAudit	Chaînage audit	01	00;20;;;;;;;	\N	System	2019-03-14 17:16:46.83441	2019-03-15 19:00:00	scheduled
-chainJournalLifeCycle	Chaînage du journal du cycle de vie	02	00;20;;;;;;;	\N	System	2019-03-14 17:17:08.959422	2019-03-15 19:00:00	scheduled
-deleteArchive	Destruction	04	00;19;;;;;;;	\N	System	2019-03-14 17:17:10.155329	2019-03-15 18:00:00	scheduled
-integrity	Intégrité	03	00;01;;;;4;H;00;20	\N	System	2019-03-14 17:17:41.825506	2019-03-14 21:17:41.825513	scheduled
-processDelivery	Traiter les communications	04	00;03;;;;;;;	\N	System	\N	\N	paused
-processdestruction	Traiter les destructions	05	00;04;;;;;;;	\N	System	\N	\N	paused
-processRestitution	Traiter les restitutions	06	00;05;;;;;;;	\N	System	\N	\N	paused
-processTransfer	Traiter les transferts	07	00;06;;;;;;;	\N	System	\N	\N	paused
-validateTransfer	Valider les transfert	08	00;07;;;;;;;	\N	System	\N	\N	paused
-purge	Purge	09	00;08;;;;;;;	\N	System	\N	\N	paused
-\.
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('chainJournalAudit', 'Chaînage audit', '01', '00;20;;;;;;;', NULL, 'System', '2019-09-19 09:24:29.658821', '2019-09-20 18:00:00', 'scheduled');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('processdestruction', 'Traiter les destructions', '04', '00;04;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
+INSERT INTO "batchProcessing".scheduling ("schedulingId", name, "taskId", frequency, parameters, "executedBy", "lastExecution", "nextExecution", status) VALUES ('purge', 'Purge', '05', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
 
 
 --
--- TOC entry 2610 (class 0 OID 536422)
--- Dependencies: 201
+-- TOC entry 2609 (class 0 OID 602601)
+-- Dependencies: 200
 -- Data for Name: address; Type: TABLE DATA; Schema: contact; Owner: maarch
 --
 
-COPY contact.address ("addressId", "contactId", purpose, room, floor, building, number, street, "postBox", block, "citySubDivision", "postCode", city, country) FROM stdin;
-\.
 
 
 --
--- TOC entry 2612 (class 0 OID 536447)
--- Dependencies: 203
+-- TOC entry 2611 (class 0 OID 602626)
+-- Dependencies: 202
 -- Data for Name: communication; Type: TABLE DATA; Schema: contact; Owner: maarch
 --
 
-COPY contact.communication ("communicationId", "contactId", purpose, "comMeanCode", value, info) FROM stdin;
-\.
 
 
 --
--- TOC entry 2611 (class 0 OID 536437)
--- Dependencies: 202
+-- TOC entry 2610 (class 0 OID 602616)
+-- Dependencies: 201
 -- Data for Name: communicationMean; Type: TABLE DATA; Schema: contact; Owner: maarch
 --
 
-COPY contact."communicationMean" (code, name, enabled) FROM stdin;
-TE	Téléphone	t
-AL	Téléphone mobile	t
-FX	Fax	t
-AO	URL	t
-AU	FTP	t
-EM	E-mail	t
-AH	World Wide Web	f
-\.
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('AH', 'World Wide Web', false);
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('AL', 'Téléphone mobile', true);
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('AO', 'URL', true);
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('AU', 'FTP', true);
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('EM', 'E-mail', true);
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('FX', 'Fax', true);
+INSERT INTO contact."communicationMean" (code, name, enabled) VALUES ('TE', 'Téléphone', true);
 
 
 --
--- TOC entry 2609 (class 0 OID 536413)
--- Dependencies: 200
+-- TOC entry 2608 (class 0 OID 602592)
+-- Dependencies: 199
 -- Data for Name: contact; Type: TABLE DATA; Schema: contact; Owner: maarch
 --
 
-COPY contact.contact ("contactId", "contactType", "orgName", "firstName", "lastName", title, function, service, "displayName") FROM stdin;
-\.
 
 
 --
--- TOC entry 2633 (class 0 OID 536741)
--- Dependencies: 224
+-- TOC entry 2632 (class 0 OID 602920)
+-- Dependencies: 223
 -- Data for Name: address; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource".address ("resId", "repositoryId", path, "lastIntegrityCheck", "integrityCheckResult", packed, created) FROM stdin;
-\.
 
 
 --
--- TOC entry 2630 (class 0 OID 536698)
--- Dependencies: 221
+-- TOC entry 2629 (class 0 OID 602877)
+-- Dependencies: 220
 -- Data for Name: cluster; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource".cluster ("clusterId", "clusterName", "clusterDescription") FROM stdin;
-archives	Digital_resource_cluster_for_archives	Digital resource cluster for archives
-\.
+INSERT INTO "digitalResource".cluster ("clusterId", "clusterName", "clusterDescription") VALUES ('archives', 'Digital_resource_cluster_for_archives', 'Digital resource cluster for archives');
 
 
 --
--- TOC entry 2634 (class 0 OID 536760)
--- Dependencies: 225
+-- TOC entry 2633 (class 0 OID 602939)
+-- Dependencies: 224
 -- Data for Name: clusterRepository; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource"."clusterRepository" ("clusterId", "repositoryId", "writePriority", "readPriority", "deletePriority") FROM stdin;
-archives	archives_1	1	1	1
-archives	archives_2	1	2	2
-\.
+INSERT INTO "digitalResource"."clusterRepository" ("clusterId", "repositoryId", "writePriority", "readPriority", "deletePriority") VALUES ('archives', 'archives_1', 1, 1, 1);
+INSERT INTO "digitalResource"."clusterRepository" ("clusterId", "repositoryId", "writePriority", "readPriority", "deletePriority") VALUES ('archives', 'archives_2', 1, 2, 2);
 
 
 --
--- TOC entry 2637 (class 0 OID 536807)
--- Dependencies: 228
+-- TOC entry 2636 (class 0 OID 602986)
+-- Dependencies: 227
 -- Data for Name: contentType; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource"."contentType" (name, mediatype, description, puids, "validationMode", "conversionMode", "textExtractionMode", "metadataExtractionMode") FROM stdin;
-\.
 
 
 --
--- TOC entry 2638 (class 0 OID 536815)
--- Dependencies: 229
+-- TOC entry 2637 (class 0 OID 602994)
+-- Dependencies: 228
 -- Data for Name: conversionRule; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource"."conversionRule" ("conversionRuleId", puid, "conversionService", "targetPuid") FROM stdin;
-workflow_pod75x-151b-v9jsef	fmt/412	dependency/fileSystem/plugins/libreOffice	fmt/95
-workflow_pod763-1691-dli2t0	fmt/291	dependency/fileSystem/plugins/libreOffice	fmt/18
-\.
+INSERT INTO "digitalResource"."conversionRule" ("conversionRuleId", puid, "conversionService", "targetPuid") VALUES ('workflow_pod75x-151b-v9jsef', 'fmt/412', 'dependency/fileSystem/plugins/libreOffice', 'fmt/95');
+INSERT INTO "digitalResource"."conversionRule" ("conversionRuleId", puid, "conversionService", "targetPuid") VALUES ('workflow_pod763-1691-dli2t0', 'fmt/291', 'dependency/fileSystem/plugins/libreOffice', 'fmt/18');
 
 
 --
--- TOC entry 2631 (class 0 OID 536706)
--- Dependencies: 222
+-- TOC entry 2630 (class 0 OID 602885)
+-- Dependencies: 221
 -- Data for Name: digitalResource; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource"."digitalResource" ("archiveId", "resId", "clusterId", size, puid, mimetype, hash, "hashAlgorithm", "fileExtension", "fileName", "mediaInfo", created, updated, "relatedResId", "relationshipType") FROM stdin;
-\.
 
 
 --
--- TOC entry 2635 (class 0 OID 536778)
--- Dependencies: 226
+-- TOC entry 2634 (class 0 OID 602957)
+-- Dependencies: 225
 -- Data for Name: package; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource".package ("packageId", method) FROM stdin;
-\.
 
 
 --
--- TOC entry 2636 (class 0 OID 536791)
--- Dependencies: 227
+-- TOC entry 2635 (class 0 OID 602970)
+-- Dependencies: 226
 -- Data for Name: packedResource; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource"."packedResource" ("packageId", "resId", name) FROM stdin;
-\.
 
 
 --
--- TOC entry 2632 (class 0 OID 536729)
--- Dependencies: 223
+-- TOC entry 2631 (class 0 OID 602908)
+-- Dependencies: 222
 -- Data for Name: repository; Type: TABLE DATA; Schema: digitalResource; Owner: maarch
 --
 
-COPY "digitalResource".repository ("repositoryId", "repositoryName", "repositoryReference", "repositoryType", "repositoryUri", parameters, "maxSize", enabled) FROM stdin;
-archives_1	Digital resource repository for archives	repository_1	fileSystem	/var/www/laabs/data/maarchRM/repository/archives_1	\N	\N	t
-archives_2	Digital resource repository for archives 2	repository_2	fileSystem	/var/www/laabs/data/maarchRM/repository/archives_2	\N	\N	t
-\.
+INSERT INTO "digitalResource".repository ("repositoryId", "repositoryName", "repositoryReference", "repositoryType", "repositoryUri", parameters, "maxSize", enabled) VALUES ('archives_1', 'Digital resource repository for archives', 'repository_1', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_1', NULL, NULL, true);
+INSERT INTO "digitalResource".repository ("repositoryId", "repositoryName", "repositoryReference", "repositoryType", "repositoryUri", parameters, "maxSize", enabled) VALUES ('archives_2', 'Digital resource repository for archives 2', 'repository_2', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_2', NULL, NULL, true);
 
 
 --
--- TOC entry 2639 (class 0 OID 536828)
--- Dependencies: 230
+-- TOC entry 2638 (class 0 OID 603007)
+-- Dependencies: 229
 -- Data for Name: folder; Type: TABLE DATA; Schema: filePlan; Owner: maarch
 --
 
-COPY "filePlan".folder ("folderId", name, "parentFolderId", description, "ownerOrgRegNumber", closed) FROM stdin;
-\.
+INSERT INTO "filePlan".folder ("folderId", name, "parentFolderId", description, "ownerOrgRegNumber", closed) VALUES ('maarchRM_5k7cwmowy-0000-sodmil', 'Journal de l''application', NULL, NULL, 'GIC', false);
+INSERT INTO "filePlan".folder ("folderId", name, "parentFolderId", description, "ownerOrgRegNumber", closed) VALUES ('maarchRM_5k7cwmoxs-0000-j6ngdd', '2019', 'maarchRM_5k7cwmowy-0000-sodmil', NULL, 'GIC', false);
+INSERT INTO "filePlan".folder ("folderId", name, "parentFolderId", description, "ownerOrgRegNumber", closed) VALUES ('maarchRM_5k7cwmoyi-0000-0y7aua', '09', 'maarchRM_5k7cwmoxs-0000-j6ngdd', NULL, 'GIC', false);
 
 
 --
--- TOC entry 2640 (class 0 OID 536843)
--- Dependencies: 231
+-- TOC entry 2639 (class 0 OID 603022)
+-- Dependencies: 230
 -- Data for Name: position; Type: TABLE DATA; Schema: filePlan; Owner: maarch
 --
 
-COPY "filePlan"."position" ("folderId", "archiveId") FROM stdin;
-\.
 
 
 --
--- TOC entry 2641 (class 0 OID 536856)
--- Dependencies: 232
+-- TOC entry 2640 (class 0 OID 603035)
+-- Dependencies: 231
 -- Data for Name: event; Type: TABLE DATA; Schema: lifeCycle; Owner: maarch
 --
 
-COPY "lifeCycle".event ("eventId", "eventType", "timestamp", "instanceName", "orgRegNumber", "orgUnitRegNumber", "accountId", "objectClass", "objectId", "operationResult", description, "eventInfo") FROM stdin;
-\.
 
 
 --
--- TOC entry 2642 (class 0 OID 536864)
--- Dependencies: 233
+-- TOC entry 2641 (class 0 OID 603043)
+-- Dependencies: 232
 -- Data for Name: eventFormat; Type: TABLE DATA; Schema: lifeCycle; Owner: maarch
 --
 
-COPY "lifeCycle"."eventFormat" (type, format, message, notification) FROM stdin;
-recordsManagement/accessRuleModification	resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber	Modification de la règle de communicabilité de l'archive %6$s	f
-recordsManagement/addRelationship	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId	Relation ajoutée avec l'archive %6$s	f
-recordsManagement/archivalProfileModification	archivalProfileReference	Modification du profil %6$s.	f
-recordsManagement/consultation	resId hash hashAlgorith address size	Consultation de la ressource %9$s	f
-recordsManagement/conversion	resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size	Conversion du document %18$s	f
-recordsManagement/deleteRelationship	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId	Relation avec l'archive %6$s supprimée	f
-recordsManagement/delivery	resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size	Communication de l'archive %6$s	f
-recordsManagement/deposit	resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size	Dépôt de l'archive %6$s	f
-recordsManagement/descriptionModification	property	Modification des métadonnées de l'archive %6$s.	f
-recordsManagement/destructionRequest	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size	Demande de destruction de l'archive %6$s	f
-recordsManagement/destructionRequestCanceling	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size	Annulation de la demande de destruction de l'archive %6$s	f
-recordsManagement/destruction	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size	Destruction de l'archive %6$s	f
-recordsManagement/elimination	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size	Élimination de l'archive %6$s	f
-recordsManagement/freeze	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber	Gel de l'archive %6$s	f
-recordsManagement/integrityCheck	resId hash hashAlgorithm address requesterOrgRegNumber info	Validation d'intégrité	f
-recordsManagement/metadataModification	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber	Modification des métadonnées de l'archive %6$s	f
-recordsManagement/profileCreation	archivalProfileReference	Création du profil %6$s	f
-recordsManagement/profileDestruction	archivalProfileReference	Destruction du profil %6$s	f
-recordsManagement/periodicIntegrityCheck	startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked	Validation périodique de l'intégrité	f
-recordsManagement/restitution	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size	Restitution de l'archive %6$s	f
-recordsManagement/retentionRuleModification	resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber	Modification de la règle de conservation de l'archive %6$s	f
-recordsManagement/unfreeze	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber	Dégel de l'archive %6$s	f
-recordsManagement/resourceDestruction	resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber	Destruction de la ressource %9$s	f
-recordsManagement/depositNewResource	resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size	Dépôt d'une ressource dans l'archive	f
-medona/sending	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference	Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)	f
-medona/reception	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference	Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)	f
-medona/validation	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info	Validation du message %14$s : %16$s (%15$s)	f
-medona/acknowledgement	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info	Acquittement du message %14$s : %16$s (%15$s)	f
-medona/processing	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference	Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)	f
-medona/acceptance	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference	Message %14$s de type %9$s accepté par %13$s (%12$s)	f
-medona/rejection	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference	Message %14$s de type %9$s rejeté par %13$s (%12$s)	f
-medona/retry	type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference	Message %14$s de type %9$s réinitialisé par %13$s (%12$s)	f
-organization/counting	orgName ownerOrgId	Compter le nombre d'objet numérique dans l'activité %6$s	f
-organization/listing	orgName ownerOrgId	Lister les identifiants d'objet numérique de l'activité %6$s	f
-organization/journal	orgName ownerOrgId	Lecture du journal de l'organisation %6$s	f
-\.
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s rejeté par %13$s (%12$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Validation du message %14$s : %16$s (%15$s)', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('organization/counting', 'orgName ownerOrgId', 'Compter le nombre d''objets numériques dans l''activité %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('organization/journal', 'orgName ownerOrgId', 'Lecture du journal de l''organisation %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('organization/listing', 'orgName ownerOrgId', 'Lister les identifiants d''objets numériques de l''activité %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de communicabilité de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation ajoutée avec l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/archivalProfileModification', 'archivalProfileReference', 'Modification du profil %6$s.', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/consultation', 'resId hash hashAlgorith address size originatorArchiveId', 'Consultation de la ressource %9$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size originatorArchiveId', 'Conversion du document %18$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation avec l''archive %6$s supprimée', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Communication de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt d''une ressource dans l''archive', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Destruction de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/destructionRequest', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Demande de destruction de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/destructionRequestCanceling', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Annulation de la demande de destruction de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Élimination de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Gel de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/integrityCheck', 'resId hash hashAlgorithm address requesterOrgRegNumber info originatorArchiveId', 'Validation d''intégrité', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/metadataModification', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification des métadonnées de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/periodicIntegrityCheck', 'startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked originatorArchiveId', 'Validation périodique de l''intégrité', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/profileCreation', 'archivalProfileReference', 'Création du profil %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/profileDestruction', 'archivalProfileReference', 'Destruction du profil %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Destruction de la ressource %9$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Restitution de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de conservation de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Dégel de l''archive %6$s', false);
 
 
 --
--- TOC entry 2613 (class 0 OID 536468)
--- Dependencies: 204
+-- TOC entry 2612 (class 0 OID 602647)
+-- Dependencies: 203
 -- Data for Name: archivalAgreement; Type: TABLE DATA; Schema: medona; Owner: maarch
 --
 
-COPY medona."archivalAgreement" ("archivalAgreementId", name, reference, description, "archivalProfileReference", "serviceLevelReference", "archiverOrgRegNumber", "depositorOrgRegNumber", "originatorOrgIds", "beginDate", "endDate", enabled, "allowedFormats", "maxSizeAgreement", "maxSizeTransfer", "maxSizeDay", "maxSizeWeek", "maxSizeMonth", "maxSizeYear", signed, "autoTransferAcceptance", "processSmallArchive") FROM stdin;
-\.
 
 
 --
--- TOC entry 2617 (class 0 OID 536516)
--- Dependencies: 208
+-- TOC entry 2616 (class 0 OID 602695)
+-- Dependencies: 207
 -- Data for Name: controlAuthority; Type: TABLE DATA; Schema: medona; Owner: maarch
 --
 
-COPY medona."controlAuthority" ("originatorOrgUnitId", "controlAuthorityOrgUnitId") FROM stdin;
-\.
 
 
 --
--- TOC entry 2614 (class 0 OID 536478)
--- Dependencies: 205
+-- TOC entry 2613 (class 0 OID 602657)
+-- Dependencies: 204
 -- Data for Name: message; Type: TABLE DATA; Schema: medona; Owner: maarch
 --
 
-COPY medona.message ("messageId", schema, type, status, date, reference, "accountId", "senderOrgRegNumber", "senderOrgName", "recipientOrgRegNumber", "recipientOrgName", "archivalAgreementReference", "replyCode", "operationDate", "receptionDate", "relatedReference", "requestReference", "replyReference", "authorizationReference", "authorizationReason", "authorizationRequesterOrgRegNumber", derogation, "dataObjectCount", size, data, path, active, archived, "isIncoming", comment) FROM stdin;
-\.
 
 
 --
--- TOC entry 2615 (class 0 OID 536488)
--- Dependencies: 206
+-- TOC entry 2614 (class 0 OID 602667)
+-- Dependencies: 205
 -- Data for Name: messageComment; Type: TABLE DATA; Schema: medona; Owner: maarch
 --
 
-COPY medona."messageComment" ("messageId", comment, "commentId") FROM stdin;
-\.
 
 
 --
--- TOC entry 2616 (class 0 OID 536503)
--- Dependencies: 207
+-- TOC entry 2615 (class 0 OID 602682)
+-- Dependencies: 206
 -- Data for Name: unitIdentifier; Type: TABLE DATA; Schema: medona; Owner: maarch
 --
 
-COPY medona."unitIdentifier" ("messageId", "objectClass", "objectId") FROM stdin;
-\.
 
 
 --
--- TOC entry 2648 (class 0 OID 536949)
--- Dependencies: 239
+-- TOC entry 2647 (class 0 OID 603128)
+-- Dependencies: 238
 -- Data for Name: archivalProfileAccess; Type: TABLE DATA; Schema: organization; Owner: maarch
 --
 
-COPY organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") FROM stdin;
-DAF	FACACH	f		{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}
-DIP	DOSIP	t		\N
-DSI	FACACH	f		{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}
-FOUR	FACACH	t		{"history": {}, "subProfile": {}, "processingStatuses": {"NEW": {"actions": {"qualify": {}, "cancelQualify": {}}}, "APPROVED": {"actions": {"pay": {}, "updateMetadata": {}}}, "REJECTED": {"actions": {"cancelQualify": {}, "sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}}, "MISQUALIFIED": {"actions": {"qualify": {}}}}}
-FOUR	FACJU	t		\N
-SALES	FACVEN	t		\N
-SG	FACACH	f		{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}
-PAIE	BULPAI	t		{"subProfile": {}, "processingStatuses": {}}
-DAF	NOTSER	t		{"subProfile": {}, "processingStatuses": {}}
-DCIAL	NOTSER	t		{"subProfile": {}, "processingStatuses": {}}
-DSI	NOTSER	t		{"subProfile": {}, "processingStatuses": {}}
-GIC	NOTSER	t		{"subProfile": {}, "processingStatuses": {}}
-TENDER	PM	t		{"subProfile": {}, "processingStatuses": {}}
-TENDER	COUNM	t		{"subProfile": {}, "processingStatuses": {}}
-DOCSOC	FICCR	t		{"subProfile": {}, "processingStatuses": {}}
-DOCSOC	LETC	t		{"subProfile": {}, "processingStatuses": {}}
-DOCSOC	FICI	t		{"subProfile": {}, "processingStatuses": {}}
-MARK	FACACH	f		{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}}}
-DCIAL	FACACH	f		{"subProfile": {}, "processingStatuses": {"VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}
-RH	*	t	\N	\N
-\.
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DAF', 'FACACH', false, '', '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DIP', 'DOSIP', true, '', NULL);
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DSI', 'FACACH', false, '', '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('FOUR', 'FACACH', true, '', '{"history": {}, "subProfile": {}, "processingStatuses": {"NEW": {"actions": {"qualify": {}, "cancelQualify": {}}}, "APPROVED": {"actions": {"pay": {}, "updateMetadata": {}}}, "REJECTED": {"actions": {"cancelQualify": {}, "sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}}, "MISQUALIFIED": {"actions": {"qualify": {}}}}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('FOUR', 'FACJU', true, '', NULL);
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('SALES', 'FACVEN', true, '', NULL);
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DSG', 'FACACH', false, '', '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('PAIE', 'BULPAI', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DAF', 'NOTSER', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DCIAL', 'NOTSER', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('RH', '*', true, '', NULL);
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DSI', 'NOTSER', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('GIC', 'NOTSER', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('TENDER', 'PM', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('TENDER', 'COUNM', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DOCSOC', 'FICCR', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DOCSOC', 'LETC', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DOCSOC', 'FICI', true, '', '{"subProfile": {}, "processingStatuses": {}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('MARK', 'FACACH', false, '', '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}}}');
+INSERT INTO organization."archivalProfileAccess" ("orgId", "archivalProfileReference", "originatorAccess", "serviceLevelReference", "userAccess") VALUES ('DCIAL', 'FACACH', false, '', '{"subProfile": {}, "processingStatuses": {"VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
 
 
 --
--- TOC entry 2647 (class 0 OID 536936)
--- Dependencies: 238
+-- TOC entry 2646 (class 0 OID 603115)
+-- Dependencies: 237
 -- Data for Name: orgContact; Type: TABLE DATA; Schema: organization; Owner: maarch
 --
 
-COPY organization."orgContact" ("contactId", "orgId", "isSelf") FROM stdin;
-\.
 
 
 --
--- TOC entry 2643 (class 0 OID 536880)
--- Dependencies: 234
+-- TOC entry 2642 (class 0 OID 603059)
+-- Dependencies: 233
 -- Data for Name: orgType; Type: TABLE DATA; Schema: organization; Owner: maarch
 --
 
-COPY organization."orgType" (code, name) FROM stdin;
-Collectivite	Collectivité
-Societe	Société
-Direction	Direction d'une entreprise ou d'une collectivité
-Service	Service d'une entreprise ou d'une collectivité
-Division	Division d'une entreprise
-\.
+INSERT INTO organization."orgType" (code, name) VALUES ('Collectivite', 'Collectivité');
+INSERT INTO organization."orgType" (code, name) VALUES ('Direction', 'Direction d''une entreprise ou d''une collectivité');
+INSERT INTO organization."orgType" (code, name) VALUES ('Division', 'Division d''une entreprise');
+INSERT INTO organization."orgType" (code, name) VALUES ('Service', 'Service d''une entreprise ou d''une collectivité');
+INSERT INTO organization."orgType" (code, name) VALUES ('Societe', 'Société');
 
 
 --
--- TOC entry 2644 (class 0 OID 536888)
--- Dependencies: 235
+-- TOC entry 2643 (class 0 OID 603067)
+-- Dependencies: 234
 -- Data for Name: organization; Type: TABLE DATA; Schema: organization; Owner: maarch
 --
 
-COPY organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit") FROM stdin;
-ACME	Archives Conservation et Mémoire Électronique	\N	Archives Conservation et Mémoire Électronique	ACME	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	f
-DAF	Direction Administrative et Financière	\N	Direction Administrative et Financière	DAF	\N	\N	\N	\N	\N	\N	\N	\N	ACME	ACME	t
-SJ	Service Juridique	\N	Service Juridique	SJ	\N	\N	\N	\N	\N	\N	\N	\N	DAF	ACME	t
-RH	Direction des Ressources Humaines	\N	Direction des Ressources Humaines	RH	\N	\N	\N	\N	\N	\N	\N	\N	ACME	ACME	t
-GIC	Gestion et Conservation de l'Information	\N	Gestion et Conservation de l'Information	GIC	\N	\N	\N	\N	\N	\N	owner	\N	ACME	ACME	t
-DG	Direction Générale	\N	Direction Générale	DG	\N	\N	\N	\N	\N	\N	\N	\N	DAF	ACME	t
-SG	Services généraux	\N	Direction des Services Généraux	SG	\N	\N	\N	\N	\N	\N	\N	\N	DAF	ACME	t
-DOCSOC	Documents de société	\N	Document de société	DOCSOC	\N	\N	\N	\N	\N	\N	\N	\N	DG	ACME	t
-LITIGES	Suivi litiges Contentieux	\N	Suivi des litiges et contentieux	LITIGES	\N	\N	\N	\N	\N	\N	\N	\N	DG	ACME	t
-ASSU	Assurances Groupe	\N	Assurances du Groupe	ASSU	\N	\N	\N	\N	\N	\N	\N	\N	SJ	ACME	t
-DSI	Direction des SI	\N	Direction des Systèmes d'Information	DSI	\N	\N	\N	\N	\N	\N	\N	\N	ACME	ACME	t
-DSOC	Droit des sociétés	\N	Droit des Sociétés	DSOC	\N	\N	\N	\N	\N	\N	\N	\N	SJ	ACME	t
-CONCOM	Contrats Commerciaux	\N	Contrats Commerciaux	CONCOM	\N	\N	\N	\N	\N	\N	\N	\N	SJ	ACME	t
-PAIE	Rémunération et Paie	\N	Rémunération et Paie	PAIE	\N	\N	\N	\N	\N	\N	\N	\N	RH	ACME	t
-DIP	Dossiers du personnel	\N	Dossiers Individuels du Personnel	DIP	\N	\N	\N	\N	\N	\N	\N	\N	RH	ACME	t
-NOTFRA	Notes Frais	\N	Gestion des Notes de Frais	NOTFRA	\N	\N	\N	\N	\N	\N	\N	\N	RH	ACME	t
-MUT	Prévoyance/Mutuelle	\N	Prévoyance/Mutuelle	MUT	\N	\N	\N	\N	\N	\N	\N	\N	RH	ACME	t
-CTBLE	Service Comptable	\N	Service Comptable	CTBLE	\N	\N	\N	\N	\N	\N	\N	\N	DAF	ACME	t
-FOUR	Achats/Fournisseurs	\N	Comptabilité Achats/Fournisseurs	FOUR	\N	\N	\N	\N	\N	\N	\N	\N	CTBLE	ACME	t
-SALES	Ventes/Clients	\N	Comptabilité Ventes/Clients	SALES	\N	\N	\N	\N	\N	\N	\N	\N	CTBLE	ACME	t
-GEN	Comptabilité Générale	\N	Comptabilité Générale/Éditions comptables	GEN	\N	\N	\N	\N	\N	\N	\N	\N	CTBLE	ACME	t
-TRESO	Trésorerie	\N	Trésorerie	TRESO	\N	\N	\N	\N	\N	\N	\N	\N	CTBLE	ACME	t
-FISCA	Fiscalité	\N	Fiscalité	FISCA	\N	\N	\N	\N	\N	\N	\N	\N	CTBLE	ACME	t
-ACHAT	Achats Groupe	\N	Achats Groupe	ACHAT	\N	\N	\N	\N	\N	\N	\N	\N	SG	ACME	t
-SUPP	Support	\N	Support	SUPP	\N	\N	\N	\N	\N	\N	\N	\N	DSI	ACME	t
-DCIAL	Direction Commerciale	\N	Direction Commerciale	DCIAL	\N	\N	\N	\N	\N	\N	\N	\N	ACME	ACME	t
-CUST	Gestion Clients	\N	Gestion Clients	CUST	\N	\N	\N	\N	\N	\N	\N	\N	DCIAL	ACME	t
-MARK	Marketing	\N	Marketing	MARK	\N	\N	\N	\N	\N	\N	\N	\N	DCIAL	ACME	t
-DEAL	Offres Commerciales	\N	Offres Commerciales	DEAL	\N	\N	\N	\N	\N	\N	\N	\N	DCIAL	ACME	t
-BILAN	Comptes de bilan	\N	Comptes de Bilan et Clôture d'Exercice	BILAN	\N	\N	\N	\N	\N	\N	\N	\N	CTBLE	ACME	t
-AUTO	Gestion parc Auto	\N	Gestion du Parc Automobile	AUTO	\N	\N	\N	\N	\N	\N	\N	\N	SG	ACME	t
-NETT	Nettoyage des Locaux	\N	Nettoyage des Locaux	NETT	\N	\N	\N	\N	\N	\N	\N	\N	SG	ACME	t
-SOC	Charges Sociales	\N	Charges Sociales	SOC	\N	\N	\N	\N	\N	\N	\N	\N	RH	ACME	t
-TENDER	Appels d'offres	\N	Réponses aux Appels d'Offres/Collectivités	TENDER	\N	\N	\N	\N	\N	\N	\N	\N	DCIAL	ACME	t
-SIG	Gestion systèmes d'informations	\N	Gestion des Systèmes d'Information	SIG	\N	\N	\N	\N	\N	\N	\N	\N	DSI	ACME	t
-SYSRES	Système et Réseaux	\N	Système et Réseaux	SYSRES	\N	\N	\N	\N	\N	\N	\N	\N	DSI	ACME	t
-\.
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('ACME', 'Archives Conservation et Mémoire Électronique', NULL, 'Archives Conservation et Mémoire Électronique', 'ACME', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DAF', 'Direction Administrative et Financière', NULL, 'Direction Administrative et Financière', 'DAF', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DSG', 'Services généraux', NULL, 'Direction des Services Généraux', 'DSG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('ACHAT', 'Achats Groupe', NULL, 'Achats Groupe', 'ACHAT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('AUTO', 'Gestion parc Auto', NULL, 'Gestion du Parc Automobile', 'AUTO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('NETT', 'Nettoyage des Locaux', NULL, 'Nettoyage des Locaux', 'NETT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('SJ', 'Service Juridique', NULL, 'Service Juridique', 'SJ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('ASSU', 'Assurances Groupe', NULL, 'Assurances du Groupe', 'ASSU', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('CONCOM', 'Contrats Commerciaux', NULL, 'Contrats Commerciaux', 'CONCOM', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DSOC', 'Droit des sociétés', NULL, 'Droit des Sociétés', 'DSOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('CTBLE', 'Service Comptable', NULL, 'Service Comptable', 'CTBLE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('BILAN', 'Comptes de bilan', NULL, 'Comptes de Bilan et Clôture d''Exercice', 'BILAN', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('FISCA', 'Fiscalité', NULL, 'Fiscalité', 'FISCA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('FOUR', 'Achats/Fournisseurs', NULL, 'Comptabilité Achats/Fournisseurs', 'FOUR', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('GEN', 'Comptabilité Générale', NULL, 'Comptabilité Générale/Éditions comptables', 'GEN', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('SALES', 'Ventes/Clients', NULL, 'Comptabilité Ventes/Clients', 'SALES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('TRESO', 'Trésorerie', NULL, 'Trésorerie', 'TRESO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DG', 'Direction Générale', NULL, 'Direction Générale', 'DG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DOCSOC', 'Documents de société', NULL, 'Document de société', 'DOCSOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DG', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('LITIGES', 'Suivi litiges Contentieux', NULL, 'Suivi des litiges et contentieux', 'LITIGES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DG', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DCIAL', 'Direction Commerciale', NULL, 'Direction Commerciale', 'DCIAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('CUST', 'Gestion Clients', NULL, 'Gestion Clients', 'CUST', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DEAL', 'Offres Commerciales', NULL, 'Offres Commerciales', 'DEAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('MARK', 'Marketing', NULL, 'Marketing', 'MARK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('TENDER', 'Appels d''offres', NULL, 'Réponses aux Appels d''Offres/Collectivités', 'TENDER', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DSI', 'Direction des SI', NULL, 'Direction des Systèmes d''Information', 'DSI', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('SIG', 'Gestion systèmes d''informations', NULL, 'Gestion des Systèmes d''Information', 'SIG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('SYSRES', 'Système et Réseaux', NULL, 'Système et Réseaux', 'SYSRES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('SUPP', 'Support', NULL, 'Support', 'SUPP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('GIC', 'Gestion et Conservation de l''Information', NULL, 'Gestion et Conservation de l''Information', 'GIC', NULL, NULL, NULL, NULL, NULL, NULL, 'owner', NULL, 'ACME', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('RH', 'Direction des Ressources Humaines', NULL, 'Direction des Ressources Humaines', 'RH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('DIP', 'Dossiers du personnel', NULL, 'Dossiers Individuels du Personnel', 'DIP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('MUT', 'Prévoyance/Mutuelle', NULL, 'Prévoyance/Mutuelle', 'MUT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('NOTFRA', 'Notes Frais', NULL, 'Gestion des Notes de Frais', 'NOTFRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('PAIE', 'Rémunération et Paie', NULL, 'Rémunération et Paie', 'PAIE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, NULL);
+INSERT INTO organization.organization ("orgId", "orgName", "otherOrgName", "displayName", "registrationNumber", "beginDate", "endDate", "legalClassification", "businessType", description, "orgTypeCode", "orgRoleCodes", "taxIdentifier", "parentOrgId", "ownerOrgId", "isOrgUnit", enabled) VALUES ('SOC', 'Charges Sociales', NULL, 'Charges Sociales', 'SOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, NULL);
 
 
 --
--- TOC entry 2646 (class 0 OID 536928)
--- Dependencies: 237
+-- TOC entry 2645 (class 0 OID 603107)
+-- Dependencies: 236
 -- Data for Name: servicePosition; Type: TABLE DATA; Schema: organization; Owner: maarch
 --
 
-COPY organization."servicePosition" ("serviceAccountId", "orgId") FROM stdin;
-SystemDepositor	GIC
-System	GIC
-maarchRM_pwop1b-0ced-pmp8jy	RH
-\.
+INSERT INTO organization."servicePosition" ("serviceAccountId", "orgId") VALUES ('System', 'GIC');
+INSERT INTO organization."servicePosition" ("serviceAccountId", "orgId") VALUES ('SystemDepositor', 'RH');
 
 
 --
--- TOC entry 2645 (class 0 OID 536915)
--- Dependencies: 236
+-- TOC entry 2644 (class 0 OID 603094)
+-- Dependencies: 235
 -- Data for Name: userPosition; Type: TABLE DATA; Schema: organization; Owner: maarch
 --
 
-COPY organization."userPosition" ("userAccountId", "orgId", function, "default") FROM stdin;
-ddaull	DAF	\N	t
-jjonasz	LITIGES	\N	t
-aackermann	FOUR	\N	t
-aalambic	FOUR	\N	t
-ccordy	FOUR	\N	t
-ccamus	TRESO	\N	t
-bboule	SALES	\N	t
-ddur	SALES	\N	t
-eerina	SALES	\N	t
-ttong	SALES	\N	t
-bbain	SJ	\N	t
-rrenaud	SG	\N	t
-ssaporta	AUTO	\N	t
-ppacioli	NETT	\N	t
-kkaar	TENDER	\N	t
-ssissoko	CUST	\N	t
-kkrach	MARK	\N	t
-mmanfred	DEAL	\N	t
-vvictoire	RH	\N	t
-hhier	PAIE	\N	t
-ppreboist	DSI	\N	t
-ppruvost	DSI	\N	t
-sstallone	SUPP	\N	t
-sstar	SUPP	\N	t
-ttule	SYSRES	\N	t
-ddenis	GIC	\N	t
-ccharles	GIC	\N	t
-aadams	DAF	\N	t
-aastier	SG	\N	t
-workflow_pod5l0-232e-0aggqt	GEN	\N	t
-bblier	GIC	\N	t
-cchaplin	RH	\N	t
-ccox	SJ	\N	t
-ggrand	RH	\N	t
-jjane	DOCSOC	\N	t
-nnataly	DSI	\N	t
-ppetit	CTBLE	\N	t
-rreynolds	ACHAT	\N	t
-sstone	DCIAL	\N	t
-\.
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('aackermann', 'FOUR', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('aadams', 'DAF', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('aalambic', 'FOUR', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('aastier', 'DSG', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('bbain', 'SJ', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('bbardot', 'GEN', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('bblier', 'GIC', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('bboule', 'SALES', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ccamus', 'TRESO', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('cchaplin', 'RH', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ccharles', 'GIC', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ccordy', 'FOUR', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ccox', 'SJ', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ddaull', 'DAF', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ddenis', 'GIC', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ddur', 'SALES', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('eerina', 'SALES', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ggrand', 'RH', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('hhier', 'PAIE', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('jjane', 'DOCSOC', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('jjonasz', 'LITIGES', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('kkaar', 'TENDER', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('kkrach', 'MARK', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('mmanfred', 'DEAL', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ppacioli', 'NETT', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ppetit', 'CTBLE', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ppreboist', 'DSI', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ppruvost', 'DSI', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('rrenaud', 'DSG', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('rreynolds', 'ACHAT', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ssaporta', 'AUTO', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ssissoko', 'CUST', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('sstallone', 'SUPP', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('sstar', 'SUPP', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('sstone', 'DCIAL', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ttong', 'SALES', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('ttule', 'SYSRES', NULL, true);
+INSERT INTO organization."userPosition" ("userAccountId", "orgId", function, "default") VALUES ('vvictoire', 'RH', NULL, true);
 
 
 --
--- TOC entry 2618 (class 0 OID 536530)
--- Dependencies: 209
+-- TOC entry 2617 (class 0 OID 602709)
+-- Dependencies: 208
 -- Data for Name: accessRule; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."accessRule" (code, duration, description) FROM stdin;
-\.
 
 
 --
--- TOC entry 2620 (class 0 OID 536546)
--- Dependencies: 211
+-- TOC entry 2619 (class 0 OID 602725)
+-- Dependencies: 210
 -- Data for Name: archivalProfile; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") FROM stdin;
-1	COUA	Courrier Administratif	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-2	PRVN	Procès-Verbal de Négociation	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-3	PRVIF	Procès-verbal à Incidence Financière	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-4	ETAR	État de Rapprochement	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-5	RELCC	Relevé de Contrôle de Caisse	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-6	CTRF	Contrat Fournisseur	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-7	DCLTVA	Déclaration de TVA	\N	\N	originatingDate	IMP	\N	\N	t	t	file	\N
-8	QUTP	Quittance de Paiement	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-9	FICIC	Fiche d'Imputation Comptable	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-10	FACJU	Facture Justificative	\N	\N	originatingDate	COM	\N	\N	t	t	item	\N
-11	FICREC	Fiche Récapitulative	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-12	DOSC	Dossiers Caisse	\N	\N	originatingDate	\N	\N	\N	t	t	file	\N
-13	PIECD	Pièce de Caisse-Dépense	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-14	PIEJ	Pièce Justificative	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-15	DOSB	Dossiers Banque	\N	\N	originatingDate	\N	\N	\N	t	t	file	\N
-16	PIEBD	Pièce de Banque-Dépense	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-17	FICDG	Fiche DG	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-18	NOTSER	Note de service	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-19	PM	Passation de marché	\N	\N	originatingDate	\N	\N	\N	t	t	file	\N
-20	BORT	Bordereau de transmission	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-21	COUNM	Courrier de notification de marché	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-22	PRVA	Procès-Verbal d'Attribution	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-23	PRVOP	Proces-Verbal d'Ouverture des Plis	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-24	RAPEO	Rapport d’Évaluation des Offres	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-26	DEMC	Demande de Cotation	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-27	RAPFOR	Rapport de Formation	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-28	DOSIP	Dossier Individuel du Personnel	\N	\N	originatingDate	DIP	\N	\N	t	t	file	\N
-29	ETAC	Etat Civil	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-30	CURV	Curriculum Vitae	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-31	EXTAN	Extrait d'Acte de Naissance	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-33	CASJU	Casier Judiciaire	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-34	ATTSU	Attestation de succès	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-35	CTRTRV	Contrat de Travail	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-37	ATTT	Attestation de Travail	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-39	CNSS	Caisse Nationale de Sécurité Sociale	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-41	CAR	Carrière	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-42	DECIN	Décision de nomination	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-43	DECIR	Décision de redéploiement	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-47	ATTF	Attestation de formation	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-53	COURRN	Courrier Répartition du Résultat Net	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-54	COUDS	Courrier Domiciliation de Salaire	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-55	FICP	Fiche de Poste	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-56	FICF	Fiche de Fonction	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-57	DEMA	Demandes Administratives	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-58	COUAA	Courrier Autorisation d'Absence	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-59	COUCA	Courrier Congés Administratifs	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-60	COUDE	Courrier Demande d'Emploi	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-61	DOSETU	Dossier de Synthèse et d’Étude	\N	\N	originatingDate	\N	\N	\N	t	t	file	\N
-62	FICRM	Fiche de Remontée Mensuelle	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-63	RAPT	Rapport Trimestriel	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-64	RAPMOE	Rapport de Mise en Œuvre	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-65	RAPA	Rapport d'Activité	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-66	RAPSE	Rapport de Suivi et Évaluation	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-67	RAPGES	Rapport de Gestion	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-68	TDRE	Termes de Références des Études	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-69	DCRN	Décret de Nomination	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-70	FICCR	Fiche de compte rendu	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-71	LETC	Lettre circulaire	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-72	FICI	Fiche d'instruction	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-73	RAPAMI	Rapport d'Audit et Missions Internes	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-74	RAPAE	Rapport d'Audit Externe	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-75	RAPER	Rapport d’Études et Recherches	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-76	COUABID	Courrier Arrivée BID	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-77	SMIROP	Fiche de visite SMIROP	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-78	VISA	Visas obtenus	\N	\N	originatingDate	\N	\N	\N	t	t	item	\N
-79	FACVEN	Facture de vente	\N	\N	originatingDate	COM	\N	\N	t	t	item	\N
-workflow_pod6si-219d-hiploo	BULPAI	Bulletins de paie	\N		\N	BULPAI		\N	f	f	item	{}
-80	FACACH	Facture d'achat	\N		originatingDate	COM		\N	t	f	item	{"NEW": {"type": "initial", "label": "Nouvelle(s) facture(s)", "actions": {"qualify": {}, "cancelQualify": {}}, "default": true, "position": 0, "filterUserAccess": false}, "PAYED": {"type": "final", "label": "Payée", "actions": {}, "default": false, "position": 6, "filterUserAccess": false}, "APPROVED": {"type": "intermediate", "label": "À payer", "actions": {"pay": {}, "updateMetadata": {}}, "default": false, "position": 5, "filterUserAccess": true}, "REJECTED": {"type": "intermediate", "label": "Rejetée(s)", "actions": {"sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}, "default": false, "position": 3, "filterUserAccess": true}, "CANCELLED": {"type": "final", "label": "Annulée", "actions": {}, "default": false, "position": 7, "filterUserAccess": false}, "QUALIFIED": {"type": "intermediate", "label": "À valider", "actions": {"reject": {}, "redirect": {}, "validate": {}}, "default": false, "position": 1, "filterUserAccess": true}, "VALIDATED": {"type": "intermediate", "label": "À approuver", "actions": {"reject": {}, "approve": {}}, "default": false, "position": 4, "filterUserAccess": true}, "MISQUALIFIED": {"type": "intermediate", "label": "À requalifier", "actions": {"qualify": {}}, "default": false, "position": 2, "filterUserAccess": true}}
-\.
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('1', 'COUA', 'Courrier Administratif', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('2', 'PRVN', 'Procès-Verbal de Négociation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('3', 'PRVIF', 'Procès-verbal à Incidence Financière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('4', 'ETAR', 'État de Rapprochement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('5', 'RELCC', 'Relevé de Contrôle de Caisse', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('6', 'CTRF', 'Contrat Fournisseur', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('7', 'DCLTVA', 'Déclaration de TVA', NULL, NULL, 'originatingDate', 'IMP', NULL, NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('8', 'QUTP', 'Quittance de Paiement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('9', 'FICIC', 'Fiche d''Imputation Comptable', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('10', 'FACJU', 'Facture Justificative', NULL, NULL, 'originatingDate', 'COM', NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('11', 'FICREC', 'Fiche Récapitulative', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('12', 'DOSC', 'Dossiers Caisse', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('13', 'PIECD', 'Pièce de Caisse-Dépense', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('14', 'PIEJ', 'Pièce Justificative', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('15', 'DOSB', 'Dossiers Banque', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('16', 'PIEBD', 'Pièce de Banque-Dépense', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('17', 'FICDG', 'Fiche DG', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('18', 'NOTSER', 'Note de service', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('19', 'PM', 'Passation de marché', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('20', 'BORT', 'Bordereau de transmission', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('21', 'COUNM', 'Courrier de notification de marché', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('22', 'PRVA', 'Procès-Verbal d''Attribution', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('23', 'PRVOP', 'Proces-Verbal d''Ouverture des Plis', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('24', 'RAPEO', 'Rapport d’Évaluation des Offres', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('26', 'DEMC', 'Demande de Cotation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('27', 'RAPFOR', 'Rapport de Formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('28', 'DOSIP', 'Dossier Individuel du Personnel', NULL, NULL, 'originatingDate', 'DIP', '', NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('29', 'ETAC', 'Etat Civil', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('30', 'CURV', 'Curriculum Vitae', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('31', 'EXTAN', 'Extrait d''Acte de Naissance', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('33', 'CASJU', 'Casier Judiciaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('34', 'ATTSU', 'Attestation de succès', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('35', 'CTRTRV', 'Contrat de Travail', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('37', 'ATTT', 'Attestation de Travail', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('39', 'CNSS', 'Caisse Nationale de Sécurité Sociale', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('41', 'CAR', 'Carrière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('42', 'DECIN', 'Décision de nomination', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('43', 'DECIR', 'Décision de redéploiement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('47', 'ATTF', 'Attestation de formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('53', 'COURRN', 'Courrier Répartition du Résultat Net', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('54', 'COUDS', 'Courrier Domiciliation de Salaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('55', 'FICP', 'Fiche de Poste', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('56', 'FICF', 'Fiche de Fonction', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('57', 'DEMA', 'Demandes Administratives', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('58', 'COUAA', 'Courrier Autorisation d''Absence', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('59', 'COUCA', 'Courrier Congés Administratifs', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('60', 'COUDE', 'Courrier Demande d''Emploi', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('61', 'DOSETU', 'Dossier de Synthèse et d’Étude', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('62', 'FICRM', 'Fiche de Remontée Mensuelle', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('63', 'RAPT', 'Rapport Trimestriel', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('64', 'RAPMOE', '	Rapport de Mise en Œuvre', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('65', 'RAPA', 'Rapport d''Activité', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('66', 'RAPSE', 'Rapport de Suivi et Évaluation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('67', 'RAPGES', 'Rapport de Gestion', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('68', 'TDRE', 'Termes de Références des Études', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('69', 'DCRN', 'Décret de Nomination', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('70', 'FICCR', 'Fiche de compte rendu', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('71', 'LETC', 'Lettre circulaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('72', 'FICI', 'Fiche d''instruction', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('73', 'RAPAMI', 'Rapport d''Audit et Missions Internes', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('74', 'RAPAE', 'Rapport d''Audit Externe', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('75', 'RAPER', 'Rapport d’Études et Recherches', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('76', 'COUABID', 'Courrier Arrivée BID', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('77', 'SMIROP', 'Fiche de visite SMIROP', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('78', 'VISA', 'Visas obtenus', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('79', 'FACVEN', 'Facture de vente', NULL, NULL, 'originatingDate', 'COM', NULL, NULL, true, true, 'item', NULL);
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('80', 'FACACH', 'Facture d''achat', NULL, '', 'description/dueDate', 'COM', '', NULL, true, false, 'item', '{"NEW": {"type": "initial", "label": "Nouvelle(s) facture(s)", "actions": {"qualify": {}, "cancelQualify": {}}, "default": true, "position": 0, "filterUserAccess": false}, "PAYED": {"type": "final", "label": "Payée", "actions": {}, "default": false, "position": 6, "filterUserAccess": false}, "APPROVED": {"type": "intermediate", "label": "À payer", "actions": {"pay": {}, "updateMetadata": {}}, "default": false, "position": 5, "filterUserAccess": true}, "REJECTED": {"type": "intermediate", "label": "Rejetée(s)", "actions": {"sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}, "default": false, "position": 3, "filterUserAccess": true}, "CANCELLED": {"type": "final", "label": "Annulée", "actions": {}, "default": false, "position": 7, "filterUserAccess": false}, "QUALIFIED": {"type": "intermediate", "label": "À valider", "actions": {"reject": {}, "redirect": {}, "validate": {}}, "default": false, "position": 1, "filterUserAccess": true}, "VALIDATED": {"type": "intermediate", "label": "À approuver", "actions": {"reject": {}, "approve": {}}, "default": false, "position": 4, "filterUserAccess": true}, "MISQUALIFIED": {"type": "intermediate", "label": "À requalifier", "actions": {"qualify": {}}, "default": false, "position": 2, "filterUserAccess": true}}');
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId", reference, name, "descriptionSchema", "descriptionClass", "retentionStartDate", "retentionRuleCode", description, "accessRuleCode", "acceptUserIndex", "acceptArchiveWithoutProfile", "fileplanLevel", "processingStatuses") VALUES ('81', 'BULPAI', 'Bulletins de paie', NULL, '', NULL, 'BULPAI', '', NULL, false, false, 'item', '{}');
 
 
 --
--- TOC entry 2621 (class 0 OID 536568)
--- Dependencies: 212
+-- TOC entry 2620 (class 0 OID 602747)
+-- Dependencies: 211
 -- Data for Name: archivalProfileContents; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") FROM stdin;
-7	8
-7	9
-7	10
-7	11
-12	9
-12	13
-12	14
-15	9
-15	14
-15	16
-19	2
-19	18
-19	20
-19	21
-19	22
-19	23
-19	24
-19	26
-28	1
-28	29
-28	30
-28	31
-28	33
-28	34
-28	35
-28	37
-28	39
-28	41
-28	42
-28	43
-28	47
-28	53
-28	54
-28	55
-28	56
-28	57
-28	58
-28	59
-28	60
-28	77
-28	78
-61	1
-61	17
-61	63
-61	64
-61	65
-61	66
-61	67
-61	68
-61	69
-\.
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('7', '8');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('7', '9');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('7', '10');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('7', '11');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('12', '9');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('12', '13');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('12', '14');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('15', '9');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('15', '14');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('15', '16');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '2');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '18');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '20');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '21');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '22');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '23');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '24');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('19', '26');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '1');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '29');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '30');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '31');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '33');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '34');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '35');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '37');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '39');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '41');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '42');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '43');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '47');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '53');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '54');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '55');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '56');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '57');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '58');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '59');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '60');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '77');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('28', '78');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '1');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '17');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '63');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '64');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '65');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '66');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '67');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '68');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId", "containedProfileId") VALUES ('61', '69');
 
 
 --
--- TOC entry 2625 (class 0 OID 536621)
--- Dependencies: 216
+-- TOC entry 2624 (class 0 OID 602800)
+-- Dependencies: 215
 -- Data for Name: archive; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement".archive ("archiveId", "originatorArchiveId", "depositorArchiveId", "archiverArchiveId", "archiveName", "storagePath", "filePlanPosition", "fileplanLevel", "originatingDate", "descriptionClass", description, text, "originatorOrgRegNumber", "originatorOwnerOrgId", "originatorOwnerOrgRegNumber", "depositorOrgRegNumber", "archiverOrgRegNumber", "userOrgRegNumbers", "archivalProfileReference", "archivalAgreementReference", "serviceLevelReference", "retentionRuleCode", "retentionStartDate", "retentionDuration", "finalDisposition", "disposalDate", "retentionRuleStatus", "accessRuleCode", "accessRuleDuration", "accessRuleStartDate", "accessRuleComDate", "storageRuleCode", "storageRuleDuration", "storageRuleStartDate", "storageRuleEndDate", "classificationRuleCode", "classificationRuleDuration", "classificationRuleStartDate", "classificationEndDate", "classificationLevel", "classificationOwner", "depositDate", "lastCheckDate", "lastDeliveryDate", "lastModificationDate", status, "processingStatus", "parentArchiveId", "fullTextIndexation") FROM stdin;
-\.
 
 
 --
--- TOC entry 2623 (class 0 OID 536595)
--- Dependencies: 214
+-- TOC entry 2622 (class 0 OID 602774)
+-- Dependencies: 213
 -- Data for Name: archiveDescription; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") FROM stdin;
-1	org	f	0	f	f	f
-2	org	f	0	f	f	f
-3	org	f	0	f	f	f
-4	org	f	0	f	f	f
-5	org	f	0	f	f	f
-6	org	f	0	f	f	f
-28	fullname	f	1	f	f	f
-28	empid	t	2	f	f	f
-61	service	f	0	f	f	f
-69	service	f	0	f	f	f
-70	service	f	0	f	f	f
-71	service	f	0	f	f	f
-72	service	f	0	f	f	f
-73	service	f	0	f	f	f
-74	service	f	0	f	f	f
-75	service	f	0	f	f	f
-76	service	f	0	f	f	f
-79	customer	f	0	f	f	f
-79	salesPerson	f	0	f	f	f
-workflow_pod6si-219d-hiploo	empid	t	0	f	\N	f
-workflow_pod6si-219d-hiploo	fullname	t	1	f	\N	f
-workflow_pod6si-219d-hiploo	service	f	2	f	\N	f
-workflow_pod6si-219d-hiploo	org	t	3	f	\N	f
-80	service	f	0	f	\N	t
-80	taxIdentifier	t	1	f	\N	f
-80	supplier	f	2	f	\N	t
-80	netPayable	f	3	f	\N	t
-80	dueDate	f	4	f	\N	f
-80	orderNumber	f	5	f	\N	f
-\.
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('1', 'org', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('2', 'org', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('3', 'org', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('4', 'org', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('5', 'org', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('6', 'org', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('28', 'empid', true, 1, false, NULL, NULL);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('28', 'fullname', false, 0, false, NULL, NULL);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('28', 'reference_addresses', false, 2, false, NULL, NULL);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('61', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('69', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('70', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('71', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('72', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('73', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('74', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('75', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('76', 'service', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('79', 'customer', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('79', 'salesPerson', false, 0, false, false, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('80', 'dueDate', false, 4, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('80', 'netPayable', false, 3, false, NULL, true);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('80', 'orderNumber', false, 5, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('80', 'service', false, 0, false, NULL, true);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('80', 'supplier', false, 2, false, NULL, true);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('80', 'taxIdentifier', true, 1, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('81', 'empid', true, 0, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('81', 'fullname', true, 1, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('81', 'service', false, 2, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId", "fieldName", required, "position", "isImmutable", "isRetained", "isInList") VALUES ('81', 'org', true, 3, false, NULL, false);
 
 
 --
--- TOC entry 2626 (class 0 OID 536646)
--- Dependencies: 217
+-- TOC entry 2625 (class 0 OID 602825)
+-- Dependencies: 216
 -- Data for Name: archiveRelationship; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."archiveRelationship" ("archiveId", "relatedArchiveId", "typeCode", description) FROM stdin;
-\.
 
 
 --
--- TOC entry 2628 (class 0 OID 536672)
--- Dependencies: 219
+-- TOC entry 2627 (class 0 OID 602851)
+-- Dependencies: 218
 -- Data for Name: descriptionClass; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."descriptionClass" (name, label) FROM stdin;
-\.
 
 
 --
--- TOC entry 2622 (class 0 OID 536586)
--- Dependencies: 213
+-- TOC entry 2621 (class 0 OID 602765)
+-- Dependencies: 212
 -- Data for Name: descriptionField; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") FROM stdin;
-org	Organisation	name		\N	\N	\N	\N	["ACME Paris","ACME Dakar","ACME Cotonou"]	\N	\N	f
-fullname	Nom complet	name	\N	\N	\N	\N	\N	\N	\N	\N	f
-empid	Matricule	name	\N	\N	\N	\N	\N	\N	\N	\N	f
-customer	Client	text	\N	\N	\N	\N	\N	\N	\N	\N	f
-salesPerson	Vendeur	text	\N	\N	\N	\N	\N	\N	\N	\N	f
-documentId	Identifiant de document	name	\N	\N	\N	\N	\N	\N	\N	\N	f
-taxIdentifier	N° TVA Intraco.	name	\N	\N	\N	\N	\N	\N	\N	\N	f
-supplier	Fournisseur	text	\N	\N	\N	\N	\N	\N	\N	\N	f
-netPayable	Net à payer	number	\N	\N	\N	\N	\N	\N	\N	\N	f
-dueDate	Date d'échéance	date	\N	\N	\N	\N	\N	\N	\N	\N	f
-orderNumber	Numéro de commande	name	\N	\N	\N	\N	\N	\N	\N	\N	f
-service	Service Concerné	name		\N	\N	\N	\N	["MARK","DSG","DSI","DAF"]	\N	\N	f
-\.
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('customer', 'Client', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('documentId', 'Identifiant de document', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('dueDate', 'Date d''échéance', 'date', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('empid', 'Matricule', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('fullname', 'Nom complet', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('netPayable', 'Net à payer', 'number', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('orderNumber', 'Numéro de commande', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('org', 'Organisation', 'name', '', NULL, NULL, NULL, NULL, '["ACME Paris","ACME Dakar","ACME Cotonou"]', NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('salesPerson', 'Vendeur', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('service', 'Service Concerné', 'name', '', NULL, NULL, NULL, NULL, '["MARK","DSG","DSI","DAF"]', NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('supplier', 'Fournisseur', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" (name, label, type, "default", "minLength", "maxLength", "minValue", "maxValue", enumeration, facets, pattern, "isArray") VALUES ('taxIdentifier', 'N° TVA Intraco.', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
 
 
 --
--- TOC entry 2627 (class 0 OID 536664)
--- Dependencies: 218
+-- TOC entry 2626 (class 0 OID 602843)
+-- Dependencies: 217
 -- Data for Name: log; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement".log ("archiveId", "fromDate", "toDate", "processId", "processName", type, "ownerOrgRegNumber") FROM stdin;
-\.
 
 
 --
--- TOC entry 2619 (class 0 OID 536538)
--- Dependencies: 210
+-- TOC entry 2618 (class 0 OID 602717)
+-- Dependencies: 209
 -- Data for Name: retentionRule; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") FROM stdin;
-BULPAI	P5Y	destruction	Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12	Bulletins de paie	\N
-DIP	P90Y	destruction	Convention Collective nationale de retraite et de prévoyance des cadres, art. 23	Dossier individuel du personnel	\N
-COM	P10Y	destruction	Code du commerce, Article L123-22	Documents comptables	\N
-IMP	P6Y	destruction	Livre des Procédures Fiscales, art 102 B et L 169 : Livres, registres, documents ou pièces sur lesquels peuvent s'exercer les droits de communication, d'enquête et de contrôle de l'administration	Contrôle de l'impôt	\N
-IMPS	P10Y	destruction	Livre des Procédures Fiscales, art 102 B et L 169 alinea 2: Les registres tenus en application du 9 de l'article 298 sexdecies F du code général des impôts et du 5 de l'article 298 sexdecies G du même code	Impôt sur les sociétés et liasses fiscales	\N
-IMPA	P3Y	destruction	Livre des Procédures Fiscales, art 102 B et L 169 alinea 3	Taxe professionnelle	\N
-GES	P5Y	destruction	Documents de gestion	Documents de gestion	\N
-\.
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('BULPAI', 'P5Y', 'destruction', 'Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12', 'Bulletins de paie', NULL);
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('COM', 'P10Y', 'destruction', 'Code du commerce, Article L123-22', 'Documents comptables', NULL);
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('DIP', 'P90Y', 'destruction', 'Convention Collective nationale de retraite et de prévoyance des cadres, art. 23', 'Dossier individuel du personnel', NULL);
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('IMP', 'P6Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 : Livres, registres, documents ou pièces sur lesquels peuvent s''exercer les droits de communication, d''enquête et de contrôle de l''administration', 'Contrôle de l''impôt', NULL);
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('IMPA', 'P3Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 3', 'Taxe professionnelle', NULL);
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('IMPS', 'P10Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 2: Les registres tenus en application du 9 de l''article 298 sexdecies F du code général des impôts et du 5 de l''article 298 sexdecies G du même code', 'Impôt sur les sociétés et liasses fiscales', NULL);
+INSERT INTO "recordsManagement"."retentionRule" (code, duration, "finalDisposition", description, label, "implementationDate") VALUES ('GES', 'P5Y', 'destruction', 'Documents de gestion', 'Documents de gestion', NULL);
 
 
 --
--- TOC entry 2624 (class 0 OID 536611)
--- Dependencies: 215
+-- TOC entry 2623 (class 0 OID 602790)
+-- Dependencies: 214
 -- Data for Name: serviceLevel; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."serviceLevel" ("serviceLevelId", reference, "digitalResourceClusterId", control, "default", "samplingFrequency", "samplingRate") FROM stdin;
-ServiceLevel_001	serviceLevel_001	archives	formatDetection formatValidation virusCheck convertOnDeposit	f	2	50
-ServiceLevel_002	serviceLevel_002	archives		t	2	50
-\.
+INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", reference, "digitalResourceClusterId", control, "default", "samplingFrequency", "samplingRate") VALUES ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50);
+INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId", reference, "digitalResourceClusterId", control, "default", "samplingFrequency", "samplingRate") VALUES ('ServiceLevel_002', 'serviceLevel_002', 'archives', '', true, 2, 50);
 
 
 --
--- TOC entry 2629 (class 0 OID 536680)
--- Dependencies: 220
+-- TOC entry 2628 (class 0 OID 602859)
+-- Dependencies: 219
 -- Data for Name: storageRule; Type: TABLE DATA; Schema: recordsManagement; Owner: maarch
 --
 
-COPY "recordsManagement"."storageRule" (code, duration, description, label) FROM stdin;
-\.
 
 
 --
--- TOC entry 2297 (class 2606 OID 536314)
+-- TOC entry 2296 (class 2606 OID 602493)
 -- Name: event event_pkey; Type: CONSTRAINT; Schema: audit; Owner: maarch
 --
 
@@ -2237,7 +2113,7 @@ ALTER TABLE ONLY audit.event
 
 
 --
--- TOC entry 2301 (class 2606 OID 536340)
+-- TOC entry 2300 (class 2606 OID 602519)
 -- Name: account account_accountName_key; Type: CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -2246,7 +2122,7 @@ ALTER TABLE ONLY auth.account
 
 
 --
--- TOC entry 2303 (class 2606 OID 536338)
+-- TOC entry 2302 (class 2606 OID 602517)
 -- Name: account account_pkey; Type: CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -2255,7 +2131,7 @@ ALTER TABLE ONLY auth.account
 
 
 --
--- TOC entry 2307 (class 2606 OID 536366)
+-- TOC entry 2306 (class 2606 OID 602545)
 -- Name: privilege privilege_roleId_userStory_key; Type: CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -2264,7 +2140,7 @@ ALTER TABLE ONLY auth.privilege
 
 
 --
--- TOC entry 2305 (class 2606 OID 536348)
+-- TOC entry 2304 (class 2606 OID 602527)
 -- Name: roleMember roleMember_roleId_userAccountId_key; Type: CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -2273,7 +2149,7 @@ ALTER TABLE ONLY auth."roleMember"
 
 
 --
--- TOC entry 2299 (class 2606 OID 536326)
+-- TOC entry 2298 (class 2606 OID 602505)
 -- Name: role role_pkey; Type: CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -2282,7 +2158,7 @@ ALTER TABLE ONLY auth.role
 
 
 --
--- TOC entry 2309 (class 2606 OID 536379)
+-- TOC entry 2308 (class 2606 OID 602558)
 -- Name: servicePrivilege servicePrivilege_accountId_serviceURI_key; Type: CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -2291,7 +2167,7 @@ ALTER TABLE ONLY auth."servicePrivilege"
 
 
 --
--- TOC entry 2314 (class 2606 OID 536402)
+-- TOC entry 2313 (class 2606 OID 602581)
 -- Name: logScheduling logScheduling_pkey; Type: CONSTRAINT; Schema: batchProcessing; Owner: maarch
 --
 
@@ -2300,7 +2176,7 @@ ALTER TABLE ONLY "batchProcessing"."logScheduling"
 
 
 --
--- TOC entry 2316 (class 2606 OID 536410)
+-- TOC entry 2315 (class 2606 OID 602589)
 -- Name: notification notification_pkey; Type: CONSTRAINT; Schema: batchProcessing; Owner: maarch
 --
 
@@ -2309,7 +2185,7 @@ ALTER TABLE ONLY "batchProcessing".notification
 
 
 --
--- TOC entry 2311 (class 2606 OID 536393)
+-- TOC entry 2310 (class 2606 OID 602572)
 -- Name: scheduling scheduling_pkey; Type: CONSTRAINT; Schema: batchProcessing; Owner: maarch
 --
 
@@ -2318,7 +2194,7 @@ ALTER TABLE ONLY "batchProcessing".scheduling
 
 
 --
--- TOC entry 2320 (class 2606 OID 536431)
+-- TOC entry 2319 (class 2606 OID 602610)
 -- Name: address address_contactId_purpose_key; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2327,7 +2203,7 @@ ALTER TABLE ONLY contact.address
 
 
 --
--- TOC entry 2322 (class 2606 OID 536429)
+-- TOC entry 2321 (class 2606 OID 602608)
 -- Name: address address_pkey; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2336,7 +2212,7 @@ ALTER TABLE ONLY contact.address
 
 
 --
--- TOC entry 2324 (class 2606 OID 536446)
+-- TOC entry 2323 (class 2606 OID 602625)
 -- Name: communicationMean communicationMean_name_key; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2345,7 +2221,7 @@ ALTER TABLE ONLY contact."communicationMean"
 
 
 --
--- TOC entry 2326 (class 2606 OID 536444)
+-- TOC entry 2325 (class 2606 OID 602623)
 -- Name: communicationMean communicationMean_pkey; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2354,7 +2230,7 @@ ALTER TABLE ONLY contact."communicationMean"
 
 
 --
--- TOC entry 2328 (class 2606 OID 536456)
+-- TOC entry 2327 (class 2606 OID 602635)
 -- Name: communication communication_contactId_purpose_comMeanCode_key; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2363,7 +2239,7 @@ ALTER TABLE ONLY contact.communication
 
 
 --
--- TOC entry 2330 (class 2606 OID 536454)
+-- TOC entry 2329 (class 2606 OID 602633)
 -- Name: communication communication_pkey; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2372,7 +2248,7 @@ ALTER TABLE ONLY contact.communication
 
 
 --
--- TOC entry 2318 (class 2606 OID 536421)
+-- TOC entry 2317 (class 2606 OID 602600)
 -- Name: contact contact_pkey; Type: CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -2381,7 +2257,7 @@ ALTER TABLE ONLY contact.contact
 
 
 --
--- TOC entry 2408 (class 2606 OID 536749)
+-- TOC entry 2407 (class 2606 OID 602928)
 -- Name: address address_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2390,7 +2266,7 @@ ALTER TABLE ONLY "digitalResource".address
 
 
 --
--- TOC entry 2410 (class 2606 OID 536767)
+-- TOC entry 2409 (class 2606 OID 602946)
 -- Name: clusterRepository clusterRepository_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2399,7 +2275,7 @@ ALTER TABLE ONLY "digitalResource"."clusterRepository"
 
 
 --
--- TOC entry 2396 (class 2606 OID 536705)
+-- TOC entry 2395 (class 2606 OID 602884)
 -- Name: cluster cluster_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2408,7 +2284,7 @@ ALTER TABLE ONLY "digitalResource".cluster
 
 
 --
--- TOC entry 2414 (class 2606 OID 536814)
+-- TOC entry 2413 (class 2606 OID 602993)
 -- Name: contentType contentType_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2417,7 +2293,7 @@ ALTER TABLE ONLY "digitalResource"."contentType"
 
 
 --
--- TOC entry 2416 (class 2606 OID 536822)
+-- TOC entry 2415 (class 2606 OID 603001)
 -- Name: conversionRule conversionRule_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2426,7 +2302,7 @@ ALTER TABLE ONLY "digitalResource"."conversionRule"
 
 
 --
--- TOC entry 2418 (class 2606 OID 536824)
+-- TOC entry 2417 (class 2606 OID 603003)
 -- Name: conversionRule conversionRule_puid_key; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2435,7 +2311,7 @@ ALTER TABLE ONLY "digitalResource"."conversionRule"
 
 
 --
--- TOC entry 2400 (class 2606 OID 536713)
+-- TOC entry 2399 (class 2606 OID 602892)
 -- Name: digitalResource digitalResource_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2444,7 +2320,7 @@ ALTER TABLE ONLY "digitalResource"."digitalResource"
 
 
 --
--- TOC entry 2412 (class 2606 OID 536785)
+-- TOC entry 2411 (class 2606 OID 602964)
 -- Name: package package_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2453,7 +2329,7 @@ ALTER TABLE ONLY "digitalResource".package
 
 
 --
--- TOC entry 2402 (class 2606 OID 536736)
+-- TOC entry 2401 (class 2606 OID 602915)
 -- Name: repository repository_pkey; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2462,7 +2338,7 @@ ALTER TABLE ONLY "digitalResource".repository
 
 
 --
--- TOC entry 2404 (class 2606 OID 536738)
+-- TOC entry 2403 (class 2606 OID 602917)
 -- Name: repository repository_repositoryReference_key; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2471,7 +2347,7 @@ ALTER TABLE ONLY "digitalResource".repository
 
 
 --
--- TOC entry 2406 (class 2606 OID 536740)
+-- TOC entry 2405 (class 2606 OID 602919)
 -- Name: repository repository_repositoryUri_key; Type: CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -2480,7 +2356,7 @@ ALTER TABLE ONLY "digitalResource".repository
 
 
 --
--- TOC entry 2421 (class 2606 OID 536837)
+-- TOC entry 2420 (class 2606 OID 603016)
 -- Name: folder filePlan_name_parentFolderId_key; Type: CONSTRAINT; Schema: filePlan; Owner: maarch
 --
 
@@ -2489,7 +2365,7 @@ ALTER TABLE ONLY "filePlan".folder
 
 
 --
--- TOC entry 2423 (class 2606 OID 536835)
+-- TOC entry 2422 (class 2606 OID 603014)
 -- Name: folder folder_pkey; Type: CONSTRAINT; Schema: filePlan; Owner: maarch
 --
 
@@ -2498,7 +2374,7 @@ ALTER TABLE ONLY "filePlan".folder
 
 
 --
--- TOC entry 2433 (class 2606 OID 536872)
+-- TOC entry 2432 (class 2606 OID 603051)
 -- Name: eventFormat eventFormat_pkey; Type: CONSTRAINT; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2507,7 +2383,7 @@ ALTER TABLE ONLY "lifeCycle"."eventFormat"
 
 
 --
--- TOC entry 2426 (class 2606 OID 536863)
+-- TOC entry 2425 (class 2606 OID 603042)
 -- Name: event event_pkey; Type: CONSTRAINT; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2516,7 +2392,7 @@ ALTER TABLE ONLY "lifeCycle".event
 
 
 --
--- TOC entry 2332 (class 2606 OID 536475)
+-- TOC entry 2331 (class 2606 OID 602654)
 -- Name: archivalAgreement archivalAgreement_pkey; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2525,7 +2401,7 @@ ALTER TABLE ONLY medona."archivalAgreement"
 
 
 --
--- TOC entry 2334 (class 2606 OID 536477)
+-- TOC entry 2333 (class 2606 OID 602656)
 -- Name: archivalAgreement archivalAgreement_reference_key; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2534,7 +2410,7 @@ ALTER TABLE ONLY medona."archivalAgreement"
 
 
 --
--- TOC entry 2351 (class 2606 OID 536523)
+-- TOC entry 2350 (class 2606 OID 602702)
 -- Name: controlAuthority controlAuthority_pkey; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2543,7 +2419,7 @@ ALTER TABLE ONLY medona."controlAuthority"
 
 
 --
--- TOC entry 2343 (class 2606 OID 536497)
+-- TOC entry 2342 (class 2606 OID 602676)
 -- Name: messageComment messageComment_messageId_comment_key; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2552,7 +2428,7 @@ ALTER TABLE ONLY medona."messageComment"
 
 
 --
--- TOC entry 2345 (class 2606 OID 536495)
+-- TOC entry 2344 (class 2606 OID 602674)
 -- Name: messageComment messageComment_pkey; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2561,7 +2437,7 @@ ALTER TABLE ONLY medona."messageComment"
 
 
 --
--- TOC entry 2339 (class 2606 OID 536485)
+-- TOC entry 2338 (class 2606 OID 602664)
 -- Name: message message_pkey; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2570,7 +2446,7 @@ ALTER TABLE ONLY medona.message
 
 
 --
--- TOC entry 2341 (class 2606 OID 536487)
+-- TOC entry 2340 (class 2606 OID 602666)
 -- Name: message message_type_reference_senderOrgRegNumber_key; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2579,7 +2455,7 @@ ALTER TABLE ONLY medona.message
 
 
 --
--- TOC entry 2349 (class 2606 OID 536510)
+-- TOC entry 2348 (class 2606 OID 602689)
 -- Name: unitIdentifier unitIdentifier_messageId_objectClass_objectId_key; Type: CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -2588,7 +2464,7 @@ ALTER TABLE ONLY medona."unitIdentifier"
 
 
 --
--- TOC entry 2449 (class 2606 OID 536957)
+-- TOC entry 2448 (class 2606 OID 603136)
 -- Name: archivalProfileAccess archivalProfileAccess_pkey; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2597,7 +2473,7 @@ ALTER TABLE ONLY organization."archivalProfileAccess"
 
 
 --
--- TOC entry 2447 (class 2606 OID 536943)
+-- TOC entry 2446 (class 2606 OID 603122)
 -- Name: orgContact orgContact_pkey; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2606,7 +2482,7 @@ ALTER TABLE ONLY organization."orgContact"
 
 
 --
--- TOC entry 2435 (class 2606 OID 536887)
+-- TOC entry 2434 (class 2606 OID 603066)
 -- Name: orgType orgType_pkey; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2615,7 +2491,7 @@ ALTER TABLE ONLY organization."orgType"
 
 
 --
--- TOC entry 2437 (class 2606 OID 536895)
+-- TOC entry 2436 (class 2606 OID 603074)
 -- Name: organization organization_pkey; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2624,7 +2500,7 @@ ALTER TABLE ONLY organization.organization
 
 
 --
--- TOC entry 2439 (class 2606 OID 536897)
+-- TOC entry 2438 (class 2606 OID 603076)
 -- Name: organization organization_registrationNumber_key; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2633,7 +2509,7 @@ ALTER TABLE ONLY organization.organization
 
 
 --
--- TOC entry 2441 (class 2606 OID 536899)
+-- TOC entry 2440 (class 2606 OID 603078)
 -- Name: organization organization_taxIdentifier_key; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2642,7 +2518,7 @@ ALTER TABLE ONLY organization.organization
 
 
 --
--- TOC entry 2445 (class 2606 OID 536935)
+-- TOC entry 2444 (class 2606 OID 603114)
 -- Name: servicePosition servicePosition_pkey; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2651,7 +2527,7 @@ ALTER TABLE ONLY organization."servicePosition"
 
 
 --
--- TOC entry 2443 (class 2606 OID 536922)
+-- TOC entry 2442 (class 2606 OID 603101)
 -- Name: userPosition userPosition_pkey; Type: CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -2660,7 +2536,7 @@ ALTER TABLE ONLY organization."userPosition"
 
 
 --
--- TOC entry 2353 (class 2606 OID 536537)
+-- TOC entry 2352 (class 2606 OID 602716)
 -- Name: accessRule accessRule_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2669,7 +2545,7 @@ ALTER TABLE ONLY "recordsManagement"."accessRule"
 
 
 --
--- TOC entry 2361 (class 2606 OID 536575)
+-- TOC entry 2360 (class 2606 OID 602754)
 -- Name: archivalProfileContents archivalProfileContents_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2678,7 +2554,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfileContents"
 
 
 --
--- TOC entry 2357 (class 2606 OID 536555)
+-- TOC entry 2356 (class 2606 OID 602734)
 -- Name: archivalProfile archivalProfile_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2687,7 +2563,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfile"
 
 
 --
--- TOC entry 2359 (class 2606 OID 536557)
+-- TOC entry 2358 (class 2606 OID 602736)
 -- Name: archivalProfile archivalProfile_reference_key; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2696,7 +2572,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfile"
 
 
 --
--- TOC entry 2365 (class 2606 OID 536605)
+-- TOC entry 2364 (class 2606 OID 602784)
 -- Name: archiveDescription archiveDescription_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2705,7 +2581,7 @@ ALTER TABLE ONLY "recordsManagement"."archiveDescription"
 
 
 --
--- TOC entry 2386 (class 2606 OID 536653)
+-- TOC entry 2385 (class 2606 OID 602832)
 -- Name: archiveRelationship archiveRelationship_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2714,7 +2590,7 @@ ALTER TABLE ONLY "recordsManagement"."archiveRelationship"
 
 
 --
--- TOC entry 2375 (class 2606 OID 536629)
+-- TOC entry 2374 (class 2606 OID 602808)
 -- Name: archive archive_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2723,7 +2599,7 @@ ALTER TABLE ONLY "recordsManagement".archive
 
 
 --
--- TOC entry 2392 (class 2606 OID 536679)
+-- TOC entry 2391 (class 2606 OID 602858)
 -- Name: descriptionClass descriptionClass_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2732,7 +2608,7 @@ ALTER TABLE ONLY "recordsManagement"."descriptionClass"
 
 
 --
--- TOC entry 2363 (class 2606 OID 536594)
+-- TOC entry 2362 (class 2606 OID 602773)
 -- Name: descriptionField descriptionField_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2741,7 +2617,7 @@ ALTER TABLE ONLY "recordsManagement"."descriptionField"
 
 
 --
--- TOC entry 2390 (class 2606 OID 536671)
+-- TOC entry 2389 (class 2606 OID 602850)
 -- Name: log log_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2750,7 +2626,7 @@ ALTER TABLE ONLY "recordsManagement".log
 
 
 --
--- TOC entry 2355 (class 2606 OID 536545)
+-- TOC entry 2354 (class 2606 OID 602724)
 -- Name: retentionRule retentionRule_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2759,7 +2635,7 @@ ALTER TABLE ONLY "recordsManagement"."retentionRule"
 
 
 --
--- TOC entry 2367 (class 2606 OID 536618)
+-- TOC entry 2366 (class 2606 OID 602797)
 -- Name: serviceLevel serviceLevel_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2768,7 +2644,7 @@ ALTER TABLE ONLY "recordsManagement"."serviceLevel"
 
 
 --
--- TOC entry 2369 (class 2606 OID 536620)
+-- TOC entry 2368 (class 2606 OID 602799)
 -- Name: serviceLevel serviceLevel_reference_key; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2777,7 +2653,7 @@ ALTER TABLE ONLY "recordsManagement"."serviceLevel"
 
 
 --
--- TOC entry 2394 (class 2606 OID 536687)
+-- TOC entry 2393 (class 2606 OID 602866)
 -- Name: storageRule storageRule_pkey; Type: CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2786,7 +2662,7 @@ ALTER TABLE ONLY "recordsManagement"."storageRule"
 
 
 --
--- TOC entry 2294 (class 1259 OID 536316)
+-- TOC entry 2293 (class 1259 OID 602495)
 -- Name: audit_event_eventDate_idx; Type: INDEX; Schema: audit; Owner: maarch
 --
 
@@ -2794,7 +2670,7 @@ CREATE INDEX "audit_event_eventDate_idx" ON audit.event USING btree ("eventDate"
 
 
 --
--- TOC entry 2295 (class 1259 OID 536315)
+-- TOC entry 2294 (class 1259 OID 602494)
 -- Name: audit_event_instanceName_idx; Type: INDEX; Schema: audit; Owner: maarch
 --
 
@@ -2802,7 +2678,7 @@ CREATE INDEX "audit_event_instanceName_idx" ON audit.event USING btree ("instanc
 
 
 --
--- TOC entry 2312 (class 1259 OID 536411)
+-- TOC entry 2311 (class 1259 OID 602590)
 -- Name: batchProcessing_logScheduling_schedulingId_idx; Type: INDEX; Schema: batchProcessing; Owner: maarch
 --
 
@@ -2810,7 +2686,7 @@ CREATE INDEX "batchProcessing_logScheduling_schedulingId_idx" ON "batchProcessin
 
 
 --
--- TOC entry 2397 (class 1259 OID 536825)
+-- TOC entry 2396 (class 1259 OID 603004)
 -- Name: digitalResource_digitalResource_archiveId_idx; Type: INDEX; Schema: digitalResource; Owner: maarch
 --
 
@@ -2818,7 +2694,7 @@ CREATE INDEX "digitalResource_digitalResource_archiveId_idx" ON "digitalResource
 
 
 --
--- TOC entry 2398 (class 1259 OID 536826)
+-- TOC entry 2397 (class 1259 OID 603005)
 -- Name: digitalResource_digitalResource_relatedResId__relationshipType_; Type: INDEX; Schema: digitalResource; Owner: maarch
 --
 
@@ -2826,7 +2702,7 @@ CREATE INDEX "digitalResource_digitalResource_relatedResId__relationshipType_" O
 
 
 --
--- TOC entry 2419 (class 1259 OID 536854)
+-- TOC entry 2418 (class 1259 OID 603033)
 -- Name: filePlan_folder_ownerOrgRegNumber_idx; Type: INDEX; Schema: filePlan; Owner: maarch
 --
 
@@ -2834,7 +2710,7 @@ CREATE INDEX "filePlan_folder_ownerOrgRegNumber_idx" ON "filePlan".folder USING 
 
 
 --
--- TOC entry 2424 (class 1259 OID 536873)
+-- TOC entry 2423 (class 1259 OID 603052)
 -- Name: event_objectId_idx; Type: INDEX; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2842,7 +2718,7 @@ CREATE INDEX "event_objectId_idx" ON "lifeCycle".event USING btree ("objectId");
 
 
 --
--- TOC entry 2427 (class 1259 OID 536874)
+-- TOC entry 2426 (class 1259 OID 603053)
 -- Name: event_timestamp_idx; Type: INDEX; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2850,7 +2726,7 @@ CREATE INDEX event_timestamp_idx ON "lifeCycle".event USING btree ("timestamp");
 
 
 --
--- TOC entry 2428 (class 1259 OID 536877)
+-- TOC entry 2427 (class 1259 OID 603056)
 -- Name: lifeCycle_event_eventType_idx; Type: INDEX; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2858,7 +2734,7 @@ CREATE INDEX "lifeCycle_event_eventType_idx" ON "lifeCycle".event USING btree ("
 
 
 --
--- TOC entry 2429 (class 1259 OID 536876)
+-- TOC entry 2428 (class 1259 OID 603055)
 -- Name: lifeCycle_event_instanceName_idx; Type: INDEX; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2866,7 +2742,7 @@ CREATE INDEX "lifeCycle_event_instanceName_idx" ON "lifeCycle".event USING btree
 
 
 --
--- TOC entry 2430 (class 1259 OID 536875)
+-- TOC entry 2429 (class 1259 OID 603054)
 -- Name: lifeCycle_event_objectClass_idx; Type: INDEX; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2874,7 +2750,7 @@ CREATE INDEX "lifeCycle_event_objectClass_idx" ON "lifeCycle".event USING btree 
 
 
 --
--- TOC entry 2431 (class 1259 OID 536878)
+-- TOC entry 2430 (class 1259 OID 603057)
 -- Name: lifeCycle_event_objectClass_objectId_idx; Type: INDEX; Schema: lifeCycle; Owner: maarch
 --
 
@@ -2882,7 +2758,7 @@ CREATE INDEX "lifeCycle_event_objectClass_objectId_idx" ON "lifeCycle".event USI
 
 
 --
--- TOC entry 2335 (class 1259 OID 536525)
+-- TOC entry 2334 (class 1259 OID 602704)
 -- Name: medona_message_date_idx; Type: INDEX; Schema: medona; Owner: maarch
 --
 
@@ -2890,7 +2766,7 @@ CREATE INDEX medona_message_date_idx ON medona.message USING btree (date);
 
 
 --
--- TOC entry 2336 (class 1259 OID 536524)
+-- TOC entry 2335 (class 1259 OID 602703)
 -- Name: medona_message_recipientOrgRegNumber_idx; Type: INDEX; Schema: medona; Owner: maarch
 --
 
@@ -2898,7 +2774,7 @@ CREATE INDEX "medona_message_recipientOrgRegNumber_idx" ON medona.message USING 
 
 
 --
--- TOC entry 2337 (class 1259 OID 536526)
+-- TOC entry 2336 (class 1259 OID 602705)
 -- Name: medona_message_status_active_idx; Type: INDEX; Schema: medona; Owner: maarch
 --
 
@@ -2906,7 +2782,7 @@ CREATE INDEX medona_message_status_active_idx ON medona.message USING btree (sta
 
 
 --
--- TOC entry 2346 (class 1259 OID 536527)
+-- TOC entry 2345 (class 1259 OID 602706)
 -- Name: medona_unitIdentifier_messageId_idx; Type: INDEX; Schema: medona; Owner: maarch
 --
 
@@ -2914,7 +2790,7 @@ CREATE INDEX "medona_unitIdentifier_messageId_idx" ON medona."unitIdentifier" US
 
 
 --
--- TOC entry 2347 (class 1259 OID 536528)
+-- TOC entry 2346 (class 1259 OID 602707)
 -- Name: medona_unitIdentifier_objectClass_idx; Type: INDEX; Schema: medona; Owner: maarch
 --
 
@@ -2922,7 +2798,7 @@ CREATE INDEX "medona_unitIdentifier_objectClass_idx" ON medona."unitIdentifier" 
 
 
 --
--- TOC entry 2370 (class 1259 OID 536641)
+-- TOC entry 2369 (class 1259 OID 602820)
 -- Name: archive_archivalProfileReference_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2930,7 +2806,7 @@ CREATE INDEX "archive_archivalProfileReference_idx" ON "recordsManagement".archi
 
 
 --
--- TOC entry 2371 (class 1259 OID 536644)
+-- TOC entry 2370 (class 1259 OID 602823)
 -- Name: archive_disposalDate_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2938,7 +2814,7 @@ CREATE INDEX "archive_disposalDate_idx" ON "recordsManagement".archive USING btr
 
 
 --
--- TOC entry 2372 (class 1259 OID 536640)
+-- TOC entry 2371 (class 1259 OID 602819)
 -- Name: archive_filePlanPosition_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2946,7 +2822,7 @@ CREATE INDEX "archive_filePlanPosition_idx" ON "recordsManagement".archive USING
 
 
 --
--- TOC entry 2373 (class 1259 OID 536643)
+-- TOC entry 2372 (class 1259 OID 602822)
 -- Name: archive_originatorOrgRegNumber_originatorArchiveId_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2954,7 +2830,7 @@ CREATE INDEX "archive_originatorOrgRegNumber_originatorArchiveId_idx" ON "record
 
 
 --
--- TOC entry 2376 (class 1259 OID 536642)
+-- TOC entry 2375 (class 1259 OID 602821)
 -- Name: archive_status_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2962,7 +2838,7 @@ CREATE INDEX archive_status_idx ON "recordsManagement".archive USING btree (stat
 
 
 --
--- TOC entry 2377 (class 1259 OID 536645)
+-- TOC entry 2376 (class 1259 OID 602824)
 -- Name: archive_to_tsvector_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2970,7 +2846,7 @@ CREATE INDEX archive_to_tsvector_idx ON "recordsManagement".archive USING gin (t
 
 
 --
--- TOC entry 2387 (class 1259 OID 536695)
+-- TOC entry 2386 (class 1259 OID 602874)
 -- Name: recordsManagement_archiveRelationship_archiveId_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2978,7 +2854,7 @@ CREATE INDEX "recordsManagement_archiveRelationship_archiveId_idx" ON "recordsMa
 
 
 --
--- TOC entry 2388 (class 1259 OID 536696)
+-- TOC entry 2387 (class 1259 OID 602875)
 -- Name: recordsManagement_archiveRelationship_relatedArchiveId_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2986,7 +2862,7 @@ CREATE INDEX "recordsManagement_archiveRelationship_relatedArchiveId_idx" ON "re
 
 
 --
--- TOC entry 2378 (class 1259 OID 536692)
+-- TOC entry 2377 (class 1259 OID 602871)
 -- Name: recordsManagement_archive_archiverOrgRegNumber_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -2994,7 +2870,7 @@ CREATE INDEX "recordsManagement_archive_archiverOrgRegNumber_idx" ON "recordsMan
 
 
 --
--- TOC entry 2379 (class 1259 OID 536690)
+-- TOC entry 2378 (class 1259 OID 602869)
 -- Name: recordsManagement_archive_descriptionClass_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3002,7 +2878,7 @@ CREATE INDEX "recordsManagement_archive_descriptionClass_idx" ON "recordsManagem
 
 
 --
--- TOC entry 2380 (class 1259 OID 536688)
+-- TOC entry 2379 (class 1259 OID 602867)
 -- Name: recordsManagement_archive_originatingDate_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3010,7 +2886,7 @@ CREATE INDEX "recordsManagement_archive_originatingDate_idx" ON "recordsManageme
 
 
 --
--- TOC entry 2381 (class 1259 OID 536694)
+-- TOC entry 2380 (class 1259 OID 602873)
 -- Name: recordsManagement_archive_originatorArchiveId_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3018,7 +2894,7 @@ CREATE INDEX "recordsManagement_archive_originatorArchiveId_idx" ON "recordsMana
 
 
 --
--- TOC entry 2382 (class 1259 OID 536693)
+-- TOC entry 2381 (class 1259 OID 602872)
 -- Name: recordsManagement_archive_originatorOrgRegNumber_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3026,7 +2902,7 @@ CREATE INDEX "recordsManagement_archive_originatorOrgRegNumber_idx" ON "recordsM
 
 
 --
--- TOC entry 2383 (class 1259 OID 536691)
+-- TOC entry 2382 (class 1259 OID 602870)
 -- Name: recordsManagement_archive_originatorOwnerOrgId_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3034,7 +2910,7 @@ CREATE INDEX "recordsManagement_archive_originatorOwnerOrgId_idx" ON "recordsMan
 
 
 --
--- TOC entry 2384 (class 1259 OID 536689)
+-- TOC entry 2383 (class 1259 OID 602868)
 -- Name: recordsManagement_archive_parentArchiveId_idx; Type: INDEX; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3042,7 +2918,7 @@ CREATE INDEX "recordsManagement_archive_parentArchiveId_idx" ON "recordsManageme
 
 
 --
--- TOC entry 2452 (class 2606 OID 536367)
+-- TOC entry 2451 (class 2606 OID 602546)
 -- Name: privilege privilege_roleId_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -3051,7 +2927,7 @@ ALTER TABLE ONLY auth.privilege
 
 
 --
--- TOC entry 2450 (class 2606 OID 536349)
+-- TOC entry 2449 (class 2606 OID 602528)
 -- Name: roleMember roleMember_roleId_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -3060,7 +2936,7 @@ ALTER TABLE ONLY auth."roleMember"
 
 
 --
--- TOC entry 2451 (class 2606 OID 536354)
+-- TOC entry 2450 (class 2606 OID 602533)
 -- Name: roleMember roleMember_userAccountId_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -3069,7 +2945,7 @@ ALTER TABLE ONLY auth."roleMember"
 
 
 --
--- TOC entry 2453 (class 2606 OID 536380)
+-- TOC entry 2452 (class 2606 OID 602559)
 -- Name: servicePrivilege servicePrivilege_accountId_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: maarch
 --
 
@@ -3078,7 +2954,7 @@ ALTER TABLE ONLY auth."servicePrivilege"
 
 
 --
--- TOC entry 2454 (class 2606 OID 536432)
+-- TOC entry 2453 (class 2606 OID 602611)
 -- Name: address address_contactId_fkey; Type: FK CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -3087,7 +2963,7 @@ ALTER TABLE ONLY contact.address
 
 
 --
--- TOC entry 2456 (class 2606 OID 536462)
+-- TOC entry 2455 (class 2606 OID 602641)
 -- Name: communication communication_comMeanCode_fkey; Type: FK CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -3096,7 +2972,7 @@ ALTER TABLE ONLY contact.communication
 
 
 --
--- TOC entry 2455 (class 2606 OID 536457)
+-- TOC entry 2454 (class 2606 OID 602636)
 -- Name: communication communication_contactId_fkey; Type: FK CONSTRAINT; Schema: contact; Owner: maarch
 --
 
@@ -3105,7 +2981,7 @@ ALTER TABLE ONLY contact.communication
 
 
 --
--- TOC entry 2472 (class 2606 OID 536755)
+-- TOC entry 2471 (class 2606 OID 602934)
 -- Name: address address_repositoryId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3114,7 +2990,7 @@ ALTER TABLE ONLY "digitalResource".address
 
 
 --
--- TOC entry 2471 (class 2606 OID 536750)
+-- TOC entry 2470 (class 2606 OID 602929)
 -- Name: address address_resId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3123,7 +2999,7 @@ ALTER TABLE ONLY "digitalResource".address
 
 
 --
--- TOC entry 2473 (class 2606 OID 536768)
+-- TOC entry 2472 (class 2606 OID 602947)
 -- Name: clusterRepository clusterRepository_clusterId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3132,7 +3008,7 @@ ALTER TABLE ONLY "digitalResource"."clusterRepository"
 
 
 --
--- TOC entry 2474 (class 2606 OID 536773)
+-- TOC entry 2473 (class 2606 OID 602952)
 -- Name: clusterRepository clusterRepository_repositoryId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3141,7 +3017,7 @@ ALTER TABLE ONLY "digitalResource"."clusterRepository"
 
 
 --
--- TOC entry 2468 (class 2606 OID 536714)
+-- TOC entry 2467 (class 2606 OID 602893)
 -- Name: digitalResource digitalResource_archiveId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3150,7 +3026,7 @@ ALTER TABLE ONLY "digitalResource"."digitalResource"
 
 
 --
--- TOC entry 2469 (class 2606 OID 536719)
+-- TOC entry 2468 (class 2606 OID 602898)
 -- Name: digitalResource digitalResource_clusterId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3159,7 +3035,7 @@ ALTER TABLE ONLY "digitalResource"."digitalResource"
 
 
 --
--- TOC entry 2470 (class 2606 OID 536724)
+-- TOC entry 2469 (class 2606 OID 602903)
 -- Name: digitalResource digitalResource_relatedResId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3168,7 +3044,7 @@ ALTER TABLE ONLY "digitalResource"."digitalResource"
 
 
 --
--- TOC entry 2475 (class 2606 OID 536786)
+-- TOC entry 2474 (class 2606 OID 602965)
 -- Name: package package_packageId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3177,7 +3053,7 @@ ALTER TABLE ONLY "digitalResource".package
 
 
 --
--- TOC entry 2476 (class 2606 OID 536797)
+-- TOC entry 2475 (class 2606 OID 602976)
 -- Name: packedResource packedResource_packageId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3186,7 +3062,7 @@ ALTER TABLE ONLY "digitalResource"."packedResource"
 
 
 --
--- TOC entry 2477 (class 2606 OID 536802)
+-- TOC entry 2476 (class 2606 OID 602981)
 -- Name: packedResource packedResource_resId_fkey; Type: FK CONSTRAINT; Schema: digitalResource; Owner: maarch
 --
 
@@ -3195,7 +3071,7 @@ ALTER TABLE ONLY "digitalResource"."packedResource"
 
 
 --
--- TOC entry 2478 (class 2606 OID 536838)
+-- TOC entry 2477 (class 2606 OID 603017)
 -- Name: folder folderId_filePlan_fkey; Type: FK CONSTRAINT; Schema: filePlan; Owner: maarch
 --
 
@@ -3204,7 +3080,7 @@ ALTER TABLE ONLY "filePlan".folder
 
 
 --
--- TOC entry 2479 (class 2606 OID 536849)
+-- TOC entry 2478 (class 2606 OID 603028)
 -- Name: position position_filePlan_fkey; Type: FK CONSTRAINT; Schema: filePlan; Owner: maarch
 --
 
@@ -3213,7 +3089,7 @@ ALTER TABLE ONLY "filePlan"."position"
 
 
 --
--- TOC entry 2457 (class 2606 OID 536498)
+-- TOC entry 2456 (class 2606 OID 602677)
 -- Name: messageComment messageComment_messageId_fkey; Type: FK CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -3222,7 +3098,7 @@ ALTER TABLE ONLY medona."messageComment"
 
 
 --
--- TOC entry 2458 (class 2606 OID 536511)
+-- TOC entry 2457 (class 2606 OID 602690)
 -- Name: unitIdentifier unitIdentifier_messageId_fkey; Type: FK CONSTRAINT; Schema: medona; Owner: maarch
 --
 
@@ -3231,7 +3107,7 @@ ALTER TABLE ONLY medona."unitIdentifier"
 
 
 --
--- TOC entry 2485 (class 2606 OID 536958)
+-- TOC entry 2484 (class 2606 OID 603137)
 -- Name: archivalProfileAccess archivalProfileAccess_orgId_fkey; Type: FK CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -3240,7 +3116,7 @@ ALTER TABLE ONLY organization."archivalProfileAccess"
 
 
 --
--- TOC entry 2484 (class 2606 OID 536944)
+-- TOC entry 2483 (class 2606 OID 603123)
 -- Name: orgContact orgContact_orgId_fkey; Type: FK CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -3249,7 +3125,7 @@ ALTER TABLE ONLY organization."orgContact"
 
 
 --
--- TOC entry 2480 (class 2606 OID 536900)
+-- TOC entry 2479 (class 2606 OID 603079)
 -- Name: organization organization_orgTypeCode_fkey; Type: FK CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -3258,7 +3134,7 @@ ALTER TABLE ONLY organization.organization
 
 
 --
--- TOC entry 2482 (class 2606 OID 536910)
+-- TOC entry 2481 (class 2606 OID 603089)
 -- Name: organization organization_ownerOrgId_fkey; Type: FK CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -3267,7 +3143,7 @@ ALTER TABLE ONLY organization.organization
 
 
 --
--- TOC entry 2481 (class 2606 OID 536905)
+-- TOC entry 2480 (class 2606 OID 603084)
 -- Name: organization organization_parentOrgId_fkey; Type: FK CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -3276,7 +3152,7 @@ ALTER TABLE ONLY organization.organization
 
 
 --
--- TOC entry 2483 (class 2606 OID 536923)
+-- TOC entry 2482 (class 2606 OID 603102)
 -- Name: userPosition userPosition_orgId_fkey; Type: FK CONSTRAINT; Schema: organization; Owner: maarch
 --
 
@@ -3285,7 +3161,7 @@ ALTER TABLE ONLY organization."userPosition"
 
 
 --
--- TOC entry 2462 (class 2606 OID 536581)
+-- TOC entry 2461 (class 2606 OID 602760)
 -- Name: archivalProfileContents archivalProfileContents_containedProfileId_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3294,7 +3170,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfileContents"
 
 
 --
--- TOC entry 2461 (class 2606 OID 536576)
+-- TOC entry 2460 (class 2606 OID 602755)
 -- Name: archivalProfileContents archivalProfileContents_parentProfileId_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3303,7 +3179,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfileContents"
 
 
 --
--- TOC entry 2459 (class 2606 OID 536558)
+-- TOC entry 2458 (class 2606 OID 602737)
 -- Name: archivalProfile archivalProfile_accessRuleCode_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3312,7 +3188,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfile"
 
 
 --
--- TOC entry 2460 (class 2606 OID 536563)
+-- TOC entry 2459 (class 2606 OID 602742)
 -- Name: archivalProfile archivalProfile_retentionRuleCode_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3321,7 +3197,7 @@ ALTER TABLE ONLY "recordsManagement"."archivalProfile"
 
 
 --
--- TOC entry 2463 (class 2606 OID 536606)
+-- TOC entry 2462 (class 2606 OID 602785)
 -- Name: archiveDescription archiveDescription_archivalProfileId_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3330,7 +3206,7 @@ ALTER TABLE ONLY "recordsManagement"."archiveDescription"
 
 
 --
--- TOC entry 2466 (class 2606 OID 536654)
+-- TOC entry 2465 (class 2606 OID 602833)
 -- Name: archiveRelationship archiveRelationship_archiveId_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3339,7 +3215,7 @@ ALTER TABLE ONLY "recordsManagement"."archiveRelationship"
 
 
 --
--- TOC entry 2467 (class 2606 OID 536659)
+-- TOC entry 2466 (class 2606 OID 602838)
 -- Name: archiveRelationship archiveRelationship_relatedArchiveId_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3348,7 +3224,7 @@ ALTER TABLE ONLY "recordsManagement"."archiveRelationship"
 
 
 --
--- TOC entry 2465 (class 2606 OID 536635)
+-- TOC entry 2464 (class 2606 OID 602814)
 -- Name: archive archive_accessRuleCode_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3357,7 +3233,7 @@ ALTER TABLE ONLY "recordsManagement".archive
 
 
 --
--- TOC entry 2464 (class 2606 OID 536630)
+-- TOC entry 2463 (class 2606 OID 602809)
 -- Name: archive archive_parentArchiveId_fkey; Type: FK CONSTRAINT; Schema: recordsManagement; Owner: maarch
 --
 
@@ -3365,7 +3241,7 @@ ALTER TABLE ONLY "recordsManagement".archive
     ADD CONSTRAINT "archive_parentArchiveId_fkey" FOREIGN KEY ("parentArchiveId") REFERENCES "recordsManagement".archive("archiveId");
 
 
--- Completed on 2019-08-23 14:03:55 CEST
+-- Completed on 2019-12-11 11:13:11 CET
 
 --
 -- PostgreSQL database dump complete

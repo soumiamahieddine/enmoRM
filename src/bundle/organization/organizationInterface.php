@@ -331,4 +331,11 @@ interface organizationInterface
      * @action organization/organization/read
      */
     public function read_orgId_();
+
+    /**
+     * Change status of organization
+     *
+     * @action organization/organization/changeStatus
+     */
+    public function read_orgId_ChangeStatus_status_();
 }
