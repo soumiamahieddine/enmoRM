@@ -452,7 +452,7 @@
     // manage Adminbutton's attributes according to UserType
     function setAdminButton(whatAmI) {
         user_security = ($("#securityLevel").text());
-        if (user_security == "fonc_admin") {
+        if (user_security == "func_admin") {
             $('#adminUser').bootstrapToggle("on");
             $('#adminUser').parent().addClass('disabled');
         } else if (user_security == "gen_admin"){
@@ -465,7 +465,7 @@
             if(whatAmI == "adminG") {
                     $('#adminUser').bootstrapToggle('on');
                     $('#adminUser').parent().addClass('disabled');
-            } else if (whatAmI == "adminF") {
+            } else if (whatAmI == "func_admin") {
                     $('#adminUser').bootstrapToggle("off");
                     $('#adminUser').parent().addClass('disabled');
                     $("#adminRights").hide();
