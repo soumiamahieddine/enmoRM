@@ -499,7 +499,15 @@ class organization
 
         return $res;
     }
-
+    
+    /**
+     * Sets the status of an org unit
+     *
+     * @param string $orgId  The org identifier
+     * @param bool   $status The new status (enabled = true of false)
+     * 
+     * @return bool The result of the change
+     */
     public function changeStatus($orgId, $status) {
         $organization = $this->sdoFactory->read('organization/organization', $orgId);
 
