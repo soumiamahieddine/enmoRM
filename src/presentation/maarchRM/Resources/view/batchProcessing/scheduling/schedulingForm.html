@@ -24,6 +24,7 @@
             <div class="form-group">
                 <label class="col-lg-3 control-label">Executed by<span style="color:red">&nbsp;*</span></label>
                 <div class="col-lg-7">
+                    <?merge isUser.bool().not().then('disabled') @disabled ?>
                     <select class="form-control" id="serviceAccountId" name="serviceAccountId" title="Executed by">
                         <option value="" disabled selected>Select a service account</option>
                         <?merge serviceAccount ?>

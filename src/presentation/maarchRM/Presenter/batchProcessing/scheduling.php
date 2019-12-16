@@ -68,6 +68,12 @@ class scheduling
             $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
             if(!$serviceAccount->enabled){
                 unset($serviceAccounts[$key]);
+                continue;
+            }
+
+            if ($serviceAccount->isAdmin) {
+                unset($serviceAccounts[$key]);
+                continue;
             }
             foreach ($privileges as $privilege) {
                 $serviceURI[] = $privilege->serviceURI;
@@ -115,11 +121,21 @@ class scheduling
             $scheduledTask->json = json_encode($scheduledTask);
         }
 
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+
+        if (is_null($account->securityLevel) || $account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER) {
+            $isUser = true;
+        } else {
+            $isUser = false;
+        }
+
         $this->view->translate();
         $this->view->setSource("serviceAccount", $serviceAccounts);
         $this->view->setSource("tasks", $tasks);
         $this->view->setSource("scheduledTasks", $scheduledTasks);
         $this->view->setSource("timezone", date_default_timezone_get());
+        $this->view->setSource("isUser", $isUser);
         $this->view->merge();
 
         return $this->view->saveHtml();
