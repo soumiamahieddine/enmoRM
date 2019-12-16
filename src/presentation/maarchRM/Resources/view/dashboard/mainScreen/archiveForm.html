@@ -20,8 +20,11 @@
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Originating date</label>
-        <div class="input-group col-sm-9" style="padding-left: 15px; padding-right: 15px;">
+        <div class="col-sm-6">
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" id="originatingDate" placeholder="Originating date"/>
+        </div>
+        <div class="col-sm-3">
+            <button type="button" class="input-sm form-control btn btn-primary" id="documentDateTodayButton">Today</button>
         </div>
     </div>
 
@@ -119,11 +122,13 @@
         }
     };
 
-    $('#app_maarchRM_main').ready(function () {
+    function setTodayDocumentDate() {
         dateInput = $("#originatingDate");
         date = new Date().toLocaleDateString().replace(/\//g, "-");
         dateInput.datepicker('setDate', date);
-    });
+    }
+
+    $('#documentDateTodayButton').on("click", setTodayDocumentDate);
 
     $("#archiveForm").keypress(function(e) {
     //To disable Enter keypress in this form
@@ -134,6 +139,7 @@
 
     // ARCHIVE
     $('#archivalProfile').on('change', function() {
+        setTodayDocumentDate();
         ArchiveForm.loadProfile();
         ArchiveForm.displayArchiveDescription();
     });
