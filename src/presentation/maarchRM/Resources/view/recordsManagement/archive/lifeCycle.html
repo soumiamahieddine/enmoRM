@@ -20,8 +20,25 @@
                             <i class="fa fa-fw fa-eye">&nbsp;</i>
                         </button>
                     </div>
+                    <?merge hasCertificatePrivilege.bool() ?>
+                    <span>
+                        <?merge .hasCertificate.bool() ?>
+                        <span>
+                            <div class="btn-group pull-right">
+                                <button type="button" class="btn btn-info btn-sm attestation" title="Download certificate" data-eventid='[?merge .eventId ?]'><span class="fa fa-download">&nbsp;</span></button>
+                            </div>
+                        </span>
+                    </span>
                 </td>
             </tr>                                    
         </tbody>
     </table>
 </div>
+<script>
+    eventCertificate = {
+        load: function(eventId) {
+            var url = '/journal/eventcertificate/' + eventId;
+            window.open(url, 'document');
+        }
+    }
+</script>

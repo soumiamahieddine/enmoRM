@@ -300,6 +300,17 @@ class archive
         $lifeCycleDataTable->setPaginationType("full_numbers");
         $lifeCycleDataTable->setSorting(array(array(0, 'desc')));
 
+        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
+        if ($hasCertificatePrivilege) {
+            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
+            foreach ($archive->lifeCycleEvent as $key => $event) {
+                if (in_array($event->eventType, $eventsToCertificate)) {
+                    $archive->lifeCycleEvent[$key]->hasCertificate = true;
+                }
+            }
+        }
+
+        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
         $this->view->translate();
         $this->view->merge();
 
@@ -340,6 +351,18 @@ class archive
         $this->view->setSource("archivalProfileList", $archive->archivalProfileList);
         $this->view->setSource("acceptArchiveWithoutProfile", $archive->acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $archive->acceptUserIndex);
+
+        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
+        if ($hasCertificatePrivilege) {
+            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
+            foreach ($events as $key => $event) {
+                if (in_array($event->eventType, $eventsToCertificate)) {
+                    $events[$key]->hasCertificate = true;
+                }
+            }
+        }
+
+        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
 
         $this->view->translate();
         $this->view->merge();
@@ -383,6 +406,17 @@ class archive
             && $archive->status === 'preserved') {
             $canDeleteResource = $canAddResource = true ;
         }
+
+        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
+        if ($hasCertificatePrivilege) {
+            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
+            foreach ($events as $key => $event) {
+                if (in_array($event->eventType, $eventsToCertificate)) {
+                    $events[$key]->hasCertificate = true;
+                }
+            }
+        }
+        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
 
         $this->view->setSource("canDeleteResource", $canDeleteResource);
         $this->view->setSource("canAddResource", $canAddResource);

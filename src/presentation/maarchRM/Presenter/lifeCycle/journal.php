@@ -211,17 +211,6 @@ class journal
 
         $this->view->setSource('multipleInstance', $multipleInstance);
 
-        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
-        if ($hasCertificatePrivilege) {
-            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
-            foreach ($events as $key => $event) {
-                if (in_array($event->eventType, $eventsToCertificate)) {
-                    $events[$key]->hasCertificate = true;
-                }
-            }
-        }
-
-        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
         $this->view->setSource('events', $events);
         $this->view->merge();
         $this->view->translate();
