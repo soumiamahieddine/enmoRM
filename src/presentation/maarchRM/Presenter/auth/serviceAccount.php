@@ -150,7 +150,7 @@ class serviceAccount
         $this->view->setSource("organizations", $organizations);
         $this->view->merge($this->view->getElementById("serviceOrgId"));
         $this->view->setSource("serviceAccount", $serviceAccount);
-        $view->setSource('whatAmI', $whatAmI);
+        $this->view->setSource('whatAmI', $whatAmI);
 
 
         $this->view->translate();
