@@ -120,7 +120,7 @@
     };
 
     $('#app_maarchRM_main').ready(function () {
-        dateInput = $("#managementMetadataForm").find("[name=retentionStartDate]");
+        dateInput = $("#originatingDate");
         date = new Date().toLocaleDateString().replace(/\//g, "-");
         dateInput.datepicker('setDate', date);
     });
