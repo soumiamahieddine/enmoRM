@@ -467,8 +467,9 @@ file that was distributed with this source code.
         $('#booleanPropertyDefaultValue').find('[value=""]').parent().addClass("active");
 
         $('#dateWithTime').bootstrapToggle('off');
+        $('#defaultTodayDate').bootstrapToggle('off');
 
-        $('#keywordDefaultValue, #keywordSelectDefault, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn, #dateWithTimeGroup, #keywordEnumForm').addClass('hide');
+        $('#keywordDefaultValue, #keywordSelectDefault, #textPropertyDefaultValue, #numberPropertyDefaultValue, #booleanPropertyDefaultValue, #descriptionField_formModifyBtn, #dateWithTimeGroup, #defaultTodayDateGroup, #keywordEnumForm').addClass('hide');
 
         $('#descriptionField_formSaveBtn').removeClass('hide');
         
@@ -544,6 +545,9 @@ file that was distributed with this source code.
                 $('#defaultTodayDateGroup').removeClass('hide');
                 if (descriptionField.format == 'datetime') {
                     $('#dateWithTime').bootstrapToggle('on');
+                }
+                if (descriptionField.default == 'now') {
+                    $('#defaultTodayDate').bootstrapToggle('on');
                 }
                 break;
 
@@ -623,7 +627,7 @@ file that was distributed with this source code.
                     field['format'] ='datetime';
                 }
                 if ($('#defaultTodayDate').prop('checked') === true) {
-                    field['default'] = Date.now();
+                    field['default'] = "now";
                 }
                 break;
         }
