@@ -7,9 +7,9 @@
                         <span aria-hidden="true">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <div name="downloadCertificate">
+                    <div name="downloadCertificate"> 
                         <div class="pull-right" style="margin-right:5em">
-                            <button type="button" id="certificateButton" class="btn btn-info btn-sm attestation" title="Download certificate"><span class="fa fa-download">&nbsp;</span></button>
+                            <button type="button" class="btn btn-info btn-sm attestation" title="Download certificate"><span class="fa fa-download">&nbsp;</span></button>
                         </div>
                     </div>
                     <h3>Event</h3>
@@ -81,8 +81,6 @@ eventInfo = {
                     response.operationResult = $('#failure_text').html();
                 }
 
-                var eventId = response.eventId;
-
                 var element = $('#eventData').find('dt[name], dd[name]');
                 $.each(element, function() {
                     var e = $(this)
@@ -99,15 +97,6 @@ eventInfo = {
                 $('#eventDescription').find('[name="description"]').text(response.description);
                 delete response.description;
 
-                $('#eventCertificate').addClass('hide');
-                /*if (response.certificateClass && response.certificateId) {
-                    var url = '/' + response.certificateClass + '/certificate/' + response.certificateId;
-                    $('#eventCertificate').removeClass('hide');
-                    $('#showEventCertificate').data('url', url);
-
-                    delete response.certificateClass;
-                    delete response.certificateId;
-                }*/
                 var eventInfo = $('#eventInfo');
                 eventInfo.html('');
                 $.each(response, function(key, value) {
@@ -115,9 +104,7 @@ eventInfo = {
                         $('<dt></dt>').text(key).appendTo(eventInfo);
                         $('<dd></dd>').html(value).css('word-break', 'break-all').appendTo(eventInfo);
                     }
-                });
-
-                $('#certificateButton').attr('data-eventid', eventId);
+                })
 
                 $('#showEvent').modal();
             },
@@ -134,5 +121,7 @@ eventCertificate = {
         window.open(url, 'document');
     }
 }
-
+$("#showEvent").on('click', '.attestation', function () {
+    eventCertificate.load($("dd[name='eventId']").text());
+});
 </script>
