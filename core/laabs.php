@@ -633,7 +633,11 @@ class laabs
      */
     public static function createPublicResource($content, $path = LAABS_TMP)
     {
-        $uid = hash('md5', $content);
+        if (is_scalar($content)) {
+            $uid = hash('md5', $content);
+        } else {
+            $uid = \laabs\uniqid();
+        }
 
         $dir = "..".DIRECTORY_SEPARATOR.LAABS_WEB;
         if ($path) {
@@ -652,8 +656,14 @@ class laabs
         $uri = LAABS_URI_SEPARATOR.$pathUri.LAABS_URI_SEPARATOR.$uid;
 
         if (!is_file($file)) {
-            if (!file_put_contents($file, $content)) {
-                throw new Exception("Unable to copy resource to '$file'");
+            if (is_scalar($content)) {
+                if (!file_put_contents($file, $content)) {
+                    throw new Exception("Unable to copy resource to '$file'");
+                }
+            } elseif (is_resource($content)) {
+                $fp = fopen($file, 'w');
+                stream_copy_to_stream($content, $fp);
+                fclose($fp);
             }
         }
 
