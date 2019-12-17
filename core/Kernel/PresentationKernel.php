@@ -405,7 +405,9 @@ class PresentationKernel
             $this->guessResponseLanguage();
         }
 
-        $this->response->setHeader('Content-Length', strlen($this->response->body));
+        if (is_scalar($this->response->body)) {
+            $this->response->setHeader('Content-Length', strlen($this->response->body));
+        }
     }
 
         /**
@@ -416,8 +418,19 @@ class PresentationKernel
     {
         
         $finfo = new \finfo();
-        $mimeType = $finfo->buffer($this->response->body, FILEINFO_MIME_TYPE);
-        $encoding = $finfo->buffer($this->response->body, FILEINFO_MIME_ENCODING);
+        
+        if (is_scalar($this->response->body)) {
+            $mimeType = $finfo->buffer($this->response->body, FILEINFO_MIME_TYPE);
+            $encoding = $finfo->buffer($this->response->body, FILEINFO_MIME_ENCODING);
+        } elseif (is_resource($this->reponse->body)) {
+            $metadata = stream_get_meta_data($this->reponse->body);
+            if ($metadata['wrapper_type'] == 'plainfile') {
+                $mimeType = $finfo->file($metadata['uri'], FILEINFO_MIME_TYPE);
+                $encoding = $finfo->file($metadata['uri'], FILEINFO_MIME_ENCODING);
+            } else {
+                return;
+            }
+        }
 
         $contentType = $mimeType;
 
