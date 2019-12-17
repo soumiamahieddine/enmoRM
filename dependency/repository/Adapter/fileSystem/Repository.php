@@ -372,7 +372,7 @@ class Repository
             throw new \Exception("Can not find resource at path $path");
         }
 
-        if (!$data = file_get_contents($filename)) {
+        if (!$data = fopen($filename, 'r')) {
             throw new \Exception("Can not read at path $path");
         }
 

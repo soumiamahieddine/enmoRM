@@ -321,20 +321,20 @@ class cluster
             }
             $address = $this->sdoFactory->read("digitalResource/address", array('resId' => $resource->resId, 'repositoryId' => $clusterRepository->repositoryId));
             if ($address) {
-                $contents = null;
+                $handler = null;
                 $resource->address[] = $address;
                 $address->repository = $clusterRepository->repository;
 
                 try {
-                    $contents = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
+                    $handler = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
 
-                    if (isset($resource->hash) && !$this->checkHash($address, $resource, $contents)) {
+                    if (isset($resource->hash) && !$this->checkHash($address, $resource, $handler)) {
                         throw \laabs::newException("digitalResource/clusterException", 'Invalid hash for resource %1$s at address %2$S', 404, null, [$resource->resId, $address->repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
                     }
 
-                    $resource->setContents($contents);
+                    $resource->sethandler($handler);
 
-                    return $contents;
+                    return $handler;
 
                 } catch (\Exception $e) {
                     $address->integrityCheckResult = false;
@@ -380,10 +380,10 @@ class cluster
 
             foreach ($resource->address as $address) {
                 $address->repository = $clusterRepository->repository;
-                $contents = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
+                $handler = $this->repositoryController->retrieveContents($clusterRepository->repository, $address);
 
-                if ($contents) {
-                    $result = $result && $this->checkHash($address, $resource, $contents);
+                if ($handler) {
+                    $result = $result && $this->checkHash($address, $resource, $handler);
 
                     if (!$result) {
                         throw \laabs::newException("digitalResource/invalidHashException", "Invalid hash on repository '%s'", 409, null, $clusterRepository->repositoryId);
@@ -395,10 +395,10 @@ class cluster
         return $result;
     }
 
-    private function checkHash($address, $resource, $contents)
+    private function checkHash($address, $resource, $handler)
     {
-        $hash = strtolower(hash($resource->hashAlgorithm, $contents));
-
+        $hash = strtolower(\laabs\hash_stream($resource->hashAlgorithm, $handler));
+        
         $address->lastIntegrityCheck = \laabs::newTimestamp();
         $address->integrityCheckResult = false;
 
@@ -406,6 +406,8 @@ class cluster
             $address->integrityCheckResult = true;
         }
         $this->sdoFactory->update($address);
+
+        
 
         return $address->integrityCheckResult;
     }
