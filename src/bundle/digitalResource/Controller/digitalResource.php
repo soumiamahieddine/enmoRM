@@ -374,29 +374,9 @@ class digitalResource
 
         $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
         $resource->cluster = $cluster;
-        $contents = $this->clusterController->retrieveResource($cluster, $resource);
+        $handler = $this->clusterController->retrieveResource($cluster, $resource);
 
-        if (!$contents) {
-            $packedResources = $this->sdoFactory->find('digitalResource/packedResource', "resId='".$resource->resId."'");
-            if (count($packedResources) > 0) {
-                $packageController = \laabs::newController('digitalResource/package');
-                foreach ($packedResources as $packedResource) {
-                    try {
-                        $package = $this->sdoFactory->read('digitalResource/package', $packedResource->packageId);
-                        $package->resource = $this->retrieve($packedResource->packageId);
-                        $contents = $packageController->getPackedContents($package, $packedResource->name);
-                        // Check hash
-                        $this->checkHash($contents, $resource->hash, $resource->hashAlgorithm);
-
-                        $resource->setContents($contents);
-                    } catch (\Exception $exception) {
-                        throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
-                    }
-                }
-            }
-        }
-
-        if (!$contents) {
+        if (!$handler) {
             throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
         }
 

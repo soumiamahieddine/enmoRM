@@ -220,18 +220,18 @@ class repository
     }
 
     /**
-     * Store a resource contents on repo (after opening it)
+     * Returns a resource handler on repo (after opening it)
      * @param digitalResource/repository $repository
      * @param digitalResource/address    $address
      *
-     * @return string Resource contents
+     * @return resource
      */
     public function retrieveContents($repository, $address)
     {
         try {
             $repositoryService = $repository->getService();
             $address->path = str_replace('\\', '/', $address->path);
-            $contents = $repositoryService->readObject($address->path);
+            $handler = $repositoryService->readObject($address->path);
         } catch (\Exception $e) {
             $address->lastIntegrityCheck = \laabs::newTimestamp();
             $address->integrityCheckResult = false;
@@ -240,7 +240,7 @@ class repository
             throw \laabs::newException("digitalResource/repositoryException", "Resource contents not available at address %s.", 404, null, [$repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
         }
 
-        return $contents;
+        return $handler;
     }
 
     /**
@@ -338,16 +338,15 @@ class repository
             if (!$repository) {
                 $repository = $this->openRepository($address->repositoryId);
             }
-            $contents = $this->retrieveContents($repository, $address);
+            $handler = $this->retrieveContents($repository, $address);
 
-            $hash = hash($digitalResource->hashAlgorithm, $contents);
-
+            $hash = strtolower(\laabs\hash_stream($digitalResource->hashAlgorithm, $handler));
+            
             $address->integrityCheckResult = true;
 
             if ($hash != strtolower($digitalResource->hash)) {
                 throw \laabs::newException("digitalResource/repositoryException", "");
             }
-
         } catch (\Exception $exception) {
             $address->integrityCheckResult = false;
         }

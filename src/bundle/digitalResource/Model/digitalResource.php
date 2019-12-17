@@ -140,6 +140,13 @@ class digitalResource
     protected $handler;
 
     /**
+     * True will cause contetns to be destroyed when object destructed
+     *
+     * @var bool
+     */
+    protected $isTemp;
+
+    /**
      * The metadata
      *
      * @var object
@@ -176,11 +183,13 @@ class digitalResource
 
     /**
      * Set resource handler
-     * @param resource $handler
+     * @param resource $handler The stream handler
+     * @param bool     $isTemp  Stream is temporary
      */
-    public function setHandler($handler)
+    public function setHandler($handler, $isTemp = false)
     {
         $this->handler = $handler;
+        $this->isTemp = $isTemp;
     }
 
     /**
@@ -195,11 +204,13 @@ class digitalResource
 
     /**
      * Set resource filename
-     * @param string $path The path of resource
+     * @param string $path    The path of file
+     * @param bool   $isTemp  File is temporary
      */
-    public function setFilename($path)
+    public function setFilename($path, $isTemp = false)
     {
         $this->handler = $path;
+        $this->isTemp = $isTemp;
     }
 
     /**
@@ -208,9 +219,11 @@ class digitalResource
      */
     public function setContents($contents)
     {
-        $this->handler = \laabs::createMemoryStream($contents);
-
-        $this->setInformation($contents);
+        $tmpfile = \laabs\tempnam();
+        file_put_contents($tmpfile, $contents);
+        $this->isTemp = true;
+        $this->handler = fopen($tmpfile, 'r+');
+        $this->setInformation($tmpfile);
     }
 
     /**
@@ -221,14 +234,10 @@ class digitalResource
     public function getContents()
     {
         if (is_string($this->handler)) {
-
             $contents = file_get_contents($this->handler);
-
         } elseif (is_resource($this->handler)) {
-
             $contents = stream_get_contents($this->handler);
             rewind($this->handler);
-
         }
 
         return $contents;
@@ -254,15 +263,33 @@ class digitalResource
     }
 
     /**
-     * Set file information
-     * @param string $contents The file contents
+     * Destructs the object
      */
-    private function setInformation($contents)
+    public function __destruct()
     {
-        $this->size = strlen($contents);
+        if ($this->isTemp) {
+            if (is_string($this->handler)) {
+                unlink($this->handler);
+            } elseif (is_resource($this->handler)) {
+                $metadata = stream_get_meta_data($this->handler);
+                fclose($this->handler);
+                if ($metadata['wrapper_type'] == 'plainfile') {
+                    unlink($metadata['uri']);
+                }
+            }
+        }
+    }
+
+    /**
+     * Set file information
+     * @param string $filename The file name
+     */
+    private function setInformation($filename)
+    {
+        $this->size = filesize($filename);
 
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $this->mimetype = $finfo->buffer($contents);
+        $this->mimetype = $finfo->file($filename);
 
         if (isset($this->fileExtension) || !isset($this->fileName)) {
             return;
