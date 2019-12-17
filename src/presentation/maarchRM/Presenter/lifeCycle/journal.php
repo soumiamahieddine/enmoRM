@@ -210,7 +210,6 @@ class journal
         }
 
         $this->view->setSource('multipleInstance', $multipleInstance);
-
         $this->view->setSource('events', $events);
         $this->view->merge();
         $this->view->translate();
@@ -225,7 +224,6 @@ class journal
             $dataTable->setUnsortableColumns(4);
             $dataTable->setSorting(array(array(1, 'desc')));
         }
-        
         return $this->view->saveHtml();
     }
     
@@ -272,6 +270,19 @@ class journal
         $eventObject->description = $this->translator->getText($event->description);
         $eventObject->objectClass = $this->translator->getText($event->objectClass);
         $eventObject->eventType = $this->translator->getText($event->eventType);
+ /*
+        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
+        if ($hasCertificatePrivilege) {
+            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
+            foreach ($event as $key => $event) {
+                if (in_array($event->eventType, $eventsToCertificate)) {
+                    $event[$key]->hasCertificate = true;
+                }
+            }
+        }
+
+        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
+*/
         $this->json->load($eventObject);
 
         $this->json->formatDateTimes();
