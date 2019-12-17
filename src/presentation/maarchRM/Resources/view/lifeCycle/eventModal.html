@@ -7,9 +7,9 @@
                         <span aria-hidden="true">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <div name="downloadCertificate"> 
+                    <div name="downloadCertificate">
                         <div class="pull-right" style="margin-right:5em">
-                            <button type="button" class="btn btn-info btn-sm attestation" title="Download certificate" data-eventid='[?merge .eventId ?]'><span class="fa fa-download">&nbsp;</span></button>
+                            <button type="button" id="certificateButton" class="btn btn-info btn-sm attestation" title="Download certificate"><span class="fa fa-download">&nbsp;</span></button>
                         </div>
                     </div>
                     <h3>Event</h3>
@@ -81,6 +81,8 @@ eventInfo = {
                     response.operationResult = $('#failure_text').html();
                 }
 
+                var eventId = response.eventId;
+
                 var element = $('#eventData').find('dt[name], dd[name]');
                 $.each(element, function() {
                     var e = $(this)
@@ -106,7 +108,6 @@ eventInfo = {
                     delete response.certificateClass;
                     delete response.certificateId;
                 }*/
-
                 var eventInfo = $('#eventInfo');
                 eventInfo.html('');
                 $.each(response, function(key, value) {
@@ -114,7 +115,9 @@ eventInfo = {
                         $('<dt></dt>').text(key).appendTo(eventInfo);
                         $('<dd></dd>').html(value).css('word-break', 'break-all').appendTo(eventInfo);
                     }
-                })
+                });
+
+                $('#certificateButton').attr('data-eventid', eventId);
 
                 $('#showEvent').modal();
             },
