@@ -104,12 +104,17 @@ class HttpResponse
     {
         http_response_code($this->code);
 
-        if (!headers_sent()) {        
+        if (!headers_sent()) {
             foreach ($this->headers as $field => $value) {
                 header($field . ": " . $value);
             }
         }
-        echo $this->body;
-    }
 
+        if (is_scalar($this->body)) {
+            echo $this->body;
+        } else {
+            $output = fopen('php://output', 'w+');
+            stream_copy_to_stream($this->body, $output);
+        }
+    }
 }
