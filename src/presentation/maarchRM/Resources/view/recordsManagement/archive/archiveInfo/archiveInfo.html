@@ -56,3 +56,9 @@
         font-size: 16px !important;
     }
 </style>
+
+<script>
+    $("#lifeCycleTab").on('click', '.attestation', function () {
+        eventCertificate.load($(this).data('eventid'));
+    });
+</script>
