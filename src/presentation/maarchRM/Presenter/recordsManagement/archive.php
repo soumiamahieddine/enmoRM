@@ -300,17 +300,6 @@ class archive
         $lifeCycleDataTable->setPaginationType("full_numbers");
         $lifeCycleDataTable->setSorting(array(array(0, 'desc')));
 
-        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
-        if ($hasCertificatePrivilege) {
-            $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
-            foreach ($archive->lifeCycleEvent as $key => $event) {
-                if (in_array($event->eventType, $eventsToCertificate)) {
-                    $archive->lifeCycleEvent[$key]->hasCertificate = true;
-                }
-            }
-        }
-
-        $this->view->setSource('hasCertificatePrivilege', $hasCertificatePrivilege);
         $this->view->translate();
         $this->view->merge();
 

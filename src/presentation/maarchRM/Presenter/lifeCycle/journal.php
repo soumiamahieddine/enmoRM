@@ -270,7 +270,15 @@ class journal
         $eventObject->description = $this->translator->getText($event->description);
         $eventObject->objectClass = $this->translator->getText($event->objectClass);
         $eventObject->eventType = $this->translator->getText($event->eventType);
-        
+
+        // check event type to add button "download certificate"
+        $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
+        $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
+            
+        if ($hasCertificatePrivilege && in_array($event->eventType, $eventsToCertificate)) {
+            $eventObject->hasCertificate = true;
+        }
+
         $this->json->load($eventObject);
 
         $this->json->formatDateTimes();
