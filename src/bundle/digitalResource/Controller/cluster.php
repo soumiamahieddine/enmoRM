@@ -332,10 +332,9 @@ class cluster
                         throw \laabs::newException("digitalResource/clusterException", 'Invalid hash for resource %1$s at address %2$S', 404, null, [$resource->resId, $address->repository->repositoryUri.DIRECTORY_SEPARATOR.$address->path]);
                     }
 
-                    $resource->sethandler($handler);
+                    $resource->setHandler($handler);
 
                     return $handler;
-
                 } catch (\Exception $e) {
                     $address->integrityCheckResult = false;
                     $this->sdoFactory->update($address);
@@ -397,7 +396,7 @@ class cluster
 
     private function checkHash($address, $resource, $handler)
     {
-        $hash = strtolower(\laabs\hash_stream($resource->hashAlgorithm, $handler));
+        $hash = \laabs\hash_stream($resource->hashAlgorithm, $handler);
         
         $address->lastIntegrityCheck = \laabs::newTimestamp();
         $address->integrityCheckResult = false;

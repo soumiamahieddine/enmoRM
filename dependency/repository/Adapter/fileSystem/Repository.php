@@ -330,25 +330,31 @@ class Repository
         if (!$fp = fopen($filename, 'x')) {
             throw new \Exception("Can't open file at path $path for creation.");
         }
-        $wl = fwrite($fp, $data);
-        if (!$wl) {
-            throw new \Exception("Can't write at path $path.");
+
+        if (is_string($data)) {
+            $wl = fwrite($fp, $data);
+            if (!$wl) {
+                throw new \Exception("Can't write at path $path.");
+            }
+
+            if ($wl != strlen($data)) {
+                if (!unlink($filename)) {
+                    throw new \Exception("Error writing at path $path, and the partial resource couldn't be deleted.");
+                }
+                throw new \Exception("Error writing at path $path.");
+            }
+
+            if (hash('md5', $data) != hash_file('md5', $filename)) {
+                if (!unlink($filename)) {
+                    throw new \Exception("Error writing at path $path, but the partial resource couldn't be deleted.");
+                }
+                throw new \Exception("Error writing at path $path.");
+            }
+        } elseif (is_resource($data)) {
+            $wl = stream_copy_to_stream($data, $fp);
         }
 
-        if ($wl != strlen($data)) {
-            if (!unlink($filename)) {
-                throw new \Exception("Error writing at path $path, and the partial resource couldn't be deleted.");
-            }
-            throw new \Exception("Error writing at path $path.");
-        }
         fclose($fp);
-
-        if (hash('md5', $data) != hash_file('md5', $filename)) {
-            if (!unlink($filename)) {
-                throw new \Exception("Error writing at path $path, but the partial resource couldn't be deleted.");
-            }
-            throw new \Exception("Error writing at path $path.");
-        }
         
         return $dir . DIRECTORY_SEPARATOR . $name;
     }
