@@ -758,14 +758,11 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (isset($binaryDataObject->attachment->content)) {
                 $digitalResource->setContents(base64_decode($binaryDataObject->attachment->content));
             } elseif (isset($binaryDataObject->attachment->filename)) {
-                $digitalResource->setHandler(
-                    fopen(
-                        dirname($message->path).DIRECTORY_SEPARATOR.$binaryDataObject->attachment->filename,
-                        'r'
-                    )
-                );
+                $handler = fopen(dirname($message->path).DIRECTORY_SEPARATOR.$binaryDataObject->attachment->filename, 'r');
+                $digitalResource->setHandler($handler);
             } elseif (isset($binaryDataObject->attachment->uri)) {
-                $digitalResource->setHandler(fopen($binaryDataObject->attachment->uri, 'r'));
+                $handler = fopen($binaryDataObject->attachment->uri, 'r');
+                $digitalResource->setHandler($handler);
             }
             
             $archive->digitalResources[] = $digitalResource;

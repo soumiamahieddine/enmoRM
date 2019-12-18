@@ -813,34 +813,29 @@ class message
             return false;
         }
 
-        $resource = \laabs::newInstance('digitalResource/digitalResource');
+        $resourceController = \laabs::newController('digitalResource/digitalResource');
 
         switch (true) {
             case isset($attachment->filename):
-                $filepath = $this->messageDirectory.DIRECTORY_SEPARATOR.
-                    (string) $message->messageId.DIRECTORY_SEPARATOR.$attachment->filename;
-                $contents = file_get_contents($filepath);
-
-                $resource->fileExtension = pathinfo($attachment->filename, \PATHINFO_EXTENSION);
-                $resource->fileName = basename($attachment->filename);
+                $messageDir = dirname($message->path);
+                $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
+                $handler = fopen($filepath, 'r');
+                $resource = $resourceController->createFromStream($handler, $attachment->filename);
                 break;
 
             case isset($attachment->uri):
-                $contents = file_get_contents($attachment->uri);
+                $handler = fopen($filepath, 'r');
+                $resource = $resourceController->createFromStream($handler);
                 break;
 
             case isset($attachment->value):
                 $contents = base64_decode($attachment->value);
+                $resource = $resourceController->createFromContents($contents);
                 break;
 
             default:
                 return false;
         }
-
-        $finfo = new \finfo(\FILEINFO_MIME_TYPE);
-        $resource->mimetype = $finfo->buffer($contents);
-
-        $resource->setContents($contents);
 
         return $resource;
     }
