@@ -48,14 +48,14 @@ class digitalResource
      */
     public function retrieve($resource)
     {
-        $contents = base64_decode($resource->attachment->data);
+        //$contents = base64_decode($resource->attachment->data);
 
-        if (strlen($contents) > 65536) {
+        if ($resource->size > 65536) {
             try {
                 switch ($resource->mimetype) {
                     case 'application/pdf':
                         $fp = fopen('php://temp', 'r+');
-                        fwrite($fp, $contents);
+                        stream_copy_to_stream($resource->attachment->data, $fp);
 
                         $fpdi = \laabs::newService('dependency/PDF/Factory')->getFpdi();
                         
@@ -77,7 +77,7 @@ class digitalResource
 
                     case 'text/html' :
                     case 'text/plain':
-                        $contents = substr($contents, 0, 65536);
+                        $contents = fread($resource->attachment->data, 65535);
                         break;
                 }
             } catch (\Exception $exception) {
@@ -87,13 +87,14 @@ class digitalResource
             switch ($resource->mimetype) {
                 case 'text/html' :
                 case 'text/plain':
-                        $contents = strip_tags($contents);
+                    $contents = strip_tags(stream_get_contents($resource->attachment->data));
+                    $url = \laabs::createPublicResource($contents);
                         break;
+
+                default:
+                    $url = \laabs::createPublicResource($resource->attachment->data);
             }
-
         }
-
-        $url = \laabs::createPublicResource($contents);
 
         $oldBrowserWarningText = $this->translator->getText("Old Browser download");
         $this->view->addContent(

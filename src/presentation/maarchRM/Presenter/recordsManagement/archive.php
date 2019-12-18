@@ -258,14 +258,13 @@ class archive
             return $contents;
         }
 
-        $contents = base64_decode($digitalResource->attachment->data);
         $mimetype = $digitalResource->mimetype;
 
         \laabs::setResponseType($mimetype);
         $response = \laabs::kernel()->response;
         $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->attachment->filename."");
 
-        return $contents;
+        return $digitalResource->attachment->data;
     }
 
     /**
