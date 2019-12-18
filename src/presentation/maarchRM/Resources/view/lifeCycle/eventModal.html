@@ -9,7 +9,7 @@
                     </button>
                     <div name="downloadCertificate"> 
                         <div class="pull-right" style="margin-right:5em">
-                            <button type="button" class="btn btn-info btn-sm attestation" title="Download certificate"><span class="fa fa-download">&nbsp;</span></button>
+                            <button type="button" id="toto" class="btn btn-info btn-sm attestation" title="Download certificate"><span class="fa fa-download">&nbsp;</span></button>
                         </div>
                     </div>
                     <h3>Event</h3>
@@ -104,7 +104,7 @@ eventInfo = {
                         $('<dt></dt>').text(key).appendTo(eventInfo);
                         $('<dd></dd>').html(value).css('word-break', 'break-all').appendTo(eventInfo);
                     }
-                })
+                });
 
                 $('#showEvent').modal();
             },
