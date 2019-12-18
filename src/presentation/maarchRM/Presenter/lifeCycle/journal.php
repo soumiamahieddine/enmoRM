@@ -274,11 +274,11 @@ class journal
         // check event type to add button "download certificate"
         $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
         $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
-            
+        
         if ($hasCertificatePrivilege && in_array($event->eventType, $eventsToCertificate)) {
             $eventObject->hasCertificate = true;
         }
-
+   
         $this->json->load($eventObject);
 
         $this->json->formatDateTimes();

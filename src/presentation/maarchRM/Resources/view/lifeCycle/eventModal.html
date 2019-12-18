@@ -7,7 +7,7 @@
                         <span aria-hidden="true">&times;</span>
                         <span class="sr-only">Close</span>
                     </button>
-                    <div id="downloadCertificate"> 
+                    <div id="downloadCertificate" class="hide"> 
                         <div class="pull-right" style="margin-right:5em">
                             <button type="button" class="btn btn-info btn-sm attestation" title="Download certificate"><span class="fa fa-download">&nbsp;</span></button>
                         </div>
@@ -81,14 +81,12 @@ eventInfo = {
                     response.operationResult = $('#failure_text').html();
                 }
 
-                if (typeof(response['hasCertificate']) !== undefined && (response['hasCertificate']) !== null) {
-                    $('#downloadCertificate').show();
+                if (typeof(response['hasCertificate']) != undefined && response['hasCertificate'] != null) {
+                    $('#downloadCertificate').removeClass('hide');
                     delete response['hasCertificate'];
+                } else {
+                    $('#downloadCertificate').addClass('hide');
                 }
-                else{
-                    $('#downloadCertificate').hide();
-                }
-
 
                 var element = $('#eventData').find('dt[name], dd[name]');
                 $.each(element, function() {
