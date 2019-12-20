@@ -24,7 +24,7 @@
             <input class="input-sm form-control datePicker archiveInput" name="originatingDate" id="originatingDate" placeholder="Originating date"/>
         </div>
         <div class="col-sm-3">
-            <button type="button" class="input-sm form-control btn btn-primary" id="documentDateTodayButton">Today</button>
+            <button type="button" class="input-sm form-control btn btn-primary" id="documentDateTodayButton">Today's date</button>
         </div>
     </div>
 
@@ -122,13 +122,9 @@
         }
     };
 
-    function setTodayDocumentDate() {
-        dateInput = $("#originatingDate");
-        date = new Date().toLocaleDateString().replace(/\//g, "-");
-        dateInput.datepicker('setDate', date);
-    }
-
-    $('#documentDateTodayButton').on("click", setTodayDocumentDate);
+    $('#documentDateTodayButton').on("click", function(){
+        ArchiveForm.setTodayDocumentDate();
+    });
 
     $("#archiveForm").keypress(function(e) {
     //To disable Enter keypress in this form
@@ -139,7 +135,6 @@
 
     // ARCHIVE
     $('#archivalProfile').on('change', function() {
-        setTodayDocumentDate();
         ArchiveForm.loadProfile();
         ArchiveForm.displayArchiveDescription();
     });
@@ -250,6 +245,13 @@
                     gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
                 }
             });
+        },
+        setTodayDocumentDate : function() {
+            dateInput = $("#originatingDate");
+            // TODO get dynamically the declared timezone in configuration.ini
+            const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+            date = new Date().toLocaleDateString("fr-FR",options).replace(/\//g, "-");
+            dateInput.datepicker('setDate', date);
         },
 
         loadProfile : function() {
