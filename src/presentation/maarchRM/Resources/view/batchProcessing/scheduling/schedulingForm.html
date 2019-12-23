@@ -373,6 +373,7 @@
     });
 
     $('#taskId').on('change', function () {
+        $('#serviceAccountId').val('');
         TaskSchedulingForm.checkServiceAccount();
     });
 
