@@ -59,7 +59,6 @@
         <span id="retentionRuleCodeMissing_error">The retention rule is missing.</span>
         <span id="documentMissing_error">You must deposit at least one document.</span>
     </div>
-    <span id="today_text">Today's date</span>
 </div>
 <span  id="addBtnTpl" class="input-group-btn hide">
     <button class="btn btn-success addArchiveDescriptionKeyword btn-sm" type="button" id="btnAddPrivilege" title="Add"><span class="fa fa-check"></span></button>
@@ -242,27 +241,6 @@ input:invalid {
             var target = $("#archivalProfileFields");
             var formGroup = Metadata.getFormGroup(descriptionField);
             target.append(formGroup);
-            if (descriptionField.type == "date" && descriptionField.default != null && descriptionField.default == "now") {
-                field = formGroup.data("field");
-                Metadata.setNowDate(field, descriptionField.format);
-            }
-        },
-
-        setNowDate(field, format) {
-            if (format == 'datetime') {
-                const dateTimeFormater = { day: 'numeric', month: 'numeric', year: 'numeric', hour : 'numeric', minute : 'numeric', second : 'numeric' };
-                now = new Date();
-                date = now.getFullYear() + "-";
-                date += (now.getMonth() < 9 ? "0" : "") + (now.getMonth() + 1) + "-";
-                date += (now.getDate() < 10 ? "0" : "") + now.getDate() + " " + now.toLocaleTimeString("fr-FR",dateTimeFormater);
-                // TODO afficher la date du jour dans un bon format datetime
-                field.data('DateTimePicker').format('DD-MM-YYYY HH:mm:ss');
-                field.data('DateTimePicker').date(date);
-            } else {
-                const dateFormater = { day: 'numeric', month: 'numeric', year: 'numeric' };
-                date = new Date().toLocaleDateString("fr-FR",dateFormater).replace(/\//g, "-");
-                field.datepicker('setDate', date);
-            }
         },
 
         getFormGroup: function(descriptionField) {
@@ -271,11 +249,7 @@ input:invalid {
             var spanLabel = $('<span name=descriptionLabel />').text(descriptionField.label);
             label.append(spanLabel);
             formGroup.append(label);
-            if (descriptionField.default == "now") {
-                var div = $('<div class="col-md-6" />');
-            } else {
-                var div = $('<div class="col-md-9" />');
-            }
+            var div = $('<div class="col-md-9" />');
             formGroup.append(div);
 
             switch (descriptionField.type) {
@@ -318,13 +292,6 @@ input:invalid {
 
             div.append(field);
 
-            if (descriptionField.default == "now") {
-                var button = $("<button type='button' class='input-sm form-control btn btn-primary todayButton'></button>").text(($("#today_text").text()));
-                var buttonDiv = $("<div class='col-sm-3'/>");
-                buttonDiv.append(button);
-                formGroup.append(buttonDiv);
-            }
-
             if (descriptionField.required) {
                 label.append($("<span style='color: red'>").text(" *"));
                 field.attr("data-required", descriptionField.required);
@@ -344,9 +311,6 @@ input:invalid {
                         .attr('type', 'text')
                         .addClass('form-control')
                         .addClass('input-sm');
-            if (descriptionField.type != "date" && descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
-                field.val(descriptionField.default);
-            }
 
             if(descriptionField.readonly && Metadata.isModification) {
                 field.attr("readonly", true);
