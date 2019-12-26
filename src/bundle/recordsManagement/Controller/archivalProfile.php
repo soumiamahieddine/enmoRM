@@ -451,13 +451,8 @@ class archivalProfile
         $profilesDirectory = $this->profilesDirectory;
         $fileDirectory = $profilesDirectory.DIRECTORY_SEPARATOR.$profileReference.".rng";
 
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.basename($fileDirectory).'"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($fileDirectory));
-        readfile($fileDirectory);
+        $file = file_get_contents($fileDirectory);
+
+        return $file;
     }
 }
