@@ -244,24 +244,9 @@ class event
             }
         }
         if ($term) {
-            $wordings = explode(",", $wording);
             $queryParts['term'] = null;
-            
-            foreach ($wordings as $wording) {
-                if($wording == 'all') {
-                    $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
-                } else {
-                    if ($queryParts['term']) {
-                        $queryParts['term'] .= " OR ".$wording." = '*".$term."*'";
-                    } else {
-                        $queryParts['term'] = "(".$wording." = '*".$term."*'";
-                    }
-                }
-            }
-            
-           if ($wording != 'all') {
-               $queryParts['term'] .= ")";
-           }
+            $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
+            $queryParts['term'] .= ")";
         }
         if ($this->separateInstance) {
             $queryParts['instanceName'] = "instanceName = '".\laabs::getInstanceName()."'";

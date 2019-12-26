@@ -49,7 +49,7 @@ interface eventInterface
      *
      * @action audit/event/search
      */
-    public function readSearch($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null, $wording = null);
+    public function readSearch($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null);
 
     /**
      * Get search form for entries
