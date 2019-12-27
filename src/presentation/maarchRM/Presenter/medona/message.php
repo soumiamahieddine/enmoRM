@@ -444,9 +444,14 @@ class message
      */
     public function messageExport($messageZip)
     {
-        \laabs::setResponseType("application/zip");
-
-        return $messageZip;
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="'.basename($messageZip).'"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($messageZip));
+        readfile($messageZip);
     }
 
     //JSON
