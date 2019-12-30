@@ -283,10 +283,6 @@
             $.each(selectedProfile.archiveDescription, function(key, value) {
                 Metadata.addArchiveDescription(value);
             });
-            $(".todayButton").on("click", function() {
-                formGroup = $(this).parent().parent();
-                Metadata.setNowDate(formGroup.data('field'), formGroup.data('description').format);
-            });
         },
         displayRetentionRulesInfo : function() {
             var value = $('#retentionRule').val();
