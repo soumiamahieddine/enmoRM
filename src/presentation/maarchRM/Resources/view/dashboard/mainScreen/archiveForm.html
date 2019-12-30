@@ -20,8 +20,8 @@
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Originating date</label>
-        <div class="col-sm-9">
-            <input class="input-sm form-control datePicker archiveInput" name="originatingDate" id="originatingDate" placeholder="Originating date"/>
+        <div class="input-group col-sm-9" style="padding-left: 15px; padding-right: 15px;">
+            <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
 
@@ -84,9 +84,11 @@
 
 
     FilePlanLevelToggle = {
-        load: function (isWithoutProfile = true) {
+        load: function (isWithoutProfile) {
+            if (isWithoutProfile === undefined) {
+                isWithoutProfile = true;
+            }
             if(isWithoutProfile == true) {
-
                 if($('#fileplanLevelDiv').is(":hidden")) {
                     $('#fileplanLevelDiv').show();
                 }
@@ -333,7 +335,12 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        syncSerialize : function(action = "add") {
+        syncSerialize : function(action) {
+            // to inititate default value and avoid bug on IE 11
+            if (action === undefined)
+            {
+                action = "add";
+            }
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {

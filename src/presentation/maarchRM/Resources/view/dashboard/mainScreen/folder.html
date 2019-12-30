@@ -259,7 +259,15 @@
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives, options = null, showArchivePath = false) {
+        buildResultList: function(archives, options, showArchivePath) {
+            // to inititate default value and avoid bug on IE 11
+            if (options === undefined) {
+                options = null;
+            }
+            if (showArchivePath === undefined) {
+                showArchivePath = false;
+            }
+
             trigger("clearDetail.recordsManagement");
             this.showArchivePath = showArchivePath;
 

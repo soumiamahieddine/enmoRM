@@ -429,6 +429,36 @@ class archive
             $archive->descriptionObject = $archive->descriptionObject[0];
         }
 
+        $thesaurusNames = [
+            "corpname",
+            "famname",
+            "geogname",
+            "name",
+            "occupation",
+            "persname",
+            "subject",
+            "genreform",
+            "function"
+            ];
+
+        $thesaurusList = new \stdClass();
+        // Set default thesaurus
+        $thesaurusList->subject = "T1";
+        $thesaurusList->genreform = "T3";
+        $thesaurusList->function = "T2";
+
+        $conf = \laabs::Configuration()['recordsManagement'];
+        
+        if (isset($conf['refDirectory']) || is_dir($conf['refDirectory'])) {
+            $refDirectory = $conf['refDirectory'];
+            foreach ($thesaurusNames as $thesaurusName) {
+                if (glob($conf['refDirectory'].'/'.$thesaurusName.'.*')) {
+                    $thesaurusList->$thesaurusName = $thesaurusName;
+                }
+            }
+        }
+
+        $this->view->setSource('thesaurus', $thesaurusList);
         $this->view->setSource('languageCodes', $languageCodes);
         $this->view->setSource("archive", $archive);
 

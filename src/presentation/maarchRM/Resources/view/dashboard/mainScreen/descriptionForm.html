@@ -778,7 +778,14 @@ input:invalid {
             itemList.append(previous);
         },
 
-        addCustomField : function(source = "", target = $("#customFields")) {
+        addCustomField : function(source, target) {
+            // to inititate default value and avoid bug on IE 11
+            if (source === undefined) {
+                source = "";
+            }
+            if (target === undefined) {
+                target = $("#customFields");
+            }
             var formGroup = $('<div class="form-group" />');
             var label = $('<div class="col-md-3"/>');
             var name = $('<input type="text" class="form-control input-sm name" />');

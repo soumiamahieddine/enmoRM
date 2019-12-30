@@ -7,7 +7,14 @@
 
 ## Version 2.5.2
 
-- `Fixed` Correctif concernant les demandes de restitution d'archives.
+- `Fixed` Rétablissement des demandes de restitution d'archives.
+- `Fixed` Les valeurs par défaut des paramètres de fonction dans JavaScript ont été retirées pour compatibilité à Internet Explorer 11.
+- `Fixed` Les tableaux s'initialisent correctement lorsqu'un nombre important d'entrées doit être affiché.
+- `Fixed` Rétablissement de la navigation entre archives liées.
+
+### Thesaurus
+
+- `Added` Ajout de la possiblité d'utiliser des fichiers CSV ou SKOS personnalisés comme référentiels de thesaurus (fonctionnalité de l'extension *archives publiques*).
 
 ## Version 2.5.1
 
