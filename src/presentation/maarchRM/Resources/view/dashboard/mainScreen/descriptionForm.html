@@ -311,9 +311,6 @@ input:invalid {
                         .attr('type', 'text')
                         .addClass('form-control')
                         .addClass('input-sm');
-            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
-                field.val(descriptionField.default);
-            }
 
             if(descriptionField.readonly && Metadata.isModification) {
                 field.attr("readonly", true);

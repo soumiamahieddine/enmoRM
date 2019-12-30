@@ -20,8 +20,8 @@
     </div>
     <div class="form-group">
         <label class="col-sm-3 control-label">Originating date</label>
-        <div class="input-group col-sm-9" style="padding-left: 15px; padding-right: 15px;">
-            <input class="input-sm form-control datePicker archiveInput" name="originatingDate" placeholder="Originating date"/>
+        <div class="col-sm-9">
+            <input class="input-sm form-control datePicker archiveInput" name="originatingDate" id="originatingDate" placeholder="Originating date"/>
         </div>
     </div>
 
@@ -118,10 +118,6 @@
             }
         }
     };
-
-    $('#app_maarchRM_main').ready(function () {
-        //$("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
-    });
 
     $("#archiveForm").keypress(function(e) {
     //To disable Enter keypress in this form

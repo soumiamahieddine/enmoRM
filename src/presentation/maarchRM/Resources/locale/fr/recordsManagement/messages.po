@@ -953,6 +953,9 @@ msgstr "Fichier conteneur"
 msgid "Originating date"
 msgstr "Date du document"
 
+msgid "Today's date"
+msgstr "Date du jour"
+
 msgid "Text indexation"
 msgstr "Indexation du texte"
 
