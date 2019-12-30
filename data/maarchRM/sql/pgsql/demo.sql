@@ -76,7 +76,6 @@ INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagem
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modifyDescription');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modify');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/retrieve');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'destruction/destructionRequest');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'journal/certificate');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal');
 INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive');
@@ -89,7 +88,6 @@ INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagemen
 INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modifyDescription');
 INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modify');
 INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/retrieve');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'destruction/destructionRequest');
 
 INSERT INTO "auth"."roleMember" VALUES ('ADMIN_FONCTIONNEL', 'nnataly');
 INSERT INTO "auth"."roleMember" VALUES ('ADMIN_GENERAL', 'superadmin');
@@ -170,10 +168,6 @@ INSERT INTO "digitalResource"."clusterRepository" VALUES ('archives', 'archives_
 
 INSERT INTO "digitalResource"."conversionRule" VALUES ('workflow_pod75x-151b-v9jsef', 'fmt/412', 'dependency/fileSystem/plugins/libreOffice', 'fmt/95');
 INSERT INTO "digitalResource"."conversionRule" VALUES ('workflow_pod763-1691-dli2t0', 'fmt/291', 'dependency/fileSystem/plugins/libreOffice', 'fmt/18');
-
-INSERT INTO "filePlan"."folder" VALUES ('maarchRM_5k7cwmowy-0000-sodmil', 'Journal de l''application', NULL, NULL, 'GIC', false);
-INSERT INTO "filePlan"."folder" VALUES ('maarchRM_5k7cwmoxs-0000-j6ngdd', '2019', 'maarchRM_5k7cwmowy-0000-sodmil', NULL, 'GIC', false);
-INSERT INTO "filePlan"."folder" VALUES ('maarchRM_5k7cwmoyi-0000-0y7aua', '09', 'maarchRM_5k7cwmoxs-0000-j6ngdd', NULL, 'GIC', false);
 
 INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false);
 INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false);
