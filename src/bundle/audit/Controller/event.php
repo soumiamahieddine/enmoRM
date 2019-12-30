@@ -212,11 +212,10 @@ class event
      * @param string    $accountId
      * @param string    $status
      * @param string    $term      Term to search
-     * @param string    $wording   Wording to search
      *
      * @return audit/event[] Array of audit/event object
      */
-    public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
+    public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null)
     {
         $queryParts = array();
         $queryParams = array();
@@ -244,7 +243,6 @@ class event
             }
         }
         if ($term) {
-            $queryParts['term'] = null;
             $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
             $queryParts['term'] .= ")";
         }
