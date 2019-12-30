@@ -451,6 +451,8 @@ class archivalProfile
         $profilesDirectory = $this->profilesDirectory;
         $fileDirectory = $profilesDirectory.DIRECTORY_SEPARATOR.$profileReference.".rng";
 
-        return $fileDirectory;
+        $file = file_get_contents($fileDirectory);
+
+        return $file;
     }
 }

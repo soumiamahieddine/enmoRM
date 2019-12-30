@@ -743,7 +743,11 @@ class message
             }
         }
 
-        return $zipfile;
+        $zipContents = file_get_contents($zipfile);
+
+        //unlink($zipfile);
+
+        return $zipContents;
     }
 
     /**

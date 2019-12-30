@@ -356,13 +356,10 @@ class archivalProfile
      */
     public function export($file)
     {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="'.basename($file).'"');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        readfile($file);
+        \laabs::setResponseType("text/xml");
+        $response = \laabs::kernel()->response;
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.func_get_args()[1] . '.rng"');
+
+        return $file;
     }
 }
