@@ -264,7 +264,7 @@ class organization
     public function create($organization)
     {
         if ($organization->isOrgUnit) {
-            $this->accountController->isAuthorized(['fonc_admin', 'user']);
+            $this->accountController->isAuthorized(['func_admin', 'user']);
         } else {
             $this->accountController->isAuthorized('gen_admin');
         }
@@ -465,7 +465,7 @@ class organization
     public function update($orgId, $organization)
     {
         if ($organization->isOrgUnit) {
-            $this->accountController->isAuthorized(['fonc_admin', 'user']);
+            $this->accountController->isAuthorized(['func_admin', 'user']);
         } else {
             $this->accountController->isAuthorized('gen_admin');
         }
@@ -498,6 +498,30 @@ class organization
         }
 
         return $res;
+    }
+    
+    /**
+     * Sets the status of an org unit
+     *
+     * @param string $orgId  The org identifier
+     * @param bool   $status The new status (enabled = true of false)
+     * 
+     * @return bool The result of the change
+     */
+    public function changeStatus($orgId, $status) {
+        $organization = $this->sdoFactory->read('organization/organization', $orgId);
+
+        if (!$organization->isOrgUnit) {
+            throw new \core\Exception("An organization can't be disabled.");
+        }
+
+        if ($status == "true") {
+            $organization->enabled = 1;
+        } else {
+            $organization->enabled = 0;
+        }
+
+        return $this->sdoFactory->update($organization);
     }
 
     /**
@@ -597,7 +621,7 @@ class organization
     {
         $organization = $this->sdoFactory->read("organization/organization", $orgId);
         if ($organization->isOrgUnit) {
-            $this->accountController->isAuthorized(['fonc_admin', 'user']);
+            $this->accountController->isAuthorized(['func_admin', 'user']);
         } else {
             $this->accountController->isAuthorized('gen_admin');
         }
@@ -691,7 +715,7 @@ class organization
      */
     public function addUserPosition($userAccountId, $orgId, $function = null)
     {
-        $this->accountController->isAuthorized('fonc_admin');
+        $this->accountController->isAuthorized('func_admin');
 
         $userPosition = \laabs::newInstance('organization/userPosition');
         $userPosition->userAccountId = $userAccountId;
@@ -719,7 +743,7 @@ class organization
      */
     public function updateUserPosition($userAccountId, $orgId = null)
     {
-        $this->accountController->isAuthorized('fonc_admin');
+        $this->accountController->isAuthorized('func_admin');
 
         $userPositions = $this->sdoFactory->find("organization/userPosition", "userAccountId='$userAccountId'");
         $default = null;
@@ -810,7 +834,7 @@ class organization
      */
     public function deleteUserPosition($userAccountId, $orgId)
     {
-        $this->accountController->isAuthorized('fonc_admin');
+        $this->accountController->isAuthorized('func_admin');
 
         $userPosition = $this->sdoFactory->read(
             "organization/userPosition",

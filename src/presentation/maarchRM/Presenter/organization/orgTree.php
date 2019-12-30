@@ -577,4 +577,11 @@ class orgTree
 
         return json_encode($orgs);
     }
+
+    public function changeStatus() {
+        $this->json->message = "Status changed";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
+    }
 }

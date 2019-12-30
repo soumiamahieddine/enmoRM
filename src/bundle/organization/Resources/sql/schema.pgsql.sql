@@ -42,6 +42,7 @@ CREATE TABLE "organization"."organization"
   "ownerOrgId" text,
 
   "isOrgUnit" boolean,
+  "enabled" boolean,
   
   PRIMARY KEY ("orgId"),
   UNIQUE ("registrationNumber"),

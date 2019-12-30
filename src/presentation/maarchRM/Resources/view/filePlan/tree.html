@@ -140,6 +140,7 @@
             var folderId = null;
             var profiles = null;
             var locked = null;
+            var disabled = null;
             var acceptarchivewithoutprofile = null
 
             if (e.hasClass('organization')) {
@@ -154,9 +155,13 @@
                 locked = e.data('closed');
             }
 
+
+            if (e.data('enabled') === undefined) {
+                disabled = true;
+            }
             var orgs = $('#filePlanTree').find('.organization');
 
-            trigger("loadFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, this.pathList]);
+            trigger("loadFolder.recordsManagement", [path, orgRegNumber, folderId, profiles, disabled, locked, acceptArchiveWithoutProfile, this.pathList]);
         },
 
         getPath: function(e) {

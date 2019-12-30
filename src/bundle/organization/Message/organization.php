@@ -169,6 +169,12 @@ class organization
      */
     public $archivalProfileAccess = array();
 
+    /**
+     * Status of organization
+     *
+     * @var bool
+     */
+    public $enabled = true;
 
     /**
      * Get string of object

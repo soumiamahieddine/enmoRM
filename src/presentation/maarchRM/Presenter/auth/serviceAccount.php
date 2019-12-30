@@ -139,20 +139,19 @@ class serviceAccount
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
-            $this->view->setSource('whatAmI', 'adminF');
-        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
-            $this->view->setSource('whatAmI', 'adminG');
-        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
-            $this->view->setSource('whatAmI', 'user');
-        } else {
-            $this->view->setSource('whatAmI', 'oldUser');
+        if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
+            $whatAmI = $account->securityLevel;
+        }
+        else {
+            $whatAmI = 'oldUser';
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");
         $this->view->setSource("organizations", $organizations);
         $this->view->merge($this->view->getElementById("serviceOrgId"));
         $this->view->setSource("serviceAccount", $serviceAccount);
+        $this->view->setSource('whatAmI', $whatAmI);
+
 
         $this->view->translate();
         $this->view->merge();
