@@ -377,10 +377,20 @@ class ArchiveTransfer extends abstractMessage
      */
     public function validateBatch()
     {
-        $results = array();
+        $results = [];
 
-        $messages = $this->sdoFactory->find("medona/message", "(status='received' OR status='modified') AND type='ArchiveTransfer' AND active=true");
-        foreach ($messages as $message) {
+        $messageIds = $this->sdoFactory->index("medona/message", ["messageId"], "(status='received' OR status='modified') AND type='ArchiveTransfer' AND active=true");
+
+        // Avoid paralleling processes
+        foreach ($messageIds as $messageId) {
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+
+            if (!in_array($message->status, ['received', 'modified'])) {
+                continue;
+            }
+
+            $this->changeStatus($message->messageId, "processing");
+
             $this->loadData($message);
 
             try {
@@ -738,11 +748,17 @@ class ArchiveTransfer extends abstractMessage
     {
         $results = array();
 
-        $messages = $this->sdoFactory->find("medona/message", "status='accepted' AND type='ArchiveTransfer' AND active=true");
-        foreach ($messages as $message) {
+        $messageIds = $this->sdoFactory->index("medona/message", ["messageId"], "status='accepted' AND type='ArchiveTransfer' AND active=true");
+
+        foreach ($messageIds as $messageId) {
+            // Avoid paralleling processing
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+
+            if (!$message->status != 'accepted') {
+                continue;
+            }
+
             $this->changeStatus($message->messageId, "processing");
-        }
-        foreach ($messages as $message) {
             $this->loadData($message);
 
             try {
