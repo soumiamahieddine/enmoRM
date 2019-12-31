@@ -366,12 +366,20 @@ class ArchiveRestitutionRequest extends abstractMessage
     {
         $results = array();
 
-        $messages = $this->sdoFactory->find(
+        $messageIds = $this->sdoFactory->index(
             "medona/message",
+            ["messageId"],
             "status='accepted' AND type='ArchiveRestitutionRequest' AND active=true"
         );
 
-        foreach ($messages as $message) {
+        foreach ($messageIds as $messageId) {
+            // Avoid parallel processing
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+            if (!$message->status != 'accepted') {
+                continue;
+            }
+            $this->changeStatus($message->messageId, "processing");
+
             try {
                 $results[(string) $message->messageId] = $this->process((string)$message->messageId);
             } catch (\Exception $e) {
@@ -432,8 +440,7 @@ class ArchiveRestitutionRequest extends abstractMessage
             $operationResult
         );
 
-        $message->status = "processed";
-        $this->update($message);
+        $this->changeStatus($message->messageId, "processed");
 
         return true;
     }

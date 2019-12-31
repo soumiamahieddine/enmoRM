@@ -622,6 +622,13 @@ trait archiveModificationTrait
         $retentionRules = [];
 
         foreach ($archives as $archive) {
+            // avoid parallel processing
+            if ($this->sdoFactory->read('recordsManagement/archive')->retentionRuleStatus != "changed") {
+                continue;
+            }
+            $archive->retentionRuleStatus = "processing";
+            $this->sdoFactory->update($archive, 'recordsManagement/archiveRetentionRule');
+
             $retentionRule = new \stdClass();
             $retentionRule->archiveId = $archive->archiveId;
             $retentionRule->previousStartDate = $archive->retentionStartDate;
