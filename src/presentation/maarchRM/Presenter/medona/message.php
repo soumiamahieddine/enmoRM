@@ -446,7 +446,10 @@ class message
     {
         \laabs::setResponseType("application/zip");
 
-        return $messageZip;
+        $response = \laabs::kernel()->response;
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.func_get_args()[1] . '.zip"');
+
+        return $file;
     }
 
     //JSON

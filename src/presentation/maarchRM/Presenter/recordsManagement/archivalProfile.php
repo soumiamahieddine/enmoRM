@@ -356,7 +356,9 @@ class archivalProfile
      */
     public function export($file)
     {
-        \laabs::setResponseType("application/file");
+        \laabs::setResponseType("text/xml");
+        $response = \laabs::kernel()->response;
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.func_get_args()[1] . '.rng"');
 
         return $file;
     }
