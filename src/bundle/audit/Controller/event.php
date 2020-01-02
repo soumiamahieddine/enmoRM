@@ -244,7 +244,6 @@ class event
         }
         if ($term) {
             $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
-            $queryParts['term'] .= ")";
         }
         if ($this->separateInstance) {
             $queryParts['instanceName'] = "instanceName = '".\laabs::getInstanceName()."'";

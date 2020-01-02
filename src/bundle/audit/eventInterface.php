@@ -45,7 +45,6 @@ interface eventInterface
      * @param string    $accountId Id of account
      * @param string    $event     Variables
      * @param string    $term      Term to search
-     * @param string    $wording   Wording to search
      *
      * @action audit/event/search
      */
