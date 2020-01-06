@@ -754,7 +754,7 @@ class ArchiveTransfer extends abstractMessage
             // Avoid paralleling processing
             $message = $this->sdoFactory->read('medona/message', (string) $messageId);
 
-            if (!$message->status != 'accepted') {
+            if ($message->status != 'accepted') {
                 continue;
             }
 

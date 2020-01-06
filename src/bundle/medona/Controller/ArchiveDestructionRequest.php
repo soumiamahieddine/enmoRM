@@ -325,7 +325,7 @@ class ArchiveDestructionRequest extends abstractMessage
         foreach ($messageIds as $messageId) {
             // Avoid parallel processing
             $message = $this->sdoFactory->read('medona/message', (string) $messageId);
-            if (!$message->status != 'validated') {
+            if ($message->status != 'validated') {
                 continue;
             }
             $this->changeStatus($message->messageId, "processing");
