@@ -375,7 +375,7 @@ class ArchiveRestitutionRequest extends abstractMessage
         foreach ($messageIds as $messageId) {
             // Avoid parallel processing
             $message = $this->sdoFactory->read('medona/message', (string) $messageId);
-            if (!$message->status != 'accepted') {
+            if ($message->status != 'accepted') {
                 continue;
             }
             $this->changeStatus($message->messageId, "processing");
