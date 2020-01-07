@@ -254,18 +254,28 @@
     $("#dropAllList").on("click", function() {
         let icon = $(this).find("i");
         let text = $(this).find(".dropDownText");
+        let tree = $(".tree");
+        let treeTexts = tree.find(".dropDownText");
+        let carets = $(".dropDownIcon");
+        console.log(carets);
         if (listDropped) {
             $(".fa-minus-square").click();
             listDropped = false;
             icon.removeClass("fa-caret-up");
             icon.addClass("fa-caret-down");
+            carets.removeClass("fa-caret-up");
+            carets.addClass("fa-caret-down");
             text.text($("#dropDownText_down").text());
+            treeTexts.text($("#dropDownText_down").text());
         } else {
             $(".fa-plus-square").click();
             listDropped = true;
             icon.removeClass("fa-caret-down");
             icon.addClass("fa-caret-up");
+            carets.removeClass("fa-caret-down");
+            carets.addClass("fa-caret-up");
             text.text($("#dropDownText_up").text());
+            treeTexts.text($("#dropDownText_up").text());
         }
     });
 </script>
