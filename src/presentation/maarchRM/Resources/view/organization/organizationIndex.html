@@ -20,8 +20,6 @@
             <div class="col-xs-12 col-md-5 col-lg-5" >
                 <?merge addOrganizationRight.bool() ?>
                 <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
-                <?merge adminOrg.bool() ?>
-                <button id="exportFilePlan" class="btn btn-default" title="Export the file plan"><i class="fa fa-upload">&nbsp;</i>Export the file plan</button>
                 <button id="dropAllList" class="btn btn-primary" title="Drop the organizations list down"><i class="fa fa-caret-down">&nbsp;</i><span class="dropDownText">Drop the organizations list down</span></button>
                 <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
 
@@ -146,10 +144,6 @@
             text.text($("#dropDownText_up").text());
         }
     });
-
-    $('#exportFilePlan').on('click', function() {
-        Tree.exportFilePlan();
-    });
     
     var Tree = {
         loadTree: function() {
@@ -233,10 +227,6 @@
 
         removeNode: function(node) {
             BootstrapTree.removeNode(node);
-        },
-
-        exportFilePlan: function() {
-            fileplanWindows = window.open("/exportFilePlan", 'export.xml');
         }
     }
 
