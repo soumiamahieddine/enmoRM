@@ -261,6 +261,7 @@
         if (listDropped) {
             $(".fa-minus-square").click();
             listDropped = false;
+            carets.parent().parent().data("listDropped", false);
             icon.removeClass("fa-caret-up");
             icon.addClass("fa-caret-down");
             carets.removeClass("fa-caret-up");
@@ -270,6 +271,7 @@
         } else {
             $(".fa-plus-square").click();
             listDropped = true;
+            carets.parent().parent().data("listDropped", true);
             icon.removeClass("fa-caret-down");
             icon.addClass("fa-caret-up");
             carets.removeClass("fa-caret-down");
