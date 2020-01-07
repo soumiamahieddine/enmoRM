@@ -124,14 +124,6 @@
                 if (value !=null) {
                     $('#orgInfo_' + key).css('display', '').text(value).prev().css('display', '');
                 }
-
-                if (key === 'enabled' && isOrgUnit) {
-                    if (value) {
-                        $('#orgInfo_enabled').find(':checkbox').bootstrapToggle('on');
-                    } else {
-                        $('#orgInfo_enabled').find(':checkbox').bootstrapToggle('off');
-                    }
-                }
             });
 
             // Users, contact, profile
