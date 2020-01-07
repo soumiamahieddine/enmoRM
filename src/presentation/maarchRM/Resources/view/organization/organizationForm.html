@@ -35,6 +35,10 @@
                 <input type="text" class="form-control" name="registrationNumber" placeholder="Registration number">
                 <small class="help-block">You must use only letters and the special character '_'</small>
             </div>
+            <div class="form-group" id="orgInfo_enabled">
+                <label>Enabled</label>
+                <input type="checkbox" name="enabled" id="enabled" data-toggle="toggle">
+            </div>
             <div id="organization_orgUnitInfo">
                 <div class="form-group">
                     <label>Organization role</label>
@@ -224,6 +228,18 @@
                 orgForm.find('.orgFormTitle').text($('#orgUnit_text').html());
             }
 
+
+            if (organization.isOrgUnit) {
+                $('#orgInfo_enabled').css('display', '');
+                if (organization.enabled) {
+                    $('#enabled').bootstrapToggle('on');
+                } else {
+                    $('#enabled').bootstrapToggle('off');
+                }
+            } else {
+                $('#orgInfo_enabled').css('display', 'none');
+            }
+
             if (organization.orgRoleCodes) {
                 $.each(organization.orgRoleCodes, function() {
                     OrganizationForm.addRole(this);
@@ -375,5 +391,20 @@
         } else {
             formGroup.removeClass('has-success').addClass('has-error');
         }
+    });
+
+    $('#enabled').on("click", function(){
+        var status = $('#enabled').prop('checked');
+        $.ajax({
+            url         : "/organization/"+orgId+"/status/"+status,
+            type        : "PUT",
+            dataType  : 'json',
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
     });
 </script>

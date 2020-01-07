@@ -55,11 +55,6 @@
 
                             <dt>Tax identifier</dt>
                             <dd id="orgInfo_taxIdentifier"></dd>
-
-                            <dt>Enabled</dt>
-                            <dd id="orgInfo_enabled">
-                                <input type="checkbox" name="enabled" id="enabled" data-toggle="toggle">
-                            </dd>
                         </dl>
                     </div>
                     <?merge adminOrg.not().then('hide') @class ?>
@@ -126,7 +121,7 @@
             $('#orgInfo_displayName').text(organization.displayName);
             $('#informationTab').find('dt, dd').css('display', 'none');
             $.each(organization, function(key, value) {
-                if (value !=null && key !== 'enabled') {
+                if (value !=null) {
                     $('#orgInfo_' + key).css('display', '').text(value).prev().css('display', '');
                 }
 
@@ -136,8 +131,6 @@
                     } else {
                         $('#orgInfo_enabled').find(':checkbox').bootstrapToggle('off');
                     }
-
-                    $('#orgInfo_enabled').css('display', '').prev().css('display', '');
                 }
             });
 
@@ -153,20 +146,5 @@
             ArchivalProfileAccessForm.close();
         }
     }
-
-    $('#orgInfo_enabled :enabled').on("click", function(){
-        var status = $('#orgInfo_enabled').find(':checkbox').prop('checked');
-        $.ajax({
-            url         : "/organization/"+orgId+"/status/"+status,
-            type        : "PUT",
-            dataType  : 'json',
-            success     : function(response) {
-                gritter.show(response.message, response.status, response.errors);
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        })
-    });
 
 </script>
