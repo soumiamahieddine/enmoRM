@@ -340,10 +340,10 @@ msgid "Export the file plan"
 msgstr "Exporter le plan de classement"
 
 msgid "Drop the organizations list down"
-msgstr "Dérouler l'organigramme"
+msgstr "Déplier l'organigramme"
 
 msgid "Wrap the organizations list"
-msgstr "Enrouler l'organigramme"
+msgstr "Replier l'organigramme"
 
 msgid "Metadatas"
 msgstr "Métadonnées"
