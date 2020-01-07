@@ -22,6 +22,7 @@
                 <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
                 <?merge adminOrg.bool() ?>
                 <button id="exportFilePlan" class="btn btn-default" title="Export the file plan"><i class="fa fa-upload">&nbsp;</i>Export the file plan</button>
+                <button id="dropAllList" class="btn btn-primary" title="Drop the organizations list down"><i class="fa fa-caret-down">&nbsp;</i><span class="dropDownText">Drop the organizations list down</span></button>
                 <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
 
                 <div id="organization_orgTree">
@@ -36,6 +37,10 @@
         </div>
         <!-- modal for delete confirmation -->
         <?hinclude organization/deleteModal.html ?>
+    </div>
+    <div class="hide">
+        <span id="dropDownText_down">Drop the organizations list down</span>
+        <span id="dropDownText_up">Wrap the organizations list</span>
     </div>
 </div>
 
@@ -117,6 +122,29 @@
 
         $('#organizationInfo_informationTab').addClass('active');
         $('#informationTab').addClass('active');
+    });
+
+    $("#organization_orgTree").on('click', '.dropAllDown', function() {
+        let orgDiv = $(this).parent().parent().parent().parent();
+        let text = orgDiv.find(".dropDownText");
+        let dropAllDown = orgDiv.find(".dropAllDown");
+        if ($(this).data("listDropped")) {
+            let icon = orgDiv.find("i.fa-caret-up");
+            let minus_square = orgDiv.find(".fa-minus-square");
+            minus_square.click();
+            dropAllDown.data("listDropped", false);
+            icon.removeClass("fa-caret-up");
+            icon.addClass("fa-caret-down");
+            text.text($("#dropDownText_down").text());
+        } else {
+            let icon = orgDiv.find("i.fa-caret-down");
+            let plus_square = orgDiv.find(".fa-plus-square");
+            plus_square.click();
+            dropAllDown.data("listDropped", true);
+            icon.removeClass("fa-caret-down");
+            icon.addClass("fa-caret-up");
+            text.text($("#dropDownText_up").text());
+        }
     });
 
     $('#exportFilePlan').on('click', function() {
@@ -208,7 +236,8 @@
         },
 
         exportFilePlan: function() {
-            fileplanWindows = window.open("/exportFilePlan", 'export.xml');        }
+            fileplanWindows = window.open("/exportFilePlan", 'export.xml');
+        }
     }
 
     var Forms = {
@@ -228,5 +257,25 @@
         $('#forms').initSmoothScrolling();
         Tree.loadTree();
         window.localStorage.clear();
+    });
+
+    var listDropped = false;
+
+    $("#dropAllList").on("click", function() {
+        let icon = $(this).find("i");
+        let text = $(this).find(".dropDownText");
+        if (listDropped) {
+            $(".fa-minus-square").click();
+            listDropped = false;
+            icon.removeClass("fa-caret-up");
+            icon.addClass("fa-caret-down");
+            text.text($("#dropDownText_down").text());
+        } else {
+            $(".fa-plus-square").click();
+            listDropped = true;
+            icon.removeClass("fa-caret-down");
+            icon.addClass("fa-caret-up");
+            text.text($("#dropDownText_up").text());
+        }
     });
 </script>
