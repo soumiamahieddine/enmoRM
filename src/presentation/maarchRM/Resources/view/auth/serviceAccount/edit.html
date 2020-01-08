@@ -22,8 +22,8 @@
                     <div class="well">
                         <div class="form-group">
                             <label class="control-label" for="serviceOrgId"><span id="serviceOrgLabel">Service</span><span style="color : red">*</span></label>
-                            <span class="hide" id="organization_label">Organization</span>
-                            <span class="hide" id="service_label">Service</span>
+                            <span class="hide" id="organization_translated_text">Organization</span>
+                            <span class="hide" id="service_translated_text">Service</span>
                             <div>
                                 <input type="text" class="form-control" name="orgName" placeholder="Service" id="orgTypeahead"/>
                                 <select class="form-control hide" name="orgId" id="serviceOrgId">
@@ -442,12 +442,12 @@
             $("#orgTypeahead").hide();
             $("#orgGroup").hide();
             $("#selectOrgGroup").show();
-            $("#serviceOrgLabel").text($("#organization_label").text());
+            $("#serviceOrgLabel").text($("#organization_translated_text").text());
         } else {
             $("#orgTypeahead").show();
             $("#selectOrgGroup").hide();
             $("#orgGroup").show();
-            $("#serviceOrgLabel").text($("#service_label").text());
+            $("#serviceOrgLabel").text($("#service_translated_text").text());
         }
     }
 
