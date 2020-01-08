@@ -21,7 +21,9 @@
                     </div>
                     <div class="well">
                         <div class="form-group">
-                            <label class="control-label" for="serviceOrgId">Service<span style="color : red">*</span></label>
+                            <label class="control-label" for="serviceOrgId"><span id="serviceOrgLabel">Service</span><span style="color : red">*</span></label>
+                            <span class="hide" id="organization_translated_text">Organization</span>
+                            <span class="hide" id="service_translated_text">Service</span>
                             <div>
                                 <input type="text" class="form-control" name="orgName" placeholder="Service" id="orgTypeahead"/>
                                 <select class="form-control hide" name="orgId" id="serviceOrgId">
@@ -168,6 +170,8 @@
 </div>
 
 <script type="application/javascript">
+
+    selectOrTypeheadOrg();
 
     $("#adminUser").on('change', function () {
         selectOrTypeheadOrg();
@@ -404,10 +408,6 @@
         if(!$(this).val()){
             $("#originatorOwnerOrgName").val('');
             $("#serviceOrgId").val('');
-            $("#orgGroup").addClass('hide');
-        }
-        else {
-            $("#orgGroup").removeClass('hide');
         }
     });
 
@@ -442,10 +442,12 @@
             $("#orgTypeahead").hide();
             $("#orgGroup").hide();
             $("#selectOrgGroup").show();
+            $("#serviceOrgLabel").text($("#organization_translated_text").text());
         } else {
             $("#orgTypeahead").show();
             $("#selectOrgGroup").hide();
             $("#orgGroup").show();
+            $("#serviceOrgLabel").text($("#service_translated_text").text());
         }
     }
 
