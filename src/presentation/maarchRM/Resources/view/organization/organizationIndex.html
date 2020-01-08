@@ -20,7 +20,7 @@
             <div class="col-xs-12 col-md-5 col-lg-5" >
                 <?merge addOrganizationRight.bool() ?>
                 <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
-                <button id="dropAllList" class="btn btn-default"><i class="fa fa-caret-down">&nbsp;</i><span class="dropDownText">Drop the organizations list down</span></button>
+                <button id="dropAllList" class="btn btn-default" title="Drop the organizations list down" data-original-title="Drop the organizations list down"><i class="fa fa-caret-down">&nbsp;</i><span class="dropDownText">Drop the organizations list down</span></button>
                 <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
 
                 <div id="organization_orgTree">
@@ -174,12 +174,16 @@
             listDropped = false;
             icon.removeClass("fa-caret-up");
             icon.addClass("fa-caret-down");
-            text.text($("#dropDownText_down").text());
+            let dropDownText = $("#dropDownText_down").text();
+            text.text(dropDownText);
+            $("#dropAllList").attr('data-original-title', dropDownText);
         } else if (plusButtons <= 0 && !listDropped) {
             listDropped = true;
             icon.removeClass("fa-caret-down");
             icon.addClass("fa-caret-up");
-            text.text($("#dropDownText_up").text());
+            let dropDownText = $("#dropDownText_up").text();
+            text.text(dropDownText);
+            $("#dropAllList").attr('data-original-title', dropDownText);
         }
     }
     
