@@ -54,7 +54,7 @@
                 $('#organization_orgTree').find('.organizationNode').children('input[type="checkbox"]').not(select).removeClass('hide');
                 $('#organization_submitMove').prop('disabled', false).data("orgType", "organization");
             } else {
-                $('#organization_orgTree').find('.orgUnitNode input[type="checkbox"]').not(select).removeClass('hide');
+                $('#organization_orgTree').find('input[type="checkbox"]').not(select).removeClass('hide');
                 $('#organization_submitMove').prop('disabled', true).data("orgType", "orgUnit");
             }
 
