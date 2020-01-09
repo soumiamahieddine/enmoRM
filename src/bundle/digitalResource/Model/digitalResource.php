@@ -219,10 +219,9 @@ class digitalResource
      */
     public function setContents($contents)
     {
-        $tmpfile = \laabs\tempnam();
-        file_put_contents($tmpfile, $contents);
+        $this->handler = fopen('php://temp', 'w+');
         $this->isTemp = true;
-        $this->handler = fopen($tmpfile, 'r+');
+        fwrite($this->handler, $contents);
     }
 
     /**
@@ -268,28 +267,6 @@ class digitalResource
             if ($metadata['wrapper_type'] == 'plainfile') {
                 unlink($metadata['uri']);
             }
-        }
-    }
-
-    /**
-     * Set file information
-     * @param string $filename The file name
-     */
-    private function setInformation($filename)
-    {
-        $this->size = filesize($filename);
-
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $this->mimetype = $finfo->file($filename);
-
-        if (isset($this->fileExtension) || !isset($this->fileName)) {
-            return;
-        }
-
-        $pathinfo = pathinfo($this->fileName);
-
-        if (isset($pathinfo['extension'])) {
-            $this->fileExtension = $pathinfo['extension'];
         }
     }
 }
