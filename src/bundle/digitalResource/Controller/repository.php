@@ -185,7 +185,7 @@ class repository
     {
         $repositoryService = $repository->getService();
 
-        $uri = $repositoryService->createObject($resource->getContents(), $repository->currentContainer.'/'.$resource->resId);
+        $uri = $repositoryService->createObject($resource->getHandler(), $repository->currentContainer.'/'.$resource->resId);
         
         if (!$uri) {
             throw \laabs::newException("digitalResource/repositoryException", "No address return for storage of resource in repository %s.", 404, null, [$repository->repositoryId]);
