@@ -602,9 +602,9 @@ file that was distributed with this source code.
             case "name":
                 field = serializeName(field);
                 break;
-                
+
             case "text":
-                field['default'] = $('#textPropertyDefaultValue').find('input').val();
+                field['default'] = $('#textPropertyDefaultValue').find('input').val() != '' ? $('#textPropertyDefaultValue').find('input').val() : null;
                 break;
 
             case "boolean":
@@ -613,13 +613,13 @@ file that was distributed with this source code.
                         break;
                     case "0": field['default'] = 0;
                         break;
-                    default: field['default'] = "";
+                    default: field['default'] = null;
                         break;
                 }
                 break;
 
             case "number":
-                field['default'] = $('#numberPropertyDefaultValue').find('input').val();
+                field['default'] = $('#numberPropertyDefaultValue').find('input').val() != '' ? $('#numberPropertyDefaultValue').find('input').val() : null;
                 break;
 
             case "date":
@@ -639,7 +639,7 @@ file that was distributed with this source code.
         var nbResult = $("#keywordEnumList").find(".list-group-item").length;
 
         if (nbResult == 0) {
-            field['default'] = $('#keywordDefaultValue').find('input').val();
+            field['default'] = $('#keywordDefaultValue').find('input').val() != '' ? $('#keywordDefaultValue').find('input').val() : null;
             if ($('#keywordExternalRef').prop('checked') === true) {
                 field['ref'] = true;
             }
@@ -657,7 +657,7 @@ file that was distributed with this source code.
 
             field['enumeration'] = enumeration;
             field.enumNames = enumNames;
-            field['default'] = $('#keywordSelectDefault').find(":selected").val();
+            field['default'] = $('#keywordSelectDefault').find(":selected").val() != '' ? $('#keywordSelectDefault').find(":selected").val() : null;
         }
 
         return field;

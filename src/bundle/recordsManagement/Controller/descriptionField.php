@@ -86,7 +86,11 @@ class descriptionField
                 $facets->{$property} = $value;
             }
         }
+
         $descriptionField->facets = json_encode($facets);
+        if (empty($facets)) {
+            $descriptionField->facets = null;
+        }
 
         if (!empty($descriptionField->enumNames)) {
             //throw exception if number of enumNames is different from enumeration
@@ -168,13 +172,23 @@ class descriptionField
 
         $model = \laabs::bundle('recordsManagement')->getClass('descriptionField');
         $differences = array_diff_key(get_object_vars($descriptionField), $model->getProperties());
+
         $facets = new \stdClass();
+        if (isset($descriptionField->facets)) {
+            $facets = json_decode($descriptionField->facets);
+        }
+
         foreach ($differences as $property => $value) {
             if (!is_null($value)) {
                 $facets->{$property} = $value;
             }
         }
-        $descriptionField->facets = json_encode($facets);
+
+        $descriptionField->facets = null;
+        if (!empty($facets) && $facets != new \stdClass()) {
+            $descriptionField->facets = json_encode($facets);
+        }
+
 
         if (!empty($descriptionField->enumeration)) {
             $descriptionField->enumeration = json_encode($descriptionField->enumeration);
