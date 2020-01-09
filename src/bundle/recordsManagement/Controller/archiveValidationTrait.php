@@ -392,7 +392,8 @@ trait archiveValidationTrait
         $digitalResource->setContents($contents);
         $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
         file_put_contents($filename, $contents);
-
+        unset($contents);
+        
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {
             $format = $this->formatController->identifyFormat($filename);
@@ -410,6 +411,6 @@ trait archiveValidationTrait
             }
         }
 
-        unlink($filename);
+
     }
 }
