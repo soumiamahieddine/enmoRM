@@ -428,7 +428,7 @@ abstract class abstractMessage
             } else {
                 $binaryDataObject->attachment->filename = $digitalResource->resId;
             }
-            // $binaryDataObject->attachment->content = base64_encode($digitalResource->getContents());
+            
             $binaryDataObject->size = $digitalResource->size;
         }
 
@@ -562,7 +562,9 @@ abstract class abstractMessage
                     $filename .= ".".$digitalResource->fileExtension;
                 }
             }
-            file_put_contents($messageDir.DIRECTORY_SEPARATOR.$filename, $digitalResource->getContents());
+            $handler = fopen($messageDir.DIRECTORY_SEPARATOR.$filename, 'w');
+            stream_copy_to_stream($handler, $digitalResource->getHandler());
+            fclose($handler);
         }
         
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$message->messageId.'.json';
