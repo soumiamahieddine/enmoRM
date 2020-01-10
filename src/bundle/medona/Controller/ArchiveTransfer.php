@@ -271,21 +271,37 @@ class ArchiveTransfer extends abstractMessage
     protected function receiveAttachments($message, $data, $attachments, $filename=false)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
-        
+
         $message->attachments = [];
-        
+
         if (count($attachments)) {
             foreach ($attachments as $attachment) {
-                if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
-                    $data = stream_get_contents($attachment->data);
-                } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $attachment->data)) {
-                    $data = base64_decode($attachment->data);
-                } elseif (is_file($attachment->data)) {
-                    $data = file_get_contents($attachment->data);
+                if (is_string($attachment)) {
+                    if (is_file($attachment)) {
+                        copy($attachment, $messageDir.DIRECTORY_SEPARATOR.basename($attachment));
+                        $message->attachments[] = $attachment;
+                    } elseif (is_dir($attachment)) {
+                        $folderFileNames = glob($attachment.DIRECTORY_SEPARATOR."*");
+                        foreach ($folderFileNames as $folderFileName) {
+                            if (basename($folderFileName) === basename($attachment)) {
+                                continue;
+                            }
+                            copy($folderFileName, $messageDir.DIRECTORY_SEPARATOR.basename($folderFileName));
+
+                            $message->attachments[] = basename($folderFileName);
+                        }
+                    }
+                } elseif (is_object($attachment)) {
+                    if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
+                        $data = stream_get_contents($attachment->data);
+                    } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $attachment->data)) {
+                        $data = base64_decode($attachment->data);
+                    } elseif (is_file($attachment->data)) {
+                        $data = file_get_contents($attachment->data);
+                    }
+                    file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
+                    $message->attachments[] = $attachment->filename;
                 }
-                
-                file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
-                $message->attachments[] = $attachment->filename;
             }
         }
     }
