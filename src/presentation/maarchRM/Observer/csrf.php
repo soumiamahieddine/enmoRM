@@ -77,35 +77,36 @@ class csrf
         }
         
         $accountTokens = $account->authentication->csrf;
-        
-        switch ($userCommand->method) {
-            case "create":
-            case "update":
-            case "delete":
-                if (empty($requestToken)) {
-                    throw new \core\Exception('Attempt to access without a valid token 1', 412);
-                }
-
-                $requestTokenTime = $this->checkToken($requestToken, $accountTokens);
-                $accountTokens = $this->shiftTokens($requestTokenTime, $accountTokens);
-                $accountTokens = $this->addToken($accountTokens);
-                break;
-
-            default:
-                if (empty($accountTokens)) {
-                    $accountTokens = $this->addToken([]);
-                }
-                break;
-        }
-
-        $account->authentication->csrf = $accountTokens;
-
-        // Set account and COMMIT
+              // Set account and COMMIT
         try {
+            switch ($userCommand->method) {
+                case "create":
+                case "update":
+                case "delete":
+                    if (empty($requestToken)) {
+                        throw new \core\Exception('Attempt to access without a valid token 1', 412);
+                    }
+
+                    $requestTokenTime = $this->checkToken($requestToken, $accountTokens);
+                    $accountTokens = $this->shiftTokens($requestTokenTime, $accountTokens);
+                    $accountTokens = $this->addToken($accountTokens);
+                    break;
+
+                default:
+                    if (empty($accountTokens)) {
+                        $accountTokens = $this->addToken([]);
+                    }
+                    break;
+            }
+
+            $account->authentication->csrf = $accountTokens;
+
             $this->updateAccount($account);
             $this->sdoFactory->commit();
         } catch (\Exception $exception) {
             $this->sdoFactory->rollback();
+
+            throw $exception;
         }
 
         return true;
