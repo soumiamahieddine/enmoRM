@@ -567,7 +567,7 @@ msgid "registrationNumber"
 msgstr "Identifiant"
 
 msgid "Undefined user command for route %1$s %2$s"
-msgstr "La page demandée '%1$s %2$s' n'existe pas ou n'est pas accessible."
+msgstr "La page demandée n'existe pas ou n'est pas accessible."
 
 msgid "accountName"
 msgstr "Identifiant"
