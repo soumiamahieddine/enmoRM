@@ -454,8 +454,8 @@ class ArchiveTransfer extends abstractMessage
         } else {
             $message->status = "valid";
 
+            $eventInfo = get_object_vars($message);
             foreach ((array) $this->infos as $info) {
-                $eventInfo = get_object_vars($message);
                 $eventInfo['code'] = "OK";
                 $eventInfo['info'] = $info;
 
@@ -545,11 +545,12 @@ class ArchiveTransfer extends abstractMessage
         } else {
             $message->status = "invalid";
         }
+
+        $eventInfo = get_object_vars($message);
         foreach ((array) $this->errors as $error) {
-            $eventInfo = get_object_vars($message);
             $eventInfo['code'] = $error->getCode();
             $eventInfo['info'] = $error->getMessage();
-
+            
             $event = $this->lifeCycleJournalController->logEvent(
                 'medona/validation',
                 'medona/message',
