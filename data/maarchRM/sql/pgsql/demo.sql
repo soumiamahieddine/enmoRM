@@ -43,7 +43,7 @@ INSERT INTO "auth"."account" VALUES ('vvictoire', 'vvictoire', 'Victor VICTOIRE'
 
 INSERT INTO "auth"."role" VALUES ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', 'func_admin', true);
 INSERT INTO "auth"."role" VALUES ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', 'gen_admin', true);
-INSERT INTO "auth"."role" VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes / records managers / référents d''archives / administrateur fonctionnels', 'user', true);
+INSERT INTO "auth"."role" VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes, records managers et référents d''archives', 'user', true);
 INSERT INTO "auth"."role" VALUES ('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', 'user', true);
 INSERT INTO "auth"."role" VALUES ('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', 'user', true);
 INSERT INTO "auth"."role" VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', 'user', true);
