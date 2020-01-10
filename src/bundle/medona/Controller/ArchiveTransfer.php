@@ -455,11 +455,7 @@ class ArchiveTransfer extends abstractMessage
             $message->status = "valid";
 
             foreach ((array) $this->infos as $info) {
-                $eventInfo = array();
-                $eventInfo['type'] = "ArchiveTransfer";
-                $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-                $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-                $eventInfo['reference'] = $message->reference;
+                $eventInfo = get_object_vars($message);
                 $eventInfo['code'] = "OK";
                 $eventInfo['info'] = $info;
 
@@ -550,11 +546,7 @@ class ArchiveTransfer extends abstractMessage
             $message->status = "invalid";
         }
         foreach ((array) $this->errors as $error) {
-            $eventInfo = array();
-            $eventInfo['type'] = "ArchiveTransfer";
-            $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-            $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-            $eventInfo['reference'] = $message->reference;
+            $eventInfo = get_object_vars($message);
             $eventInfo['code'] = $error->getCode();
             $eventInfo['info'] = $error->getMessage();
 
