@@ -109,7 +109,7 @@ class csrf
         }
 
         // If a token was received, discard it and all the previous tokens
-        if (isset($requestTokenTime)) {
+        if (isset($this->requestTokenTime)) {
             $this->discardUsedTokens();
         }
 
