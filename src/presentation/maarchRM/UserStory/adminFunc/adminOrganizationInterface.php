@@ -47,6 +47,17 @@ interface AdminOrganizationInterface
     public function readOrganizationtree();
 
     /**
+     * Search organization
+     * @param string $term
+     * @param string $enabled
+     *
+     * @return organization/organization/search
+     *
+     * @uses organization/organization/readSearch
+     */
+    public function readOrganizationsearch($term = null, $enabled = "all");
+
+    /**
      * Add an organization
      * @param organization/organization $organization The organization object to add
      *

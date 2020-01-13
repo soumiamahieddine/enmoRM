@@ -111,6 +111,108 @@ class organization
         return $orgList;
     }
 
+    public function search($term = null, $enabled = "all")
+    {
+        $authController = \laabs::newController("auth/userAccount");
+        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+        $owner = true;
+
+        if (isset($currentOrg)) {
+            if (!$currentOrg->orgRoleCodes) {
+                $owner = false;
+            } elseif (is_array($currentOrg->orgRoleCodes) && !in_array('owner', $currentOrg->orgRoleCodes)) {
+                $owner = false;
+            }
+        }
+
+        $queryParts = array();
+        $queryParams = array();
+
+        $securityLevel = $user->getSecurityLevel();
+        if ($securityLevel == $user::SECLEVEL_GENADMIN) {
+            $queryParams['isOrgUnit'] = 'false';
+            $queryParts['isOrgUnit'] = "isOrgUnit=:isOrgUnit";
+        }
+
+        if ($term) {
+            $queryParts['term'] = "(registrationNumber ='*".$term."*' 
+            OR orgName = '*".$term."*' 
+            OR displayName = '*".$term."*' 
+            OR parentOrgId = '*".$term."*')";
+        }
+
+        if($enabled !== 'all') {
+            $queryParams['enabled'] = $enabled;
+            $queryParts['enabled'] = "enabled=:enabled";
+        }
+
+        $queryString = "";
+        if (count($queryParts)) {
+            $queryString = implode(' AND ', $queryParts );
+        }
+
+        $length = \laabs::configuration('presentation.maarchRM')['maxResults'];;
+        $organizationList = $this->sdoFactory->find("organization/organization", $queryString, $queryParams, null, 0, $length);
+        $organizationList = \laabs::castMessageCollection($organizationList, "organization/organizationList");
+
+        if ($term || $enabled !== 'all') {
+            $organizations = [];
+            foreach ($organizationList as $organization) {
+                if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
+                    if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
+                        continue;
+                    }
+                }
+
+                if ($organization->parentOrgId) {
+                    $organization->parentOrgName = $this->sdoFactory->index(
+                        'organization/organization',
+                        ['displayName'],
+                        "orgId='". $organization->parentOrgId . "'"
+                    )[$organization->parentOrgId];
+                }
+                $organizations[] = $organization;
+            }
+
+            return $organizations;
+        }
+
+        $tree = array();
+        $organizationByParent = array();
+        foreach ($organizationList as $organization) {
+            $parentOrgId = (string)$organization->parentOrgId;
+
+            if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
+                if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
+                    continue;
+                }
+            }
+
+            if (empty($parentOrgId) && $owner) {
+                $tree[] = $organization;
+                continue;
+            } elseif (!$owner && (string)$organization->orgId == (string)$currentOrg->ownerOrgId) {
+                $tree[] = $organization;
+                continue;
+            }
+
+            if (!isset($organizationByParent[$parentOrgId])) {
+                $organizationByParent[$parentOrgId] = array();
+            }
+
+            $organization->parentOrgName = $this->sdoFactory->index(
+                'organization/organization',
+                ['displayName'],
+                "orgId='". $organization->parentOrgId . "'"
+            )[$organization->parentOrgId];
+            $organizationByParent[$parentOrgId][] = $organization;
+        }
+
+        return $this->buildTree($tree, $organizationByParent);
+    }
+
     /**
      * Get organizations tree
      *
@@ -200,59 +302,6 @@ class organization
         }
 
         return $roots;
-    }
-
-    /**
-     * Search organizations
-     * @param string $name
-     * @param string $businessType
-     * @param string $orgRoleCode
-     * @param string $orgTypeCode
-     * @param string $registrationNumber
-     * @param string $taxIdentifier
-     *
-     * @return organization/organization[] An array of organizations
-     */
-    public function search($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null)
-    {
-        $queryParts = array();
-        $variables = array();
-        $query = null;
-
-        if ($name) {
-            $variables['name'] = "*$name*";
-            $queryParts[] = "(orgName~:name OR otherOrgName~:name OR displayName~:name)";
-        }
-
-        if ($businessType) {
-            $variables['businessType'] = "*$businessType*";
-            $queryParts[] = "(businessType~:businessType)";
-        }
-
-        if ($orgRoleCode) {
-            $variables['orgRoleCodes'] = "*$orgRoleCode*";
-            $queryParts[] = "(orgRoleCodes~:orgRoleCodes)";
-        }
-
-        if ($orgTypeCode) {
-            $variables['orgTypeCode'] = "*$orgTypeCode*";
-            $queryParts[] = "(orgTypeCode='$orgTypeCode')";
-        }
-
-        if ($registrationNumber) {
-            $variables['registrationNumber'] = $registrationNumber;
-            $queryParts[] = "(registrationNumber='$registrationNumber')";
-        }
-        if ($taxIdentifier) {
-            $variables['taxIdentifier'] = $taxIdentifier;
-            $queryParts[] = "(taxIdentifier='$taxIdentifier')";
-        }
-
-        if (count($queryParts)) {
-            $query = implode(" AND ", $queryParts);
-        }
-
-        return $this->sdoFactory->find("organization/organization", $query, $variables);
     }
 
     /**

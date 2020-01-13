@@ -7,7 +7,7 @@
 #-->
 
 <div class="tree" style="padding:20px 0 0 50px">
-    <?merge organizations /organization/organizationRoot.html ?>
+    <?merge organizations /organization/orgTree/organizationRoot.html ?>
 </div>
 
 <li id="orgTemplate" class="organizationNode hide" lang="en" data-translate-catalog="organization/messages">
@@ -45,3 +45,55 @@
 
     <input type="checkbox" class="hide" style="width:20px; height:20px"/>
 </li>
+
+<script>
+    $("#organization_orgTree").on('click', '.moveOrganization', function() {
+        var span = $(this).closest('span')
+        Forms.clear();
+        Org.select(span);
+        OrganizationShifting.show(span);
+    });
+
+    var Tree = {
+        addNode: function(parentId, org) {
+            var template = null;
+            var parent = null;
+            var span = null;
+            if (!org.isOrgUnit) {
+                template = $('#orgTemplate').clone();
+                span = template.find('.root');
+                org.ownerOrgId = org.orgId;
+
+            } else {
+                template = $('#orgUnitTemplate').clone();
+                span = template.find('.node');
+            }
+
+            span.attr('id', org.orgId)
+                .data('orgname', org.orgName)
+                .data('ownerorgid', org.ownerOrgId);
+
+            template.find('.showDetails').text(org.displayName);
+            template.removeAttr('id').removeClass('hide');
+
+            if (!parentId) {
+                BootstrapTree.addRoot($('.tree'), template);
+
+            } else {
+                BootstrapTree.addNode($('#'+parentId).closest('li'), template);
+            }
+
+
+        },
+
+        updateNode: function(org) {
+            $('#'+org.orgId).data('orgname', org.orgName)
+                .data('ownerorgid', org.ownerOrgId)
+                .find('.showDetails').text(org.displayName);
+        },
+
+        removeNode: function(node) {
+            BootstrapTree.removeNode(node);
+        }
+    }
+</script>

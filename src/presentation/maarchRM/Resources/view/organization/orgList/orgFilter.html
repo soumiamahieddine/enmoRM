@@ -1,0 +1,95 @@
+<br>
+<div class="col-md-12" data-translate-catalog="organization/messages">
+    <div class="panel panel-default">
+        <div class="panel-body" id="orgSearch">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Search</label>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-sm" name="term" id="term" placeholder="Identifier or name"/>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="col-lg-4 control-label">Enabled</label>
+                        <div class="btn-group" data-toggle="buttons" >
+                            <label class="btn btn-info active enabled" title="All">
+                                <input type="radio" id="all" name="enabled" value="all" checked>All
+                            </label>
+                            <label class="btn btn-default enabled" title="Yes">
+                                <input type="radio" id="true" name="enabled" value="1">Yes
+                            </label>
+                            <label class="btn btn-default enabled" title="No">
+                                <input type="radio" id="false" name="enabled" value="0">No
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                    <hr/>
+                <div class="clearfix">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-primary pull-right" id="search" title="Search"><i class="fa fa-search">&nbsp;</i> Search</button>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script>
+    $("#orgSearch").on('click', '.enabled', function () {
+        $('#orgSearch').find('.enabled').removeClass('btn-info active').addClass('btn-default');
+        $(this).addClass('btn-info active').removeClass('btn-default');
+    });
+
+    $("#orgSearch").on('click', '#search', function () {
+        Forms.clear();
+        Filter.search();
+    });
+
+    $("#organization_org").on('click', '.addChildOrganization', function() {
+        var span = $(this).closest('span');
+        var orgId = span.attr("id");
+        var parentName = span.data('orgname');
+        Forms.clear();
+        Org.select(span);
+        OrganizationForm.newOrg(parentName, orgId);
+    });
+
+    $("#organization_org").on('click', '.addChildOrgUnit', function() {
+        var span = $(this).closest('span');
+        var orgId = span.attr("id");
+        var parentName = span.data('orgname');
+        var ownerOrgId = span.data('ownerorgid');
+        Forms.clear();
+        Org.select(span);
+        OrganizationForm.newOrg(parentName, orgId, ownerOrgId);
+    });
+
+    $("#organization_org").on('click', '.moveOrganization', function() {
+        var span = $(this).closest('span')
+        Forms.clear();
+        Org.select(span);
+        OrganizationShifting.show(span);
+    });
+
+    var Filter = {
+        search : function() {
+            const enabled = 'enabled=' + $("#orgSearch").find('[name="enabled"]:checked').val();
+
+            let term = '';
+            if ($("#term").val()) {
+                term = '&term=' + encodeURI($("#term").val());
+            }
+
+            $.ajax({
+                url      : '/organizationSearch?' + enabled + term,
+                type     : "GET",
+                dataType : 'html',
+                success  : function(response) {
+                    $('#organization_orgList').empty().html(response).css('display', '');
+                },
+                error    : function(response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        }
+    }
+</script>

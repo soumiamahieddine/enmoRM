@@ -517,6 +517,13 @@ chainJournalByOrganization = false;
 chainWithTimestamp = false;
 
 [organization]
+
+; Displaying the organization as a tree
+; true = organization tree
+; false = organization list
+; WARNING : Above 40 services, we advise you not to activate this option.
+isOrgTree = true;
+
 ; Roles of organization unit
 ; if 'transaction' parameter disable, uncomment the block 'orgUnitRoles' below
 ; if 'transaction' parameter enable, comment the block 'orgUnitRoles' below

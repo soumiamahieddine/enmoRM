@@ -17,15 +17,22 @@
 
     <div class="container-fluid" lang="en" data-translate-catalog="organization/messages">
         <div class="row">
-            <div class="col-xs-12 col-md-5 col-lg-5" >
+            <div class="col-xs-12 col-md-6 col-lg-6" id="organization">
                 <?merge addOrganizationRight.bool() ?>
                 <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
                 <?merge adminOrg.bool() ?>
                 <button id="exportFilePlan" class="btn btn-default" title="Export the file plan"><i class="fa fa-upload">&nbsp;</i>Export the file plan</button>
                 <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
 
+                <input class="hide" id="isOrgTree" value="[?merge isOrgTree ?]">
                 <div id="organization_orgTree">
                     <!-- Organization tree goes here -->
+                </div>
+                <div id="organization_org">
+                    <?hinclude organization/orgList/orgFilter.html ?>
+                    <div id="organization_orgList">
+                        <!-- Organization List goes here -->
+                    </div>
                 </div>
             </div>
             <div class="col-xs-12 col-lg-6" id="forms">
@@ -50,6 +57,10 @@
     /*border: 3px solid #d9534f !important;*/
     border: 3px solid #f0ad4e !important;
 }
+
+ .selectedLine   {
+    font-weight: bold;
+}
 </style>
 
 <script src="/public/js/bootstrap-tree/bootstrap-tree.js"></script>
@@ -62,50 +73,42 @@
     })
 
     // Add a child organization
-    $("#organization_orgTree").on('click', '.addChildOrganization', function() {
+    $("#organization").on('click', '.addChildOrganization', function() {
         var span = $(this).closest('span');
         var orgId = span.attr("id");
         var parentName = span.data('orgname');
         Forms.clear();
-        Tree.select(span);
+        Org.select(span);
         OrganizationForm.newOrg(parentName, orgId);
     });
 
     // Add a child organization unit
-    $("#organization_orgTree").on('click', '.addChildOrgUnit', function() {
+    $("#organization").on('click', '.addChildOrgUnit', function() {
         var span = $(this).closest('span');
         var orgId = span.attr("id");
         var parentName = span.data('orgname');
         var ownerOrgId = span.data('ownerorgid');
         Forms.clear();
-        Tree.select(span);
+        Org.select(span);
         OrganizationForm.newOrg(parentName, orgId, ownerOrgId);
     });
 
     // Delete on organization
-    $("#organization_orgTree").on('click', '.deleteOrganization', function() {
+    $("#organization").on('click', '.deleteOrganization', function() {
         var span = $(this).closest('span')
         var orgId = span.attr("id");
         Forms.clear();
-        Tree.select(span);
+        Org.select(span);
         $('#organization_confirmDelete').data('orgid', orgId);
         $('#organization_confirmDeleteModal').modal('show');
     });
 
-    // Move an organization
-    $("#organization_orgTree").on('click', '.moveOrganization', function() {
-        var span = $(this).closest('span')
-        Forms.clear();
-        Tree.select(span);
-        OrganizationShifting.show(span);
-    });
-
     // Read an organization
-    $("#organization_orgTree").on('click', '.showDetails', function() {
+    $("#organization").on('click', '.showDetails', function() {
         var span = $(this).closest('span')
         Forms.clear();
-        Tree.select(span);
-        Tree.showDetails(span.attr('id'));
+        Org.select(span);
+        Org.showDetails(span.attr('id'));
 
         $.each($('#organization_organizationInfo').find('li'), function() {
             $(this).removeClass('active');
@@ -119,23 +122,48 @@
         $('#informationTab').addClass('active');
     });
 
-    $('#exportFilePlan').on('click', function() {
-        Tree.exportFilePlan();
-    });
-    
-    var Tree = {
-        loadTree: function() {
+    var Org = {
+        add: function(parentId, org) {
+            if ($('#isOrgTree').val()) {
+                Tree.addNode(parentId, org);
+            } else {
+                Filter.search();
+            }
+        },
+
+        update: function (org) {
+            if ($('#isOrgTree').val()) {
+                Tree.updateNode(org);
+            } else {
+                Filter.search();
+            }
+        },
+
+        load: function() {
             $("#treeLoading").css('display', '');
             $('#organization_orgTree').css('display', 'none');
+            $('#organization_org').css('display', 'none');
+
+            let url;
+            if ($('#isOrgTree').val()) {
+                url = '/organizationTree';
+            } else {
+                url = '/organizationSearch';
+            }
 
             $.ajax({
-                url      : "/organizationTree",
+                url      : url,
                 type     : "GET",
                 dataType : 'html',
                 success  : function(response) {
                     $("#treeLoading").css('display', 'none');
-                    $('#organization_orgTree').empty().html(response).css('display', '');
-                    BootstrapTree.init($('#organization_orgTree'), true);
+                    if ($('#isOrgTree').val()) {
+                        $('#organization_orgTree').empty().html(response).css('display', '');
+                        BootstrapTree.init($('#organization_orgTree'), true);
+                    } else {
+                        $('#organization_org').css('display', '');
+                        $('#organization_orgList').empty().html(response).css('display', '');
+                    }
                 },
                 error    : function(response) {
                     gritter.show(response.responseText, false);
@@ -158,65 +186,27 @@
         },
 
         select: function(item) {
-            $('#organization_orgTree').find('.selectedNode').removeClass('selectedNode');
-            item.addClass('selectedNode');
+            if (item.hasClass('node') || item.hasClass('root')) {
+                $('#organization').find('.selectedNode').removeClass('selectedNode');
+                item.addClass('selectedNode');
+            } else {
+                $('#organization').find('.selectedLine').removeClass('selectedLine');
+                var tr = $('#organization_orgList').find("[data-orgid='" + item.attr('id') + "']");
+                tr.find('#displayName').addClass('selectedLine');
+            }
         },
 
         unselect: function() {
-            $('#organization_orgTree').find('.selectedNode').removeClass('selectedNode');
-        },
-
-        addNode: function(parentId, org) {
-            var template = null
-            var parent = null
-            var span = null
-            if (!org.isOrgUnit) {
-                template = $('#orgTemplate').clone();
-                span = template.find('.root');
-                org.ownerOrgId = org.orgId;
-
-            } else {
-                template = $('#orgUnitTemplate').clone();
-                span = template.find('.node');
-            }
-
-            span.attr('id', org.orgId)
-                .data('orgname', org.orgName)
-                .data('ownerorgid', org.ownerOrgId); 
-
-            template.find('.showDetails').text(org.displayName);
-            template.removeAttr('id').removeClass('hide');
-
-            if (!parentId) {
-                BootstrapTree.addRoot($('.tree'), template);
-
-            } else {
-                BootstrapTree.addNode($('#'+parentId).closest('li'), template);
-            }
-
-
-        },
-
-        updateNode: function(org) {
-            $('#'+org.orgId).data('orgname', org.orgName)
-                            .data('ownerorgid', org.ownerOrgId)
-                            .find('.showDetails').text(org.displayName);
-        },
-
-        removeNode: function(node) {
-            BootstrapTree.removeNode(node);
-        },
-
-        exportFilePlan: function() {
-            fileplanWindows = window.open("/exportFilePlan", 'export.xml');        }
-    }
+            $('#organization').find('.selectedNode').removeClass('selectedNode');
+        }
+    };
 
     var Forms = {
         clear: function() {
             OrgInfo.close();
             OrganizationForm.close();
             OrganizationShifting.close();
-            Tree.unselect();
+            Org.unselect();
         }
     }
 
@@ -226,7 +216,7 @@
         $('#organization_moveForm').css('display', 'none');
         
         $('#forms').initSmoothScrolling();
-        Tree.loadTree();
+        Org.load();
         window.localStorage.clear();
     });
 </script>
