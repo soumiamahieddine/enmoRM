@@ -1,0 +1,50 @@
+<tr data-orgid="[?merge .orgId?]">
+    <td class="text-center col-1" data-translate="organization/messages">
+        <span style=" color: [?merge .isOrgUnit.then('#23AAE5','#4CAE4C') ?]">
+            <i class="fa fa-circle"></i>
+        </span>
+    </td>
+    <td class="col-md-5" id="displayName"><?merge .displayName ?></td>
+    <td class="col-md-5"><?merge .parentOrgName ?></td>
+    <td class="col-1">
+        <i class="[?merge  .enabled.then('fa fa-check','fa fa-ban') ?]"></i>
+    </td>
+    <td class="action_btn col-md-3" data-translate-catalog="organization/messages">
+        <?merge .isOrgUnit.bool().not() ?>
+        <span id="[?merge .orgId?]" data-orgname="[?merge .displayName?]" data-ownerorgid="[?merge .orgId?]">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btn-sm showDetails"><span class="fa fa-info-circle">&nbsp;</span></button>
+                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-edit">&nbsp;</i>&nbsp;
+                    <span class="caret"></span>
+                </button>
+                <?merge adminOrg ?>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="addChildOrganization"><a href="#contain"><i class="fa fa-plus" >&nbsp;</i>Add a child organization</a></li>
+                    <li class="addChildOrgUnit"><a href="#contain"><i class="fa fa-plus" >&nbsp;</i>Add a child organization unit</a></li>
+                    <li class="moveOrganization"><a href="#contain"><i class="fa fa-share">&nbsp;</i>Move</a></li>
+                    <li class="deleteOrganization"><a href="#contain"><i class="fa fa-trash-o" >&nbsp;</i>Delete</a></li>
+                </ul>
+            </div>
+        </span>
+        <?merge .isOrgUnit.bool() ?>
+        <span id="[?merge .orgId ?]" data-orgname="[?merge .displayName?]" data-ownerorgid="[?merge .ownerOrgId?]">
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btn-sm showDetails"><span class="fa fa-info-circle">&nbsp;</span></button>
+                <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-edit">&nbsp;</i>&nbsp;
+                    <span class="caret"></span>
+                </button>
+                <?merge adminOrg ?>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="addChildOrgUnit"><a href="#contain"><i class="fa fa-plus" >&nbsp;</i>Add a child organization unit</a></li>
+                    <li class="moveOrganization"><a href="#contain"><i class="fa fa-share">&nbsp;</i>Move</a></li>
+                    <li class="deleteOrganization"><a href="#contain"><i class="fa fa-trash-o">&nbsp;</i>Delete</a></li>
+                </ul>
+            </div>
+        </span>
+    </td>
+</tr>
+
+<?merge .organization /organization/orgList/orgListLine.html ?>
+
