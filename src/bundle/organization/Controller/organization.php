@@ -113,8 +113,7 @@ class organization
 
     public function search($term = null, $enabled = "all")
     {
-        $authController = \laabs::newController("auth/userAccount");
-        $user = $authController->get(\laabs::getToken('AUTH')->accountId);
+        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
 
         $currentOrg = \laabs::getToken("ORGANIZATION");
         $owner = true;
@@ -153,13 +152,15 @@ class organization
             $queryString = implode(' AND ', $queryParts );
         }
 
-        $length = \laabs::configuration('presentation.maarchRM')['maxResults'];;
+        $length = \laabs::configuration('presentation.maarchRM')['maxResults'];
         $organizationList = $this->sdoFactory->find("organization/organization", $queryString, $queryParams, null, 0, $length);
         $organizationList = \laabs::castMessageCollection($organizationList, "organization/organizationList");
 
         if ($term || $enabled !== 'all') {
             $organizations = [];
             foreach ($organizationList as $organization) {
+                $parentOrgId = (string)$organization->parentOrgId;
+
                 if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
                     if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
                         continue;
