@@ -289,17 +289,12 @@ class ArchiveTransferSending extends abstractMessage
         $this->changeStatus($messageId, "accepted");
 
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveRestitution";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
+        
         $this->lifeCycleJournalController->logEvent(
             'medona/acceptance',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
@@ -313,17 +308,12 @@ class ArchiveTransferSending extends abstractMessage
         $this->changeStatus($messageId, "acknowledge");
 
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveTransfer";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
+        
         $this->lifeCycleJournalController->logEvent(
             'medona/acknowledgement',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
@@ -350,17 +340,11 @@ class ArchiveTransferSending extends abstractMessage
             $this->archiveController->setStatus((string) $unitIdentifier->objectId, "preserved");
         }
 
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveTransfer";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
         $this->lifeCycleJournalController->logEvent(
             'medona/rejection',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
@@ -390,17 +374,11 @@ class ArchiveTransferSending extends abstractMessage
             \laabs\rmdir($uri, true);
         }
 
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveTransfer";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
         $this->lifeCycleJournalController->logEvent(
             'medona/processing',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
