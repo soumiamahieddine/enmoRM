@@ -128,14 +128,19 @@ class csrf
         \laabs::setToken($this->config["cookieName"], $responseToken, null, false);
     }
 
+    /**
+     * Retrieves the current account identifier
+     * from AUTH or TEMP-AUTH token
+     * @return string
+     */
     private function getAccountId()
     {
         $authToken = \laabs::getToken('AUTH');
 
-        if (!$authToken) {
+        if (is_null($authToken)) {
             $authToken = \laabs::getToken('TEMP-AUTH');
 
-            if (!$authToken) {
+            if (!is_null($authToken)) {
                 return false;
             }
         }
@@ -143,19 +148,21 @@ class csrf
         return $this->accountId = $authToken->accountId;
     }
 
+    /**
+     * Retrieves the current user accout
+     */
     private function getAccount()
     {
         $this->account = $this->sdoFactory->read('auth/account', $this->accountId, $lock = true);
     }
 
     /**
-     * Retrieves the account information with a LOCK on database
-     * @param bool $lock Lock user
-     *
-     * @return auth/userAccount
+     * Retrieves the current account auth object
+     * containing the csrf tokens
      */
-    private function getAccountAuth($lock = false)
+    private function getAccountAuth()
     {
+        // Decode authentication object from JSON
         $this->accountAuth = json_decode($this->account->authentication);
 
         // Create authentication object if not set
@@ -177,15 +184,22 @@ class csrf
         $this->accountAuth->csrf = get_object_vars($this->accountAuth->csrf);
     }
 
+    /**
+     * Remove tokens which date is expired
+     */
     private function discardExpiredTokens()
     {
+        // Get lifetime from config, defaults 1h
         $lifetime = '3600';
         if (isset($this->config['lifetime'])) {
             $lifetime = $this->config['lifetime'];
         }
         $duration = \laabs::newDuration('PT'.$lifetime.'S');
+        
+        // Current timestamp
         $now = \laabs::newTimestamp();
 
+        // Loop and discard expired tokens
         foreach ($this->accountAuth->csrf as $time => $token) {
             $timestamp = \laabs::newTimestamp($time);
             $expiration = $timestamp->add($duration);
@@ -198,6 +212,7 @@ class csrf
 
     /**
      * Adds a token to the current array of tokens
+     * @return string The generated token
      */
     private function addToken()
     {
@@ -220,6 +235,10 @@ class csrf
         return $this->accountAuth->csrf[$time] = $token;
     }
 
+    /**
+     * Returns the latest token on the auth crsf list
+     * @return string
+     */
     private function getLastToken()
     {
         ksort($this->accountAuth->csrf);
@@ -227,6 +246,12 @@ class csrf
         return end($this->accountAuth->csrf);
     }
 
+    /**
+     * Checks wthat a token has been sent with request
+     * and that it can be found on account auth object
+     *
+     * @throws Exception If no token or not found
+     */
     private function checkRequestToken()
     {
         $this->requestToken = \laabs::getToken("Csrf", LAABS_IN_HEADER);
@@ -241,6 +266,10 @@ class csrf
         }
     }
 
+    /**
+     * Removes the used token AND the older tokens
+     * from auth object
+     */
     private function discardUsedTokens()
     {
         foreach ($this->accountAuth->csrf as $time => $token) {
@@ -250,6 +279,9 @@ class csrf
         }
     }
 
+    /**
+     * Persists modifications on account auth object
+     */
     private function updateAccount()
     {
         $this->account->authentication = json_encode($this->accountAuth);

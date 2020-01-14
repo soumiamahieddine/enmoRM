@@ -378,6 +378,7 @@ blacklistUserStories = "[
 ; 'csrfConfig' Available rules
 ;   'cookieName' Name of the cookie whose value is the csrf token
 ;   'tokenLenght' Token size
+;   'lifeTime' Token validity in seconds (defaults 3600)
 csrfWhiteList = "['user/login', 'user/password']"
 csrfConfig = '{
     "cookieName" : "CSRF",
