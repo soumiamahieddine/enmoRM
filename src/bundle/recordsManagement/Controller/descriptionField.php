@@ -87,9 +87,10 @@ class descriptionField
             }
         }
 
-        $descriptionField->facets = json_encode($facets);
-        if (empty($facets)) {
-            $descriptionField->facets = null;
+        $descriptionField->facets = null;
+        // cast in array to check if empty
+        if (!empty((array) $facets)) {
+            $descriptionField->facets = json_encode($facets);
         }
 
         if (!empty($descriptionField->enumNames)) {
@@ -185,7 +186,8 @@ class descriptionField
         }
 
         $descriptionField->facets = null;
-        if (!empty($facets) && $facets != new \stdClass()) {
+        // cast as array to check if empty
+        if (!empty((array) $facets)) {
             $descriptionField->facets = json_encode($facets);
         }
 
