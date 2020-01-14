@@ -167,12 +167,12 @@ class organization
                     }
                 }
 
-                if ($organization->parentOrgId) {
+                if ($parentOrgId) {
                     $organization->parentOrgName = $this->sdoFactory->index(
                         'organization/organization',
                         ['displayName'],
-                        "orgId='". $organization->parentOrgId . "'"
-                    )[$organization->parentOrgId];
+                        "orgId='". $parentOrgId . "'"
+                    )[$parentOrgId];
                 }
                 $organizations[] = $organization;
             }
@@ -206,8 +206,8 @@ class organization
             $organization->parentOrgName = $this->sdoFactory->index(
                 'organization/organization',
                 ['displayName'],
-                "orgId='". $organization->parentOrgId . "'"
-            )[$organization->parentOrgId];
+                "orgId='". $parentOrgId . "'"
+            )[$parentOrgId];
             $organizationByParent[$parentOrgId][] = $organization;
         }
 
