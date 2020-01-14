@@ -56,14 +56,25 @@
                         return "<span class='well well-sm'>"+$('#no_org_found_text').text()+"</span>";
                     },
                     suggestion: function(org) {
-                        var display =
-                            "<span>"
-                            + "<span class='fa fa-user' >&nbsp;</span>"
-                            + "<span style='font-family:Helvetica, sans-serif;'>"
-                            + org.ownerOrgName
-                            + " > "
-                            + org.displayName
-                            + "</span></span><br>";
+                        var display;
+
+                        if (org.ownerOrgName !== undefined) {
+                            display =
+                                "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>"
+                                + org.ownerOrgName
+                                + " > "
+                                + org.displayName
+                                + "</span></span><br>";
+                        } else {
+                            display =
+                                "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>"
+                                + org.displayName
+                                + "</span></span><br>";
+                        }
 
                         return display;
                     }
