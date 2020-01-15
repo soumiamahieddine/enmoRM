@@ -399,11 +399,18 @@ class ArchiveDeliveryRequest extends abstractMessage
     {
         $results = array();
 
-        $messages = $this->sdoFactory->find(
+        $messageIds = $this->sdoFactory->index(
             "medona/message",
+            ["messageId"],
             "status='accepted' AND type='ArchiveDeliveryRequest' AND active=true"
         );
-        foreach ($messages as $message) {
+
+        foreach ($messageIds as $messageId) {
+            // Avoid parallel processing
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+            if ($message->status != 'accepted') {
+                continue;
+            }
             $this->changeStatus($message->messageId, "processing");
             $this->readOrgs($message);
 
