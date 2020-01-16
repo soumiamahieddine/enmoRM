@@ -285,9 +285,9 @@
                         
                         if(method == "POST") {
                             organization.orgId = response.orgId;
-                            Tree.addNode(organization.parentOrgId, organization);
+                            Org.add(organization.parentOrgId, organization);
                         } else {
-                            Tree.updateNode(organization);
+                            Org.update(organization);
                         }
                     }
                 },
@@ -380,7 +380,7 @@
                 nameForm.click();
             }
 
-            Tree.unselect();
+            Org.unselect();
         }
     }
 

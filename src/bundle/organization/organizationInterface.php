@@ -45,18 +45,14 @@ interface organizationInterface
 
     /**
      * Search organization
-     * @param string $name
-     * @param string $businessType
-     * @param string $orgRoleCode
-     * @param string $orgTypeCode
-     * @param string $registrationNumber
-     * @param string $taxIdentifier
+     * @param string $term
+     * @param string $enabled
      *
      * @return organization/organization[] An array of organizations
      *
      * @action organization/organization/search
      */
-    public function readSearch($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null);
+    public function readSearch($term = null, $enabled = "all");
 
     /**
      * Create an organization

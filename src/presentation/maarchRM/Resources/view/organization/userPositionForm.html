@@ -115,10 +115,7 @@
     });
 
     $('#organization_userTypeahead').on('keyup', function(){
-        var btn = $('#organization_addUserPosition');
-        var input = $(this);
-
-            btn.prop('disabled', true);
+        $('#organization_addUserPosition').prop('disabled', true);
     })
 
     //add a user
