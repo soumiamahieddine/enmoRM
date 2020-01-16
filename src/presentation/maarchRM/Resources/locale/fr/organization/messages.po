@@ -390,3 +390,6 @@ msgstr "Statut de l'activité modifié"
 
 msgid "Identifier or name"
 msgstr "Identifiant ou nom de l'organisation"
+
+msgid "No org found"
+msgstr "Aucune organisation trouvée"
