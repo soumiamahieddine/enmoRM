@@ -610,3 +610,6 @@ msgstr "Pas de statut de traitement"
 
 msgid "Resource size is null"
 msgstr "La taille de la ressource est nulle"
+
+msgid "Attempt to access without a valid token"
+msgstr "Une erreur est survenue. Si le problème persiste, veuillez recharger la page."
