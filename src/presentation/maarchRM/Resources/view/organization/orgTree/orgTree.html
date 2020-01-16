@@ -98,6 +98,84 @@
 
         removeNode: function(node) {
             BootstrapTree.removeNode(node);
+        },
+
+        checkDropDown: function() {
+            let orgDivs = $(".organizationNode, .orgUnitNode");
+            orgDivs.each(function() {
+                let dropDownTextDiv = $(this).find(".dropAllDown").first();
+                if (dropDownTextDiv.length > 0) {
+                    let plusButtons = $(this).find(".fa-plus-square").length;
+                    let dropDownIcon = dropDownTextDiv.find(".dropDownIcon");
+                    let dropDownText = dropDownTextDiv.find(".dropDownText");
+                    if (plusButtons > 0 && dropDownTextDiv.data("listDropped")) {
+                        dropDownTextDiv.data("listDropped", false);
+                        dropDownIcon.removeClass("fa-caret-up");
+                        dropDownIcon.addClass("fa-caret-down");
+                        dropDownText.text($("#dropDownTextDown").text());
+                    } else if (plusButtons <= 0 && !dropDownTextDiv.data("listDropped")) {
+                        dropDownTextDiv.data("listDropped", true);
+                        dropDownIcon.removeClass("fa-caret-down");
+                        dropDownIcon.addClass("fa-caret-up");
+                        dropDownText.text($("#dropDownTextUp").text());
+                    }
+                }
+            });
+            let tree = $(".tree");
+            let plusButtons = tree.find(".fa-plus-square").length;
+            let icon = $("#dropAllList").find("i");
+            let textDiv = $("#dropAllList").find(".dropDownText");
+            if (plusButtons > 0 && listDropped) {
+                listDropped = false;
+                icon.removeClass("fa-caret-up");
+                icon.addClass("fa-caret-down");
+                let dropDownText = $("#dropDownTextDown").text();
+                textDiv.text(dropDownText);
+                $("#dropAllList").attr('data-original-title', dropDownText);
+            } else if (plusButtons <= 0 && !listDropped) {
+                listDropped = true;
+                icon.removeClass("fa-caret-down");
+                icon.addClass("fa-caret-up");
+                let dropDownText = $("#dropDownTextUp").text();
+                textDiv.text(dropDownText);
+                $("#dropAllList").attr('data-original-title', dropDownText);
+            }
+        },
+
+        dropAllTree: function() {
+            let orgDiv = $(".tree");
+            let textDiv = $.merge($(this).find(".dropDownText"), orgDiv.find(".dropDownText"));
+            let icons = $.merge($(this).find("i"), orgDiv.find(".dropDownIcon"));
+            Tree.dropAllDown(orgDiv, textDiv, icons, listDropped);
+        },
+
+        dropAllDiv: function() {
+            let orgDiv = $(this).parents("li").eq(0);
+            let textDiv = orgDiv.find(".dropDownText");
+            let icons = orgDiv.find("i.dropDownIcon");
+            let listDropped = $(this).data("listDropped");
+            Tree.dropAllDown(orgDiv, textDiv, icons, listDropped);
+        },
+
+        dropAllDown: function(orgDiv, textDiv, icons, listDropped) {
+            if (listDropped) {
+                orgDiv.find(".fa-minus-square").click();
+                icons.parents("li").eq(0).data("listDropped", false);
+                icons.removeClass("fa-caret-up");
+                icons.addClass("fa-caret-down");
+                textDiv.text($("#dropDownTextDown").text());
+            } else {
+                orgDiv.find(".fa-plus-square").click();
+                icons.parents("li").eq(0).data("listDropped", true);
+                icons.removeClass("fa-caret-down");
+                icons.addClass("fa-caret-up");
+                textDiv.text($("#dropDownTextUp").text());
+            }
         }
     }
+
+    var listDropped = false;
+
+    $("#organization_orgTree").on('click', '.dropAllDown', Tree.dropAllDiv);
+    $("#dropAllList").on("click", Tree.dropAllTree);
 </script>

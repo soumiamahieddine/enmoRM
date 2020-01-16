@@ -20,6 +20,7 @@
             <div class="col-xs-12 col-md-6 col-lg-6" id="organization">
                 <?merge addOrganizationRight.bool() ?>
                 <button id="newOrganization" class="btn btn-default" title="Add a new organization"><i class="fa fa-plus">&nbsp;</i>New organization</button>
+                <?merge isOrgTree.bool() ?>
                 <button id="dropAllList" class="btn btn-default" title="Drop the organizations list down" data-original-title="Drop the organizations list down"><i class="fa fa-caret-down">&nbsp;</i><span class="dropDownText">Drop the organizations list down</span></button>
                 <div id="treeLoading"><i class="fa fa-spinner fa-spin"></i></div>
 
