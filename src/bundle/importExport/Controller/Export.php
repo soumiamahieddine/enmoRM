@@ -28,15 +28,68 @@ use core\Exception;
  */
 class Export
 {
+    protected $sdoFactory;
+    protected $userAccountController;
+    protected $userPositionController;
+    protected $organizationController;
+    protected $roleController;
+    protected $descriptionFieldController;
+    protected $controller;
+
     /**
-     * Export a csv file with type of data choosen
+     * Constructor
+     * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
+     */
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\localisation\TranslatorInterface $translator)
+    {
+        $this->sdoFactory = $sdoFactory;
+        $this->userAccountController = \laabs::newController('auth/userAccount');
+        $this->serviceAccountController = \laabs::newController('auth/serviceAccount');
+        $this->roleController = \laabs::newController('auth/role');
+        $this->organizationController = \laabs::newController('organization/organization');
+        $this->archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
+        $this->descriptionFieldController = \laabs::newController('recordsManagement/descriptionField');
+        $this->retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
+        $this->controller = [
+            'userAccount' => $this->userAccountController,
+            'serviceAccount' => $this->serviceAccountController,
+            'role' => $this->roleController,
+            'organization' => $this->organizationController,
+            'archivalProfile' => $this->archivalProfileController,
+            'descriptionField' => $this->descriptionFieldController,
+            'retentionRule' => $this->retentionRuleController
+        ];
+    }
+
+    /**
+     * Create a csv file with type of data chosen
      *
      * @param  string $dataType Type of data to export (organization, user, etc)
      *
-     * @return binary $csv      csv file with data wanted
-      */
+     * @return binary $csv      Csv files with data exported
+     */
+    public function create($dataType)
+    {
+        return true;
+    }
+
+    /**
+     * Read an excerpt of data type user can export
+     *
+     * @param  string $dataType Type of data to visualize (organization, user, etc)
+     *
+     * @action importExport/Export/read
+     *
+     * @return array $data      Csv files with data exported
+     */
     public function read($dataType)
     {
+        if (!array_key_exists($dataType, $this->controller)) {
+            throw new \core\Exception\BadRequestException("Data your trying to export does not exists");
+        }
 
+        $data = $this->controller[$dataType]->index();
+
+        return $data;
     }
 }
