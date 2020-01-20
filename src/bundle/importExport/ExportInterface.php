@@ -17,27 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with bundle organization.  If not, see <http://www.gnu.org/licenses/>.
  */
-namespace bundle\importExport\Controller;
-
-use core\Exception;
+namespace bundle\importExport;
 
 /**
- * Control of the organization
- *
- * @package importExport
+ * Interface for export
  */
-class Import
+interface ExportInterface
 {
     /**
-     * Import chosen data with chosen format
+     * Export a csv file with type of data choosen
      *
-     * @param string  $csv     Data base64 encoded or not
-     * @param boolean $isReset Reset tables or not
+     * @param  string $dataType Type of data to export (organization, user, etc)
      *
-     * @return boolean           Data exported well or not
+     * @action importExport/Export/read
+     *
+     * @return binary $csv      Csv files with data exported
      */
-    public function create($csv, $isReset = false)
-    {
-
-    }
+    public function read($dataType)
 }
