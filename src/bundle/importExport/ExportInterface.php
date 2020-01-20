@@ -25,7 +25,7 @@ namespace bundle\importExport;
 interface ExportInterface
 {
     /**
-     * Export a csv file with type of data choosen
+     * Create a csv file with type of data chosen
      *
      * @param  string $dataType Type of data to export (organization, user, etc)
      *
@@ -33,5 +33,16 @@ interface ExportInterface
      *
      * @return binary $csv      Csv files with data exported
      */
-    public function read($dataType)
+    public function create($dataType);
+
+    /**
+     * Read an excerpt of data type user can export
+     *
+     * @param  string $dataType Type of data to visualize (organization, user, etc)
+     *
+     * @action importExport/Export/read
+     *
+     * @return array $data      Csv files with data exported
+     */
+    public function read($dataType);
 }
