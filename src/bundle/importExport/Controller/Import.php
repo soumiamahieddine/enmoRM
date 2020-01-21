@@ -54,9 +54,37 @@ class Import extends ImportExport
 
         $datas = explode("\n", $csv);
 
-        var_dump(explode(",", $datas[0]));
-        var_dump($header);
+        //compare csv header with message template
+        if (str_getcsv($datas[0], ',', '"') != $header) {
+            throw new \core\Exception\BadRequestException("Error in csv header");
+        }
+
+        //remove header
+        unset($datas[0]);
+
+        foreach ($datas as $line => $data) {
+            $csvLineValues = str_getcsv($data, ',', '"');
+            if ($isReset) {
+                $functionName = 'create' . ucfirst(strtolower($dataType));
+                $this->$functionName();
+            } else {
+                $functionName = 'update' . ucfirst(strtolower($dataType));
+                $this->$functionName();
+            }
+        }
+    }
+
+    protected function createUseraccount()
+    {
+        var_dump('titi');
+        return true;
+    }
+
+    protected function updateUseraccount()
+    {
+        var_dump('toto');
         exit;
+        return true;
     }
 
     protected function isBase64($string)

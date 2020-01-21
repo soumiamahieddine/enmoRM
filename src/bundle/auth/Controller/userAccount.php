@@ -746,4 +746,30 @@ class userAccount
 
         throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
     }
+
+    public function export($limit = null) {
+        $userAccounts = $this->sdoFactory->find('auth/account', null, null, null, null, $limit);
+        $userAccounts = \laabs::castMessageCollection($userAccounts, 'importExport/userAccount');
+
+        foreach ($userAccounts as $userAccount) {
+            $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccount->accountId'");
+            if (!empty($roleMembers)) {
+                foreach ($roleMembers as $roleMember) {
+                    $userAccount->roles .= $roleMember->roleId . " ";
+                }
+                $userAccount->roles = trim($userAccount->roles);
+            }
+
+            $userPositionController = \laabs::newController('organization/userPosition');
+            $positions = $userPositionController->listPositions($userAccount->accountId);
+            if (!empty($positions)) {
+                foreach ($positions as $position) {
+                    $userAccount->organizations .= $position->orgId . " ";
+                }
+                $userAccount->organizations = trim($userAccount->organizations);
+            }
+        }
+
+        return $userAccounts;
+    }
 }

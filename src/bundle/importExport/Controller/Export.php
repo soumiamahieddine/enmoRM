@@ -43,7 +43,7 @@ class Export extends ImportExport
         $csvFile = fopen('php://output', 'w');
 
         $header = [];
-        $object = \laabs::newInstance($this->model[$dataType]);
+        $object = \laabs::newMessage($this->message[strtolower($dataType)]);
         foreach ($object as $key => $value) {
             $header[] = $key;
         }
@@ -67,11 +67,11 @@ class Export extends ImportExport
      */
     public function read($dataType)
     {
+        $dataType = strtolower($dataType);
         if (!array_key_exists($dataType, $this->controller)) {
             throw new \core\Exception\BadRequestException("Data your trying to export does not exists");
         }
-
-        $data = $this->controller[$dataType]->index($this->limit);
+        $data = $this->controller[$dataType]->export($this->limit);
 
         return $data;
     }
