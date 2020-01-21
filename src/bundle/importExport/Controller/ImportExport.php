@@ -59,34 +59,20 @@ class ImportExport
         $this->controller = [
             'useraccount' => $this->userAccountController,
             'serviceaccount' => $this->serviceAccountController,
-            'role' => $this->roleController,
             'organization' => $this->organizationController,
             'archivalprofile' => $this->archivalProfileController,
             'descriptionfield' => $this->descriptionFieldController,
             'retentionrule' => $this->retentionRuleController
         ];
 
-        $this->model = [
-            'useraccount' => 'auth/account',
-            'serviceaccount' => 'auth/account',
-            'role' => 'auth/role',
-            'organization' => 'organization/organization',
-            'archivalprofile' => 'recordsManagement/archivalProfile',
-            'descriptionfield' => 'recordsManagement/descriptionField',
-            'retentionrule' => 'recordsManagement/retentionRule'
-        ];
-
         $this->message = [
             'useraccount' => 'auth/userAccountImportExport',
             'serviceaccount' => 'auth/serviceAccount',
-            'role' => 'auth/role',
             'organization' => 'organization/organization',
             'archivalprofile' => 'recordsManagement/archivalProfile',
             'descriptionfield' => 'recordsManagement/descriptionField',
             'retentionrule' => 'recordsManagement/retentionRule'
         ];
-
-
 
         $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
