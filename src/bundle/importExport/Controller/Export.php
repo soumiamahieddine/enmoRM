@@ -30,11 +30,15 @@ class Export
 {
     protected $sdoFactory;
     protected $userAccountController;
+    protected $serviceAccountController;
     protected $userPositionController;
     protected $organizationController;
+    protected $archivalProfileController;
     protected $roleController;
     protected $descriptionFieldController;
+    protected $retentionRuleController;
     protected $controller;
+    protected $model;
     protected $limit;
 
     /**
@@ -60,6 +64,17 @@ class Export
             'descriptionField' => $this->descriptionFieldController,
             'retentionRule' => $this->retentionRuleController
         ];
+
+        $this->model = [
+            'userAccount' => 'auth/account',
+            'serviceAccount' => 'auth/account',
+            'role' => 'auth/role',
+            'organization' => 'organization/organization',
+            'archivalProfile' => 'recordsManagement/archivalProfile',
+            'descriptionField' => 'recordsManagement/descriptionField',
+            'retentionRule' => 'recordsManagement/retentionRule'
+        ];
+
         $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
 
@@ -72,7 +87,23 @@ class Export
      */
     public function create($dataType)
     {
-        return true;
+        $this->limit = null;
+        $data = $this->read($dataType);
+
+        $csvFile = fopen('php://output', 'w');
+
+        $header = [];
+        $object = \laabs::newInstance($this->model[$dataType]);
+        foreach ($object as $key => $value) {
+            $header[] = $key;
+        }
+        fputcsv($csvFile, $header);
+
+        foreach ($data as $list) {
+            fputcsv($csvFile, (array) $list);
+        }
+
+        return $csvFile;
     }
 
     /**

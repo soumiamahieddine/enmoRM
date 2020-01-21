@@ -29,7 +29,7 @@ interface ExportInterface
      *
      * @param  string $dataType Type of data to export (organization, user, etc)
      *
-     * @action importExport/Export/read
+     * @action importExport/Export/create
      *
      * @return binary $csv      Csv files with data exported
      */
