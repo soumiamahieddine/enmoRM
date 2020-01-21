@@ -88,7 +88,7 @@ class Export
             throw new \core\Exception\BadRequestException("Data your trying to export does not exists");
         }
 
-        $data = $this->controller[$dataType]->index();
+        $data = $this->controller[$dataType]->index($limit = 100);
 
         return $data;
     }

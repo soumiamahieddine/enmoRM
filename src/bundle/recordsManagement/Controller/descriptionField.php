@@ -43,11 +43,13 @@ class descriptionField
     /**
      * List
      *
+     * @param integer $limit Max limit of results to return
+     *
      * @return recordsManagement/descriptionField[] The list of retention rules
      */
-    public function index()
+    public function index($limit = null)
     {
-        $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField');
+        $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
 
         foreach ($descriptionFields as $i => $descriptionField) {
             $descriptionFields[$descriptionField->name] = $descriptionField;

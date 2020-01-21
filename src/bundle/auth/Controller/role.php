@@ -55,9 +55,11 @@ class role
     /**
      * List roles
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return array Array of auth/role object
      */
-    public function index()
+    public function index($limit = null)
     {
         $roleMemberController = \laabs::newController("auth/roleMember");
         $roleMembers = $roleMemberController->readByUserAccount(\laabs::getToken("AUTH")->accountId);
@@ -81,7 +83,7 @@ class role
                     $query[] = "securityLevel = null";
             }
         }
-        $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)));
+        $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)), null, null, null, $limit);
 
         return $roles;
     }

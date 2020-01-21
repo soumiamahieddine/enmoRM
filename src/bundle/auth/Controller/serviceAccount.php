@@ -56,11 +56,13 @@ class serviceAccount
     /**
      * List all services for administration
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return auth/account[] The array of services
      */
-    public function index()
+    public function index($limit = null)
     {
-        return $this->sdoFactory->find('auth/account', "accountType='service'");
+        return $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
     }
 
     /**
