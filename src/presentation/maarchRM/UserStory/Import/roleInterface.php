@@ -1,0 +1,17 @@
+<?php
+
+namespace presentation\maarchRM\UserStory\Import;
+
+interface roleInterface
+{
+    /**
+     * Import a csv file with role informations
+     *
+     * @param string  $csv      Data base64 encoded or not in proper format
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @uses importExport/Import/create_dataType_
+     *
+     */
+    public function createImportRole($csv, $isReset = false);
+}
