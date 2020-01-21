@@ -52,7 +52,7 @@ class organization
      *
      * @return organization/organization[] An array of organization
      */
-    public function index($limit, $query = null)
+    public function index($limit = null, $query = null)
     {
         return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "parentOrgId", "ownerOrgId"), $query, null, null, $limit);
     }
@@ -138,9 +138,9 @@ class organization
         }
 
         if ($term) {
-            $queryParts['term'] = "(registrationNumber ='*".$term."*' 
-            OR orgName = '*".$term."*' 
-            OR displayName = '*".$term."*' 
+            $queryParts['term'] = "(registrationNumber ='*".$term."*'
+            OR orgName = '*".$term."*'
+            OR displayName = '*".$term."*'
             OR parentOrgId = '*".$term."*')";
         }
 
@@ -555,13 +555,13 @@ class organization
 
         return $res;
     }
-    
+
     /**
      * Sets the status of an org unit
      *
      * @param string $orgId  The org identifier
      * @param bool   $status The new status (enabled = true of false)
-     * 
+     *
      * @return bool The result of the change
      */
     public function changeStatus($orgId, $status) {
