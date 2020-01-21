@@ -57,23 +57,23 @@ class ImportExport
         $this->descriptionFieldController = \laabs::newController('recordsManagement/descriptionField');
         $this->retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $this->controller = [
-            'userAccount' => $this->userAccountController,
-            'serviceAccount' => $this->serviceAccountController,
+            'useraccount' => $this->userAccountController,
+            'serviceaccount' => $this->serviceAccountController,
             'role' => $this->roleController,
             'organization' => $this->organizationController,
-            'archivalProfile' => $this->archivalProfileController,
-            'descriptionField' => $this->descriptionFieldController,
-            'retentionRule' => $this->retentionRuleController
+            'archivalprofile' => $this->archivalProfileController,
+            'descriptionfield' => $this->descriptionFieldController,
+            'retentionrule' => $this->retentionRuleController
         ];
 
         $this->model = [
-            'userAccount' => 'auth/account',
-            'serviceAccount' => 'auth/account',
+            'useraccount' => 'auth/account',
+            'serviceaccount' => 'auth/account',
             'role' => 'auth/role',
             'organization' => 'organization/organization',
-            'archivalProfile' => 'recordsManagement/archivalProfile',
-            'descriptionField' => 'recordsManagement/descriptionField',
-            'retentionRule' => 'recordsManagement/retentionRule'
+            'archivalprofile' => 'recordsManagement/archivalProfile',
+            'descriptionfield' => 'recordsManagement/descriptionField',
+            'retentionrule' => 'recordsManagement/retentionRule'
         ];
 
         $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];

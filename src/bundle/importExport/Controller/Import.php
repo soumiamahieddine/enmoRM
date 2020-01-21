@@ -31,12 +31,13 @@ class Import extends ImportExport
     /**
      * Import chosen data with chosen format
      *
+     * @param string  $dataType Type of data to visualize (organization, user, etc)
      * @param string  $csv     Data base64 encoded or not
      * @param boolean $isReset Reset tables or not
      *
      * @return boolean           Data exported well or not
      */
-    public function create($csv, $isReset = false)
+    public function create($dataType, $csv, $isReset = false)
     {
         if (!is_string($csv)) {
             throw new \core\Exception\BadRequestException("Data your trying to import is in an invalid format");

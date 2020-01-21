@@ -44,5 +44,5 @@ interface ExportInterface
      *
      * @return array $data      Csv files with data exported
      */
-    public function read($dataType);
+    public function read_dataType_();
 }
