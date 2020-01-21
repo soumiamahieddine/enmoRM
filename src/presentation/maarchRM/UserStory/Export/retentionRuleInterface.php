@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\Export;
 
-interface roleInterface
+interface retentionRuleInterface
 {
     /**
      * Get retention rules infos
