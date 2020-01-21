@@ -35,6 +35,7 @@ class Export
     protected $roleController;
     protected $descriptionFieldController;
     protected $controller;
+    protected $limit;
 
     /**
      * Constructor
@@ -59,6 +60,7 @@ class Export
             'descriptionField' => $this->descriptionFieldController,
             'retentionRule' => $this->retentionRuleController
         ];
+        $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
 
     /**
@@ -88,7 +90,7 @@ class Export
             throw new \core\Exception\BadRequestException("Data your trying to export does not exists");
         }
 
-        $data = $this->controller[$dataType]->index($limit = 100);
+        $data = $this->controller[$dataType]->index($this->limit);
 
         return $data;
     }
