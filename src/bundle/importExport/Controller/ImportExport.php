@@ -76,6 +76,18 @@ class ImportExport
             'retentionrule' => 'recordsManagement/retentionRule'
         ];
 
+        $this->message = [
+            'useraccount' => 'ImportExport/userAccount',
+            'serviceaccount' => 'auth/serviceAccount',
+            'role' => 'auth/role',
+            'organization' => 'organization/organization',
+            'archivalprofile' => 'recordsManagement/archivalProfile',
+            'descriptionfield' => 'recordsManagement/descriptionField',
+            'retentionrule' => 'recordsManagement/retentionRule'
+        ];
+
+
+
         $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
 }

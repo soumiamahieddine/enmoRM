@@ -33,5 +33,5 @@ interface ImportInterface
      *
      * @return boolean        Import with reset of table data or not
      */
-    public function create_datatype_($csv, $isReset = false);
+    public function create_dataType_($csv, $isReset = false);
 }
