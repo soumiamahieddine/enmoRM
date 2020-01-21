@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\Import;
 
-interface roleInterface
+interface retentionRuleInterface
 {
     /**
      * Import a csv file with retention rules informations
