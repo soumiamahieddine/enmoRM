@@ -19,7 +19,7 @@
  * along with bundle auth.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace bundle\importExport\Message;
+namespace bundle\auth\Message;
 
 /**
  * userAccount message
