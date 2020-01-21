@@ -26,7 +26,7 @@ use core\Exception;
  *
  * @package importExport
  */
-class Import
+class Import extends ImportExport
 {
     /**
      * Import chosen data with chosen format
@@ -38,6 +38,24 @@ class Import
      */
     public function create($csv, $isReset = false)
     {
+        if (!is_string($csv)) {
+            throw new \core\Exception\BadRequestException("Data your trying to import is in an invalid format");
+        }
 
+        if ($this->isBase64($csv)) {
+            $csv = base64_decode($csv, true);
+        }
+
+
+
+    }
+
+    protected function isBase64($string)
+    {
+        if (base64_encode(base64_decode($string, true)) === $string) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -26,58 +26,8 @@ use core\Exception;
  *
  * @package importExport
  */
-class Export
+class Export extends ImportExport
 {
-    protected $sdoFactory;
-    protected $userAccountController;
-    protected $serviceAccountController;
-    protected $userPositionController;
-    protected $organizationController;
-    protected $archivalProfileController;
-    protected $roleController;
-    protected $descriptionFieldController;
-    protected $retentionRuleController;
-    protected $controller;
-    protected $model;
-    protected $limit;
-
-    /**
-     * Constructor
-     * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
-     */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\localisation\TranslatorInterface $translator)
-    {
-        $this->sdoFactory = $sdoFactory;
-        $this->userAccountController = \laabs::newController('auth/userAccount');
-        $this->serviceAccountController = \laabs::newController('auth/serviceAccount');
-        $this->roleController = \laabs::newController('auth/role');
-        $this->organizationController = \laabs::newController('organization/organization');
-        $this->archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
-        $this->descriptionFieldController = \laabs::newController('recordsManagement/descriptionField');
-        $this->retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
-        $this->controller = [
-            'userAccount' => $this->userAccountController,
-            'serviceAccount' => $this->serviceAccountController,
-            'role' => $this->roleController,
-            'organization' => $this->organizationController,
-            'archivalProfile' => $this->archivalProfileController,
-            'descriptionField' => $this->descriptionFieldController,
-            'retentionRule' => $this->retentionRuleController
-        ];
-
-        $this->model = [
-            'userAccount' => 'auth/account',
-            'serviceAccount' => 'auth/account',
-            'role' => 'auth/role',
-            'organization' => 'organization/organization',
-            'archivalProfile' => 'recordsManagement/archivalProfile',
-            'descriptionField' => 'recordsManagement/descriptionField',
-            'retentionRule' => 'recordsManagement/retentionRule'
-        ];
-
-        $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
-    }
-
     /**
      * Create a csv file with type of data chosen
      *
