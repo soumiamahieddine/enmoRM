@@ -47,8 +47,16 @@ class Import extends ImportExport
             $csv = base64_decode($csv, true);
         }
 
+        $object = \laabs::newMessage($this->message[strtolower($dataType)]);
+        foreach ($object as $key => $value) {
+            $header[] = $key;
+        }
 
+        $datas = explode("\n", $csv);
 
+        var_dump($datas[0]);
+        var_dump($header);
+        exit;
     }
 
     protected function isBase64($string)
