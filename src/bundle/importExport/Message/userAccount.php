@@ -30,6 +30,14 @@ namespace bundle\importExport\Message;
 class userAccount
 {
     /**
+     * The user account identifier
+     *
+     * @var id
+     * @notempty
+     */
+    public $accountId;
+
+    /**
      * @var string
      * @pattern #^[A-Za-z][A-Za-z0-9_.@]*[A-Za-z]$#
      * @notempty
@@ -107,11 +115,4 @@ class userAccount
      * @var bool
      */
     public $isAdmin;
-
-    /**
-     * The security Level (constants in userAccount model)
-     *
-     * @var string
-     */
-    public $securityLevel;
 }
