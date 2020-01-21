@@ -61,6 +61,13 @@ class Import extends ImportExport
         exit;
     }
 
+    /**
+     * Check if a string is base 64 encoded
+     *
+     * @param  string $string string to test
+     *
+     * @return boolean If string is base64 encoded or not
+     */
     protected function isBase64($string)
     {
         if (base64_encode(base64_decode($string, true)) === $string) {
@@ -70,6 +77,14 @@ class Import extends ImportExport
         return false;
     }
 
+
+    /**
+     * Clean boolean values received from get parameter. Return true if standard boolean values, false otherwise
+     *
+     * @param  string $value string to clean
+     *
+     * @return boolean        value cleaned
+     */
     protected function cleanBooleanValue($value)
     {
         switch ($value) {
@@ -85,6 +100,7 @@ class Import extends ImportExport
             case 'yes':
             case 'Yes':
             case 'YES':
+            case true:
                 $value = true;
                 break;
             default:
