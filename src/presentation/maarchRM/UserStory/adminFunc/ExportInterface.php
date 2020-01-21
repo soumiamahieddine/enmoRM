@@ -7,12 +7,58 @@ namespace presentation\maarchRM\UserStory\adminFunc;
 interface ExportInterface
 {
     /**
-     * Get all contacts
+     * Get user account infos
      *
-     * @param  string $dataType Type of data to visualize (organization, user, etc)
-     *
-     * @uses importExport/Export/read
+     * @uses importExport/Export/read_dataType_
      *
      */
-    public function readExport($dataType);
+    public function readExportUseraccount();
+
+    /**
+     * Get service accounts infos
+     *
+     * @uses importExport/Export/read_dataType_
+     *
+     */
+    public function readExportServiceaccount();
+
+    /**
+     * Get roles infos
+     *
+     * @uses importExport/Export/read_dataType_
+     *
+     */
+    public function readExportRole();
+
+    /**
+     * Get organizations infos
+     *
+     * @uses importExport/Export/read_dataType_
+     *
+     */
+    public function readExportOrganization();
+
+    /**
+     * Get archival profiles infos
+     *
+     * @uses importExport/Export/read_dataType_
+     *
+     */
+    public function readExportArchivalprofile();
+
+    /**
+     * Get description fields infos
+     *
+     * @uses importExport/Export/read_dataType_
+     *
+     */
+    public function readExportDescriptionfield();
+
+    /**
+     * Get retention rules infos
+     *
+     * @uses importExport/Export/read_dataType_
+     *
+     */
+    public function readExportRetentionrule();
 }
