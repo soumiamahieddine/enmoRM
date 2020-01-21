@@ -77,7 +77,7 @@ class ImportExport
         ];
 
         $this->message = [
-            'useraccount' => 'ImportExport/userAccount',
+            'useraccount' => 'importExport/userAccount',
             'serviceaccount' => 'auth/serviceAccount',
             'role' => 'auth/role',
             'organization' => 'organization/organization',
