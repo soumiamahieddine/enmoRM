@@ -45,11 +45,13 @@ class retentionRule
     /**
      * List the retention rules
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return recordsManagement/retentionRule[] The list of retention rules
      */
-    public function index()
+    public function index($limit = null)
     {
-        $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule');
+        $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule', null, null, null, null, $limit);
 
         return $retentionRules;
     }

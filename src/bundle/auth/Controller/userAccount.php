@@ -54,11 +54,13 @@ class userAccount
 
     /**
      * List all users to display
-     * @param string $query
+     *
+     * @param integer $limit Max limit of info to return
+     * @param string  $query sdo query
      *
      * @return array The array of stdClass with dislpay name and user identifier
      */
-    public function index($query = null)
+    public function index($limit = null, $query = null)
     {
         if ($query) {
             $query .= "AND accountType='user'";
@@ -66,7 +68,7 @@ class userAccount
             $query .= "accountType='user'";
         }
 
-        $userAccounts = $this->sdoFactory->find('auth/account', $query);
+        $userAccounts = $this->sdoFactory->find('auth/account', $query, null, null, null, $limit);
         $userAccounts = \laabs::castMessageCollection($userAccounts, 'auth/userAccountIndex');
 
         return $userAccounts;

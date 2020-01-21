@@ -1037,7 +1037,7 @@ class journal
         if (isset(\laabs::configuration('lifeCycle')['chainJournalByOrganization']) && \laabs::configuration('lifeCycle')['chainJournalByOrganization']) {
             $orgController = \laabs::newController('organization/organization');
 
-            $organizations = $orgController->index("isOrgUnit=false");
+            $organizations = $orgController->index(null, "isOrgUnit=false");
 
             foreach ($organizations as $organization) {
                 $journalArray[] = $this->processChaining($organization->registrationNumber);

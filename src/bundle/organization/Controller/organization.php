@@ -46,13 +46,15 @@ class organization
 
     /**
      * Index of organizations
-     * @param string $query The query of the index
+     *
+     * @param integer $limit Maximal number of results to dispay
+     * @param string $query  The query of the index
      *
      * @return organization/organization[] An array of organization
      */
-    public function index($query = null)
+    public function index($limit, $query = null)
     {
-        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "parentOrgId", "ownerOrgId"), $query);
+        return $this->sdoFactory->index("organization/organization", array("orgId", "displayName", "isOrgUnit", "registrationNumber", "parentOrgId", "ownerOrgId"), $query, null, null, $limit);
     }
 
     /**
@@ -1469,6 +1471,7 @@ class organization
                 $originators = $organizationController->index();
             } else {
                 $originators = $organizationController->index(
+                    null,
                     "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
                 );
                 $originators = array_merge($originators, $this->readDescendantServices($user->ownerOrgId));

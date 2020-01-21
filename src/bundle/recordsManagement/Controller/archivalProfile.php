@@ -62,11 +62,13 @@ class archivalProfile
     /**
      * List archival profiles
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return recordsManagement/archivalProfile[] The list of archival profiles
      */
-    public function index()
+    public function index($limit = null)
     {
-        $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile');
+        $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', null, null, null, null, $limit);
 
         foreach ($archivalProfiles as $archivalProfile) {
             $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId, true);
