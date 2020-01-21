@@ -32,10 +32,10 @@ class Import extends ImportExport
      * Import chosen data with chosen format
      *
      * @param string  $dataType Type of data to visualize (organization, user, etc)
-     * @param string  $csv     Data base64 encoded or not
-     * @param boolean $isReset Reset tables or not
+     * @param string  $csv      Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
      *
-     * @return boolean           Data exported well or not
+     * @return boolean          Data exported well or not
      */
     public function create($dataType, $csv, $isReset = false)
     {
@@ -54,7 +54,7 @@ class Import extends ImportExport
 
         $datas = explode("\n", $csv);
 
-        var_dump($datas[0]);
+        var_dump(explode(",", $datas[0]));
         var_dump($header);
         exit;
     }
