@@ -47,6 +47,8 @@ class Import extends ImportExport
             $csv = base64_decode($csv, true);
         }
 
+        $isReset = $this->cleanBooleanValue($isReset);
+
         $object = \laabs::newMessage($this->message[strtolower($dataType)]);
         foreach ($object as $key => $value) {
             $header[] = $key;
@@ -66,5 +68,30 @@ class Import extends ImportExport
         }
 
         return false;
+    }
+
+    protected function cleanBooleanValue($value)
+    {
+        switch ($value) {
+            case 'true':
+            case '1':
+            case 'y':
+            case 'Y':
+            case 'o':
+            case 'O':
+            case 'oui':
+            case 'Oui':
+            case 'OUI':
+            case 'yes':
+            case 'Yes':
+            case 'YES':
+                $value = true;
+                break;
+            default:
+                $value = false;
+                break;
+        }
+
+        return $value;
     }
 }

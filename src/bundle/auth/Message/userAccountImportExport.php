@@ -27,7 +27,7 @@ namespace bundle\auth\Message;
  * @package ImportExport
  * @author  Jerome Boucher <jerome.boucher@maarch.org>
  */
-class userAccount
+class userAccountImportExport
 {
     /**
      * The user account identifier
