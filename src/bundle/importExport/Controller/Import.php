@@ -47,7 +47,7 @@ class Import extends ImportExport
             $csv = base64_decode($csv, true);
         }
 
-        $isReset = $this->cleanBooleanValue($isReset);
+        $isReset = filter_var($isReset, FILTER_VALIDATE_BOOLEAN);
 
         $header = $this->getDefaultHeader($dataType);
 
@@ -91,7 +91,7 @@ class Import extends ImportExport
                 }
 
                 if ($value == '0' || $value == '1') {
-                    $csvLineValues[$line] = $this->cleanBooleanValue($line);
+                    $csvLineValues[$line] = filter_var($value, FILTER_VALIDATE_BOOLEAN);
                 }
 
                 if (strpos($value, ';')) {
@@ -125,34 +125,5 @@ class Import extends ImportExport
         }
 
         return false;
-    }
-
-
-    /**
-     * Clean boolean values received from get parameter. Return true if standard boolean values, false otherwise
-     *
-     * @param  string $value string to clean
-     *
-     * @return boolean        value cleaned
-     */
-    private function cleanBooleanValue($value)
-    {
-        $value = strtolower($value);
-
-        switch ($value) {
-            case 'true':
-            case '1':
-            case 'y':
-            case 'o':
-            case 'oui':
-            case 'yes':
-                $value = true;
-                break;
-            default:
-                $value = false;
-                break;
-        }
-
-        return $value;
     }
 }

@@ -834,10 +834,30 @@ class userAccount
      */
     public function import($data, $isReset = false)
     {
-//        foreach ($data as $key => $user) {
-//            $userAccount = new
-//        }
-        var_dump($data);
+        $organizationController = \laabs::newController('organization/organization');
+        $userAccount = $this->newUser();
+
+        foreach ($data as $key => $user) {
+            if (!$isReset) {
+                $userAccount = $this->get($user['accountId']);
+            }
+            $userAccount->displayName = $user['displayName'];
+            $userAccount->emailAddress = $user['emailAddress'];
+            $userAccount->lastName = $user['lastName'];
+            $userAccount->firstName = $user['firstName'];
+            $userAccount->title = $user['title'];
+            $userAccount->password = $user['password'];
+            $userAccount->passwordChangeRequired = true;
+            $userAccount->locked = $user['locked'];
+            $userAccount->enabled = $user['enabled'];
+            $userAccount->isAdmin = $user['isAdmin'];
+
+            $userOwnerOrg = $organizationController->getOrgByRegNumber($user['ownerOrgId']);
+            if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
+                $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
+            }
+        }
+        var_dump($userAccount);
         exit;
     }
 }
