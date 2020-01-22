@@ -66,6 +66,9 @@ class Import extends ImportExport
 
         foreach ($datas as $line => $data) {
             $csvLineValues = str_getcsv($data, ',', '"');
+            if (empty($csvLineValues) || (count($csvLineValues) != count($header)) {
+                throw new \core\Exception\BadRequestException("Error in data");
+            }
             if ($isReset) {
                 $functionName = 'create' . ucfirst(strtolower($dataType));
                 $this->$functionName();
@@ -113,7 +116,7 @@ class Import extends ImportExport
      *
      * @return boolean        value cleaned
      */
-    protected function cleanBooleanValue($value)
+    private function cleanBooleanValue($value)
     {
         switch ($value) {
             case 'true':
