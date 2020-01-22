@@ -781,13 +781,21 @@ class userAccount
 
     public function export($limit = null) {
         $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user'", null, null, null, $limit);
-        $userAccounts = \laabs::castMessageCollection($userAccounts, 'auth/userAccountImportExport');
 
         $userPositionController = \laabs::newController('organization/userPosition');
         $roleMemberController = \laabs::newController('auth/roleMember');
         $organizationController = \laabs::newController('organization/organization');
-        foreach ($userAccounts as $userAccount) {
-            $roleMembers = $roleMemberController->readByUserAccount($userAccount->accountId);
+        foreach ($userAccounts as $key => $userAccount) {
+            $ownerOrgId = $userAccount->ownerOrgId;
+            $accountId = $userAccount->accountId;
+            $userAccount = \laabs::castMessage($userAccount, 'auth/userAccountImportExport');
+
+            if ($ownerOrgId) {
+                $organization = $organizationController->read($ownerOrgId);
+                $userAccount->ownerOrgRegNumber = $organization->registrationNumber;
+            }
+
+            $roleMembers = $roleMemberController->readByUserAccount($accountId);
             if (!empty($roleMembers)) {
                 foreach ($roleMembers as $roleMember) {
                     $userAccount->roles = $roleMember->roleId;
@@ -798,7 +806,7 @@ class userAccount
                 }
             }
 
-            $positions = $userPositionController->listPositions($userAccount->accountId);
+            $positions = $userPositionController->listPositions($accountId);
             if (!empty($positions)) {
                 foreach ($positions as $position) {
                     $organization = $organizationController->read($position->orgId);
@@ -809,6 +817,8 @@ class userAccount
                     }
                 }
             }
+
+            $userAccounts[$key] = $userAccount;
         }
 
         return $userAccounts;
@@ -824,9 +834,9 @@ class userAccount
      */
     public function import($data, $isReset = false)
     {
-        foreach ($data as $key => $user) {
-            $userAccount = new
-        }
+//        foreach ($data as $key => $user) {
+//            $userAccount = new
+//        }
         var_dump($data);
         exit;
     }
