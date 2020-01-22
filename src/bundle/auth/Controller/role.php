@@ -391,7 +391,7 @@ class role
         return true;
     }
 
-    public function export($limit = null) {
+    public function exportData($limit = null) {
         $roles = $this->sdoFactory->find('auth/role', null, null, null, null, $limit);
         $roles = \laabs::castMessageCollection($roles, 'auth/roleImportExport');
 
