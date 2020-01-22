@@ -1589,4 +1589,11 @@ class organization
 
         return $userOrgs;
     }
+
+    public function export($limit = null)
+    {
+        $organizations = $this->sdoFactory->find('organization/organization', null, null, null, null, $limit);
+        $organizations = \laabs::castMessageCollection($organizations, 'organization/organizationImportExport');
+        return $organizations;
+    }
 }

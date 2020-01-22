@@ -70,7 +70,7 @@ class ImportExport
             'useraccount' => 'auth/userAccountImportExport',
             'serviceaccount' => 'auth/serviceAccountImportExport',
             'role'          => 'auth/roleImportExport',
-            'organization' => 'organization/organization',
+            'organization' => 'organization/organizationImportExport',
             'archivalprofile' => 'recordsManagement/archivalProfile',
             'descriptionfield' => 'recordsManagement/descriptionField',
             'retentionrule' => 'recordsManagement/retentionRule'
