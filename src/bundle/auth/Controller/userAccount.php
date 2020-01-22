@@ -729,7 +729,7 @@ class userAccount
                         $organizationsIds[] = (string) $organization->orgId;
                     }
 
-                    $queryAssert[] = "((isAdmin!=TRUE 
+                    $queryAssert[] = "((isAdmin!=TRUE
                 AND ownerOrgId=['" .
                         implode("', '", $organizationsIds) .
                         "'])";
@@ -803,5 +803,10 @@ class userAccount
         }
 
         return $userAccounts;
+    }
+
+    public function import ($data, $isReset = false)
+    {
+
     }
 }

@@ -76,4 +76,14 @@ class ImportExport
 
         $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
+
+    public function getDefaultHeader($dataType)
+    {
+        $object = \laabs::newMessage($this->message[strtolower($dataType)]);
+        foreach ($object as $key => $value) {
+            $header[] = $key;
+        }
+
+        return $header;
+    }
 }
