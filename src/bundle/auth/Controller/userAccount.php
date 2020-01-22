@@ -752,21 +752,30 @@ class userAccount
         $userAccounts = \laabs::castMessageCollection($userAccounts, 'auth/userAccountImportExport');
 
         $userPositionController = \laabs::newController('organization/userPosition');
+        $roleMemberController = \laabs::newController('auth/roleMember');
+        $organizationController = \laabs::newController('organization/organization');
         foreach ($userAccounts as $userAccount) {
-            $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccount->accountId'");
+            $roleMembers = $roleMemberController->readByUserAccount($userAccount->accountId);
             if (!empty($roleMembers)) {
                 foreach ($roleMembers as $roleMember) {
-                    $userAccount->roles = $roleMember->roleId . " ";
+                    $userAccount->roles = $roleMember->roleId;
+
+                    if (end($roleMembers) !== $roleMember) {
+                        $userAccount->roles .= ";";
+                    }
                 }
-                $userAccount->roles = trim($userAccount->roles);
             }
 
             $positions = $userPositionController->listPositions($userAccount->accountId);
             if (!empty($positions)) {
                 foreach ($positions as $position) {
-                    $userAccount->organizations = $position->orgId . " ";
+                    $organization = $organizationController->read($position->orgId);
+                    $userAccount->organizations .= $organization->registrationNumber;
+
+                    if (end($positions) !== $position) {
+                        $userAccount->organizations .= ";";
+                    }
                 }
-                $userAccount->organizations = trim($userAccount->organizations);
             }
         }
 

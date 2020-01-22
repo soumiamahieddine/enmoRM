@@ -59,6 +59,7 @@ class ImportExport
         $this->controller = [
             'useraccount' => $this->userAccountController,
             'serviceaccount' => $this->serviceAccountController,
+            'role'         => $this->roleController,
             'organization' => $this->organizationController,
             'archivalprofile' => $this->archivalProfileController,
             'descriptionfield' => $this->descriptionFieldController,
@@ -68,6 +69,7 @@ class ImportExport
         $this->message = [
             'useraccount' => 'auth/userAccountImportExport',
             'serviceaccount' => 'auth/serviceAccountImportExport',
+            'role'          => 'auth/roleImportExport',
             'organization' => 'organization/organization',
             'archivalprofile' => 'recordsManagement/archivalProfile',
             'descriptionfield' => 'recordsManagement/descriptionField',

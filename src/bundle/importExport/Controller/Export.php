@@ -42,7 +42,7 @@ class Export extends ImportExport
 
         $csvFile = fopen('php://output', 'w');
 
-        $header = getDefaultHeader($dataType);
+        $header = $this->getDefaultHeader($dataType);
 
         fputcsv($csvFile, $header);
 

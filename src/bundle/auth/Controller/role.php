@@ -390,4 +390,25 @@ class role
 
         return true;
     }
+
+    public function export($limit = null) {
+        $roles = $this->sdoFactory->find('auth/role', null, null, null, null, $limit);
+        $roles = \laabs::castMessageCollection($roles, 'auth/roleImportExport');
+
+        foreach ($roles as $role) {
+            $privileges = $this->getPrivilege($role->roleId);
+            if (!empty($privileges)) {
+                foreach ($privileges as $privilege) {
+                    $role->privileges .= $privilege;
+
+                    if (end($privileges) !== $privilege) {
+                        $role->privileges .= ";";
+                    }
+                }
+            }
+
+        }
+
+        return $roles;
+    }
 }
