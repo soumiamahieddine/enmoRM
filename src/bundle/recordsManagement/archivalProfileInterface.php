@@ -105,7 +105,7 @@ interface archivalProfileInterface
     /**
      * Download the profile file
      *
-     * @action recordsManagement/archivalProfile/export
+     * @action recordsManagement/archivalProfile/exportFile
      */
     public function readArchivalprofileExport_profileReference_();
 

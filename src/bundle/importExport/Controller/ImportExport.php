@@ -71,7 +71,7 @@ class ImportExport
             'serviceaccount' => 'auth/serviceAccountImportExport',
             'role'          => 'auth/roleImportExport',
             'organization' => 'organization/organizationImportExport',
-            'archivalprofile' => 'recordsManagement/archivalProfile',
+            'archivalprofile' => 'recordsManagement/archivalProfileImportExport',
             'descriptionfield' => 'recordsManagement/descriptionField',
             'retentionrule' => 'recordsManagement/retentionRule'
         ];
