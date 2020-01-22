@@ -158,7 +158,7 @@ class retentionRule
         return $retentionRule;
     }
 
-    public function export($limit)
+    public function export($limit = null)
     {
         $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule', null, null, null, null, $limit);
         $retentionRules = \laabs::castMessageCollection($retentionRules, 'recordsManagement/retentionRule');
