@@ -749,7 +749,7 @@ class userAccount
 
     public function export($limit = null) {
         $userAccounts = $this->sdoFactory->find('auth/account', null, null, null, null, $limit);
-        $userAccounts = \laabs::castMessageCollection($userAccounts, 'importExport/userAccount');
+        $userAccounts = \laabs::castMessageCollection($userAccounts, 'auth/userAccountImportExport');
 
         foreach ($userAccounts as $userAccount) {
             $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccount->accountId'");
