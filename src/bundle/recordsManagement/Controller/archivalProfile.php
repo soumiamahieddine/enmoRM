@@ -448,7 +448,7 @@ class archivalProfile
      *
      * @return string
      */
-    public function export($profileReference)
+    public function exportFile($profileReference)
     {
         $profilesDirectory = $this->profilesDirectory;
         $fileDirectory = $profilesDirectory.DIRECTORY_SEPARATOR.$profileReference.".rng";
@@ -456,5 +456,30 @@ class archivalProfile
         $file = file_get_contents($fileDirectory);
 
         return $file;
+    }
+
+    public function exportData($limit = null)
+    {
+        $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', null, null, null, null, $limit);
+        foreach ($archivalProfiles as $key => $archivalProfile) {
+            $containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId);
+            $archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
+
+            $archivalProfile = \laabs::castMessage($archivalProfile, 'recordsManagement/archivalProfileImportExport');
+            if ($containedProfiles) {
+                foreach ($containedProfiles as $containedProfile) {
+                    $archivalProfile->childrenProfiles .= $containedProfile->reference;
+
+                    if (end($containedProfiles) !== $containedProfile) {
+                        $archivalProfile->childrenProfiles .= ";";
+                    }
+                }
+            }
+
+            $archivalProfile->archiveDescriptions = json_encode($archiveDescription);
+
+            $archivalProfiles[$key] = $archivalProfile;
+        }
+        return $archivalProfiles;
     }
 }
