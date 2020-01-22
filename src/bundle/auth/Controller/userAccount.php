@@ -141,7 +141,8 @@ class userAccount
         } else {
             $query .= "accountType='user'";
         }
-
+        // var_dump($query);
+        // exit;
         $userAccounts = $this->sdoFactory->find('auth/account', $query);
 
         return $userAccounts;
@@ -839,8 +840,9 @@ class userAccount
 
         foreach ($data as $key => $user) {
             if (!$isReset) {
-                $userAccount = $this->get($user['accountId']);
+                $userAccount = $this->search('accountName="' . $user['accountName'] . '" ')[0];
             }
+
             $userAccount->displayName = $user['displayName'];
             $userAccount->emailAddress = $user['emailAddress'];
             $userAccount->lastName = $user['lastName'];
@@ -852,7 +854,7 @@ class userAccount
             $userAccount->enabled = $user['enabled'];
             $userAccount->isAdmin = $user['isAdmin'];
 
-            $userOwnerOrg = $organizationController->getOrgByRegNumber($user['ownerOrgId']);
+            $userOwnerOrg = $organizationController->getOrgByRegNumber($user['ownerOrgRegNumber']);
             if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
                 $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
             }
