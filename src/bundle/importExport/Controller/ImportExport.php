@@ -67,7 +67,7 @@ class ImportExport
 
         $this->message = [
             'useraccount' => 'auth/userAccountImportExport',
-            'serviceaccount' => 'auth/serviceAccount',
+            'serviceaccount' => 'auth/serviceAccountImportExport',
             'organization' => 'organization/organization',
             'archivalprofile' => 'recordsManagement/archivalProfile',
             'descriptionfield' => 'recordsManagement/descriptionField',
