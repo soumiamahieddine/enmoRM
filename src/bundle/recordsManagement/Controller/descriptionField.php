@@ -229,4 +229,10 @@ class descriptionField
     {
         return (bool) $this->sdoFactory->count('recordsManagement/archiveDescription', "fieldName='$descriptionField->name'");
     }
+
+    public function exportData($limit = null)
+    {
+        $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
+        return $descriptionFields;
+    }
 }
