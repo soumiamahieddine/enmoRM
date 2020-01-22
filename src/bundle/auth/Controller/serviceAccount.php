@@ -467,7 +467,7 @@ class serviceAccount
         return true;
     }
 
-    public function export($limit = null) {
+    public function exportData($limit = null) {
         $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
         $serviceAccounts = \laabs::castMessageCollection($serviceAccounts, 'auth/serviceAccountImportExport');
 
