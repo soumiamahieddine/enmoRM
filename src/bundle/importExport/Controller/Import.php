@@ -49,10 +49,7 @@ class Import extends ImportExport
 
         $isReset = $this->cleanBooleanValue($isReset);
 
-        $object = \laabs::newMessage($this->message[strtolower($dataType)]);
-        foreach ($object as $key => $value) {
-            $header[] = $key;
-        }
+        $header = $this->getDefaultHeader($dataType);
 
         $datas = explode("\n", $csv);
 
@@ -64,32 +61,24 @@ class Import extends ImportExport
         //remove header
         unset($datas[0]);
 
-        foreach ($datas as $line => $data) {
-            $csvLineValues = str_getcsv($data, ',', '"');
-            if (empty($csvLineValues) || (count($csvLineValues) != count($header)) {
+        $cleanDatas = $this->convertCsvToArray($datas, $dataType);
+
+        $this->controller[$dataType]->import($cleanDatas, $isReset);
+    }
+
+    private function convertCsvToArray($arrayCsvs, $dataType)
+    {
+        $cleanDatas = [];
+        foreach ($arrayCsvs as $line => $csv) {
+            $csvLineValues = str_getcsv($csv, ',', '"');
+            if (empty($csvLineValues) || (count($csvLineValues) != count($this->getDefaultHeader($dataType)))) {
                 throw new \core\Exception\BadRequestException("Error in data");
             }
-            if ($isReset) {
-                $functionName = 'create' . ucfirst(strtolower($dataType));
-                $this->$functionName();
-            } else {
-                $functionName = 'update' . ucfirst(strtolower($dataType));
-                $this->$functionName();
-            }
+
+            $cleanDatas[] = $csvLineValues;
         }
-    }
 
-    protected function createUseraccount()
-    {
-        var_dump('titi');
-        return true;
-    }
-
-    protected function updateUseraccount()
-    {
-        var_dump('toto');
-        exit;
-        return true;
+        return $cleanDatas;
     }
 
     /**
@@ -118,20 +107,15 @@ class Import extends ImportExport
      */
     private function cleanBooleanValue($value)
     {
+        $value = strtolower($value);
+
         switch ($value) {
             case 'true':
             case '1':
             case 'y':
-            case 'Y':
             case 'o':
-            case 'O':
             case 'oui':
-            case 'Oui':
-            case 'OUI':
             case 'yes':
-            case 'Yes':
-            case 'YES':
-            case true:
                 $value = true;
                 break;
             default:

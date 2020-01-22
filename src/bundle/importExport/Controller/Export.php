@@ -42,11 +42,8 @@ class Export extends ImportExport
 
         $csvFile = fopen('php://output', 'w');
 
-        $header = [];
-        $object = \laabs::newMessage($this->message[strtolower($dataType)]);
-        foreach ($object as $key => $value) {
-            $header[] = $key;
-        }
+        $header = getDefaultHeader($dataType);
+
         fputcsv($csvFile, $header);
 
         foreach ($data as $list) {
