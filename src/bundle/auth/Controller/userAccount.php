@@ -773,8 +773,20 @@ class userAccount
         return $userAccounts;
     }
 
-    public function import ($data, $isReset = false)
+    /**
+     * Import User account function and create or update them
+     *
+     * @param array   $data     Associative array of userAccount
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @return boolean          Success of operation or not
+     */
+    public function import($data, $isReset = false)
     {
-
+        foreach ($data as $key => $user) {
+            $userAccount = new
+        }
+        var_dump($data);
+        exit;
     }
 }
