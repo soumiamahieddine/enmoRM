@@ -77,15 +77,29 @@ class Import extends ImportExport
     private function convertCsvToArray($arrayCsv, $dataType)
     {
         $datas = [];
-        $headerValuesNumber = count($this->getDefaultHeader($dataType));
+        $header = $this->getDefaultHeader($dataType);
 
-        foreach ($arrayCsv as $csv) {
+        foreach ($arrayCsv as $key => $csv) {
             $csvLineValues = str_getcsv($csv, ',', '"');
-            if (empty($csvLineValues) || (count($csvLineValues) != headerValuesNumber)) {
+            if (empty($csvLineValues) || (count($csvLineValues) != count($header))) {
                 throw new \core\Exception\BadRequestException("Error in data");
             }
 
-            $datas[] = $csvLineValues;
+            foreach ($csvLineValues as $line => $value) {
+                if ($value == '') {
+                    $csvLineValues[$line] = null;
+                }
+
+                if ($value == '0' || $value == '1') {
+                    $csvLineValues[$line] = $this->cleanBooleanValue($line);
+                }
+
+                if (strpos($value, ';')) {
+                    $csvLineValues[$line] = explode(';', $value);
+                }
+            }
+
+            $datas[] = array_combine($header, $csvLineValues);
         }
 
         return $datas;
