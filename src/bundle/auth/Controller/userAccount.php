@@ -758,18 +758,24 @@ class userAccount
             $roleMembers = $roleMemberController->readByUserAccount($userAccount->accountId);
             if (!empty($roleMembers)) {
                 foreach ($roleMembers as $roleMember) {
-                    $userAccount->roles = $roleMember->roleId . " ";
+                    $userAccount->roles = $roleMember->roleId;
+
+                    if (end($roleMembers) !== $roleMember) {
+                        $userAccount->roles .= ";";
+                    }
                 }
-                $userAccount->roles = trim($userAccount->roles);
             }
 
             $positions = $userPositionController->listPositions($userAccount->accountId);
             if (!empty($positions)) {
                 foreach ($positions as $position) {
                     $organization = $organizationController->read($position->orgId);
-                    $userAccount->organizations = $organization->registrationNumber . " ";
+                    $userAccount->organizations .= $organization->registrationNumber;
+
+                    if (end($positions) !== $position) {
+                        $userAccount->organizations .= ";";
+                    }
                 }
-                $userAccount->organizations = trim($userAccount->organizations);
             }
         }
 
