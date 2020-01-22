@@ -466,4 +466,19 @@ class serviceAccount
 
         return true;
     }
+
+    public function export($limit = null) {
+        $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
+        $serviceAccounts = \laabs::castMessageCollection($serviceAccounts, 'auth/serviceAccountImportExport');
+
+        $servicePositionController = \laabs::newController('organization/servicePosition');
+        foreach ($serviceAccounts as $serviceAccount) {
+            $position = $servicePositionController->getPosition($serviceAccount->accountId);
+            if (!empty($position)) {
+                $serviceAccount->organization = $position->orgId;
+            }
+        }
+
+        return $serviceAccounts;
+    }
 }

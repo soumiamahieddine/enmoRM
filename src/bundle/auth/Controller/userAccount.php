@@ -748,23 +748,23 @@ class userAccount
     }
 
     public function export($limit = null) {
-        $userAccounts = $this->sdoFactory->find('auth/account', null, null, null, null, $limit);
+        $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user'", null, null, null, $limit);
         $userAccounts = \laabs::castMessageCollection($userAccounts, 'auth/userAccountImportExport');
 
+        $userPositionController = \laabs::newController('organization/userPosition');
         foreach ($userAccounts as $userAccount) {
             $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccount->accountId'");
             if (!empty($roleMembers)) {
                 foreach ($roleMembers as $roleMember) {
-                    $userAccount->roles .= $roleMember->roleId . " ";
+                    $userAccount->roles = $roleMember->roleId . " ";
                 }
                 $userAccount->roles = trim($userAccount->roles);
             }
 
-            $userPositionController = \laabs::newController('organization/userPosition');
             $positions = $userPositionController->listPositions($userAccount->accountId);
             if (!empty($positions)) {
                 foreach ($positions as $position) {
-                    $userAccount->organizations .= $position->orgId . " ";
+                    $userAccount->organizations = $position->orgId . " ";
                 }
                 $userAccount->organizations = trim($userAccount->organizations);
             }
