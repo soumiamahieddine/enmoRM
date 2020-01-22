@@ -77,7 +77,14 @@ class ImportExport
         $this->limit =  \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
 
-    public function getDefaultHeader($dataType)
+    /**
+     * Return header template for csv in function of dataType
+     *
+     * @param string  $dataType Type of data to visualize (organization, user, etc)
+     *
+     * @return array  $header   Array of values for csv
+     */
+    protected function getDefaultHeader($dataType)
     {
         $object = \laabs::newMessage($this->message[strtolower($dataType)]);
         foreach ($object as $key => $value) {

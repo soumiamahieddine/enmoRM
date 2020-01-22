@@ -66,19 +66,29 @@ class Import extends ImportExport
         $this->controller[$dataType]->import($cleanDatas, $isReset);
     }
 
-    private function convertCsvToArray($arrayCsvs, $dataType)
+    /**
+     * Convert an array of csv string into a ful array
+     *
+     * @param array  $arrayCsv    Array of csv strings
+     * @param string $dataType    Type of data to visualize (organization, user, etc)
+     *
+     * @return array $cleanDatas  Array of datas
+     */
+    private function convertCsvToArray($arrayCsv, $dataType)
     {
-        $cleanDatas = [];
-        foreach ($arrayCsvs as $line => $csv) {
+        $datas = [];
+        $headerValuesNumber = count($this->getDefaultHeader($dataType));
+
+        foreach ($arrayCsv as $csv) {
             $csvLineValues = str_getcsv($csv, ',', '"');
-            if (empty($csvLineValues) || (count($csvLineValues) != count($this->getDefaultHeader($dataType)))) {
+            if (empty($csvLineValues) || (count($csvLineValues) != headerValuesNumber)) {
                 throw new \core\Exception\BadRequestException("Error in data");
             }
 
-            $cleanDatas[] = $csvLineValues;
+            $datas[] = $csvLineValues;
         }
 
-        return $cleanDatas;
+        return $datas;
     }
 
     protected function updateUseraccount()
