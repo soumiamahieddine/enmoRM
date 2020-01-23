@@ -30,6 +30,7 @@ use core\Exception;
 class ImportExport
 {
     protected $sdoFactory;
+    protected $csv;
     protected $userAccountController;
     protected $serviceAccountController;
     protected $userPositionController;
@@ -45,10 +46,12 @@ class ImportExport
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
+     * @param \dependency\csv\Csv     $csv              The csv service
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\localisation\TranslatorInterface $translator)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->userAccountController = \laabs::newController('auth/userAccount');
         $this->serviceAccountController = \laabs::newController('auth/serviceAccount');
         $this->roleController = \laabs::newController('auth/role');

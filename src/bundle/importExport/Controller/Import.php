@@ -31,27 +31,32 @@ class Import extends ImportExport
     /**
      * Import chosen data with chosen format
      *
+     * @param string  $data      Data base64 encoded or not
      * @param string  $dataType Type of data to visualize (organization, user, etc)
-     * @param string  $csv      Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @return boolean          Data exported well or not
      */
-    public function create($dataType, $csv, $isReset = false)
+    public function create($data, $dataType, $isReset = false)
     {
-        if (!is_string($csv)) {
+        // $filename = \laabs\tempnam();
+        // file_put_contents($filename, $data);
+        // $csv = $this->csv->read($filename, $this->message[strtolower($dataType)], $messageType = true);
+        // var_dump($csv);
+        // exit;
+        if (!is_string($data)) {
             throw new \core\Exception\BadRequestException("Data your trying to import is in an invalid format");
         }
 
-        if ($this->isBase64($csv)) {
-            $csv = base64_decode($csv, true);
+        if ($this->isBase64($data)) {
+            $data = base64_decode($data, true);
         }
 
         $header = $this->getDefaultHeader($dataType);
 
-        $datas = explode("\n", $csv);
+        $datas = explode("\n", $data);
 
-        //compare csv header with message template
+        //compare data header with message template
         if (str_getcsv($datas[0], ',', '"') != $header) {
             throw new \core\Exception\BadRequestException("Error in csv header");
         }

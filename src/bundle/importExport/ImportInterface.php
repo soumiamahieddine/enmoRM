@@ -25,12 +25,12 @@ namespace bundle\importExport;
 interface ImportInterface
 {
     /**
-     * @param string  $csv      Data base64 encoded or not
+     * @param string  $data      Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action importExport/Import/create
      *
      * @return boolean        Import with reset of table data or not
      */
-    public function create_dataType_($csv, $isReset = false);
+    public function create_dataType_($data, $isReset = false);
 }

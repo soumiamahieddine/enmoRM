@@ -881,13 +881,11 @@ class userAccount
             }
 
             if (!is_null($user['organizations'])) {
-                $this->importUserOrganizations((array) $user['organizations'], (string) $userAccount->accountId);
+                $this->importUserPositions((array) $user['organizations'], (string) $userAccount->accountId);
             }
 
             $this->importUserRoles($user['roles'], (string) $userAccount->accountId);
         }
-        var_dump($userAccount);
-        exit;
     }
 
     /**
@@ -898,33 +896,37 @@ class userAccount
      *
      * @return [type]                [description]
      */
-    private function importUserOrganizations($organizations, $userAccountId)
+    private function importUserPositions($organizations, $userAccountId)
     {
-        $userPositionController = \laabs::newController('organization/userPosition');
-        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory');
-
-        var_dump($organization);
-        exit;
         $organizationController = \laabs::newController('organization/organization');
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
+
         $currentUserServices = $userPositionController->listPositions($userAccountId);
 
         if (!empty($currentUserServices)) {
-            foreach ($currentUserServices as $key => $service) {
-                $organizationController->deleteUserPosition($userAccountId, $service->orgId);
+            foreach ($currentUserServices as $key => $userPosition) {
+                $organizationSdoFactory->delete($userPosition, 'organization/userPosition');
             }
         }
 
-        foreach ($organizations as $key => $organization) {
-            $organization = $organizationController->getOrgByRegNumber($organization);
-            if (!is_null($organization) && !empty($organization)) {
+        foreach ($organizations as $key => $orgRegNumber) {
+            // $organization = $organizationController->getOrgByRegNumber($orgRegNumber);
+            $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
+
+            if (is_null($organization) || empty($organization)) {
                 throw new \core\Exception\BadRequestException("Organization does not exists");
             }
 
+            $userPosition = \laabs::newInstance('organization/userPosition');
+            $userPosition->userAccountId = $userAccountId;
+            $userPosition->orgId = (string) $organization->orgId;
+            $userPosition->default = false;
             if ($key == 0) {
-                $organizationController->setDefaultUserPosition($userAccountId, (string) $organization->orgId);
-            } else {
-                $organizationController->addUserPosition($userAccountId, (string) $organization->orgId);
+                $userPosition->default = true;
             }
+
+            $organizationSdoFactory->create($userPosition, 'organization/userPosition');
         }
     }
 
@@ -939,18 +941,30 @@ class userAccount
     private function importUserRoles($roles, $userAccountId)
     {
         $roleMemberController = \laabs::newController('auth/roleMember');
+        $roleController = \laabs::newController('auth/role');
 
         if (!empty($roles)) {
-            foreach (roles as $key => $roleId) {
+            foreach ($roles as $key => $roleId) {
                 if (!$roleController->edit($roleId)) {
                     throw new \core\Exception\BadRequestException("Role does not exists");
                 }
 
                 $roleMember = $roleMemberController->readByUserAccount($userAccountId);
-                if (!is_null($roleMember) || empty($roleMember)) {
+
+                if (!is_null($roleMember) || !empty($roleMember)) {
                     $roleMemberController->delete($roleMember);
                 }
-                $roleMemberController->create($roleId, $userAccountId);
+
+                // create role
+                $roleMember = \laabs::newInstance("auth/roleMember");
+                $roleMember->userAccountId = $userAccountId;
+                $roleMember->roleId = $roleId;
+
+                try {
+                    $this->sdoFactory->create($roleMember);
+                } catch (\Exception $e) {
+                    throw \laabs::newException("auth/sdoException");
+                }
             }
         }
     }

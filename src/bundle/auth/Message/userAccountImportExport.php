@@ -78,12 +78,12 @@ class userAccountImportExport
     public $password;
 
     /**
-     * @var id[]
+     * @var string
      */
     public $roles;
 
     /**
-     * @var id[]
+     * @var string
      */
     public $organizations;
 
