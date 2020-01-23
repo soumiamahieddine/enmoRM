@@ -31,6 +31,7 @@ class serviceAccount
 {
 
     protected $sdoFactory;
+    protected $csv;
     protected $passwordEncryption;
     protected $securityPolicy;
     protected $organizationController;
@@ -41,11 +42,13 @@ class serviceAccount
      * Constructor
      * @param array                   $securityPolicy     The array of security policy parameters
      * @param \dependency\sdo\Factory $sdoFactory         The dependency Sdo Factory object
+     * @param \dependency\csv\Csv     $csv                The dependency Csv
      * @param string                  $passwordEncryption The password encryption algorythm
      */
-    public function __construct($securityPolicy, \dependency\sdo\Factory $sdoFactory = null, $passwordEncryption = 'md5')
+    public function __construct($securityPolicy, \dependency\sdo\Factory $sdoFactory = null, \dependency\csv\Csv $csv = null, $passwordEncryption = 'md5')
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
         $this->organizationController = \laabs::newController('organization/organization');
@@ -467,7 +470,7 @@ class serviceAccount
         return true;
     }
 
-    public function exportData($limit = null) {
+    public function exportCsv($limit = null) {
         $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
         $serviceAccounts = \laabs::castMessageCollection($serviceAccounts, 'auth/serviceAccountImportExport');
 
@@ -479,6 +482,6 @@ class serviceAccount
             }
         }
 
-        return $serviceAccounts;
+        $this->csv->write('php://output', (array) $serviceAccounts, 'auth/serviceAccountImportExport', true);
     }
 }

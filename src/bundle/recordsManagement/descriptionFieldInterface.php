@@ -40,6 +40,14 @@ interface descriptionFieldInterface
     public function create($descriptionField);
 
     /**
+     * Create a csv file
+     *
+     * @action recordsManagement/descriptionField/exportCsv
+     *
+     */
+    public function readExport();
+
+    /**
      * Read a description field
      *
      * @action recordsManagement/descriptionField/read

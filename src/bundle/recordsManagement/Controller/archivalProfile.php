@@ -29,6 +29,7 @@ use core\Exception;
 class archivalProfile
 {
     protected $sdoFactory;
+    protected $csv;
 
     protected $lifeCycleJournalController;
 
@@ -43,9 +44,10 @@ class archivalProfile
      * @param bool                    $notifyModification The state of the fonction of notification modification
      * @param string                  $profilesDirectory  The profile directory
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $notifyModification, $profilesDirectory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv, $notifyModification, $profilesDirectory)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
         $this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme'); 
         //$this->descriptionFields = \Laabs::newController('recordsManagement/descriptionField')->index();
@@ -458,7 +460,7 @@ class archivalProfile
         return $file;
     }
 
-    public function exportData($limit = null)
+    public function exportCsv($limit = null)
     {
         $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', null, null, null, null, $limit);
         foreach ($archivalProfiles as $key => $archivalProfile) {
@@ -480,6 +482,7 @@ class archivalProfile
 
             $archivalProfiles[$key] = $archivalProfile;
         }
-        return $archivalProfiles;
+
+        $this->csv->write('php://output', (array) $archivalProfiles, 'recordsManagement/archivalProfileImportExport', true);
     }
 }

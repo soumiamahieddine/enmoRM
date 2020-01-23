@@ -43,6 +43,14 @@ interface retentionRuleInterface
     public function create($retentionRule);
 
     /**
+     * Create a csv file
+     *
+     * @action recordsManagement/retentionRule/exportCsv
+     *
+     */
+    public function readExport();
+
+    /**
      * Read a retention rule
      *
      * @action recordsManagement/retentionRule/read

@@ -48,6 +48,15 @@ interface serviceAccountInterface
      */
     public function readNewservice();
 
+
+    /**
+     * Create a csv file
+     *
+     * @action auth/serviceAccount/exportCsv
+     *
+     */
+    public function readExport();
+
     /**
      * Prepares access control object for update or create
      *
