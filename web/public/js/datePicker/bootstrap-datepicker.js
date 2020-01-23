@@ -1018,7 +1018,7 @@
                 this.dates.clear();
             }
             else if (ix !== -1){
-                this.dates.remove(ix);
+                //this.dates.remove(ix);
             }
             else {
                 this.dates.push(date);

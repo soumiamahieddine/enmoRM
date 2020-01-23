@@ -71,7 +71,7 @@ class datePicker
         
         $this->parameters = new \StdClass();
         $this->parameters->weekstart = 1;
-        $this->parameters->autoclose = 'true';
+        $this->parameters->autoclose = true;
         $this->parameters->todayHighlight = true;
         $this->parameters->todayBtn = 'linked';
 
