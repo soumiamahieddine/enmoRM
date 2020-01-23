@@ -32,6 +32,7 @@ class userAccount
     use ForgotAccountTrait;
 
     protected $sdoFactory;
+    protected $csv;
     protected $passwordEncryption;
     protected $securityPolicy;
     protected $adminUsers;
@@ -41,11 +42,13 @@ class userAccount
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory         The dependency Sdo Factory object
+     * @param \dependency\csv\Csv     $csv                The dependency csv
      * @param string                  $passwordEncryption The password encryption algorythm
      * @param array                   $securityPolicy     The array of security policy parameters
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory = null, $passwordEncryption = 'md5', $securityPolicy = [], $adminUsers = [])
+    public function __construct(\dependency\sdo\Factory $sdoFactory = null, \dependency\csv\Csv $csv = null, $passwordEncryption = 'md5', $securityPolicy = [], $adminUsers = [])
     {
+        $this->csv = $csv;
         $this->sdoFactory = $sdoFactory;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
@@ -780,7 +783,7 @@ class userAccount
         throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
     }
 
-    public function exportData($limit = null) {
+    public function exportCsv($limit = null) {
         $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user'", null, null, null, $limit);
 
         $userPositionController = \laabs::newController('organization/userPosition');
@@ -822,7 +825,7 @@ class userAccount
             $userAccounts[$key] = $userAccount;
         }
 
-        return $userAccounts;
+        $this->csv->write('php://output', (array) $userAccounts, 'auth/userAccountImportExport', true);
     }
 
     /**

@@ -320,6 +320,14 @@ interface organizationInterface
     public function readOriginator();
 
     /**
+     * Create a csv file
+     *
+     * @action organization/organization/exportCsv
+     *
+     */
+    public function readExport();
+
+    /**
      * Read an organization by his orgId
      *
      * @return organization/organization the organization

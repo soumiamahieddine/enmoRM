@@ -33,14 +33,17 @@ class role
 {
 
     public $sdoFactory;
+    protected $csv;
 
     /**
      * Constructor of adminRole class
      * @param \dependency\sdo\Factory $sdoFactory The factory
+     * @param \dependency\csv\Csv     $csv        The dependency csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
     }
 
     /**
@@ -391,7 +394,7 @@ class role
         return true;
     }
 
-    public function exportData($limit = null) {
+    public function exportCsv($limit = null) {
         $roles = $this->sdoFactory->find('auth/role', null, null, null, null, $limit);
         $roles = \laabs::castMessageCollection($roles, 'auth/roleImportExport');
 
@@ -409,6 +412,6 @@ class role
 
         }
 
-        return $roles;
+        $this->csv->write('php://output', (array) $roles, 'auth/roleImportExport', true);
     }
 }

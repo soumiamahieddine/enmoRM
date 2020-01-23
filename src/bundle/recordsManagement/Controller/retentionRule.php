@@ -30,15 +30,18 @@ class retentionRule
 {
 
     protected $sdoFactory;
+    protected $csv;
     protected $lifeCycleJournalController;
 
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
+     * @param \dependency\csv\Csv     $csv        Csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->lifeCycleJournalController = \laabs::newController("lifeCycle/journal");
     }
 
@@ -158,11 +161,11 @@ class retentionRule
         return $retentionRule;
     }
 
-    public function exportData($limit = null)
+    public function exportCsv($limit = null)
     {
         $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule', null, null, null, null, $limit);
         $retentionRules = \laabs::castMessageCollection($retentionRules, 'recordsManagement/retentionRule');
 
-        return $retentionRules;
+        $this->csv->write('php://output', (array) $retentionRules, 'recordsManagement/retentionRule', true);
     }
 }

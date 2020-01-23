@@ -41,6 +41,14 @@ interface roleInterface
     public function readNewrole();
 
     /**
+     * Create a csv file
+     *
+     * @action auth/role/exportCsv
+     *
+     */
+    public function readExport();
+
+    /**
      * Prepares access control object for update or create
      * 
      * @return auth/role
