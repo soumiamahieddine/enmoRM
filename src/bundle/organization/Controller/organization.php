@@ -30,17 +30,20 @@ use core\Exception;
 class organization
 {
     protected $sdoFactory;
+    protected $csv;
     protected $accountController;
 
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The dependency sdo factory service
+     * @param \dependency\csv\Csv     $csv        The dependency csv
      *
      * @return void
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->accountController = \laabs::newController('auth/userAccount');
     }
 
@@ -1574,10 +1577,11 @@ class organization
         return $userOrgs;
     }
 
-    public function exportData($limit = null)
+    public function exportCsv($limit = null)
     {
         $organizations = $this->sdoFactory->find('organization/organization', null, null, null, null, $limit);
         $organizations = \laabs::castMessageCollection($organizations, 'organization/organizationImportExport');
-        return $organizations;
+
+        $this->csv->write('php://output', (array) $organizations, 'organization/organizationImportExport', true);
     }
 }

@@ -30,14 +30,17 @@ class descriptionField
 {
 
     protected $sdoFactory;
+    protected $csv;
 
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
+     * @param \dependency\csv\Csv     $csv        Csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
     }
 
     /**
@@ -230,9 +233,10 @@ class descriptionField
         return (bool) $this->sdoFactory->count('recordsManagement/archiveDescription', "fieldName='$descriptionField->name'");
     }
 
-    public function exportData($limit = null)
+    public function exportCsv($limit = null)
     {
         $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
-        return $descriptionFields;
+
+        $this->csv->write('php://output', (array) $descriptionFields, 'recordsManagement/descriptionField', false);
     }
 }

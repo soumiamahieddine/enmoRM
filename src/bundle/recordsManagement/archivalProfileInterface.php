@@ -43,6 +43,13 @@ interface archivalProfileInterface
      */
     public function readNew();
 
+    /**
+     * Create a csv file
+     *
+     * @action recordsManagement/archivalProfile/exportCsv
+     *
+     */
+    public function readExport();
 
     /**
      * Edit a archival profile

@@ -68,6 +68,14 @@ interface userAccountInterface
     public function readNew();
 
     /**
+     * Create a csv file
+     *
+     * @action auth/userAccount/exportCsv
+     *
+     */
+    public function readExport();
+
+    /**
      * Add a new user & role members
      * @param auth/newUserAccount $userAccount The new user Account information
      *
