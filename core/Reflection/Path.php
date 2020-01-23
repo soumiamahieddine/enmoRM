@@ -223,11 +223,16 @@ class Path
         // Get message parts using route definition
         $parameters = $this->getParameters();
         $messageParts = array();
-        foreach ($parameters as $parameter) {
+        foreach ($parameters as $i => $parameter) {
             switch (true) {
                 // Value available from request arguments or body: cast into message part type
                 case isset($requestArgs[$parameter->name]) :
                     $value = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
+                    break;
+
+                // Value available from request arguments or body: cast into message part type
+                case isset($requestArgs[$i]) :
+                    $value = \laabs::cast($requestArgs[$i], $parameter->getType(), true);
                     break;
 
                 // Default value

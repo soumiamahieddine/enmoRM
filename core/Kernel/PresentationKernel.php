@@ -152,16 +152,17 @@ class PresentationKernel
                     $queryArguments = $_GET;
                     break;
             }
-
             switch ($this->request->contentType) {
                 case 'url':
                     $bodyArguments = \core\Encoding\url::decode($this->request->body);
                     break;
 
                 case 'json':
-                default:
                     $bodyArguments = \core\Encoding\json::decode($this->request->body);
                     break;
+
+                default:
+                    $bodyArguments = [$this->request->body];
             }
 
             $this->userMessage = array_merge($queryArguments, $bodyArguments);
