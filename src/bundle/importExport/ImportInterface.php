@@ -25,7 +25,6 @@ namespace bundle\importExport;
 interface ImportInterface
 {
     /**
-     * @param string  $dataType Type of data to visualize (organization, user, etc)
      * @param string  $csv      Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
