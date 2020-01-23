@@ -872,9 +872,11 @@ class userAccount
             $userAccount->enabled = $user['enabled'];
             $userAccount->isAdmin = $user['isAdmin'];
 
-            $userOwnerOrg = $organizationController->getOrgByRegNumber($user['ownerOrgRegNumber']);
-            if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
-                $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
+            if (!is_null($user['ownerOrgRegNumber'])) {
+                $userOwnerOrg = $organizationController->getOrgByRegNumber($user['ownerOrgRegNumber']);
+                if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
+                    $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
+                }
             }
 
             if ($isReset) {
