@@ -241,4 +241,14 @@ interface userAccountInterface
      * @action auth/userAccount/requirePasswordChange
      */
     public function updatePasswordchangerequest_userAccountId_();
+
+    /**
+     * @param string  $data      Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action auth/userAccount/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport_isReset_($data);
 }

@@ -36,9 +36,9 @@ class Csv
         } else {
             $class = \laabs::getClass($className);
         }
-        
+
         $handler = fopen($filename, 'r');
-        
+
         $header = fgetcsv($handler, 0, $delimiter, $enclosure, $escape);
 
         $properties = $this->getPropertiesFromHeader($header, $class);
@@ -85,6 +85,10 @@ class Csv
                 $value = \laabs::cast($value, $type);
             }
 
+            if (empty($value)) {
+                $value = null;
+            }
+
             $property->setValue($object, $value);
         }
 
@@ -106,7 +110,7 @@ class Csv
         }
 
         $properties = $class->getProperties();
-        
+
         $handler = fopen($filename, 'w');
 
         fputcsv($handler, array_keys($properties), $delimiter, $enclosure, $escape);
