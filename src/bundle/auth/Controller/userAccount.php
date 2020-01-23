@@ -804,11 +804,26 @@ class userAccount
     public function import($data, $isReset = false)
     {
         $organizationController = \laabs::newController('organization/organization');
+        $roleController = \laabs::newController('auth/role');
+
         $userAccount = $this->newUser();
 
         foreach ($data as $key => $user) {
             if (!$isReset) {
                 $userAccount = $this->search('accountName="' . $user['accountName'] . '" ')[0];
+            }
+
+            if (is_null($user['password']) || empty($user['password'])) {
+                throw new \core\Exception\BadRequestException("Password cannot be null");
+            }
+
+            if (!$user['isAdmin']
+                && (
+                    is_null($user['organizations'])
+                    || empty($user['organizations'])
+                )
+            ) {
+                throw new \core\Exception\BadRequestException("User account must be attached to at least one service");
             }
 
             $userAccount->displayName = $user['displayName'];
@@ -826,8 +841,85 @@ class userAccount
             if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
                 $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
             }
+
+            if ($isReset) {
+                $this->sdoFactory->create($userAccount, 'auth/account');
+            } else {
+                $this->sdoFactory->update($userAccount, 'auth/account');
+            }
+
+            if (!is_null($user['organizations'])) {
+                $this->importUserOrganizations((array) $user['organizations'], (string) $userAccount->accountId);
+            }
+
+            $this->importUserRoles($user['roles'], (string) $userAccount->accountId);
         }
         var_dump($userAccount);
         exit;
+    }
+
+    /**
+     * Import array of organizations
+     *
+     * @param array  $organizations Array of orgRegNumber
+     * @param string $userAccountId Unique user identifier
+     *
+     * @return [type]                [description]
+     */
+    private function importUserOrganizations($organizations, $userAccountId)
+    {
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory');
+
+        var_dump($organization);
+        exit;
+        $organizationController = \laabs::newController('organization/organization');
+        $currentUserServices = $userPositionController->listPositions($userAccountId);
+
+        if (!empty($currentUserServices)) {
+            foreach ($currentUserServices as $key => $service) {
+                $organizationController->deleteUserPosition($userAccountId, $service->orgId);
+            }
+        }
+
+        foreach ($organizations as $key => $organization) {
+            $organization = $organizationController->getOrgByRegNumber($organization);
+            if (!is_null($organization) && !empty($organization)) {
+                throw new \core\Exception\BadRequestException("Organization does not exists");
+            }
+
+            if ($key == 0) {
+                $organizationController->setDefaultUserPosition($userAccountId, (string) $organization->orgId);
+            } else {
+                $organizationController->addUserPosition($userAccountId, (string) $organization->orgId);
+            }
+        }
+    }
+
+    /**
+     * Import array of user roles
+     *
+     * @param array  $roles         Array of roles Id
+     * @param string $userAccountId Unique user identifier
+     *
+     * @return [type]        [description]
+     */
+    private function importUserRoles($roles, $userAccountId)
+    {
+        $roleMemberController = \laabs::newController('auth/roleMember');
+
+        if (!empty($roles)) {
+            foreach (roles as $key => $roleId) {
+                if (!$roleController->edit($roleId)) {
+                    throw new \core\Exception\BadRequestException("Role does not exists");
+                }
+
+                $roleMember = $roleMemberController->readByUserAccount($userAccountId);
+                if (!is_null($roleMember) || empty($roleMember)) {
+                    $roleMemberController->delete($roleMember);
+                }
+                $roleMemberController->create($roleId, $userAccountId);
+            }
+        }
     }
 }
