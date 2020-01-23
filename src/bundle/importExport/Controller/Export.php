@@ -68,7 +68,7 @@ class Export extends ImportExport
         if (!array_key_exists($dataType, $this->controller)) {
             throw new \core\Exception\BadRequestException("Data your trying to export does not exists");
         }
-        $data = $this->controller[$dataType]->export($this->limit);
+        $data = $this->controller[$dataType]->exportData($this->limit);
 
         return $data;
     }
