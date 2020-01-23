@@ -47,8 +47,6 @@ class Import extends ImportExport
             $csv = base64_decode($csv, true);
         }
 
-        $isReset = filter_var($isReset, FILTER_VALIDATE_BOOLEAN);
-
         $header = $this->getDefaultHeader($dataType);
 
         $datas = explode("\n", $csv);
