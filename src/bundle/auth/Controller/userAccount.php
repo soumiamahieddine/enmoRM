@@ -831,7 +831,7 @@ class userAccount
     /**
      * Import User account function and create or update them
      *
-     * @param array   $data     Associative array of userAccount
+     * @param array   $data     Array of userAccountImportExort Message
      * @param boolean $isReset  Reset tables or not
      *
      * @return boolean          Success of operation or not
@@ -841,58 +841,103 @@ class userAccount
         $organizationController = \laabs::newController('organization/organization');
         $roleController = \laabs::newController('auth/role');
 
-        $userAccount = $this->newUser();
+        $filename = \laabs\tempnam();
+        file_put_contents($filename, $data);
+        $users = $this->csv->read($filename, 'auth/userAccountImportExport', $messageType = true);
 
-        foreach ($data as $key => $user) {
+        $isReset = filter_var($isReset, FILTER_VALIDATE_BOOLEAN);
+
+        foreach ($users as $key => $user) {
+            $userAccount = $this->newUser();
+            $userAccount->accountId = \laabs::newId();
             if (!$isReset) {
-                $userAccount = $this->search('accountName="' . $user['accountName'] . '" ')[0];
+                $userAccount = $this->search('accountName="' . $user->accountName . '" ')[0];
             }
 
-            if (is_null($user['password']) || empty($user['password'])) {
+            if (is_null($user->password) || empty($user->password)) {
                 throw new \core\Exception\BadRequestException("Password cannot be null");
             }
 
-            if (!$user['isAdmin']
+            if (!$user->isAdmin
                 && (
-                    is_null($user['organizations'])
-                    || empty($user['organizations'])
+                    is_null($user->organizations)
+                    || empty($user->organizations)
                 )
             ) {
                 throw new \core\Exception\BadRequestException("User account must be attached to at least one service");
             }
 
-            $userAccount->displayName = $user['displayName'];
-            $userAccount->emailAddress = $user['emailAddress'];
-            $userAccount->lastName = $user['lastName'];
-            $userAccount->firstName = $user['firstName'];
-            $userAccount->title = $user['title'];
-            $userAccount->password = $user['password'];
+            $userAccount->accountName = $user->accountName;
+            $userAccount->displayName = $user->displayName;
+            $userAccount->emailAddress = $user->emailAddress;
+            $userAccount->lastName = $user->lastName;
+            $userAccount->firstName = $user->firstName;
+            $userAccount->title = $user->title;
+            $userAccount->password = $user->password;
             $userAccount->passwordChangeRequired = true;
-            $userAccount->locked = $user['locked'];
-            $userAccount->enabled = $user['enabled'];
-            $userAccount->isAdmin = $user['isAdmin'];
+            $userAccount->locked = $user->locked;
+            $userAccount->enabled = $user->enabled;
+            $userAccount->isAdmin = $user->isAdmin;
+            $userAccount->accountType = 'user';
 
-            if (!is_null($user['ownerOrgRegNumber'])) {
-                $userOwnerOrg = $organizationController->getOrgByRegNumber($user['ownerOrgRegNumber']);
+            if (!is_null($user->ownerOrgRegNumber) && !empty($uer->ownerOrgRegNumber)) {
+                $userOwnerOrg = $organizationController->getOrgByRegNumber($user->ownerOrgRegNumber);
                 if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
                     $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
                 }
             }
 
             if ($isReset) {
+                $userAlreadyExists = $this->search("accountName='" . $user->accountName . "' ");
+                if (!empty($userAlreadyExists) && !is_null($userAlreadyExists[0]) && !empty($userAlreadyExists[0])) {
+                    $this->importDeleteUser($userAlreadyExists[0]);
+                }
                 $this->sdoFactory->create($userAccount, 'auth/account');
             } else {
                 $this->sdoFactory->update($userAccount, 'auth/account');
             }
 
-            if (!is_null($user['organizations'])) {
-                $this->importUserPositions((array) $user['organizations'], (string) $userAccount->accountId);
+            if (!is_null($user->organizations) && !empty($user->organizations)) {
+                $user->organizations = explode(';', $user->organizations);
+                $this->importUserPositions((array) $user->organizations, (string) $userAccount->accountId);
             }
 
-            $this->importUserRoles((array) $user['roles'], (string) $userAccount->accountId);
+            $this->importUserRoles((array) explode(';', $user->roles), (string) $userAccount->accountId);
         }
     }
 
+    /**
+     * delete existing user
+     *
+     * @param auth/account $userAccount The user object
+     *
+     * @return
+     */
+    public function importDeleteUser($userAccount)
+    {
+        // Delete user positions
+        $userPositionController = \laabs::newController('organization/userPosition');
+        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
+        $currentUserServices = $userPositionController->listPositions((string) $userAccount->accountId);
+        if (!empty($currentUserServices)) {
+            foreach ($currentUserServices as $key => $userPosition) {
+                $organizationSdoFactory->delete($userPosition, 'organization/userPosition');
+            }
+        }
+
+        // Delete user roles members
+        $roleMemberController = \laabs::newController('auth/roleMember');
+        $roleMemberSdoFactory = \laabs::dependency('sdo', 'auth')->getService('Factory')->newInstance();
+        $roleMembers = $roleMemberController->readByUserAccount((string) $userAccount->accountId);
+        //delete role
+        if (!is_null($roleMembers) || !empty($roleMembers)) {
+            foreach ($roleMembers as $key => $roleMember) {
+                $roleMemberSdoFactory->delete($roleMember, 'auth/roleMember');
+            }
+        }
+
+        $this->sdoFactory->delete($userAccount);
+    }
     /**
      * Import array of organizations
      *
