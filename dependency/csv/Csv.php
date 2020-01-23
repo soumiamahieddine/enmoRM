@@ -25,73 +25,40 @@ namespace dependency\csv;
  */
 class Csv
 {
-    protected $handler;
-    protected $delimiter = ",";
-    protected $enclosure = '"';
-    protected $escape = '\\';
-
     /**
-     * Loads a file
-     * @param string $filename
-     * @param string $delimiter
-     * @param string $enclosure
-     * @param string $escape
+     * Exports the csv contents to an array of entities
+     * @param resource $filename
      */
-    public function loadFile($filename, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    public function read($filename, $className, $messageType = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
-        $this->handler = fopen($filename, 'r');
-        $this->delimiter = $delimiter;
-        $this->enclosure = $enclosure;
-        $this->escape = $escape;
-    }
-
-    /**
-     * Loads a string
-     * @param string $filename
-     * @param string $delimiter
-     * @param string $enclosure
-     * @param string $escape
-     */
-    public function load($data, $delimiter = ',', $enclosure = '"', $escape = '\\')
-    {
-        $this->handler = explode("\n", $data);
-        $this->delimiter = $delimiter;
-        $this->enclosure = $enclosure;
-        $this->escape = $escape;
-    }
-
-    /**
-     * Returns the next line
-     */
-    public function read()
-    {
-        if (is_array($this->handler)) {
-            $line = current($this->handler);
-            
-            next($this->handler);
-            if (empty($line)) {
-                return;
-            }
-
-            return str_getcsv($line, $this->delimiter, $this->enclosure, $this->escape);
+        if ($messageType) {
+            $class = \laabs::getMessage($className);
         } else {
-            return fgetcsv($this->handler, 0, $this->delimiter, $this->enclosure, $this->escape);
+            $class = \laabs::getClass($className);
         }
+        
+        $handler = fopen($filename, 'r');
+        
+        $header = fgetcsv($handler, 0, $delimiter, $enclosure, $escape);
+
+        $properties = $this->getPropertiesFromHeader($header, $class);
+
+        $collection = [];
+        while ($line = fgetcsv($handler, 0, $delimiter, $enclosure, $escape)) {
+            $collection[] = $this->getObjectFromLine($line, $class, $properties);
+        }
+
+        fclose($handler);
+
+        return $collection;
     }
 
-    /**
-     * @param string $className
-     */
-    public function export($className)
+    protected function getPropertiesFromHeader($header, $class)
     {
-        $header = $this->read();
-
-        $class = \laabs::getClass($className);
-
         $properties = [];
         foreach ($header as $num => $name) {
             if (!$class->hasProperty($name)) {
-                throw new Exception("Undefined property $className::$name");
+                throw new \Exception("Undefined property $className::$name");
             }
             $properties[$num] = $property = $class->getProperty($name);
             if (!$property->isPublic()) {
@@ -99,28 +66,60 @@ class Csv
             }
         }
 
-        $collection = [];
-        while ($line = $this->read()) {
-            if (count($line) != count($header)) {
-                throw new Exception("Line ".key($data)." is not well formed.");
-            }
+        return $properties;
+    }
 
-            $object = $class->newInstanceWithoutConstructor();
-
-            foreach ($properties as $num => $property) {
-                $value = $line[$num];
-                $type = $property->getType();
-
-                if (isset($type)) {
-                    $value = \laabs::cast($value, $type);
-                }
-
-                $property->setValue($object, $value);
-            }
-
-            $collection[] = $object;
+    protected function getObjectFromLine($cols, $class, $properties)
+    {
+        if (count($cols) != count($properties)) {
+            throw new \Exception("Line is not well formed");
         }
 
-        return $collection;
+        $object = $class->newInstanceWithoutConstructor();
+
+        foreach ($properties as $num => $property) {
+            $value = $cols[$num];
+            $type = $property->getType();
+
+            if (isset($type)) {
+                $value = \laabs::cast($value, $type);
+            }
+
+            $property->setValue($object, $value);
+        }
+
+        return $object;
+    }
+
+    /**
+     * Import an array of entities to a csv contents
+     * @param array  $collection
+     * @param string $className
+     * @param bool   $messageType
+     */
+    public function write($filename, $collection, $className, $messageType = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    {
+        if ($messageType) {
+            $class = \laabs::getMessage($className);
+        } else {
+            $class = \laabs::getClass($className);
+        }
+
+        $properties = $class->getProperties();
+        
+        $handler = fopen($filename, 'w');
+
+        fputcsv($handler, array_keys($properties), $delimiter, $enclosure, $escape);
+
+        $properties = [];
+        foreach ($properties as $name => $property) {
+            if (!$property->isPublic()) {
+                $property->setAccessible(true);
+            }
+        }
+
+        foreach ($collection as $object) {
+            fputcsv($handler, get_object_vars($object), $delimiter, $enclosure, $escape);
+        }
     }
 }
