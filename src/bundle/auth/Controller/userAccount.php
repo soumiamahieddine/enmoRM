@@ -852,7 +852,7 @@ class userAccount
                 $this->importUserPositions((array) $user['organizations'], (string) $userAccount->accountId);
             }
 
-            $this->importUserRoles($user['roles'], (string) $userAccount->accountId);
+            $this->importUserRoles((array) $user['roles'], (string) $userAccount->accountId);
         }
     }
 
@@ -910,6 +910,7 @@ class userAccount
     {
         $roleMemberController = \laabs::newController('auth/roleMember');
         $roleController = \laabs::newController('auth/role');
+        $roleMemberSdoFactory = \laabs::dependency('sdo', 'auth')->getService('Factory')->newInstance();
 
         if (!empty($roles)) {
             foreach ($roles as $key => $roleId) {
@@ -917,22 +918,21 @@ class userAccount
                     throw new \core\Exception\BadRequestException("Role does not exists");
                 }
 
-                $roleMember = $roleMemberController->readByUserAccount($userAccountId);
-
-                if (!is_null($roleMember) || !empty($roleMember)) {
-                    $roleMemberController->delete($roleMember);
+                $roleMembers = $roleMemberController->readByUserAccount($userAccountId);
+                //delete role
+                if (!is_null($roleMembers) || !empty($roleMembers)) {
+                    foreach ($roleMembers as $key => $roleMember) {
+                        if ($roleMember->roleId == $roleId) {
+                            $roleMemberSdoFactory->delete($roleMember, 'auth/roleMember');
+                            unset($roleMembers[$key]);
+                        }
+                    }
                 }
-
                 // create role
                 $roleMember = \laabs::newInstance("auth/roleMember");
                 $roleMember->userAccountId = $userAccountId;
                 $roleMember->roleId = $roleId;
-
-                try {
-                    $this->sdoFactory->create($roleMember);
-                } catch (\Exception $e) {
-                    throw \laabs::newException("auth/sdoException");
-                }
+                $roleMemberSdoFactory->create($roleMember, 'auth/roleMember');
             }
         }
     }
