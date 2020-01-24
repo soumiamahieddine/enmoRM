@@ -504,14 +504,18 @@ class serviceAccount
 
     public function exportCsv($limit = null) {
         $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
-        $serviceAccounts = \laabs::castMessageCollection($serviceAccounts, 'auth/serviceAccountImportExport');
+
 
         $servicePositionController = \laabs::newController('organization/servicePosition');
-        foreach ($serviceAccounts as $serviceAccount) {
-            $position = $servicePositionController->getPosition($serviceAccount->accountId);
+        foreach ($serviceAccounts as $key => $serviceAccount) {
+            $accountId = $serviceAccount->accountId;
+            $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccountImportExport');
+            $position = $servicePositionController->getPosition($accountId);
             if (!empty($position)) {
                 $serviceAccount->organization = $position->orgId;
             }
+
+            $serviceAccounts[$key] = $serviceAccount;
         }
 
         $this->csv->write('php://output', (array) $serviceAccounts, 'auth/serviceAccountImportExport', true);
