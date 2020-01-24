@@ -508,14 +508,32 @@ class serviceAccount
 
 
         $servicePositionController = \laabs::newController('organization/servicePosition');
+        $organizationController = \laabs::newController('organization/organization');
         foreach ($serviceAccounts as $key => $serviceAccount) {
             $accountId = $serviceAccount->accountId;
+            $ownerOrgId = $serviceAccount->ownerOrgId;
             $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccountImportExport');
-            $position = $servicePositionController->getPosition($accountId);
-            if (!empty($position)) {
-                $serviceAccount->organization = $position->orgId;
+
+            if ($ownerOrgId) {
+                $organization = $organizationController->read($ownerOrgId);
+                $serviceAccount->ownerOrgRegNumber = $organization->registrationNumber;
             }
 
+            $position = $servicePositionController->getPosition($accountId);
+            if (!empty($position)) {
+                $serviceAccount->organizations = $position->orgId;
+            }
+
+            $privileges = $this->getPrivileges($accountId);
+            if (!empty($privileges)) {
+                foreach ($privileges as $privilege) {
+                    $serviceAccount->privileges .= $privilege->serviceURI;
+
+                    if (end($privileges) !== $privilege) {
+                        $serviceAccount->privileges .= ";";
+                    }
+                }
+            }
             $serviceAccounts[$key] = $serviceAccount;
         }
 

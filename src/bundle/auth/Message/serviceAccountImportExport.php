@@ -62,6 +62,11 @@ class serviceAccountImportExport
     public $organizations;
 
     /**
+     * @var string
+     */
+    public $privileges;
+
+    /**
      * @var bool
      */
     public $locked = false;
