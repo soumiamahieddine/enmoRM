@@ -446,7 +446,9 @@ class role
             $roles = $this->csv->read($filename, 'auth/roleImportExport', true);
             foreach ($roles as $key => $role) {
 
-                if ($isReset) {
+                if ($isReset
+                    || !$this->sdoFactory->exists('auth/role', $role->roleId)
+                ) {
                     $newRole = \laabs::newInstance('auth/role');
                     $newRole->roleId = $role->roleId;
                     $newRole->roleName = $role->roleName;
