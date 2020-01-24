@@ -845,10 +845,17 @@ class userAccount
         file_put_contents($filename, $data);
         $users = $this->csv->read($filename, 'auth/userAccountImportExport', $messageType = true);
 
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
         foreach ($users as $key => $user) {
-            $userAccount = $this->newUser();
-            $userAccount->accountId = \laabs::newId();
-            if (!$isReset) {
+            if ($isReset) {
+                $userAccount = $this->newUser();
+                $userAccount->accountId = \laabs::newId();
+            } else {
                 $userAccount = $this->search('accountName="' . $user->accountName . '" ')[0];
             }
 
@@ -885,22 +892,33 @@ class userAccount
                 }
             }
 
-            if ($isReset) {
-                $userAlreadyExists = $this->search("accountName='" . $user->accountName . "' ");
-                if (!empty($userAlreadyExists) && !is_null($userAlreadyExists[0]) && !empty($userAlreadyExists[0])) {
-                    $this->importDeleteUser($userAlreadyExists[0]);
+            try {
+                if ($isReset) {
+                    $userAlreadyExists = $this->search("accountName='" . $user->accountName . "' ");
+                    if (!empty($userAlreadyExists) && !is_null($userAlreadyExists[0]) && !empty($userAlreadyExists[0])) {
+                        $this->importDeleteUser($userAlreadyExists[0]);
+                    }
+                    $this->sdoFactory->create($userAccount, 'auth/account');
+                } else {
+                    $this->sdoFactory->update($userAccount, 'auth/account');
                 }
-                $this->sdoFactory->create($userAccount, 'auth/account');
-            } else {
-                $this->sdoFactory->update($userAccount, 'auth/account');
-            }
 
-            if (!is_null($user->organizations) && !empty($user->organizations)) {
-                $user->organizations = explode(';', $user->organizations);
-                $this->importUserPositions((array) $user->organizations, (string) $userAccount->accountId);
-            }
+                if (!is_null($user->organizations) && !empty($user->organizations)) {
+                    $user->organizations = explode(';', $user->organizations);
+                    $this->importUserPositions((array) $user->organizations, (string) $userAccount->accountId);
+                }
 
-            $this->importUserRoles((array) explode(';', $user->roles), (string) $userAccount->accountId);
+                $this->importUserRoles((array) explode(';', $user->roles), (string) $userAccount->accountId);
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
         }
     }
 
