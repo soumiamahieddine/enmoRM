@@ -250,5 +250,5 @@ interface userAccountInterface
      *
      * @return boolean        Import with reset of table data or not
      */
-    public function createImport_isReset_($data);
+    public function createImport($data, $isReset);
 }

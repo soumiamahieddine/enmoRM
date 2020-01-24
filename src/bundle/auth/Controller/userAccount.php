@@ -845,8 +845,6 @@ class userAccount
         file_put_contents($filename, $data);
         $users = $this->csv->read($filename, 'auth/userAccountImportExport', $messageType = true);
 
-        $isReset = filter_var($isReset, FILTER_VALIDATE_BOOLEAN);
-
         foreach ($users as $key => $user) {
             $userAccount = $this->newUser();
             $userAccount->accountId = \laabs::newId();
