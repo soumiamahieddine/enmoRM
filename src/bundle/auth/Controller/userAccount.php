@@ -940,6 +940,7 @@ class userAccount
 
         $this->sdoFactory->delete($this->get($userAccountId));
     }
+
     /**
      * Import array of organizations
      *
