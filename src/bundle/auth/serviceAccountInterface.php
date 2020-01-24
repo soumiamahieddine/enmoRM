@@ -121,4 +121,14 @@ interface serviceAccountInterface
      * @action auth/serviceAccount/queryServiceAccounts
      */
     public function readQuery_query_($query = null);
+
+    /**
+     * @param string  $data      Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action auth/serviceAccount/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }
