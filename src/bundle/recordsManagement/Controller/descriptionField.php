@@ -272,7 +272,9 @@ class descriptionField
                     throw new \core\Exception\BadRequestException("Name cannot be null");
                 }
 
-                if ($isReset) {
+                if ($isReset
+                    || !$this->sdoFactory->exists('recordsManagement/descriptionField', $descriptionField->name)
+                ) {
                     $this->sdoFactory->create($descriptionField, 'recordsManagement/descriptionField');
                 } else {
                     $this->sdoFactory->update($descriptionField, 'recordsManagement/descriptionField');
