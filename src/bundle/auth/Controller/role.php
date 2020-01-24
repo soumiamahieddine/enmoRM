@@ -414,4 +414,82 @@ class role
 
         $this->csv->write('php://output', (array) $roles, 'auth/roleImportExport', true);
     }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $roles = $this->getAll();
+
+                foreach ($roles as $role) {
+                    $roleMembers = $this->sdoFactory->find('auth/roleMember', "roleId='$role->roleId'");
+                    foreach ($roleMembers as $roleMember) {
+                        $this->sdoFactory->delete($roleMember, 'auth/roleMember');
+                    }
+
+                    $privileges = $this->sdoFactory->find('auth/privilege', "roleId='$role->roleId'");
+                    foreach ($privileges as $privilege) {
+                        $this->sdoFactory->delete($privilege, 'auth/privilege');
+                    }
+                    $this->sdoFactory->delete($role, 'auth/role');
+                }
+            }
+
+            $filename = \laabs\tempnam();
+            file_put_contents($filename, $data);
+            $roles = $this->csv->read($filename, 'auth/roleImportExport', true);
+            foreach ($roles as $key => $role) {
+
+                if ($isReset) {
+                    $newRole = \laabs::newInstance('auth/role');
+                    $newRole->roleId = $role->roleId;
+                    $newRole->roleName = $role->roleName;
+                    $newRole->description = $role->description;
+                    $newRole->enabled = (bool) $role->enabled;
+                    $newRole->securityLevel = $role->securityLevel;
+
+                    $this->sdoFactory->create($newRole, 'auth/role');
+                } else {
+                    $changedRole = $this->sdoFactory->read('auth/role', $role->roleId);
+                    $changedRole->roleName = $role->roleName;
+                    $changedRole->description = $role->description;
+                    $changedRole->enabled = (bool) $role->enabled;
+                    $changedRole->securityLevel = $role->securityLevel;
+                    $this->sdoFactory->update($changedRole, 'auth/role');
+
+                    $privileges = $this->sdoFactory->find('auth/privilege', "roleId='$role->roleId'");
+                    foreach ($privileges as $privilege) {
+                        $this->sdoFactory->delete($privilege, 'auth/privilege');
+                    }
+                }
+
+                $userStories = explode(';', $role->privileges);
+                foreach ($userStories as $userStory) {
+                    $privilege = \laabs::newInstance('auth/privilege');
+                    $privilege->roleId = $role->roleId;
+                    $privilege->userStory = $userStory;
+
+                    $this->sdoFactory->create($privilege, 'auth/privilege');
+                }
+
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
+    }
 }

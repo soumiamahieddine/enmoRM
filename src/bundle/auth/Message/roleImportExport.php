@@ -32,7 +32,7 @@ class roleImportExport
     /**
      * The role identifier
      *
-     * @var id
+     * @var string
      */
     public $roleId;
 
@@ -53,14 +53,14 @@ class roleImportExport
     /**
      * Status of role
      *
-     * @var boolean
+     * @var string
      */
     public $enabled;
 
     /**
      * Array of user story names
      *
-     * @var string[]
+     * @var string
      */
     public $privileges;
 
