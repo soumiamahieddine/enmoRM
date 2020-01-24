@@ -49,6 +49,16 @@ interface roleInterface
     public function readExport();
 
     /**
+     * @param string  $data      Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action auth/role/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
+
+    /**
      * Prepares access control object for update or create
      * 
      * @return auth/role
