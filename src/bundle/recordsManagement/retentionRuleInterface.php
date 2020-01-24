@@ -51,6 +51,16 @@ interface retentionRuleInterface
     public function readExport();
 
     /**
+     * @param string  $data      Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action recordsManagement/retentionRule/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
+
+    /**
      * Read a retention rule
      *
      * @action recordsManagement/retentionRule/read
