@@ -770,7 +770,7 @@ class userAccount
             $roleMembers = $roleMemberController->readByUserAccount($accountId);
             if (!empty($roleMembers)) {
                 foreach ($roleMembers as $roleMember) {
-                    $userAccount->roles = $roleMember->roleId;
+                    $userAccount->roles .= $roleMember->roleId;
 
                     if (end($roleMembers) !== $roleMember) {
                         $userAccount->roles .= ";";
