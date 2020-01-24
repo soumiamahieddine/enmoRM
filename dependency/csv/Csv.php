@@ -44,8 +44,14 @@ class Csv
         $properties = $this->getPropertiesFromHeader($header, $class);
 
         $collection = [];
-        while ($line = fgetcsv($handler, 0, $delimiter, $enclosure, $escape)) {
-            $collection[] = $this->getObjectFromLine($line, $class, $properties);
+        $lineNumber = 0;
+        try {
+            while ($line = fgetcsv($handler, 0, $delimiter, $enclosure, $escape)) {
+                $collection[] = $this->getObjectFromLine($line, $class, $properties);
+                $lineNumber++;
+            }
+        } catch (\Exception $e) {
+            throw new \Exception("Wrong columns numbers with csv on line $lineNumber");
         }
 
         fclose($handler);
@@ -72,7 +78,7 @@ class Csv
     protected function getObjectFromLine($cols, $class, $properties)
     {
         if (count($cols) != count($properties)) {
-            throw new \Exception("Line is not well formed");
+            throw new \Exception();
         }
 
         $object = $class->newInstanceWithoutConstructor();
