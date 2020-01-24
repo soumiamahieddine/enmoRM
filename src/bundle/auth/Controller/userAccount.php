@@ -819,6 +819,17 @@ class userAccount
             $this->sdoFactory->beginTransaction();
         }
 
+        if ($isReset) {
+            try {
+                $this->deleteAllusers();
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+
         foreach ($users as $key => $user) {
             if ($isReset) {
                 $userAccount = $this->newUser();
@@ -862,10 +873,6 @@ class userAccount
 
             try {
                 if ($isReset) {
-                    $userAlreadyExists = $this->search("accountName='" . $user->accountName . "' ");
-                    if (!empty($userAlreadyExists) && !is_null($userAlreadyExists[0]) && !empty($userAlreadyExists[0])) {
-                        $this->importDeleteUser($userAlreadyExists[0]);
-                    }
                     $this->sdoFactory->create($userAccount, 'auth/account');
                 } else {
                     $this->sdoFactory->update($userAccount, 'auth/account');
@@ -890,19 +897,28 @@ class userAccount
         }
     }
 
+    private function deleteAllusers()
+    {
+        $users = $this->index();
+
+        foreach ($users as $key => $user) {
+            $this->importDeleteUser((string) $user->accountId);
+        }
+    }
+
     /**
      * delete existing user
      *
-     * @param auth/account $userAccount The user object
+     * @param auth/account $userAccount The user object unique identifier
      *
      * @return
      */
-    public function importDeleteUser($userAccount)
+    public function importDeleteUser($userAccountId)
     {
         // Delete user positions
         $userPositionController = \laabs::newController('organization/userPosition');
         $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
-        $currentUserServices = $userPositionController->listPositions((string) $userAccount->accountId);
+        $currentUserServices = $userPositionController->listPositions((string) $userAccountId);
         if (!empty($currentUserServices)) {
             foreach ($currentUserServices as $key => $userPosition) {
                 $organizationSdoFactory->delete($userPosition, 'organization/userPosition');
@@ -912,7 +928,7 @@ class userAccount
         // Delete user roles members
         $roleMemberController = \laabs::newController('auth/roleMember');
         $roleMemberSdoFactory = \laabs::dependency('sdo', 'auth')->getService('Factory')->newInstance();
-        $roleMembers = $roleMemberController->readByUserAccount((string) $userAccount->accountId);
+        $roleMembers = $roleMemberController->readByUserAccount((string) $userAccountId);
         //delete role
         if (!is_null($roleMembers) || !empty($roleMembers)) {
             foreach ($roleMembers as $key => $roleMember) {
@@ -920,7 +936,7 @@ class userAccount
             }
         }
 
-        $this->sdoFactory->delete($userAccount);
+        $this->sdoFactory->delete($this->get($userAccountId));
     }
     /**
      * Import array of organizations
