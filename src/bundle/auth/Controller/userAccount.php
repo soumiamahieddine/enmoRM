@@ -853,7 +853,7 @@ class userAccount
 
         if ($isReset) {
             try {
-                $this->deleteAllusers();
+                $this->deleteAllUsers();
             } catch (\Exception $e) {
                 if ($transactionControl) {
                     $this->sdoFactory->rollback();
@@ -896,7 +896,7 @@ class userAccount
             $userAccount->isAdmin = $user->isAdmin;
             $userAccount->accountType = 'user';
 
-            if (!is_null($user->ownerOrgRegNumber) && !empty($uer->ownerOrgRegNumber)) {
+            if (!is_null($user->ownerOrgRegNumber) && !empty($user->ownerOrgRegNumber)) {
                 $userOwnerOrg = $organizationController->getOrgByRegNumber($user->ownerOrgRegNumber);
                 if (!is_null($userOwnerOrg) && !empty($userOwnerOrg)) {
                     $userAccount->ownerOrgId = (string) $userOwnerOrg->orgId;
@@ -927,9 +927,11 @@ class userAccount
         if ($transactionControl) {
             $this->sdoFactory->commit();
         }
+
+        return true;
     }
 
-    private function deleteAllusers()
+    private function deleteAllUsers()
     {
         $users = $this->index();
 
