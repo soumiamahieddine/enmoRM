@@ -168,4 +168,54 @@ class retentionRule
 
         $this->csv->write('php://output', (array) $retentionRules, 'recordsManagement/retentionRule', true);
     }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $retentionRules = $this->index();
+
+                foreach ($retentionRules as $retentionRule) {
+                    $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "retentionRuleCode='$retentionRule->code'");
+                    foreach ($archivalProfiles as $archivalProfile) {
+                        $archivalProfile->retentionRuleCode = null;
+                        $this->sdoFactory->update($archivalProfile, 'recordsManagement/archivalProfile');
+                    }
+
+                    $this->sdoFactory->delete($retentionRule, 'recordsManagement/retentionRule');
+                }
+            }
+
+            $filename = \laabs\tempnam();
+            file_put_contents($filename, $data);
+            $retentionRules = $this->csv->read($filename, 'recordsManagement/retentionRule', true);
+            foreach ($retentionRules as $key => $retentionRule) {
+
+                if ($isReset
+                    || !$this->sdoFactory->exists('recordsManagement/retentionRule', $retentionRule->code)
+                ) {
+                    $this->sdoFactory->create($retentionRule, 'recordsManagement/retentionRule');
+                } else {
+                    $this->sdoFactory->update($retentionRule, 'recordsManagement/retentionRule');
+                }
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
+    }
 }
