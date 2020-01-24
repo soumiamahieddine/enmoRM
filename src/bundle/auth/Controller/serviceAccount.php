@@ -565,7 +565,7 @@ class serviceAccount
                     $serviceAccount = $serviceAccount[0];
                 }
             }
-            var_dump($serviceAccount);
+            var_dump($service);
             exit;
             if (is_null($service->password) || empty($service->password)) {
                 throw new \core\Exception\BadRequestException("Password cannot be null");
@@ -577,23 +577,20 @@ class serviceAccount
                     || empty($service->organizations)
                 )
             ) {
-                throw new \core\Exception\BadRequestException("User account must be attached to at least one service");
+                throw new \core\Exception\BadRequestException("Service account must be attached to at least one service");
             }
 
             $serviceAccount->accountName = $service->accountName;
             $serviceAccount->displayName = $service->displayName;
             $serviceAccount->emailAddress = $service->emailAddress;
-            $serviceAccount->lastName = $service->lastName;
-            $serviceAccount->firstName = $service->firstName;
-            $serviceAccount->title = $service->title;
             $serviceAccount->password = $service->password;
             $serviceAccount->passwordChangeRequired = true;
             $serviceAccount->locked = $service->locked;
             $serviceAccount->enabled = $service->enabled;
             $serviceAccount->isAdmin = $service->isAdmin;
-            $serviceAccount->accountType = 'user';
+            $serviceAccount->accountType = 'service';
 
-            if (!is_null($service->ownerOrgRegNumber) && !empty($service>ownerOrgRegNumber)) {
+            if (!is_null($service->ownerOrgRegNumber) && !empty($service->ownerOrgRegNumber)) {
                 $serviceOwnerOrg = $organizationController->getOrgByRegNumber($service->ownerOrgRegNumber);
                 if (!is_null($serviceOwnerOrg) && !empty($serviceOwnerOrg)) {
                     $serviceAccount->ownerOrgId = (string) $serviceOwnerOrg->orgId;
@@ -609,7 +606,7 @@ class serviceAccount
 
                 if (!is_null($service->organizations) && !empty($service->organizations)) {
                     $service->organizations = explode(';', $service->organizations);
-                    $this->importUserPositions((array) $service->organizations, (string) $serviceAccount->accountId);
+                    $this->importServicePositions((array) $service->organizations, (string) $serviceAccount->accountId);
                 }
 
                 $this->importUserRoles((array) explode(';', $service->roles), (string) $serviceAccount->accountId);
@@ -640,19 +637,61 @@ class serviceAccount
      */
     public function importDeleteService($serviceAccountId)
     {
-        // Delete user positions
-        $servicePositionController = \laabs::newController('organization/servicePosition');
-        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
-        $currentServicePositions = $organizationSdoFactory->find('organization/servicePosition', "accountId = '" . $serviceAccountId . "'");
-        if (!empty($currentServicePositions)) {
-            foreach ($currentServicePositions as $key => $servicePosition) {
-                $organizationSdoFactory->delete($servicePosition, 'organization/servicePosition');
-            }
-        }
+        // Delete service positions
+        $this->deleteServicePosition($serviceAccountId);
 
         //delete service Privileges
         $this->sdoFactory->deleteChildren("auth/servicePrivilege", array("accountId" => $serviceAccountId), 'auth/account');
 
         $this->sdoFactory->delete($this->read($serviceAccountId));
+    }
+
+    /**
+     * Delete service position
+     *
+     * @param string $serviceAccountId Unique user identifier
+     *
+     * @return
+     */
+    private function deleteServicePosition($serviceAccountId)
+    {
+        $organizationController = \laabs::newController('organization/organization');
+        $servicePositionController = \laabs::newController('organization/servicePosition');
+        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
+
+        $currentServicePositions = $organizationSdoFactory->find('organization/servicePosition', "accountId = '" . $serviceAccountId . "'");
+
+        if (!empty($currentServicePositions)) {
+            foreach ($currentServicePositions as $key => $servicePosition) {
+                $organizationSdoFactory->delete($servicePosition, 'organization/servicePosition');
+            }
+        }
+    }
+
+    /**
+     * Import array of organizations org reg numbers
+     *
+     * @param array  $organizations    Array of orgRegNumber
+     * @param string $serviceAccountId Unique user identifier
+     *
+     * @return [type]                [description]
+     */
+    private function importServicePositions($organizations, $serviceAccountId)
+    {
+        $this->deleteServicePosition($serviceAccountId);
+
+        foreach ($organizations as $key => $orgRegNumber) {
+            $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
+
+            if (is_null($organization) || empty($organization)) {
+                throw new \core\Exception\BadRequestException("Organization does not exists");
+            }
+
+            $servicePosition = \laabs::newInstance('organization/servicePosition');
+            $servicePosition->serviceAccountId = $serviceAccountId;
+            $servicePosition->orgId = (string) $organization->orgId;
+
+            $organizationSdoFactory->create($servicePosition, 'organization/servicePosition');
+        }
     }
 }

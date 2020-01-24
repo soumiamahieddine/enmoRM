@@ -30,6 +30,14 @@ namespace bundle\auth\Message;
 class serviceAccountImportExport
 {
     /**
+     * The user account identifier
+     *
+     * @var id
+     * @notempty
+     */
+    public $accountId;
+
+    /**
      * @var string
      * @pattern #^[A-Za-z][A-Za-z0-9_.@]*[A-Za-z]$#
      * @notempty
