@@ -59,7 +59,7 @@ class serviceAccountImportExport
     /**
      * @var string
      */
-    public $organization;
+    public $organizations;
 
     /**
      * @var bool
@@ -74,7 +74,7 @@ class serviceAccountImportExport
     /**
      * @var string
      */
-    public $ownerOrgId;
+    public $ownerOrgRegNumber;
 
     /**
      * @var bool
