@@ -239,4 +239,56 @@ class descriptionField
 
         $this->csv->write('php://output', (array) $descriptionFields, 'recordsManagement/descriptionField', false);
     }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $descriptionFields = $this->index();
+
+                $archiveDescriptionSdoFactory = \laabs::dependency('sdo', 'recordsManagement')->getService('Factory')->newInstance();
+                foreach ($descriptionFields as $descriptionField) {
+                    $archiveDescriptions = $archiveDescriptionSdoFactory->find('recordsManagement/archiveDescription', "fieldName='$descriptionField->name'");
+
+                    foreach ($archiveDescriptions as $archiveDescription) {
+                        $archiveDescriptionSdoFactory->delete($archiveDescription, 'recordsManagement/archiveDescription');
+                    }
+
+                    $this->sdoFactory->delete($descriptionField, 'recordsManagement/descriptionField');
+                }
+            }
+
+            $filename = \laabs\tempnam();
+            file_put_contents($filename, $data);
+            $descriptionFields = $this->csv->read($filename, 'recordsManagement/descriptionField', $messageType = false);
+            foreach ($descriptionFields as $key => $descriptionField) {
+                if (is_null($descriptionField->name)) {
+                    throw new \core\Exception\BadRequestException("Name cannot be null");
+                }
+
+                if ($isReset) {
+                    $this->sdoFactory->create($descriptionField, 'recordsManagement/descriptionField');
+                } else {
+                    $this->sdoFactory->update($descriptionField, 'recordsManagement/descriptionField');
+                }
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
+    }
 }

@@ -71,4 +71,14 @@ interface descriptionFieldInterface
      *
      */
     public function delete_name_();
+
+    /**
+     * @param string  $data      Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action recordsManagement/descriptionField/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }
