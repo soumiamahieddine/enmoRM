@@ -1599,7 +1599,8 @@ class organization
         file_put_contents($filename, $data);
         $organizations = $this->csv->read($filename, 'organization/organizationImportExport', $messageType = true);
         $transactionControl = !$this->sdoFactory->inTransaction();
-
+        var_dump($organizations);
+        exit;
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
@@ -1611,9 +1612,53 @@ class organization
             $this->sdoFactory->commit();
         }
 
-        foreach ($organizations as $key => $organization) {
-            # code...
+        foreach ($organizations as $key => $org) {
+            $organization = \laabs::newInstance('organization/organization');
+            $organization->orgId = \laabs::newId();
+
+            if (!isReset) {
+                if (is_null($org->orgRegNumber) || empty($org->orgRegNumber)) {
+                    throw new \Exception("Organization orgRegNumber is mandatory when no reset");
+                }
+                if (!empty($this->getOrgByRegNumber($org->orgRegNumber))) {
+                    $organization = $this->getOrgByRegNumber($org->orgRegNumber);
+                }
+            }
+
+            $organization->orgName = $org->orgName;
+            $organization->otherOrgName = $org->otherOrgName;
+            $organization->displayName = $org->displayName;
+            $organization->legalClassification = $org->legalClassification;
+            $organization->businessType = $org->businessType;
+            $organization->description = $org->description;
+            $organization->orgTypeCode = $org->orgTypeCode;
+            $organization->orgRoleCodes = $org->orgRoleCodes;
+            $organization->registrationNumber = $org->registrationNumber;
+            $organization->taxIdentifier = $org->taxIdentifier;
+            $organization->beginDate = $org->beginDate;
+            $organization->endDate = $org->endDate;
+            $organization->isOrgUnit = $org->isOrgUnit;
+            $organization->enabled = $org->enabled;
+
+            if (!$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->ownerOrgId])) {
+
+            }
+            $organization->ownerOrgId = $org->ownerOrgId;
+            $organization->parentOrgId = $org->parentOrgId;
+
+
+            try {
+                if (!empty($organization->parentOrgId)) {
+                    if (!this->sdoFactory->exists())
+                }
+                if ($isReset) {
+                    $this->sdoFactory->create($organization, 'organization/organization');
+                }
+            } catch (\Exception $e) {
+
+            }
         }
+
         return true;
     }
 
