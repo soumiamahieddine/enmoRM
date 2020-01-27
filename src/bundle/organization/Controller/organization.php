@@ -1613,29 +1613,66 @@ class organization
         file_put_contents($filename, $data);
         $organizations = $this->csv->read($filename, 'organization/organizationImportExport', $messageType = true);
         $transactionControl = !$this->sdoFactory->inTransaction();
-        var_dump($organizations);
-        exit;
+
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
         if ($isReset) {
-            $this->deleteAllOrganizationsAndDependencies();
+            try {
+                $this->deleteAllOrganizationsAndDependencies();
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+
+        try {
+            //create or update organization/service
+            $this->createBasicOrganizations($organizations, $isReset);
+
+            // check for parent organization and update
+            $this->createParentRelationship($organizations, $isReset);
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
         }
 
         if ($transactionControl) {
             $this->sdoFactory->commit();
         }
 
+        return true;
+    }
+
+    /**
+     * Create basic organizations
+     *
+     * @param  array   $organizations      Array of organizations
+     * @param  boolean $isReset            Reset tables or not
+     * @param  array   $transactionControl transaction control
+     *
+     * @return
+     */
+    private function createBasicOrganizations($organizations, $isReset)
+    {
+        // if ($transactionControl) {
+        //     $this->sdoFactory->beginTransaction();
+        // }
+
         foreach ($organizations as $key => $org) {
+            if (is_null($org->registrationNumber) || empty($org->registrationNumber)) {
+                throw new \ExceptionregistrationNumber("Organization orgRegNumber is mandatory");
+            }
+
             $organization = \laabs::newInstance('organization/organization');
             $organization->orgId = \laabs::newId();
-
-            if (!isReset) {
-                if (is_null($org->orgRegNumber) || empty($org->orgRegNumber)) {
-                    throw new \Exception("Organization orgRegNumber is mandatory when no reset");
-                }
-                if (!empty($this->getOrgByRegNumber($org->orgRegNumber))) {
-                    $organization = $this->getOrgByRegNumber($org->orgRegNumber);
+            if (!$isReset) {
+                if (!empty($this->getOrgByRegNumber($org->registrationNumber))) {
+                    $organization = $this->getOrgByRegNumber($org->registrationNumber);
                 }
             }
 
@@ -1654,28 +1691,51 @@ class organization
             $organization->isOrgUnit = $org->isOrgUnit;
             $organization->enabled = $org->enabled;
 
-            if (!$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->ownerOrgId])) {
-
-            }
-            $organization->ownerOrgId = $org->ownerOrgId;
-            $organization->parentOrgId = $org->parentOrgId;
-
-
             try {
-                if (!empty($organization->parentOrgId)) {
-                    if (!this->sdoFactory->exists())
-                }
                 if ($isReset) {
                     $this->sdoFactory->create($organization, 'organization/organization');
+                } else {
+                    $this->sdoFactory->update($organization, 'organization/organization');
                 }
             } catch (\Exception $e) {
-
+                throw $e;
             }
         }
-
-        return true;
     }
 
+    private function createParentRelationship($organizations, $isReset)
+    {
+        foreach ($organizations as $key => $org) {
+            if (!is_null($org->ownerOrgRegNumber)
+                && !$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->ownerOrgRegNumber])) {
+                throw new \Exception("Owner Organization is mandatory if not orgUnit");
+            }
+
+            if (!is_null($org->parentOrgRegNumber)
+                && !$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->parentOrgRegNumber])) {
+                throw new \Exception("Parent organization " . $org->parentOrgRegNumber .  " does not exists");
+            }
+
+            $organization = $this->getOrgByRegNumber($org->registrationNumber);
+
+            if (!is_null($org->ownerOrgRegNumber)) {
+                $organization->ownerOrgId = (string) $this->getOrgByRegNumber($org->ownerOrgRegNumber)->orgId;
+            }
+
+            if (!is_null($org->parentOrgRegNumber)) {
+                $organization->parentOrgId = (string) $this->getOrgByRegNumber($org->parentOrgRegNumber)->orgId;
+            }
+
+            try {
+                $this->sdoFactory->update($organization, 'organization/organization');
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+    }
     /**
      * Delete all organizations and dependencies
      *
