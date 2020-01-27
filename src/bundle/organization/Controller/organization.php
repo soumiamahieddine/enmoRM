@@ -394,7 +394,7 @@ class organization
     }
 
     /**
-     * List organisations
+     * List organizations
      * @param string $role The role of organizations
      *
      * @return organization/organization[] The organizations list
@@ -411,7 +411,7 @@ class organization
     }
 
     /**
-     * List organisations
+     * List organizations
      * @param string $role The role of organizations
      *
      * @return organization/organization[] The organizations list
@@ -1063,7 +1063,7 @@ class organization
 
     /**
      * Read parent orgs recursively
-     * @param string $orgId Organisation identifier
+     * @param string $orgId Organization identifier
      *
      * @return organization/organization[] The list of organization
      */
@@ -1087,7 +1087,7 @@ class organization
 
     /**
      * Read descendant orgs recursively
-     * @param string $orgId Organisation identifier
+     * @param string $orgId Organization identifier
      *
      * @return organization/organization[] The list of organization
      */
@@ -1583,5 +1583,90 @@ class organization
         $organizations = \laabs::castMessageCollection($organizations, 'organization/organizationImportExport');
 
         $this->csv->write('php://output', (array) $organizations, 'organization/organizationImportExport', true);
+    }
+
+    /**
+     * Import organization and create or update them
+     *
+     * @param array   $data     Array of serviceAccountImportExort Message
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @return boolean          Success of operation or not
+     */
+    public function import($data, $isReset = false)
+    {
+        $filename = \laabs\tempnam();
+        file_put_contents($filename, $data);
+        $organizations = $this->csv->read($filename, 'organization/organizationImportExport', $messageType = true);
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+        if ($isReset) {
+            $this->deleteAllOrganizationsAndDependencies();
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        foreach ($organizations as $key => $organization) {
+            # code...
+        }
+        return true;
+    }
+
+    /**
+     * Delete all organizations and dependencies
+     *
+     * @return
+     */
+    private function deleteAllOrganizationsAndDependencies()
+    {
+        $servicePositions = $this->sdoFactory->find("organization/servicePosition");
+        $userPositions = $this->sdoFactory->find("organization/userPosition");
+        $archivalProfileAccesses = $this->sdoFactory->find("organization/archivalProfileAccess");
+        $orgContacts = $this->sdoFactory->find("organization/orgContact");
+
+        if (!empty($servicePositions)) {
+            $this->sdoFactory->deleteCollection($servicePositions, "organization/servicePosition");
+        }
+        if (!empty($userPositions)) {
+            $this->sdoFactory->deleteCollection($userPositions, "organization/userPosition");
+        }
+        if (!empty($archivalProfileAccesses)) {
+            $this->sdoFactory->deleteCollection($archivalProfileAccesses, "organization/archivalProfileAccess");
+        }
+        if (!empty($orgContacts)) {
+            $this->sdoFactory->deleteCollection($orgContacts, "organization/orgContact");
+        }
+
+        $organizations = $this->sdoFactory->find("organization/organization");
+        $this->deleteAllOrganizations($organizations);
+    }
+
+    /**
+     * Delete organizations recursively
+     *
+     * @param  array $organizations array or organization/organization object
+     *
+     * @return
+     */
+    private function deleteAllOrganizations($organizations)
+    {
+        foreach ($organizations as $key => $organization) {
+            $childrenOrganizations = $this->sdoFactory->readChildren("organization/organization", $organization);
+            if (!empty($childrenOrganizations)) {
+                foreach ($childrenOrganizations as $key => $childOrganization) {
+                    $this->deleteAllOrganizations([$childOrganization]);
+                }
+            }
+
+            if ($this->sdoFactory->exists('organization/organization', (string) $organization->orgId)) {
+                $this->sdoFactory->delete((string) $organization->orgId, 'organization/organization');
+                unset($organizations[$key]);
+            }
+        }
     }
 }
