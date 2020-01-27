@@ -118,14 +118,14 @@ class organizationImportExport
      *
      * @var string
      */
-    public $parentOrgId;
+    public $parentOrgRegNumber;
 
     /**
      * The organization owner orgId
      *
      * @var string
      */
-    public $ownerOrgId;
+    public $ownerOrgRegNumber;
 
     /**
      * The organization is an orgUnit
