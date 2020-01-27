@@ -341,5 +341,15 @@ interface organizationInterface
      *
      * @action organization/organization/changeStatus
      */
-    public function read_orgId_Changestatus_status_();
+    public function read_orgId_ChangeStatus_status_();
+
+    /**
+     * @param string  $data     Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action organization/organization/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }
