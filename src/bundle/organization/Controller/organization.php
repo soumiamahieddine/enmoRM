@@ -1580,7 +1580,21 @@ class organization
     public function exportCsv($limit = null)
     {
         $organizations = $this->sdoFactory->find('organization/organization', null, null, null, null, $limit);
-        $organizations = \laabs::castMessageCollection($organizations, 'organization/organizationImportExport');
+        foreach ($organizations as $key => $organization) {
+            $parentOrgId = $organization->parentOrgId;
+            $ownerOrgId = $organization->ownerOrgId;
+
+            $organization = \laabs::castMessage($organization, 'organization/organizationImportExport');
+
+            if ($parentOrgId) {
+                $organization->parentOrgRegNumber = $this->sdoFactory->read('organization/organization', $parentOrgId)->registrationNumber;
+            }
+            if ($ownerOrgId) {
+                $organization->ownerOrgRegNumber = $this->sdoFactory->read('organization/organization', $ownerOrgId)->registrationNumber;
+            }
+
+            $organizations[$key] = $organization;
+        }
 
         $this->csv->write('php://output', (array) $organizations, 'organization/organizationImportExport', true);
     }
