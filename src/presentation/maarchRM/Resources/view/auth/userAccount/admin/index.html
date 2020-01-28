@@ -96,10 +96,14 @@ $("#contain").ready(function() {
         off: 'All'
     });*/
 
-    var url = new URL(document.URL);
-    var deactivatedUsers = url.searchParams.get("query");
+    //var url = new URL(document.URL);
+    //var deactivatedUsers = url.searchParams.get("query");
 
-    if (deactivatedUsers === 'enabled=true') {
+    var regex = new RegExp("[\\?&]query=([^&#]*)");
+    var results = regex.exec(window.location.search);
+    var query = (results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")));
+
+    if (query === 'enabled=true') {
         $("#activatedUsers").bootstrapToggle('on');
     }
 });

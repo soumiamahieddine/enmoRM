@@ -208,8 +208,21 @@
     });
 
     $("#selectPrivilegeURI").find('option').each(function(){
-        if(privileges.includes($(this).val())) {
-            $(this).hide();
+        var option = $(this);
+        if (option.val() == "") {
+            return;
+        }
+        if(privileges.indexOf(option.val()) !== -1) {
+            // Not working on IE11
+            option.hide();
+
+            if(navigator.userAgent.indexOf('MSIE')!==-1
+            || navigator.appVersion.indexOf('Trident/') > -1){
+                /* Microsoft Internet Explorer detected in. */
+                var span = $('<span data-serviceuri="'+option.data('serviceuri')+'">')
+                option.replaceWith(span);
+                span.append(option);
+            }
         }
     });
 
@@ -301,7 +314,18 @@
                 .closest('[name=privilegeURI]')
                 .appendTo($("#listPrivilege"));
 
-            $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').hide();
+            var option = $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]');
+
+            option.hide();
+            
+            if(navigator.userAgent.indexOf('MSIE')!==-1
+            || navigator.appVersion.indexOf('Trident/') > -1){
+                /* Microsoft Internet Explorer detected in. */
+                var span = $('<span data-serviceuri="'+option.data('serviceuri')+'">')
+                option.replaceWith(span);
+                span.append(option);
+            }
+
             $(this).attr('disabled',true);
         }
 
@@ -316,7 +340,15 @@
     $("#privilegesTab").on("click","[name=btnDeletePrvilege]", function(){
         var serviceURI = $(this).closest("[name=privilegeURI]").find('input').data('serviceuri');
 
-        $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]').show();
+        var option = $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]');
+        option.show();
+
+        if(navigator.userAgent.indexOf('MSIE')!==-1 || navigator.appVersion.indexOf('Trident/') > -1){
+            /* Microsoft Internet Explorer detected in. */
+            var span = $("#selectPrivilegeURI").val('').find('span[data-serviceuri="'+serviceURI+'"]');
+            span.replaceWith(option);
+        }
+
         $(this).closest("[name=privilegeURI]").remove();
     });
 
