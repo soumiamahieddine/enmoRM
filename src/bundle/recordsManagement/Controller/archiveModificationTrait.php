@@ -670,13 +670,20 @@ trait archiveModificationTrait
         // Valid URL file:// http:// data://
         if (filter_var($contents, FILTER_VALIDATE_URL)) {
             $contents = stream_get_contents($contents);
+            // Encode to base64 because validateDigitalResource decodes it !
+            $contents = base64_encode($contents);
         } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
-            $contents = base64_decode($contents);
+            // Avoid decode from base64 because validateDigitalResource decodes it !
+            //$contents = base64_decode($contents);
         } elseif (is_file($contents)) {
             if (empty($filename)) {
                 $filename = basename($contents);
             }
             $contents = file_get_contents($contents);
+            // Encode to base64 because validateDigitalResource decodes it !
+            $contents = base64_encode($contents);
+        } else {
+            throw new \core\Exception\BadRequestException();
         }
 
         $digitalResource = $this->digitalResourceController->createFromContents($contents, $filename);
