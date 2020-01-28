@@ -821,6 +821,7 @@ class userAccount
 
         if ($isReset) {
             try {
+                $this->checkForSuperAdmin($users);
                 $this->deleteAllUsers();
             } catch (\Exception $e) {
                 if ($transactionControl) {
@@ -897,6 +898,33 @@ class userAccount
         }
 
         return true;
+    }
+
+    /**
+     * Verify if there is at least one superadmin when resetting users
+     *
+     * @param  array $users Array of user/userAccountImportExport message
+     *
+     * @return boolean
+     */
+    private function checkForSuperAdmin($users)
+    {
+        $hasSuperAdmin = false;
+        foreach ($users as $key => $user) {
+            if ($user->isAdmin
+                && (
+                    !isset($user->ownerOrgRegNumber)
+                    || empty($user->ownerOrgRegNumber)
+                    || is_null($user->ownerOrgRegNumber)
+                   )
+                ) {
+                $hasSuperAdmin = true;
+            }
+        }
+
+        if (!hasSuperAdmin) {
+            throw new \Exception("Csv must have at least one superadmin");
+        }
     }
 
     private function deleteAllUsers()
