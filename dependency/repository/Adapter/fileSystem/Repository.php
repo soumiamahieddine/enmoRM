@@ -237,7 +237,7 @@ class Repository
 
             if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
                 mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
-            } 
+            }
         }
 
         return $dir;
