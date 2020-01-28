@@ -42,10 +42,12 @@ interface descriptionFieldInterface
     /**
      * Create a csv file
      *
+     * @param  integer $limit Max number of results to display
+     *
      * @action recordsManagement/descriptionField/exportCsv
      *
      */
-    public function readExport();
+    public function readExport($limit = null);
 
     /**
      * Read a description field

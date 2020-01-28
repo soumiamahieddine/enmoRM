@@ -32,7 +32,7 @@ interface organizationInterface
      * @action organization/organization/index
      *
      */
-    public function readIndex($query = null);
+    public function readIndex($limit = null, $query = null);
 
     /**
      * Tree of organizations
@@ -322,10 +322,12 @@ interface organizationInterface
     /**
      * Create a csv file
      *
+     * @param  integer $limit Max number of results to display
+     *
      * @action organization/organization/exportCsv
      *
      */
-    public function readExport();
+    public function readExport($limit = null);
 
     /**
      * Read an organization by his orgId
