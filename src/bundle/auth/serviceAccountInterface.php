@@ -52,10 +52,12 @@ interface serviceAccountInterface
     /**
      * Create a csv file
      *
+     * @param  integer $limit Max number of results to display
+     *
      * @action auth/serviceAccount/exportCsv
      *
      */
-    public function readExport();
+    public function readExport($limit = null);
 
     /**
      * Prepares access control object for update or create

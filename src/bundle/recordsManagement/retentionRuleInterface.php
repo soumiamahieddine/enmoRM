@@ -30,7 +30,7 @@ interface retentionRuleInterface
     /**
      * List the retention rules
      *
-     * @action recordsManagement/retentionRule/index 
+     * @action recordsManagement/retentionRule/index
      */
     public function readIndex();
 
@@ -45,10 +45,12 @@ interface retentionRuleInterface
     /**
      * Create a csv file
      *
+     * @param integer $limit Max number of results to display
+     *
      * @action recordsManagement/retentionRule/exportCsv
      *
      */
-    public function readExport();
+    public function readExport($limit = null);
 
     /**
      * @param string  $data      Data base64 encoded or not

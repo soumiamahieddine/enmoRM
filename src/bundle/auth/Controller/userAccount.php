@@ -783,9 +783,9 @@ class userAccount
         throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
     }
 
-    public function exportCsv($limit = null) {
+    public function exportCsv($limit = null)
+    {
         $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user'", null, null, null, $limit);
-
         $userPositionController = \laabs::newController('organization/userPosition');
         $roleMemberController = \laabs::newController('auth/roleMember');
         $organizationController = \laabs::newController('organization/organization');
