@@ -234,10 +234,10 @@ class Repository
             $step = $this->getName($step, $dir);
 
             $dir .= DIRECTORY_SEPARATOR . $step;
-
-            if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
-                mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
-            } 
+        }
+        
+        if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
+            mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
         }
 
         return $dir;
