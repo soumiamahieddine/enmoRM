@@ -352,6 +352,10 @@ class ServiceKernel extends AbstractKernel
 
             $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);
         } else {
+            if (is_null($this->serviceReturn)) {
+                return;
+            }
+
             $mimetype = $this->guessResponseType();
 
             $types = \laabs::getContentTypes();
