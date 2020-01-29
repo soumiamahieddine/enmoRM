@@ -79,13 +79,10 @@ class Export
 
     public function exportIntoView($csv)
     {
-        $lines = explode("\n", $csv);
+        $lines = \laabs\explode("\n", $csv);
 
         $keys = str_getcsv($lines[0]);
         unset($lines[0]);
-
-        //remove last null line
-        array_pop($lines);
 
         $rows = [];
         foreach ($lines as $lineNumber => $line) {

@@ -7,11 +7,11 @@ interface organizationInterface
     /**
      * Import a csv file with organization informations
      *
-     * @param string  $csv      Data base64 encoded or not in proper format
+     * @param string  $data      Data base64 encoded or not in proper format
      * @param boolean $isReset  Reset tables or not
      *
-     * @uses importExport/Import/create_dataType_
+     * @uses organization/organization/createImport
      *
      */
-    public function createImportOrganization($csv, $isReset = false);
+    public function createImportOrganizations($data, $isReset = false);
 }
