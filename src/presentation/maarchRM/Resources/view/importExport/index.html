@@ -53,21 +53,27 @@
     $(".list-group-item").click(function() {
         $(".list-group a").removeClass('active');
         $(this).addClass('active');
-        exportData.load($(this).data('value'));
+        exportData.load($(this).data('value'), $('#maxResults').data('value'));
     });
 
     $('#exportButton').on('click', function() {
-        exportData.export($(this).data('ref'));
+        var ref = $(this).data('ref');
+        var url = '/export/' + ref + '?limit=null&ref=' + ref;
+        window.open(url, '_self');
     });
 
     exportData =  {
-        load: function(ref) {
+        load: function(ref, limit = null) {
             $("#listLoading").css('display', '');
             $('#exportButton').css('display', 'none').attr('data-ref', null);
             $('#listResults').empty();
             ajax($('#exportList'), {
-                url: '/export/' + ref + '?limit=' + $('#maxResults').data('value'),
+                url: '/export/' + ref,
                 param: 'GET',
+                data: {
+                    'limit' : limit,
+                    'ref'   : ref
+                },
                 success: function(response) {
                     $("#listLoading").css('display', 'none');
                     $('#exportButton').css('display', '').attr('data-ref', ref);
@@ -78,10 +84,6 @@
                     console.log(error);
                 }
             });
-        },
-        export: function(ref) {
-            var url = '/exportall/' + ref;
-            window.open(url, '_self');
         }
     }
 

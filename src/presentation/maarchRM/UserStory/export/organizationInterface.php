@@ -11,14 +11,5 @@ interface organizationInterface
      *
      * @return importExport/Export/listCsv
      */
-    public function readExportOrganizations($limit = null);
-
-    /**
-     * Get organizations infos
-     *
-     * @uses organization/organization/readExport
-     *
-     * @return importExport/Export/export
-     */
-    public function readExportallOrganizations($limit = null);
+    public function readExportOrganizations($limit = null, $ref = null);
 }
