@@ -108,6 +108,12 @@ class csrf
             return;
         }
 
+        // Get account
+        $this->getAccount();
+
+        // Get auth object from json, init data structures if necessary
+        $this->getAccountAuth();
+
         // If a token was received, discard it and all the previous tokens
         if (isset($this->requestTokenTime)) {
             $this->discardUsedTokens();
