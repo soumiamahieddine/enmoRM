@@ -55,7 +55,7 @@ class Export
         $this->view->addContentFile('importExport/index.html');
         $this->view->translate();
         $title = 'Export referentiels';
-        $this->view->setSource("title", $title);
+        $this->view->setSource("isExport", true);
         $this->view->setSource("maxResults", $this->maxResults);
 
         $this->view->merge();

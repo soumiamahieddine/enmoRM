@@ -52,7 +52,7 @@ class Import
         $this->view->addContentFile('importExport/index.html');
 
         $title = 'Import referentiels';
-        $this->view->setSource("title", $title);
+        $this->view->setSource("isExport", false);
         $this->view->merge();
 
         $this->view->translate();
