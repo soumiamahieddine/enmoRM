@@ -193,20 +193,6 @@ class userAccount
         $userAccount->accountId = \laabs::newId();
         $userAccount->accountType = 'user';
 
-        $accountToken = \laabs::getToken('AUTH');
-        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
-
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
-            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if (!$organizations || $userAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-        }
-
         $organizationController = \laabs::newController('organization/organization');
         if (!is_null($organizations)) {
             $organization = $organizationController->read($organizations[0]);

@@ -194,7 +194,9 @@ class organization
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
                 continue;
-            } elseif (!$owner && (string)$organization->orgId == (string)$currentOrg->ownerOrgId) {
+            } elseif (!$owner && (
+                (string)$organization->orgId == (string)$currentOrg->ownerOrgId)
+                || (string)$organization->orgId == (string) $user->ownerOrgId) {
                 $tree[] = $organization;
                 continue;
             }
@@ -270,7 +272,9 @@ class organization
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
                 continue;
-            } elseif (!$owner && (string)$organization->orgId == (string)$currentOrg->ownerOrgId) {
+            } elseif (!$owner && (
+                    (string)$organization->orgId == (string)$currentOrg->ownerOrgId)
+                || (string)$organization->orgId == (string) $user->ownerOrgId) {
                 $tree[] = $organization;
                 continue;
             }
