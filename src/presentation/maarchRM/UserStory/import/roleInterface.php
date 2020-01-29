@@ -7,11 +7,11 @@ interface roleInterface
     /**
      * Import a csv file with role informations
      *
-     * @param string  $csv      Data base64 encoded or not in proper format
+     * @param string  $data      Data base64 encoded or not in proper format
      * @param boolean $isReset  Reset tables or not
      *
-     * @uses importExport/Import/create_dataType_
+     * @uses auth/role/createImport
      *
      */
-    public function createImportRole($csv, $isReset = false);
+    public function createImportRoles($data, $isReset = false);
 }
