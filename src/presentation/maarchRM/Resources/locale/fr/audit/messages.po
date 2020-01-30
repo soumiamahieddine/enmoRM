@@ -1217,7 +1217,7 @@ msgstr "Lecture des services descendants"
 msgid "organization/userPosition/readGetcurrentorgtree"
 msgstr "Lecture de la position utilisateur dans l'organisation"
 
-msgid "organization/organization/read_orgId_ChangeStatus_status_"
+msgid "organization/organization/read_orgId_Changestatus_status_"
 msgstr "Mise à jour du statut d'une activité"
 
 msgid "auth/authentication/createUserlogin"

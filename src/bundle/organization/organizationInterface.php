@@ -333,5 +333,5 @@ interface organizationInterface
      *
      * @action organization/organization/changeStatus
      */
-    public function read_orgId_ChangeStatus_status_();
+    public function read_orgId_Changestatus_status_();
 }
