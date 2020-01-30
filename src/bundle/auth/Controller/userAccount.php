@@ -806,6 +806,7 @@ class userAccount
      */
     public function import($data, $isReset = false)
     {
+
         $organizationController = \laabs::newController('organization/organization');
         $roleController = \laabs::newController('auth/role');
 
@@ -996,7 +997,7 @@ class userAccount
             $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
 
             if (is_null($organization) || empty($organization)) {
-                throw new \core\Exception\BadRequestException("Organization does not exists");
+                throw new \core\Exception\BadRequestException("Organization %s does not exists", 400, null, [$organization]);
             }
 
             $userPosition = \laabs::newInstance('organization/userPosition');

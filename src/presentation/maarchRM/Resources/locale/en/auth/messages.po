@@ -49,3 +49,35 @@ msgctxt "userStory"
 msgid "certificate"
 msgstr "Download certificate"
 msgctxt "userStory"
+
+msgid "export"
+msgstr "Export referentiels"
+msgctxt "userStoryGroup"
+
+msgid "import"
+msgstr "Import referentiels"
+msgctxt "userStoryGroup"
+
+msgid "home"
+msgstr "Homepage"
+msgctxt "userStory"
+
+msgid "organization"
+msgstr "Manage organizations"
+msgctxt "userStory"
+
+msgid "retentionRule"
+msgstr "Manage Retention Rules"
+msgctxt "userStory"
+
+msgid "role"
+msgstr "Manage Roles"
+msgctxt "userStory"
+
+msgid "serviceAccount"
+msgstr "Manage Services Account"
+msgctxt "userStory"
+
+msgid "userAccount"
+msgstr "Manage User Accounts"
+msgctxt "userStory"

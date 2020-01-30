@@ -1,0 +1,102 @@
+# importExport/messages
+# Language: en
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Export referentiels"
+msgstr "Export Referentiels"
+
+msgid "Export"
+msgstr "Export"
+
+msgid "Description fields"
+msgstr "Description Fields"
+
+msgid "Organizations"
+msgstr "Organizations"
+
+msgid "Archival profiles"
+msgstr "Archival Profiles"
+
+msgid "Retention rules"
+msgstr "Retention Rules"
+
+msgid "Service accounts"
+msgstr "Service Accounts"
+
+msgid "User accounts"
+msgstr "User Accounts"
+
+msgid "Import referentiels"
+msgstr "Import Referentiels"
+
+msgid "results"
+msgstr "Results"
+
+msgid "Import"
+msgstr "Import"
+
+msgid "File successfully imported"
+msgstr "File successfully imported"
+
+msgid "Warning"
+msgstr "Warning"
+
+msgid "You are about to replace referentiel"
+msgstr "You are about to replace referentiel"
+
+msgid "Are you sure to do this ?"
+msgstr "Are you sure to do this ?"
+
+# ---------------------------------------------------------
+# Datatable Organization
+# ---------------------------------------------------------
+msgid "orgName"
+msgstr "Organization's name"
+
+msgid "orgNames"
+msgstr "Organizations' names"
+
+msgid "parentRegistrationNumber"
+msgstr "Parent Registration Name"
+
+msgid "displayName"
+msgstr "Displayed Name"
+
+msgid "registrationNumber"
+msgstr "Registration Name"
+
+msgid "orgRoleCodes"
+msgstr "Roles"
+
+msgid "accountName"
+msgstr "Account Name"
+
+msgid "emailAddress"
+msgstr "Email address"
+
+msgid "lastName"
+msgstr "Last name"
+
+msgid "firstName"
+msgstr "First name"
+
+msgid "title"
+msgstr "Title"
+
+msgid "password"
+msgstr "Password"
+
+msgid "roleNames"
+msgstr "Roles Names"
+
+msgid "locked"
+msgstr "Locked"
+
+msgid "enabled"
+msgstr "Enabled"
+
+msgid "orgPosition"
+msgstr "Organization Position"
+
+msgid "enumeration"
+msgstr "Enumeration"

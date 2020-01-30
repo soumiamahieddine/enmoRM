@@ -1682,7 +1682,7 @@ class organization
         }
 
         if (!$isOrgUserRecreated && $isownerOrganizationUserRecreated) {
-            throw new \Exception("Organization of deleting user must be persisted in new scheme");
+            throw new \core\Exception("Organization of deleting user must be persisted in new scheme");
         }
 
         $currentUserPosition = new \stdClass();
@@ -1800,12 +1800,12 @@ class organization
         foreach ($organizations as $key => $org) {
             if (!is_null($org->ownerOrgRegNumber)
                 && !$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->ownerOrgRegNumber])) {
-                throw new \Exception("Owner Organization is mandatory if not orgUnit");
+                throw new \core\Exception("Owner Organization is mandatory if not orgUnit", 400);
             }
 
             if (!is_null($org->parentOrgRegNumber)
                 && !$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->parentOrgRegNumber])) {
-                throw new \Exception("Parent organization " . $org->parentOrgRegNumber .  " does not exists");
+                throw new \core\Exception("Parent organization %s does not exists", 400, null, [$org->parentOrgRegNumber]);
             }
 
             $organization = $this->getOrgByRegNumber($org->registrationNumber);

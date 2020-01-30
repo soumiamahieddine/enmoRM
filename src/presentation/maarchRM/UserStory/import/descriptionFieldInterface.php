@@ -11,6 +11,7 @@ interface descriptionFieldInterface
      * @param boolean $isReset  Reset tables or not
      *
      * @uses recordsManagement/descriptionField/createImport
+     * @return importExport/Import/import
      *
      */
     public function createImportDescriptionfields($data, $isReset = false);

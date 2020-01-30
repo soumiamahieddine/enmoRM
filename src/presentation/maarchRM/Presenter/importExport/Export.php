@@ -30,6 +30,7 @@ class Export
 
     public $view;
     public $json;
+    protected $translator;
     public $maxResults;
 
     protected $userArchivalProfiles = [];
@@ -39,13 +40,15 @@ class Export
      * @param \dependency\html\Document   $view The view
      * @param \dependency\json\JsonObject $json Json utility
      */
-    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json)
+    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json, \dependency\localisation\TranslatorInterface $translator)
     {
         $this->view = $view;
-        $this->view->translator->setCatalog('recordsManagement/messages');
 
         $this->json = $json;
         $this->json->status = true;
+
+        $this->translator = $translator;
+        $this->translator->setCatalog('importExport/messages');
 
         $this->maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
     }
@@ -53,12 +56,11 @@ class Export
     public function home()
     {
         $this->view->addContentFile('importExport/index.html');
-        $this->view->translate();
-        $title = 'Export referentiels';
         $this->view->setSource("isExport", true);
         $this->view->setSource("maxResults", $this->maxResults);
 
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
@@ -98,8 +100,8 @@ class Export
         $this->view->setSource("rows", $rows);
         $this->view->setSource("csv", $csv);
 
-        $this->view->translate();
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
