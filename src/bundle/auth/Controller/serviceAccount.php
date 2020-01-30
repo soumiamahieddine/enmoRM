@@ -708,10 +708,10 @@ class serviceAccount
         $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
 
         foreach ($organizations as $key => $orgRegNumber) {
-            $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
-
-            if (is_null($organization) || empty($organization)) {
-                throw new \core\Exception\BadRequestException("Organization does not exists");
+            try {
+                $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
+            } catch (\Exception $e) {
+                throw new \core\Exception\BadRequestException("Organization '%s' does not exists", 400, null, [$orgRegNumber]);
             }
 
             $servicePosition = \laabs::newInstance('organization/servicePosition');
@@ -736,7 +736,8 @@ class serviceAccount
 
         // Check if privileges exists in conf file
         if (!empty(array_diff($privileges, $existingPrivileges))) {
-            throw new \Exception("Privileges does not exits");
+            $differences = array_diff($privileges, $existingPrivileges);
+            throw new \core\Exception("Privileges %s does not exits", 400, null, $differences);
         }
 
         foreach ($privileges as $key => $privilege) {

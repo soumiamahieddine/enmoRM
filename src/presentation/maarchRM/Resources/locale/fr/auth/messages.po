@@ -819,3 +819,39 @@ msgstr "Administrateur général"
 
 msgid "Functional administrator"
 msgstr "Administrateur fonctionnel"
+
+msgid "adminEventFormat"
+msgstr "Gérer les formats d'événement du cycle de vie"
+msgctxt "userStory"
+
+msgid "export"
+msgstr "Exporter des référentiels"
+msgctxt "userStoryGroup"
+
+msgid "import"
+msgstr "Importer des référentiels"
+msgctxt "userStoryGroup"
+
+msgid "home"
+msgstr "Page d'accueil"
+msgctxt "userStory"
+
+msgid "organization"
+msgstr "Gérer les organisations"
+msgctxt "userStory"
+
+msgid "retentionRule"
+msgstr "Gérer les règles de conservation"
+msgctxt "userStory"
+
+msgid "role"
+msgstr "Gérer les rôles"
+msgctxt "userStory"
+
+msgid "serviceAccount"
+msgstr "Gérer les comptes de service"
+msgctxt "userStory"
+
+msgid "userAccount"
+msgstr "Gérer les comptes d'utilisateur"
+msgctxt "userStory"

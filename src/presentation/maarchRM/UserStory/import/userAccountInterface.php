@@ -11,6 +11,7 @@ interface userAccountInterface
      * @param boolean $isReset  Reset tables or not
      *
      * @uses auth/userAccount/createImport
+     * @return importExport/Import/import
      *
      */
     public function createImportUseraccounts($data, $isReset = false);

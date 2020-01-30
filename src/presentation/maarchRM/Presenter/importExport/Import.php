@@ -30,6 +30,7 @@ class Import
 
     public $view;
     public $json;
+    protected $translator;
 
     protected $userArchivalProfiles = [];
 
@@ -38,13 +39,15 @@ class Import
      * @param \dependency\html\Document   $view The view
      * @param \dependency\json\JsonObject $json Json utility
      */
-    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json)
+    public function __construct(\dependency\html\Document $view, \dependency\json\JsonObject $json, \dependency\localisation\TranslatorInterface $translator)
     {
         $this->view = $view;
-        $this->view->translator->setCatalog('recordsManagement/messages');
 
         $this->json = $json;
         $this->json->status = true;
+
+        $this->translator = $translator;
+        $this->translator->setCatalog('importExport/messages');
     }
 
     public function home()
@@ -57,5 +60,29 @@ class Import
 
         $this->view->translate();
         return $this->view->saveHtml();
+    }
+
+    public function import()
+    {
+        $this->view->translate();
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * Exception
+     * @param Exception $exception exception
+     *
+     * @return string
+     */
+    public function exception($exception)
+    {
+        $this->json->load($exception);
+
+        $this->json->setMessage($this->translator->getText($this->json->getMessage()));
+        $this->json->status = false;
+
+        return $this->json->save();
     }
 }

@@ -4,7 +4,7 @@
         <div class="page-header">
             <h1>
                 <i class="fa fa-copy"></i>
-                <?merge isExport.then('Export Referentiels', 'Import Referentiels') ?>
+                <?merge isExport.then('Export referentiels', 'Import Referentiels') ?>
             </h1>
         </div>
     </div>
@@ -59,8 +59,8 @@
                                             <tbody>
                                             </tbody>
                                         </table>
-                                        <input type="checkbox" id="isReset" name="isReset" data-on="Import with data reset" data-off="Import without data reset" data-toggle="toggle" data-width="200" data-onstyle="danger"/>
-                                        <button type="button" class="btn btn-primary pull-right" id="importButton" title="Import">Import</button>
+                                        <button type="button" class="btn btn-primary center" id="importButton" title="Import">Import</button>
+                                        <input type="checkbox" id="isReset" name="isReset" class="center"/>
                                     </div>
                             </div>
                         </div>
@@ -70,7 +70,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="resetWarningModal">
+<div class="modal fade" id="resetWarningModal"  data-translate-catalog="importExport/messages">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,6 +86,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="hidden"  data-translate-catalog="importExport/messages">
+    <span id="noFile">No file uploaded</span>
+    <span id="text_with_reset">Import with data reset</span>
+    <span id="text_without_reset">Import without data reset</span>
 </div>
 
 <style>
@@ -141,6 +147,14 @@
         }
     });
 
+    $('#isReset').bootstrapToggle({
+        on: $('#text_with_reset'),
+        off: $('#text_without_reset'),
+        onstyle: "danger",
+        width: 160,
+        style: 'center'
+    });
+
     $('#exportButton').on('click', function() {
         var ref = $('#exportButton').attr('data-ref');
         var url = '/export/' + ref + '?limit=null&ref=' + ref;
@@ -159,8 +173,13 @@
     var importData = {
         import: function(referentiel, isReset = false) {
             var file = resourceList.serialize();
+            if (!file) {
+                gritter.show($("#noFile").text(), false);
+                return;
+            }
+
             var data = {
-                'data': file,
+                'data': file[0].handler,
                 'isReset' : isReset
             };
 
@@ -171,10 +190,12 @@
                 contentType: 'application/json',
                 success: function (response) {
                     ResourceForm.clear();
-                    gritter.show('success', 'true');
+                    gritter.show('File successfully imported', 'true');
                 },
                 error: function(response) {
-                    console.log('import error');
+                    response = JSON.parse(response.responseText);
+
+                    gritter.show(response.message, false);
                 }
             });
         }
@@ -214,7 +235,8 @@
 
         upload: function(file) {
             var oFileReader = new FileReader();
-            oFileReader.readAsDataURL(file);
+            // oFileReader.readAsDataURL(file);
+            oFileReader.readAsText(file);
 
             oFileReader.onload = function (e) {
                 var fileObject = {
@@ -335,9 +357,35 @@
                 digitalResources = null;
             }
 
-            var base64Decoded = atob(digitalResources[0].handler.replace("text/csv;base64,", ""));
+            return digitalResources;
+        },
+        asyncSerialize: function() {
+            var tr = this.list.find('tr');
 
-            return decodeURIComponent(escape(base64Decoded));
+            var binaryDataObject = {};
+
+            $.each(tr, function(){
+                var id = Math.random().toString(36).substr(2, 9);
+                var obj = {};
+                obj[id] = {
+                    attachment : {
+                        value        : null,
+                        filename    : null
+                    },
+                    mimetype    : null,
+                    size        : null
+                };
+
+                obj[id].attachment.value = $(this).attr('data-binary');
+                obj[id].attachment.filename = $(this).find("[name=fileName]").text();
+                obj[id].mimetype = $(this).find("[name=type]").text();
+                obj[id].size = $(this).find("[name=size]").text();
+
+                binaryDataObject[id] = obj[id];
+            });
+
+            return binaryDataObject;
+
         }
     };
 
@@ -376,6 +424,7 @@
 
     // Files browser
     $('#resource_XMLDropZone').on('click', function() {
+        ResourceForm.clear();
         $('#resource_filesBrowser').click();
     });
 

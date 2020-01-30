@@ -11,6 +11,7 @@ interface organizationInterface
      * @param boolean $isReset  Reset tables or not
      *
      * @uses organization/organization/createImport
+     * @return importExport/Import/import
      *
      */
     public function createImportOrganizations($data, $isReset = false);

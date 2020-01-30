@@ -409,7 +409,6 @@ class role
                     }
                 }
             }
-
         }
 
         $this->csv->write('php://output', (array) $roles, 'auth/roleImportExport', true);
@@ -445,7 +444,6 @@ class role
             file_put_contents($filename, $data);
             $roles = $this->csv->read($filename, 'auth/roleImportExport', true);
             foreach ($roles as $key => $role) {
-
                 if ($isReset
                     || !$this->sdoFactory->exists('auth/role', $role->roleId)
                 ) {
@@ -479,7 +477,6 @@ class role
 
                     $this->sdoFactory->create($privilege, 'auth/privilege');
                 }
-
             }
         } catch (\Exception $e) {
             if ($transactionControl) {

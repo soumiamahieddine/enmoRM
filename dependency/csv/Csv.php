@@ -51,7 +51,7 @@ class Csv
                 $lineNumber++;
             }
         } catch (\Exception $e) {
-            throw new \Exception("Wrong columns numbers with csv on line $lineNumber");
+            throw new \core\Exception("Wrong columns numbers with csv on line %s", 400, null, [$lineNumber]);
         }
 
         fclose($handler);
@@ -64,7 +64,7 @@ class Csv
         $properties = [];
         foreach ($header as $num => $name) {
             if (!$class->hasProperty($name)) {
-                throw new \Exception("Undefined property $className::$name");
+                throw new \core\Exception("Undefined property %s", 400, null, ["$class->name::$name"]);
             }
             $properties[$num] = $property = $class->getProperty($name);
             if (!$property->isPublic()) {
@@ -103,6 +103,7 @@ class Csv
 
     /**
      * Import an array of entities to a csv contents
+     *
      * @param array  $collection
      * @param string $className
      * @param bool   $messageType

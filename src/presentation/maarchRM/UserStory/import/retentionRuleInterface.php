@@ -11,6 +11,7 @@ interface retentionRuleInterface
      * @param boolean $isReset  Reset tables or not
      *
      * @uses recordsManagement/retentionRule/createImport
+     * @return importExport/Import/import
      *
      */
     public function createImportRetentionrules($data, $isReset = false);
