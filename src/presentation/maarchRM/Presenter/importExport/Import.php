@@ -69,20 +69,4 @@ class Import
 
         return $this->view->saveHtml();
     }
-
-    /**
-     * Exception
-     * @param Exception $exception exception
-     *
-     * @return string
-     */
-    public function exception($exception)
-    {
-        $this->json->load($exception);
-
-        $this->json->setMessage($this->translator->getText($this->json->getMessage()));
-        $this->json->status = false;
-
-        return $this->json->save();
-    }
 }

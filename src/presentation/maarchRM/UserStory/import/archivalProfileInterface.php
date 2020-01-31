@@ -11,7 +11,6 @@ interface archivalProfileInterface
      * @param boolean $isReset  Reset tables or not
      *
      * @uses recordsManagement/archivalProfile/createImport
-     * @return importExport/Import/import
      *
      */
     public function createImportArchivalprofiles($data, $isReset = false);
