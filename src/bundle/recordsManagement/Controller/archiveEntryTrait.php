@@ -94,6 +94,8 @@ trait archiveEntryTrait
             throw new \core\Exception("The deposit is blocked because the activity is disabled.");
         }
 
+        $this->checkRights($archive);
+
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();
 
