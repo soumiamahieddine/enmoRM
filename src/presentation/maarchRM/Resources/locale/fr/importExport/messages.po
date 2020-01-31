@@ -2,6 +2,9 @@
 # Language: fr
 # Content-Type: text/plain; charset=UTF-8
 
+msgid "Roles"
+msgstr "Rôles"
+
 msgid "Export referentiels"
 msgstr "Exporter un référentiel"
 
@@ -100,10 +103,10 @@ msgid "endDate"
 msgstr "Date de fin"
 
 msgid "parentOrgRegNumber"
-msgstr "Nom d'enregistrement de l'organisation parente"
+msgstr "Identifiant de l'organisation parente"
 
 msgid "ownerOrgRegNumber"
-msgstr "Nom d'enregistrement de l'organisation mère d'appartenance"
+msgstr "Identifiant de l'organisation mère d'appartenance"
 
 msgid "isOrgUnit"
 msgstr "Est une organization"
