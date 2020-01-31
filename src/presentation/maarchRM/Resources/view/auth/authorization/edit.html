@@ -546,21 +546,16 @@
             jsonObject.roleMembers.push($(this).data('memberid'));
         });
 
-        if ($("#privilegesTab").find('.superAdminAll.active').length !== 0) {
-            jsonObject.privileges.push('*');
-        }
-        else{
-            //privileges
-            $('#privileges').find('.selectAll').each(function(){
-                if($(this).hasClass('active')) {
-                    jsonObject.privileges.push($(this).find('input').val());
-                } else {
-                    $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
-                        jsonObject.privileges.push($(this).val());
-                    });
-                }
-            });
-        }
+        //privileges
+        $('#privileges').find('.selectAll').each(function(){
+            if($(this).hasClass('active')) {
+                jsonObject.privileges.push($(this).find('input').val());
+            } else {
+                $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
+                    jsonObject.privileges.push($(this).val());
+                });
+            }
+        });
 
         return jsonObject;
     }
