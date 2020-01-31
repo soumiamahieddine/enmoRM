@@ -55,6 +55,8 @@ INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgU
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminServiceaccount');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminUseraccount');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/batchScheduling');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'export/*');
+INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'import/*');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminOrganization');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminAuthorization');
 INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminUseraccount');
