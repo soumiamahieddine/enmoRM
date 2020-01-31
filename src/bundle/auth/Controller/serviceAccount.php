@@ -128,7 +128,23 @@ class serviceAccount
      */
     public function enableService($serviceAccountId)
     {
+        $this->userAccountController->isAuthorized(['gen_admin', 'func_admin']);
+
         $serviceAccount = $this->sdoFactory->read("auth/account", $serviceAccountId);
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if ($serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $serviceAccount->enabled = true;
 
         return $this->sdoFactory->update($serviceAccount, "auth/account");
@@ -142,7 +158,23 @@ class serviceAccount
      */
     public function disableService($serviceAccountId)
     {
+        $this->userAccountController->isAuthorized(['gen_admin', 'func_admin']);
+
         $serviceAccount = $this->sdoFactory->read("auth/account", $serviceAccountId);
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if ($serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $serviceAccount->enabled = false;
 
         return $this->sdoFactory->update($serviceAccount, "auth/account");

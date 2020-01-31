@@ -538,7 +538,24 @@ class userAccount
      */
     public function enable($userAccountId)
     {
+        $this->isAuthorized(['gen_admin', 'func_admin']);
+
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $userAccount->enabled = true;
         $userAccount->replacingUserAccountId = null;
 
@@ -553,9 +570,24 @@ class userAccount
      */
     public function disable($userAccountId)
     {
+        $this->isAuthorized(['gen_admin', 'func_admin']);
+
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $userAccount->enabled = false;
-        //$userAccount->replacingUserAccountId = $replacingUserAccountId;
 
         return $this->sdoFactory->update($userAccount);
     }

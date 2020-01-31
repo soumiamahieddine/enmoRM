@@ -563,7 +563,19 @@ class organization
      * @return bool The result of the change
      */
     public function changeStatus($orgId, $status) {
+        $this->accountController->isAuthorized(['func_admin']);
+
         $organization = $this->sdoFactory->read('organization/organization', $orgId);
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if ($organization->ownerOrgId != $account->ownerOrgId) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
 
         if (!$organization->isOrgUnit) {
             throw new \core\Exception("An organization can't be disabled.");
