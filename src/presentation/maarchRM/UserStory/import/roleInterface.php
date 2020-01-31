@@ -11,7 +11,6 @@ interface roleInterface
      * @param boolean $isReset  Reset tables or not
      *
      * @uses auth/role/createImport
-     * @return importExport/Import/import
      *
      */
     public function createImportRoles($data, $isReset = false);

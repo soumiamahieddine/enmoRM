@@ -64,7 +64,7 @@ class Csv
         $properties = [];
         foreach ($header as $num => $name) {
             if (!$class->hasProperty($name)) {
-                throw new \core\Exception("Undefined property %s", 400, null, ["$class->name::$name"]);
+                throw new \core\Exception("Unknown column %s", 400, null, ["$name"]);
             }
             $properties[$num] = $property = $class->getProperty($name);
             if (!$property->isPublic()) {
