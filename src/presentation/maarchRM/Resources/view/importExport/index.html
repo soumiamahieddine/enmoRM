@@ -77,7 +77,7 @@
                 <h4 >Warning</h4>
             </div>
             <div class="modal-body">
-                <p id="warningMessage">You are about to replace referentiel : </p>
+                <p>You are about to replace referentiel :<span id="warningMessage"></span></p>
                 <p>Are you sure to do this ?</p>
             </div>
             <div class="modal-footer">
@@ -140,7 +140,8 @@
         var referentiel = $(this).attr('data-ref');
         var isReset = $('#isReset').is(':checked');
         if (isReset) {
-            $('#warningMessage').append(referentiel);
+            $('#warningMessage').empty();
+            $('#warningMessage').append(' ' + referentiel);
             $('#resetWarningModal').modal('show');
         } else {
             importData.import(referentiel, isReset = false);

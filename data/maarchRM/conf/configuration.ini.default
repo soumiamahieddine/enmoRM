@@ -361,7 +361,9 @@ blacklistUserStories = "[
     'originatorAccess/*',
     'restitution/*',
     'adminFunc/contact',
-    'adminArchive/adminStorageRule'
+    'adminArchive/adminStorageRule',
+    'export/role',
+    'import/role'
 ]"
 
 ; Blacklist of user stories
