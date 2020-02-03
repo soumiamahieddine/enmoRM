@@ -85,7 +85,7 @@ msgid "otherOrgName"
 msgstr "Autre nom affiché"
 
 msgid "legalClassification"
-msgstr "Classificaiton légale"
+msgstr "Classification légale"
 
 msgid "businessType"
 msgstr "Type d'organisation"
@@ -112,7 +112,7 @@ msgid "ownerOrgRegNumber"
 msgstr "Identifiant de l'organisation mère d'appartenance"
 
 msgid "isOrgUnit"
-msgstr "Est une organization"
+msgstr "Est une organisation"
 
 
 # ---------------------------------------------------------
@@ -278,16 +278,16 @@ msgid "Password cannot be null"
 msgstr "Le mot de passe ne doit pas être vide"
 
 msgid "User account must be attached to at least one service"
-msgstr "Un compte utilisateur doit être attaché à au moins un service"
+msgstr "Un compte utilisateur doit être rattaché à au moins un service"
 
 msgid "Csv must have at least one superadmin"
 msgstr "Le csv doit avoir au moins un superadmin"
 
 msgid "Service account must be attached to at least one service"
-msgstr "Un compte de service doit être attaché à au moins un service"
+msgstr "Un compte de service doit être rattaché à au moins un service"
 
 msgid "Organization '%s' does not exists"
-msgstr "L'organization %s n'existe pas"
+msgstr "L'organisation %s n'existe pas"
 
 msgid "Privileges %s does not exits"
 msgstr "Le(s) privilège(s) %s n'existe(nt) pas"

@@ -30,10 +30,12 @@
                                         <div id="listLoading" style="display: none;"><i class="fa fa-spinner fa-spin"></i></div>
                                     </div>
                                 <?merge isExport ?>
-                                    <button type="button" id="exportButton" class="btn btn-warning pull-right" data-original-title="Export" style="display: none;"><i class="fa fa-download">&nbsp;</i>&nbsp;Export</button>
+                                    <div style="text-align: center;">
+                                        <button type="button" id="exportButton" class="btn btn-warning" data-original-title="Export" style="display: none;"><i class="fa fa-download">&nbsp;</i>&nbsp;Export</button>
+                                    </div>
                                 <?merge isExport.not() ?>
                                     <div id="exportContainer" class="hide">
-                                        <input type="file" id="resource_filesBrowser" class="hide"/>
+                                        <input type="file" id="resource_filesBrowser" accept=".csv" class="hide"/>
                                         <table class="hide" id="table_infos">
                                             <tr>
                                                 <td><i class="fa fa-file-text fileIcon">&nbsp;</i></td>
@@ -59,8 +61,10 @@
                                             <tbody>
                                             </tbody>
                                         </table>
-                                        <button type="button" class="btn btn-primary center" id="importButton" title="Import">Import</button>
-                                        <input type="checkbox" id="isReset" name="isReset" class="center"/>
+                                        <div style="text-align: center;">
+                                            <button type="button" class="btn btn-primary" id="importButton" title="Import">Import</button>
+                                            <input type="checkbox" id="isReset" name="isReset" />
+                                        </div>
                                     </div>
                             </div>
                         </div>
@@ -92,6 +96,7 @@
     <span id="noFile">No file uploaded</span>
     <span id="text_with_reset">Import with data reset</span>
     <span id="text_without_reset">Import without data reset</span>
+    <span id="file_success">File successfully imported</span>
 </div>
 
 <style>
@@ -141,7 +146,8 @@
         var isReset = $('#isReset').is(':checked');
         if (isReset) {
             $('#warningMessage').empty();
-            $('#warningMessage').append(' ' + referentiel);
+            referentielLabel = $("#exportList").find('[data-value="'+referentiel+'"]').text();
+            $('#warningMessage').append(' ' + referentielLabel);
             $('#resetWarningModal').modal('show');
         } else {
             importData.import(referentiel, isReset = false);
@@ -190,13 +196,17 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function (response) {
-                    ResourceForm.clear();
-                    gritter.show('File successfully imported', 'true');
+                    gritter.show($("#file_success").text(), 'true');
                 },
                 error: function(response) {
                     response = JSON.parse(response.responseText);
-
                     gritter.show(response.message, false);
+                },
+                complete: function(response) {
+                    $(".list-group a").removeClass('active');
+                    ResourceForm.clear();
+                    $('#exportContainer').addClass('hide');
+                    $('#isReset').bootstrapToggle('off');
                 }
             });
         }
