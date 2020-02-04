@@ -150,11 +150,12 @@ class digitalResource
 
     /**
      * Get information about resource stream contents
-     * @param string $stream The data stream to store
+     * @param string $stream   The data stream to store
+     * @param string $filename The original filename
      *
      * @return digitalResource/digitalResource The digitalResource
      */
-    public function createFromStream($stream)
+    public function createFromStream($stream, $filename = null)
     {
         $resource = $this->newResource();
 
@@ -224,7 +225,12 @@ class digitalResource
         $handler = $resource->gethandler();
         $metadata = stream_get_meta_data($handler);
         if ($metadata['wrapper_type'] == 'plainfile') {
-            $resource->mimetype = filesize($metadata['uri']);
+            $resource->size = filesize($metadata['uri']);
+        } else {
+            $fstats = fstat($handler);
+            if (isset($fstats['size'])) {
+                $resource->size = $fstats['size'];
+            }
         }
     }
 

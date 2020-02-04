@@ -708,6 +708,22 @@ class laabs
     }
 
     /**
+     * Create a stream resource in temp with a given content
+     * @param string $contents
+     *
+     * @return resource
+     * @author
+     **/
+    public static function createTempStream($contents)
+    {
+        $stream = fopen('php://temp', 'r+');
+        fwrite($stream, $contents);
+        rewind($stream);
+
+        return $stream;
+    }
+
+    /**
      * Log an event into laabs log
      * @param string  $message
      * @param integer $level

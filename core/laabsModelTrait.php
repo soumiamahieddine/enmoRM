@@ -491,10 +491,10 @@ trait laabsModelTrait
                 if (is_resource($sourceValue)) {
                     return $sourceValue;
                 } else {
-                    return self::createMemoryStream((string) $sourceValue);
+                    return self::createTempStream((string) $sourceValue);
                 }
 
-                return self::createMemoryStream('');
+                return self::createTempStream('');
 
             case 'NULL':
                 return $sourceValue;

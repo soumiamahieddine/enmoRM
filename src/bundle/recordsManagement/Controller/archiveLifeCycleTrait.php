@@ -54,7 +54,9 @@ trait archiveLifeCycleTrait
 
         if ($digitalResource && $logDigitalResources) {
             $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
-            $eventItems['address'] = $digitalResource->address[0]->path;
+            if (is_array($digitalResource->address) && !empty($digitalResource->address)) {
+                $eventItems['address'] = $digitalResource->address[0]->path;
+            }
 
             $res = $this->lifeCycleJournalController->logEvent(
                 $type,
@@ -63,13 +65,14 @@ trait archiveLifeCycleTrait
                 $eventItems,
                 $operationResult
             );
-
         } elseif (!empty($archive->digitalResources) && $logDigitalResources) {
             $res = [];
 
             foreach ($archive->digitalResources as $digitalResource) {
                 $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
-                $eventItems['address'] = $digitalResource->address[0]->path;
+                if (is_array($digitalResource->address) && !empty($digitalResource->address)) {
+                    $eventItems['address'] = $digitalResource->address[0]->path;
+                }
 
                 $res[] = $this->lifeCycleJournalController->logEvent(
                     $type,
@@ -79,7 +82,6 @@ trait archiveLifeCycleTrait
                     $operationResult
                 );
             }
-
         } else {
             $eventItems['address'] = $archive->storagePath;
 

@@ -384,19 +384,25 @@ trait archiveValidationTrait
      */
     public function validateDigitalResource($digitalResource)
     {
-        if ($digitalResource->size === 0) {
+        if ($digitalResource->size == 0) {
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
-        $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
-
+        // Create temp file
         $handler = $digitalResource->getHandler();
-        stream_filter_append($handler, 'convert.base64-decode');
-
-        $temp = fopen($filename, 'w+');
-
+        $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
+        $temp = fopen($filename, 'w');
         stream_copy_to_stream($handler, $temp);
-        $digitalResource->setHandler($temp);
+        rewind($handler);
+        fclose($temp);
+
+        $digitalResource->size = filesize($filename);
+
+        if (!isset($digitalResource->mimetype)) {
+            $finfo = new \finfo();
+            $mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
+            $digitalResource->mimetype = $mimetype;
+        }
         
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {
@@ -414,7 +420,5 @@ trait archiveValidationTrait
                 throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
             }
         }
-
-
     }
 }

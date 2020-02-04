@@ -101,6 +101,8 @@ trait archiveEntryTrait
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
         }
 
         // Load archival profile, service level if specified
@@ -128,6 +130,45 @@ trait archiveEntryTrait
         $this->sendResponse($archive);
 
         return $archive->archiveId;
+    }
+
+    /**
+     * Receives attachments
+     * @param object $archive
+     */
+    protected function receiveAttachments($archive)
+    {
+        if (is_array($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                // Valid URL file:// http:// data://
+                $receivedHandler = $digitalResource->getHandler();
+                if (is_string($receivedHandler)) {
+                    if (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)) {
+                        $handler = fopen($receivedHandler, 'r');
+                    } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler)) {
+                        $receivedHandler = base64_decode($receivedHandler);
+
+                        $handler = fopen('php://temp', 'r+');
+                        fwrite($handler, $receivedHandler);
+                        rewind($handler);
+                    }
+                } elseif (is_resource($receivedHandler)) {
+                    $handler = fopen('php://temp', 'r+');
+                    stream_filter_append($handler, 'convert.base64-decode');
+                    stream_copy_to_stream($receivedHandler, $handler);
+                    rewind($handler);
+                }
+
+                unset($receivedHandler);
+                $digitalResource->setHandler($handler);
+            }
+        }
+
+        if (is_array($archive->contents)) {
+            foreach ($archive->contents as $contentArchive) {
+                $this->receiveAttachments($contentArchive);
+            }
+        }
     }
 
     /**
@@ -181,6 +222,8 @@ trait archiveEntryTrait
         file_put_contents($zipfile, base64_decode($zip->getContents()));
 
         $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
+
+        unset($zipfile);
 
         return $packageDir.$name;
     }
