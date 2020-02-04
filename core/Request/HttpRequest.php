@@ -52,7 +52,10 @@ class HttpRequest
 
         $this->getAuthentication();
 
-        $this->body = @file_get_contents('php://input');
+        $this->body = fopen('php://temp', 'w+');
+        $input = fopen('php://input', 'r');
+        stream_copy_to_stream($input, $this->body);
+        rewind($this->body);
 
         $this->query = urldecode($_SERVER['QUERY_STRING']);
 

@@ -186,29 +186,29 @@ class ServiceKernel extends AbstractKernel
         }
 
         $bodyArguments = array();
+        $contents = stream_get_contents($this->request->body);
+            
         if (isset($this->inputRouter)) {
             if ($this->response->mode == 'http') {
                 $this->response->setHeader("X-Laabs-Parser", $this->inputRouter->uri . "; type=" . $this->request->contentType);
             }
             $parser = $this->inputRouter->parser->newInstance();
-            $bodyArguments = $this->inputRouter->input->parse($parser, $this->request->body);
-
+            $bodyArguments = $this->inputRouter->input->parse($parser, $contents);
         } else {
             switch ($this->request->contentType) {
                 case 'php':
-                    $bodyArguments = $this->request->body;
+                    $bodyArguments = $contents;
                     break;
 
                 case 'url':
-                    $bodyArguments = \core\Encoding\url::decode($this->request->body);
+                    $bodyArguments = \core\Encoding\url::decode($contents);
                     break;
 
                 case 'json':
                 default:
-                    $bodyArguments = \core\Encoding\json::decode($this->request->body);
+                    $bodyArguments = \core\Encoding\json::decode($contents);
                     break;
             }
-
         }
 
         $requestArguments = array_merge($queryArguments, $bodyArguments);

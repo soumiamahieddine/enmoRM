@@ -388,11 +388,15 @@ trait archiveValidationTrait
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
-        $contents = base64_decode($digitalResource->getContents());
-        $digitalResource->setContents($contents);
         $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
-        file_put_contents($filename, $contents);
-        unset($contents);
+
+        $handler = $digitalResource->getHandler();
+        stream_filter_append($handler, 'convert.base64-decode');
+
+        $temp = fopen($filename, 'w+');
+
+        stream_copy_to_stream($handler, $temp);
+        $digitalResource->setHandler($temp);
         
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {

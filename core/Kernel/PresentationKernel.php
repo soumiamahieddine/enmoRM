@@ -133,6 +133,8 @@ class PresentationKernel
      */
     protected function parseRequest()
     {
+        $contents = stream_get_contents($this->request->body);
+
         if (isset($this->userInputRouter)) {
             if ($this->response->mode == 'http') {
                 $this->response->setHeader("X-Laabs-Composer", $this->userInputRouter->uri);
@@ -140,7 +142,7 @@ class PresentationKernel
 
             $composer = $this->userInputRouter->composer->newInstance();
 
-            $this->userMessage = $this->userInputRouter->userInput->compose($composer, $this->request->body, $this->request->query);
+            $this->userMessage = $this->userInputRouter->userInput->compose($composer, $contents, $this->request->query);
         } else {
             switch ($this->request->queryType) {
                 case 'lql':
@@ -155,12 +157,12 @@ class PresentationKernel
 
             switch ($this->request->contentType) {
                 case 'url':
-                    $bodyArguments = \core\Encoding\url::decode($this->request->body);
+                    $bodyArguments = \core\Encoding\url::decode($contents);
                     break;
 
                 case 'json':
                 default:
-                    $bodyArguments = \core\Encoding\json::decode($this->request->body);
+                    $bodyArguments = \core\Encoding\json::decode($contents);
                     break;
             }
 
