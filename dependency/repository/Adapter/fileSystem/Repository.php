@@ -345,7 +345,6 @@ class Repository implements \dependency\repository\RepositoryInterface
                 throw new \Exception("Error writing at path $path.");
             }
         } elseif (is_resource($data)) {
-            var_dump(fread($data, 20));exit;
             rewind($data);
             $wl = stream_copy_to_stream($data, $fp);
             rewind($data);
