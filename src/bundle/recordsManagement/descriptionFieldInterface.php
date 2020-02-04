@@ -75,7 +75,7 @@ interface descriptionFieldInterface
     public function delete_name_();
 
     /**
-     * @param string  $data      Data base64 encoded or not
+     * @param string  $data     Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action recordsManagement/descriptionField/import

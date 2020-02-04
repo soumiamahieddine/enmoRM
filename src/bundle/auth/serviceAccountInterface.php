@@ -118,6 +118,7 @@ interface serviceAccountInterface
 
     /**
      * Search the service account for typehead
+     *
      * @param string $query The query string
      *
      * @action auth/serviceAccount/queryServiceAccounts
@@ -125,7 +126,7 @@ interface serviceAccountInterface
     public function readQuery_query_($query = null);
 
     /**
-     * @param string  $data      Data base64 encoded or not
+     * @param string  $data     Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action auth/serviceAccount/import

@@ -51,7 +51,7 @@ class organization
      * Index of organizations
      *
      * @param integer $limit Maximal number of results to dispay
-     * @param string $query  The query of the index
+     * @param string  $query The query of the index
      *
      * @return organization/organization[] An array of organization
      */
