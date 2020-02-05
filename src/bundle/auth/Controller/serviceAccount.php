@@ -322,7 +322,7 @@ class serviceAccount
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if (!$orgId || $serviceAccount->isAdmin) {
+            if ($serviceAccount->isAdmin && $serviceAccount->ownerOrgId != $account->ownerOrgId) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
