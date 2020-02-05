@@ -469,10 +469,11 @@ class archivalProfile
 
             $archivalProfile = \laabs::castMessage($archivalProfile, 'recordsManagement/archivalProfileImportExport');
             if ($containedProfiles) {
-                foreach ($containedProfiles as $containedProfile) {
+                $lastIndex = count($privileges) -1;
+                foreach ($containedProfiles as $index => $containedProfile) {
                     $archivalProfile->childrenProfiles .= $containedProfile->reference;
 
-                    if (end($containedProfiles) !== $containedProfile) {
+                    if ($lastIndex !== $index) {
                         $archivalProfile->childrenProfiles .= ";";
                     }
                 }

@@ -401,10 +401,11 @@ class role
         foreach ($roles as $role) {
             $privileges = $this->getPrivilege($role->roleId);
             if (!empty($privileges)) {
-                foreach ($privileges as $privilege) {
+                $lastIndex = count($privileges) -1;
+                foreach ($privileges as $index => $privilege) {
                     $role->privileges .= $privilege;
 
-                    if (end($privileges) !== $privilege) {
+                    if ($lastIndex !== $index) {
                         $role->privileges .= ";";
                     }
                 }
