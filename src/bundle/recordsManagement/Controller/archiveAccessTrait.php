@@ -805,13 +805,13 @@ trait archiveAccessTrait
 
             if (!empty($args['originatingDate'][0])) { // originatingStartDate
                 $args['originatingDate'][0] = $args['originatingDate'][0]->format('Y-m-d');
-                $queryParts['originatingDate'] = "originatingDate>= :originatingDate";
-                $queryParams['originatingDate'] =$args['originatingDate'][0];
+                $queryParts['originatingDate0'] = "originatingDate>= :originatingDate0";
+                $queryParams['originatingDate0'] =$args['originatingDate'][0];
             }
             if (!empty($args['originatingDate'][1])) { // originatingEndDate;
                 $args['originatingDate'][1] = $args['originatingDate'][1]->format('Y-m-d');
-                $queryParts['originatingDate'] = "originatingDate<= :originatingDate";
-                $queryParams['originatingDate'] = $args['originatingDate'][1];
+                $queryParts['originatingDate1'] = "originatingDate<= :originatingDate1";
+                $queryParams['originatingDate1'] = $args['originatingDate'][1];
             }
         }
 

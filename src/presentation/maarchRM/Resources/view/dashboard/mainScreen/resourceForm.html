@@ -23,6 +23,13 @@
     </table>
 </div>
 
+<div class="hide">
+    <!-- ERROR MESSAGE -->
+    <div data-translate-catalog="recordsManagement/message">
+        <span id="emptyResource_error">Your ressource is empty</span>
+    </div>
+</div>
+
 <style type="text/css">
     #resource_XMLDropZone {
         border: 2px dashed grey;
@@ -63,10 +70,15 @@
                     type    : null
                 }
 
-                fileObject.binary = oFileReader.result.replace(/(^data:|;base64,)|(^data:.*?;base64,)/, "");
+                fileObject.binary = oFileReader.result.replace(/(^data:.*?;base64,)/, "");
                 fileObject.fileName = file.name;
                 fileObject.size = file.size;
                 fileObject.type = file.type;
+
+                if (fileObject.size == 0) {
+                    gritter.show($('#emptyResource_error').text(), false);
+                    return -1;
+                }
 
                 if ((fileObject.type == "application/x-zip-compressed" || fileObject.type == "application/zip") && resourceList.card == 0) {
                     $('#resource_XMLDropZone').addClass('hide');

@@ -88,11 +88,13 @@ trait archiveEntryTrait
             $archive->originatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
         }
 
-        $organization = $this->sdoFactory->read('organization/organization', $archive->originatorOrgRegNumber);
+        $organization = $this->sdoFactory->read('organization/organization', ['registrationNumber' => $archive->originatorOrgRegNumber]);
 
         if (!is_null($organization->enabled) && $organization->enabled === false) {
             throw new \core\Exception("The deposit is blocked because the activity is disabled.");
         }
+
+        $this->checkRights($archive);
 
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();

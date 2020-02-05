@@ -133,7 +133,23 @@ class serviceAccount
      */
     public function enableService($serviceAccountId)
     {
+        $this->userAccountController->isAuthorized(['gen_admin', 'func_admin']);
+
         $serviceAccount = $this->sdoFactory->read("auth/account", $serviceAccountId);
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if ($serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $serviceAccount->enabled = true;
 
         return $this->sdoFactory->update($serviceAccount, "auth/account");
@@ -147,7 +163,23 @@ class serviceAccount
      */
     public function disableService($serviceAccountId)
     {
+        $this->userAccountController->isAuthorized(['gen_admin', 'func_admin']);
+
         $serviceAccount = $this->sdoFactory->read("auth/account", $serviceAccountId);
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->read($accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if ($serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $serviceAccount->enabled = false;
 
         return $this->sdoFactory->update($serviceAccount, "auth/account");
@@ -676,10 +708,10 @@ class serviceAccount
         $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
 
         foreach ($organizations as $key => $orgRegNumber) {
-            $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
-
-            if (is_null($organization) || empty($organization)) {
-                throw new \core\Exception\BadRequestException("Organization does not exists");
+            try {
+                $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
+            } catch (\Exception $e) {
+                throw new \core\Exception\BadRequestException("Organization '%s' does not exists", 400, null, [$orgRegNumber]);
             }
 
             $servicePosition = \laabs::newInstance('organization/servicePosition');
@@ -704,7 +736,8 @@ class serviceAccount
 
         // Check if privileges exists in conf file
         if (!empty(array_diff($privileges, $existingPrivileges))) {
-            throw new \Exception("Privileges does not exits");
+            $differences = array_diff($privileges, $existingPrivileges);
+            throw new \core\Exception("Privileges %s does not exits", 400, null, $differences);
         }
 
         foreach ($privileges as $key => $privilege) {

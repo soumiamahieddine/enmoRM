@@ -51,7 +51,7 @@ class organization
      * Index of organizations
      *
      * @param integer $limit Maximal number of results to dispay
-     * @param string $query  The query of the index
+     * @param string  $query The query of the index
      *
      * @return organization/organization[] An array of organization
      */
@@ -199,7 +199,9 @@ class organization
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
                 continue;
-            } elseif (!$owner && (string)$organization->orgId == (string)$currentOrg->ownerOrgId) {
+            } elseif (!$owner && (
+                (string)$organization->orgId == (string)$currentOrg->ownerOrgId)
+                || (string)$organization->orgId == (string) $user->ownerOrgId) {
                 $tree[] = $organization;
                 continue;
             }
@@ -275,7 +277,9 @@ class organization
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
                 continue;
-            } elseif (!$owner && (string)$organization->orgId == (string)$currentOrg->ownerOrgId) {
+            } elseif (!$owner && (
+                    (string)$organization->orgId == (string)$currentOrg->ownerOrgId)
+                || (string)$organization->orgId == (string) $user->ownerOrgId) {
                 $tree[] = $organization;
                 continue;
             }
@@ -564,7 +568,19 @@ class organization
      * @return bool The result of the change
      */
     public function changeStatus($orgId, $status) {
+        $this->accountController->isAuthorized(['func_admin']);
+
         $organization = $this->sdoFactory->read('organization/organization', $orgId);
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if ($organization->ownerOrgId != $account->ownerOrgId) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
 
         if (!$organization->isOrgUnit) {
             throw new \core\Exception("An organization can't be disabled.");
@@ -1617,18 +1633,216 @@ class organization
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
+
+        $currentUserPosition = null;
         if ($isReset) {
-            $this->deleteAllOrganizationsAndDependencies();
+            try {
+                $currentUserPosition = $this->retrieveAdminInfo($organizations);
+                $this->deleteAllOrganizationsAndDependencies();
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+
+        try {
+            //create or update organization/service
+            $this->createBasicOrganizations($organizations, $isReset, $currentUserPosition);
+
+            // check for parent organization and update
+            $this->createParentRelationship($organizations, $isReset);
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
+        }
+
+        if (isset($currentUserPosition)) {
+            $this->createUserPosition($currentUserPosition);
         }
 
         if ($transactionControl) {
             $this->sdoFactory->commit();
         }
 
-        foreach ($organizations as $key => $organization) {
-            # code...
-        }
         return true;
+    }
+
+    /**
+     * Check if user has right to delete and retrieve info to recreate a single user Position
+     *
+     * @param  array  $organizations       Array of message organizations/organizationImportExport
+     *
+     * @return object $currentUserPosition Object of current user position and type
+     */
+    private function retrieveAdminInfo($organizations)
+    {
+        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
+        $currentOrg = \laabs::getToken("ORGANIZATION");
+        $ownerOrg = $this->sdoFactory->read('organization/organization', $user->ownerOrgId);
+
+        $isServiceUserRecreated = false;
+        $isownerOrganizationUserRecreated = false;
+
+        foreach ($organizations as $key => $organization) {
+            if ($organization->registrationNumber == $currentOrg->registrationNumber) {
+                $isOrgUserRecreated = true;
+            }
+
+            if ($organization->registrationNumber == $ownerOrg->registrationNumber) {
+                $isownerOrganizationUserRecreated = true;
+            }
+        }
+
+        if (!$isOrgUserRecreated && $isownerOrganizationUserRecreated) {
+            throw new \core\Exception("Organization of deleting user must be persisted in new scheme");
+        }
+
+        $currentUserPosition = new \stdClass();
+        $currentUserPosition->accountId = (string) $user->accountId;
+        $currentUserPosition->orgRegistrationNumber = $currentOrg->registrationNumber;
+        $currentUserPosition->accountType = $user->accountType;
+        $currentUserPosition->orgId = $currentOrg->orgId;
+        $currentUserPosition->ownerOrgId = $ownerOrg->orgId;
+        $currentUserPosition->ownerOrgRegistrationNumber = $ownerOrg->registrationNumber;
+
+        return $currentUserPosition;
+    }
+
+    /**
+     * Create a single user or service position after import
+     *
+     * @param  object $currentUserPosition Custom object with basic info for creating position
+     *
+     * @return
+     */
+    private function createUserPosition($currentUserPosition)
+    {
+        $position = null;
+        $className = null;
+        if ($currentUserPosition->accountType == 'service') {
+            $position = \laabs::newInstance('organization/servicePosition');
+            $position->serviceAccountId = (string) $currentUserPosition->accountId;
+            $position->orgId = (string) $currentUserPosition->orgId;
+            $className = 'organization/servicePosition';
+        } else {
+            $position = \laabs::newInstance('organization/userPosition');
+            $position->serviceAccountId = (string) $currentUserPosition->accountId;
+            $position->orgId = (string) $currentUserPosition->orgId;
+            $position->default = true;
+            $className = 'organization/userPosition';
+        }
+
+        try {
+            $this->sdoFactory->create($position, $className);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * Create basic organizations
+     *
+     * @param  array   $organizations       Array of organizations
+     * @param  boolean $isReset             Reset tables or not
+     * @param  object  $currentUserPosition Object with onformation on user reserting table
+     *
+     * @return
+     */
+    private function createBasicOrganizations($organizations, $isReset, $currentUserPosition = null)
+    {
+        foreach ($organizations as $key => $org) {
+            if (is_null($org->registrationNumber) || empty($org->registrationNumber)) {
+                throw new \ExceptionregistrationNumber("Organization orgRegNumber is mandatory");
+            }
+            $orgAlreadyExists = false;
+            $organization = \laabs::newInstance('organization/organization');
+            $organization->orgId = \laabs::newId();
+            if (!$isReset) {
+                if (!empty($this->getOrgByRegNumber($org->registrationNumber))) {
+                    $organization = $this->getOrgByRegNumber($org->registrationNumber);
+                } else {
+                    $orgAlreadyExists = true;
+                }
+            }
+
+            $organization->orgName = $org->orgName;
+            $organization->otherOrgName = $org->otherOrgName;
+            $organization->displayName = $org->displayName;
+            $organization->legalClassification = $org->legalClassification;
+            $organization->businessType = $org->businessType;
+            $organization->description = $org->description;
+            $organization->orgTypeCode = $org->orgTypeCode;
+            $organization->orgRoleCodes = $org->orgRoleCodes;
+            $organization->registrationNumber = $org->registrationNumber;
+            $organization->taxIdentifier = $org->taxIdentifier;
+            $organization->beginDate = $org->beginDate;
+            $organization->endDate = $org->endDate;
+            $organization->isOrgUnit = $org->isOrgUnit;
+            $organization->enabled = $org->enabled;
+
+            try {
+                // force id of organization of user reseting organization
+                if ($isReset || $orgAlreadyExists) {
+                    if (!is_null($currentUserPosition) && $currentUserPosition->orgRegistrationNumber == $org->registrationNumber) {
+                        $organization->orgId = (string) $currentUserPosition->orgId;
+                    } elseif (!is_null($currentUserPosition) && $currentUserPosition->ownerOrgRegistrationNumber == $org->registrationNumber) {
+                        $organization->orgId = $currentUserPosition->ownerOrgId;
+                    }
+                    $this->sdoFactory->create($organization, 'organization/organization');
+                    $orgAlreadyExists = false;
+                } else {
+                    $this->sdoFactory->update($organization, 'organization/organization');
+                }
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * Create relation tree between organization
+     *
+     * @param array $organizations  Array of message organizations/organizationImportExport
+     * @param boolean $isReset      Reset tables or not
+     *
+     * @return
+     */
+    private function createParentRelationship($organizations, $isReset)
+    {
+        foreach ($organizations as $key => $org) {
+            if (!is_null($org->ownerOrgRegNumber)
+                && !$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->ownerOrgRegNumber])) {
+                throw new \core\Exception("Owner Organization is mandatory if not orgUnit", 400);
+            }
+
+            if (!is_null($org->parentOrgRegNumber)
+                && !$this->sdoFactory->exists("organization/organization", ['registrationNumber' => $org->parentOrgRegNumber])) {
+                throw new \core\Exception("Parent organization %s does not exists", 400, null, [$org->parentOrgRegNumber]);
+            }
+
+            $organization = $this->getOrgByRegNumber($org->registrationNumber);
+
+            if (!is_null($org->ownerOrgRegNumber)) {
+                $organization->ownerOrgId = (string) $this->getOrgByRegNumber($org->ownerOrgRegNumber)->orgId;
+            }
+
+            if (!is_null($org->parentOrgRegNumber)) {
+                $organization->parentOrgId = (string) $this->getOrgByRegNumber($org->parentOrgRegNumber)->orgId;
+            }
+
+            try {
+                $this->sdoFactory->update($organization, 'organization/organization');
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
     }
 
     /**

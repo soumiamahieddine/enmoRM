@@ -376,7 +376,7 @@
                     var title = ""
 
                     if (archive.hasClass('bg-info')) {
-                        $('#folderContentList').find('.bg-info').each(function() {
+                        $('#folderContentList').find('.archive.selected').each(function() {
                             archiveIds.push($(this).attr('id'));
                             title = archiveIds.length + ' ' + $('#archives_text').text();
                         })

@@ -246,6 +246,7 @@ class ArchiveTransfer extends abstractMessage
             }
         }
 
+        unlink($zipfile);
         rmdir($zipFolder);
     }
 

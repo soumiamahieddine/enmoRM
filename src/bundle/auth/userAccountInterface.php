@@ -70,10 +70,12 @@ interface userAccountInterface
     /**
      * Create a csv file
      *
+     * @param  integer $limit Max number of results to display
+     *
      * @action auth/userAccount/exportCsv
      *
      */
-    public function readExport();
+    public function readExport($limit = null);
 
     /**
      * Add a new user & role members
@@ -243,7 +245,7 @@ interface userAccountInterface
     public function updatePasswordchangerequest_userAccountId_();
 
     /**
-     * @param string  $data      Data base64 encoded or not
+     * @param string  $data     Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action auth/userAccount/import

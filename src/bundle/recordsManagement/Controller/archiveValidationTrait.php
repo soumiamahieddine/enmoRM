@@ -409,5 +409,7 @@ trait archiveValidationTrait
                 throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
             }
         }
+
+        unlink($filename);
     }
 }

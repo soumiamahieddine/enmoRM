@@ -163,7 +163,7 @@ interface AdminOrganizationInterface
      * Change status of organization
      *
      * @return organization/orgTree/changeStatus
-     * @uses organization/organization/read_orgId_ChangeStatus_status_
+     * @uses organization/organization/read_orgId_Changestatus_status_
      */
     public function updateOrganization_orgId_Status_status_();
 }

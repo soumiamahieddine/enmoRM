@@ -43,13 +43,15 @@ interface roleInterface
     /**
      * Create a csv file
      *
+     * @param @param  integer $limit Max number of results to display
+     *
      * @action auth/role/exportCsv
      *
      */
-    public function readExport();
+    public function readExport($limit = null);
 
     /**
-     * @param string  $data      Data base64 encoded or not
+     * @param string  $data     Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action auth/role/import
@@ -60,7 +62,7 @@ interface roleInterface
 
     /**
      * Prepares access control object for update or create
-     * 
+     *
      * @return auth/role
      *
      * @action auth/role/edit

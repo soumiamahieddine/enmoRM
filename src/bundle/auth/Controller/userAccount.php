@@ -544,7 +544,24 @@ class userAccount
      */
     public function enable($userAccountId)
     {
+        $this->isAuthorized(['gen_admin', 'func_admin']);
+
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $userAccount->enabled = true;
         $userAccount->replacingUserAccountId = null;
 
@@ -559,9 +576,24 @@ class userAccount
      */
     public function disable($userAccountId)
     {
+        $this->isAuthorized(['gen_admin', 'func_admin']);
+
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
+        $accountToken = \laabs::getToken('AUTH');
+        $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
         $userAccount->enabled = false;
-        //$userAccount->replacingUserAccountId = $replacingUserAccountId;
 
         return $this->sdoFactory->update($userAccount);
     }
@@ -751,9 +783,9 @@ class userAccount
         throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
     }
 
-    public function exportCsv($limit = null) {
+    public function exportCsv($limit = null)
+    {
         $userAccounts = $this->sdoFactory->find('auth/account', "accountType='user'", null, null, null, $limit);
-
         $userPositionController = \laabs::newController('organization/userPosition');
         $roleMemberController = \laabs::newController('auth/roleMember');
         $organizationController = \laabs::newController('organization/organization');
@@ -806,6 +838,7 @@ class userAccount
      */
     public function import($data, $isReset = false)
     {
+
         $organizationController = \laabs::newController('organization/organization');
         $roleController = \laabs::newController('auth/role');
 
@@ -821,6 +854,7 @@ class userAccount
 
         if ($isReset) {
             try {
+                $this->checkForSuperAdmin($users);
                 $this->deleteAllUsers();
             } catch (\Exception $e) {
                 if ($transactionControl) {
@@ -899,6 +933,33 @@ class userAccount
         return true;
     }
 
+    /**
+     * Verify if there is at least one superadmin when resetting users
+     *
+     * @param  array $users Array of user/userAccountImportExport message
+     *
+     * @return boolean
+     */
+    private function checkForSuperAdmin($users)
+    {
+        $hasSuperAdmin = false;
+        foreach ($users as $key => $user) {
+            if ($user->isAdmin
+                && (
+                    !isset($user->ownerOrgRegNumber)
+                    || empty($user->ownerOrgRegNumber)
+                    || is_null($user->ownerOrgRegNumber)
+                   )
+                ) {
+                $hasSuperAdmin = true;
+            }
+        }
+
+        if (!hasSuperAdmin) {
+            throw new \Exception("Csv must have at least one superadmin");
+        }
+    }
+
     private function deleteAllUsers()
     {
         $users = $this->index();
@@ -968,7 +1029,7 @@ class userAccount
             $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
 
             if (is_null($organization) || empty($organization)) {
-                throw new \core\Exception\BadRequestException("Organization does not exists");
+                throw new \core\Exception\BadRequestException("Organization %s does not exists", 400, null, [$organization]);
             }
 
             $userPosition = \laabs::newInstance('organization/userPosition');

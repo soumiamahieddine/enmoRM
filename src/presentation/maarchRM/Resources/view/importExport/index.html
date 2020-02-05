@@ -1,0 +1,455 @@
+<div id="contain" data-translate-catalog="importExport/messages">
+    <input type="hidden" id="isExport" data-value="[?merge isExport.then('true', 'false') ?]">
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-copy"></i>
+                <?merge isExport.then('Export referentiels', 'Import Referentiels') ?>
+            </h1>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div id="resourceForm" class="row col-md-12">
+            <div class="panel-body">
+                <form class="form-horizontal col-xs-12">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="list-group col-md-5" id="exportList">
+                                <input type="hidden" id="maxResults" data-value="[?merge maxResults ?]">
+                                <a class="list-group-item" data-value="useraccounts">User accounts</a>
+                                <a class="list-group-item" data-value="serviceaccounts">Service accounts</a>
+                                <!-- <a class="list-group-item" data-value="roles">Roles</a> -->
+                                <a class="list-group-item" data-value="organizations">Organizations</a>
+                                <a class="list-group-item" data-value="archivalprofiles">Archival profiles</a>
+                                <a class="list-group-item" data-value="descriptionfields">Description fields</a>
+                                <a class="list-group-item" data-value="retentionrules">Retention rules</a>
+                            </div>
+                            <div class="col-md-7">
+                                <?merge isExport ?>
+                                    <div>
+                                        <div id="listResults">
+                                            <div id="listLoading" style="display: none;"><i class="fa fa-spinner fa-spin"></i></div>
+                                        </div>
+                                        <div style="text-align: center;">
+                                            <button type="button" id="exportButton" class="btn btn-warning" data-original-title="Export" style="display: none;"><i class="fa fa-download">&nbsp;</i>&nbsp;Export</button>
+                                        </div>
+                                    </div>
+                                <?merge isExport.not() ?>
+                                    <div id="exportContainer" class="hide">
+                                        <input type="file" id="resource_filesBrowser" accept=".csv" class="hide"/>
+                                        <table class="hide" id="table_infos">
+                                            <tr>
+                                                <td><i class="fa fa-file-text fileIcon">&nbsp;</i></td>
+                                                <td>
+                                                    <dl class="dl-horizontal">
+                                                        <dt>File name</dt>
+                                                        <dd id="messageImport_fileName"></dd>
+                                                        <dt>Size</dt>
+                                                        <dd id="messageImport_fileSize"></dd>
+
+                                                        <dt>Type</dt>
+                                                        <dd id="messageImport_fileType"></dd>
+                                                    </dl>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <div id="resource_XMLDropZone">
+                                            <i class="fa fa-file-text fileIcon">&nbsp;</i>
+                                            <h5>Click or drop a referentiel</h5>
+                                        </div>
+                                        <br/>
+                                        <table id="resourceList" class="table table-condensed col-xs-12"  style="display: none">
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                        <div style="text-align: center;">
+                                            <button type="button" class="btn btn-primary" id="importButton" title="Import">Import</button>
+                                            <input type="checkbox" id="isReset" name="isReset" />
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="resetWarningModal"  data-translate-catalog="importExport/messages">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 >Warning</h4>
+            </div>
+            <div class="modal-body">
+                <p>You are about to replace referentiel :<span id="warningMessage"></span></p>
+                <p>Are you sure to do this ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="closeModal">Cancel</button>
+                <button type="button" class="btn btn-success" id="importWithReset">Import</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden"  data-translate-catalog="importExport/messages">
+    <span id="noFile">No file uploaded</span>
+    <span id="text_with_reset">Import with data reset</span>
+    <span id="text_without_reset">Import without data reset</span>
+    <span id="file_success">File successfully imported</span>
+</div>
+
+<style>
+    .list-group-item {
+        cursor: pointer;
+    }
+
+    #listLoading {
+        font-size: 50px;
+        text-align: center;
+        padding: 80px;
+    }
+
+    #resource_XMLDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 50px 10px 50px 10px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+
+    .fileIcon {
+        font-size: 400%;
+    }
+
+</style>
+
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+<script>
+    $(".list-group-item").click(function() {
+        var isExport = $('#isExport').attr('data-value');
+        var referentiel = $(this).attr('data-value');
+        $(".list-group a").removeClass('active');
+        $(this).addClass('active');
+        if (isExport == "true") {
+            exportData.load(referentiel, $('#maxResults').attr('data-value'));
+        } else {
+            $('#exportContainer').removeClass('hide');
+            $('#importButton').attr('data-ref', referentiel);
+            $('#importWithReset').attr('data-ref', referentiel);
+        }
+    });
+
+    $('#importButton').on('click', function() {
+        var referentiel = $(this).attr('data-ref');
+        var isReset = $('#isReset').is(':checked');
+        if (isReset) {
+            $('#warningMessage').empty();
+            referentielLabel = $("#exportList").find('[data-value="'+referentiel+'"]').text();
+            $('#warningMessage').append(' ' + referentielLabel);
+            $('#resetWarningModal').modal('show');
+        } else {
+            importData.import(referentiel, isReset = false);
+        }
+    });
+
+    $('#isReset').bootstrapToggle({
+        on: $('#text_with_reset'),
+        off: $('#text_without_reset'),
+        onstyle: "danger",
+        width: 160,
+        style: 'center'
+    });
+
+    $('#exportButton').on('click', function() {
+        var ref = $('#exportButton').attr('data-ref');
+        var url = '/export/' + ref + '?limit=null&ref=' + ref;
+        window.open(url, '_self');
+    });
+
+    $('#closeModal').on('click', function() {
+        $('#resetWarningModal').modal('hide');
+    });
+
+    $('#importWithReset').on('click', function() {
+        $('#resetWarningModal').modal('hide');
+        importData.import($(this).attr('data-ref'), true)
+    });
+
+    var importData = {
+        import: function(referentiel, isReset = false) {
+            var file = resourceList.serialize();
+            if (!file) {
+                gritter.show($("#noFile").text(), false);
+                return;
+            }
+
+            var data = {
+                'data': file[0].handler,
+                'isReset' : isReset
+            };
+
+            ajax($('#exportContainer'), {
+                url: '/import/' + referentiel,
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (response) {
+                    gritter.show($("#file_success").text(), 'true');
+                },
+                error: function(response) {
+                    response = JSON.parse(response.responseText);
+                    gritter.show(response.message, false);
+                },
+                complete: function(response) {
+                    $(".list-group a").removeClass('active');
+                    ResourceForm.clear();
+                    $('#exportContainer').addClass('hide');
+                    $('#isReset').bootstrapToggle('off');
+                }
+            });
+        }
+    }
+
+
+    var exportData =  {
+        load: function(ref, limit = null) {
+            $("#listLoading").css('display', '');
+            $('#exportButton').css('display', 'none').attr('data-ref', null);
+            ajax($('#exportList'), {
+                url: '/export/' + ref,
+                type: 'GET',
+                data: {
+                    'limit' : limit,
+                    'ref'   : ref
+                },
+                success: function(response) {
+                    $("#listLoading").css('display', 'none');
+                    $('#exportButton').css('display', '').attr('data-ref', ref);
+                    $('#listResults').html(response);
+                    $("#tableList").parent().css("overflow-x", "auto");
+                },
+                error: function (response) {
+                }
+            });
+        }
+    };
+
+    var ResourceForm = {
+        documentFileInput: $('#resource_filesBrowser'),
+        zipContainer: false,
+
+        reset: function() {
+            this.documentFileInput.data('base64', '').val('');
+        },
+
+        upload: function(file) {
+            var oFileReader = new FileReader();
+            // oFileReader.readAsDataURL(file);
+            oFileReader.readAsText(file);
+
+            oFileReader.onload = function (e) {
+                var fileObject = {
+                    binary  : null,
+                    size    : null,
+                    fileName: null,
+                    type    : null
+                }
+
+                fileObject.binary = oFileReader.result.replace(/(^data:|;base64,)|(^data:.*?;base64,)/, "");
+                fileObject.fileName = file.name;
+                fileObject.size = file.size;
+                fileObject.type = file.type;
+
+                if ((fileObject.type == "application/x-zip-compressed" || fileObject.type == "application/zip") && resourceList.card == 0) {
+                    $('#resource_XMLDropZone').addClass('hide');
+                    $('#resourceForm').find("[name=zipContainer]").prop('checked', true).parent().removeClass('hide');
+                    ResourceForm.zipContainer = true;
+
+                } else if (ResourceForm.zipContainer) {
+                    ResourceForm.disabledZipContainer();
+                }
+
+
+                resourceList.addDocument(fileObject);
+            };
+        },
+
+        disabledZipContainer: function() {
+            $('#resource_XMLDropZone').removeClass('hide');
+            $('#resourceForm').find("[name=zipContainer]").prop('checked', false).parent().addClass('hide');
+            this.zipContainer = false;
+        },
+
+        clear: function() {
+            ResourceForm.reset();
+            resourceList.removeDocument($(this));
+            resourceList.clear();
+            $('#table_infos dd').empty();
+            $('#table_infos').hide();
+        }
+    }
+
+    var resourceList = {
+        table: $('#resourceList'),
+        list: $('#resourceList').find('tbody'),
+        card: 0,
+
+        addDocument: function(fileObject) {
+            this.list.remove("tr");
+            var tr = $('<tr/>').attr('data-binary', fileObject.binary).appendTo(this.list);
+
+            $('<td class="small">').attr('name', 'fileName').text(fileObject.fileName).appendTo(tr);
+            $('<td class="hide">').attr('name', 'size').text(fileObject.size).appendTo(tr);
+            $('<td class="hide">').attr('name', 'type').text(fileObject.type).appendTo(tr);
+
+            var button = $('<button>')
+                    .attr('type', 'button')
+                    .addClass('deleteDocument')
+                    .addClass("btn btn-sm btn-link pull-right");
+            var i = $('<i/>').addClass('fa fa-times text-danger').appendTo(button);
+            $('<td>').append(button).appendTo(tr);
+
+            this.card = this.card+1;
+            if (this.table.is(":hidden")) {
+                if ($('#archiveForm [name=archiveName]').val() == "") {
+                    $('#archiveForm [name=archiveName]').val(fileObject.fileName.replace(/\.[^/.]+$/, ""));
+                }
+
+                this.table.show();
+            }
+            $("#messageImport_fileName").text(fileObject.fileName);
+            $("#messageImport_fileSize").text(fileObject.size + ' ' + $("#translate_bytes").text());
+            $("#messageImport_fileType").text(fileObject.type);
+            $("#table_infos").removeClass("hide");
+        },
+
+        removeDocument: function(button) {
+            button.closest('tr').remove();
+
+            this.card = this.card-1;
+            if (this.list.find("tr").length == 0) {
+                this.table.hide();
+            }
+            $("#resource_XMLDropZone").removeClass("hide");
+        },
+
+        clear: function() {
+            this.card = 0;
+            this.list.html("");
+            this.table.hide();
+            ResourceForm.disabledZipContainer();
+        },
+
+        serialize: function() {
+            var tr = this.list.find('tr');
+
+            var digitalResources = [];
+
+            $.each(tr, function(){
+                var digitalResource = {
+                    handler     : null,
+                    size        : null,
+                    fileName    : null,
+                    mimetype    : null
+                }
+
+                digitalResource.handler = $(this).attr('data-binary');
+                digitalResource.fileName = $(this).find("[name=fileName]").text();
+                digitalResource.size = $(this).find("[name=size]").text();
+                digitalResource.mimetype = $(this).find("[name=type]").text();
+
+                digitalResources.push(digitalResource);
+
+            });
+
+            if (digitalResources.length == 0) {
+                digitalResources = null;
+            }
+
+            return digitalResources;
+        },
+        asyncSerialize: function() {
+            var tr = this.list.find('tr');
+
+            var binaryDataObject = {};
+
+            $.each(tr, function(){
+                var id = Math.random().toString(36).substr(2, 9);
+                var obj = {};
+                obj[id] = {
+                    attachment : {
+                        value        : null,
+                        filename    : null
+                    },
+                    mimetype    : null,
+                    size        : null
+                };
+
+                obj[id].attachment.value = $(this).attr('data-binary');
+                obj[id].attachment.filename = $(this).find("[name=fileName]").text();
+                obj[id].mimetype = $(this).find("[name=type]").text();
+                obj[id].size = $(this).find("[name=size]").text();
+
+                binaryDataObject[id] = obj[id];
+            });
+
+            return binaryDataObject;
+
+        }
+    };
+
+    $('#resourceList').on('click', '.deleteDocument', function() {
+        ResourceForm.clear();
+    });
+
+
+    // Drag & drop
+    $('#resource_XMLDropZone').on('dragenter', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    });
+
+    $('#resource_XMLDropZone').on('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#resource_XMLDropZone').css('opacity', '1');
+    });
+
+    $("#resource_XMLDropZone").on('dragleave', function(e) {
+        $('#resource_XMLDropZone').css('/', '0.5');
+    });
+
+    $('#resource_XMLDropZone').on('drop', function(e) {
+        if(!e.originalEvent.dataTransfer || !e.originalEvent.dataTransfer.files.length){
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        $('#resource_XMLDropZone').css('opacity', '0.5');
+
+        ResourceForm.upload(e.originalEvent.dataTransfer.files[0]);
+    });
+
+    // Files browser
+    $('#resource_XMLDropZone').on('click', function() {
+        ResourceForm.clear();
+        $('#resource_filesBrowser').click();
+    });
+
+    $('#resource_filesBrowser').on('change', function() {
+        ResourceForm.upload($(this).context.files[0]);
+        ResourceForm.reset();
+    });
+
+    $('#resourceForm').on('click', '[name=zipContainer]', function() {
+        ResourceForm.disabledZipContainer();
+    });
+
+
+
+
+</script>
