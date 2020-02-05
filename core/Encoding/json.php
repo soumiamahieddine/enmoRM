@@ -32,20 +32,16 @@ class json
 
     /**
      * Decode a json contents into an associative array of parameters
-     * @param string $json
+     * @param string $params
      * 
      * @return mixed
      */
-    public static function decode($json)
+    public static function decode($params)
     {
-        $data = \json_decode($json);
+        $params = \json_decode($params);
         
-        $params = array();
-
-        if ($data) {
-            foreach ($data as $name => $value) {
-                $params[$name] = $value;
-            }
+        if (is_object($params)) {
+            $params = get_object_vars($params);
         }
         
         return $params;

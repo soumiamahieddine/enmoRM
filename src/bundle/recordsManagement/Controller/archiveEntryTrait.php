@@ -154,8 +154,9 @@ trait archiveEntryTrait
                     }
                 } elseif (is_resource($receivedHandler)) {
                     $handler = fopen('php://temp', 'r+');
-                    stream_filter_append($handler, 'convert.base64-decode');
+                    $filter = stream_filter_append($handler, 'convert.base64-decode', STREAM_FILTER_WRITE);
                     stream_copy_to_stream($receivedHandler, $handler);
+                    stream_filter_remove($filter);
                     rewind($handler);
                 }
 
