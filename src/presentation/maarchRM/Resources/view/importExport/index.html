@@ -151,7 +151,7 @@
             $('#warningMessage').append(' ' + referentielLabel);
             $('#resetWarningModal').modal('show');
         } else {
-            importData.import(referentiel, isReset = false);
+            importData.import(referentiel, false);
         }
     });
 
@@ -179,7 +179,7 @@
     });
 
     var importData = {
-        import: function(referentiel, isReset = false) {
+        import: function(referentiel, isReset) {
             var file = resourceList.serialize();
             if (!file) {
                 gritter.show($("#noFile").text(), false);
