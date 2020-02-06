@@ -192,7 +192,6 @@ class ServiceKernel extends AbstractKernel
             }
             $parser = $this->inputRouter->parser->newInstance();
             $bodyArguments = $this->inputRouter->input->parse($parser, $this->request->body);
-
         } else {
             switch ($this->request->contentType) {
                 case 'php':
@@ -204,15 +203,16 @@ class ServiceKernel extends AbstractKernel
                     break;
 
                 case 'json':
-                default:
                     $bodyArguments = \core\Encoding\json::decode($this->request->body);
                     break;
-            }
 
+                default:
+                    $bodyArguments = [$this->request->body];
+            }
         }
 
         $requestArguments = array_merge($queryArguments, $bodyArguments);
-
+       
         $this->serviceRequest = $this->servicePath->getMessage($requestArguments);
 
         $valid = \laabs::validateMessage($this->serviceRequest, $this->servicePath);
@@ -352,6 +352,10 @@ class ServiceKernel extends AbstractKernel
 
             $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);
         } else {
+            if (is_null($this->serviceReturn)) {
+                return;
+            }
+
             $mimetype = $this->guessResponseType();
 
             $types = \laabs::getContentTypes();

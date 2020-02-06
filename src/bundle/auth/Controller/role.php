@@ -33,14 +33,17 @@ class role
 {
 
     public $sdoFactory;
+    protected $csv;
 
     /**
      * Constructor of adminRole class
      * @param \dependency\sdo\Factory $sdoFactory The factory
+     * @param \dependency\csv\Csv     $csv        The dependency csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
     }
 
     /**
@@ -55,9 +58,11 @@ class role
     /**
      * List roles
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return array Array of auth/role object
      */
-    public function index()
+    public function index($limit = null)
     {
         $roleMemberController = \laabs::newController("auth/roleMember");
         $roleMembers = $roleMemberController->readByUserAccount(\laabs::getToken("AUTH")->accountId);
@@ -81,7 +86,7 @@ class role
                     $query[] = "securityLevel = null";
             }
         }
-        $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)));
+        $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)), null, null, null, $limit);
 
         return $roles;
     }
@@ -380,6 +385,105 @@ class role
                 $this->sdoFactory->rollback();
             }
             throw \laabs::newException("auth/sdoException");
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
+    }
+
+    public function exportCsv($limit = null) {
+        $roles = $this->sdoFactory->find('auth/role', null, null, null, null, $limit);
+        $roles = \laabs::castMessageCollection($roles, 'auth/roleImportExport');
+
+        foreach ($roles as $role) {
+            $privileges = $this->getPrivilege($role->roleId);
+            if (!empty($privileges)) {
+                $lastIndex = count($privileges) -1;
+                foreach ($privileges as $index => $privilege) {
+                    $role->privileges .= $privilege;
+
+                    if ($lastIndex !== $index) {
+                        $role->privileges .= ";";
+                    }
+                }
+            }
+        }
+
+        $this->csv->write('php://output', (array) $roles, 'auth/roleImportExport', true);
+    }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $roles = $this->getAll();
+
+                foreach ($roles as $role) {
+                    $roleMembers = $this->sdoFactory->find('auth/roleMember', "roleId='$role->roleId'");
+                    foreach ($roleMembers as $roleMember) {
+                        $this->sdoFactory->delete($roleMember, 'auth/roleMember');
+                    }
+
+                    $privileges = $this->sdoFactory->find('auth/privilege', "roleId='$role->roleId'");
+                    foreach ($privileges as $privilege) {
+                        $this->sdoFactory->delete($privilege, 'auth/privilege');
+                    }
+                    $this->sdoFactory->delete($role, 'auth/role');
+                }
+            }
+
+            $filename = \laabs\tempnam();
+            file_put_contents($filename, $data);
+            $roles = $this->csv->read($filename, 'auth/roleImportExport', true);
+            foreach ($roles as $key => $role) {
+                if ($isReset
+                    || !$this->sdoFactory->exists('auth/role', $role->roleId)
+                ) {
+                    $newRole = \laabs::newInstance('auth/role');
+                    $newRole->roleId = $role->roleId;
+                    $newRole->roleName = $role->roleName;
+                    $newRole->description = $role->description;
+                    $newRole->enabled = (bool) $role->enabled;
+                    $newRole->securityLevel = $role->securityLevel;
+
+                    $this->sdoFactory->create($newRole, 'auth/role');
+                } else {
+                    $changedRole = $this->sdoFactory->read('auth/role', $role->roleId);
+                    $changedRole->roleName = $role->roleName;
+                    $changedRole->description = $role->description;
+                    $changedRole->enabled = (bool) $role->enabled;
+                    $changedRole->securityLevel = $role->securityLevel;
+                    $this->sdoFactory->update($changedRole, 'auth/role');
+
+                    $privileges = $this->sdoFactory->find('auth/privilege', "roleId='$role->roleId'");
+                    foreach ($privileges as $privilege) {
+                        $this->sdoFactory->delete($privilege, 'auth/privilege');
+                    }
+                }
+
+                $userStories = explode(';', $role->privileges);
+                foreach ($userStories as $userStory) {
+                    $privilege = \laabs::newInstance('auth/privilege');
+                    $privilege->roleId = $role->roleId;
+                    $privilege->userStory = $userStory;
+
+                    $this->sdoFactory->create($privilege, 'auth/privilege');
+                }
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
         }
 
         if ($transactionControl) {

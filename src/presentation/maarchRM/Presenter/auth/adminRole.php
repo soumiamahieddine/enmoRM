@@ -133,6 +133,7 @@ class adminRole
             if (count($role->roleMembers) > 0) {
                 $role->roleMembers = \laabs::callService(
                     'auth/userAccount/readIndex',
+                    null,
                     "accountId=['".implode("', '", $role->roleMembers)."']"
                 );
             }

@@ -31,6 +31,7 @@ class serviceAccount
 {
 
     protected $sdoFactory;
+    protected $csv;
     protected $passwordEncryption;
     protected $securityPolicy;
     protected $organizationController;
@@ -41,11 +42,13 @@ class serviceAccount
      * Constructor
      * @param array                   $securityPolicy     The array of security policy parameters
      * @param \dependency\sdo\Factory $sdoFactory         The dependency Sdo Factory object
+     * @param \dependency\csv\Csv     $csv                The dependency Csv
      * @param string                  $passwordEncryption The password encryption algorythm
      */
-    public function __construct($securityPolicy, \dependency\sdo\Factory $sdoFactory = null, $passwordEncryption = 'md5')
+    public function __construct($securityPolicy, \dependency\sdo\Factory $sdoFactory = null, \dependency\csv\Csv $csv = null, $passwordEncryption = 'md5')
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
         $this->organizationController = \laabs::newController('organization/organization');
@@ -56,11 +59,13 @@ class serviceAccount
     /**
      * List all services for administration
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return auth/account[] The array of services
      */
-    public function index()
+    public function index($limit = null)
     {
-        return $this->sdoFactory->find('auth/account', "accountType='service'");
+        return $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
     }
 
     /**
@@ -495,5 +500,252 @@ class serviceAccount
         }
 
         return true;
+    }
+
+    public function exportCsv($limit = null)
+    {
+        $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
+
+
+        $servicePositionController = \laabs::newController('organization/servicePosition');
+        $organizationController = \laabs::newController('organization/organization');
+        foreach ($serviceAccounts as $key => $serviceAccount) {
+            $accountId = $serviceAccount->accountId;
+            $ownerOrgId = $serviceAccount->ownerOrgId;
+            $serviceAccount = \laabs::castMessage($serviceAccount, 'auth/serviceAccountImportExport');
+
+            if ($ownerOrgId) {
+                $organization = $organizationController->read($ownerOrgId);
+                $serviceAccount->ownerOrgRegNumber = $organization->registrationNumber;
+            }
+
+            $position = $servicePositionController->getPosition($accountId);
+            if (!empty($position)) {
+                $serviceAccount->organizations = $position->orgId;
+            }
+
+            $privileges = $this->getPrivileges($accountId);
+            if (!empty($privileges)) {
+                foreach ($privileges as $privilege) {
+                    $serviceAccount->privileges .= $privilege->serviceURI;
+
+                    if (end($privileges) !== $privilege) {
+                        $serviceAccount->privileges .= ";";
+                    }
+                }
+            }
+            $serviceAccounts[$key] = $serviceAccount;
+        }
+
+        $this->csv->write('php://output', (array) $serviceAccounts, 'auth/serviceAccountImportExport', true);
+    }
+
+    /**
+     * Import Service account function and create or update them
+     *
+     * @param array   $data     Array of serviceAccountImportExort Message
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @return boolean          Success of operation or not
+     */
+    public function import($data, $isReset = false)
+    {
+        $filename = \laabs\tempnam();
+        file_put_contents($filename, $data);
+        $services = $this->csv->read($filename, 'auth/serviceAccountImportExport', $messageType = true);
+        $organizationController = \laabs::newController('organization/organization');
+
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        if ($isReset) {
+            try {
+                $this->deleteAllServices();
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+        $newService = false;
+        foreach ($services as $key => $service) {
+            if ($isReset) {
+                $serviceAccount = $this->newService();
+                $serviceAccount->accountId = \laabs::newId();
+            } else {
+                $serviceAccount = $this->sdoFactory->find('auth/account', 'accountName="' . $service->accountName . '" ');
+                if (!isset($serviceAccount) || empty($serviceAccount)) {
+                    $newService = true;
+                    $serviceAccount = $this->newService();
+                    $serviceAccount->accountId = \laabs::newId();
+                } else {
+                    $serviceAccount = $serviceAccount[0];
+                }
+            }
+
+            if (is_null($service->password) || empty($service->password)) {
+                throw new \core\Exception\BadRequestException("Password cannot be null");
+            }
+
+            if (!$service->isAdmin
+                && (
+                    is_null($service->organizations)
+                    || empty($service->organizations)
+                )
+            ) {
+                throw new \core\Exception\BadRequestException("Service account must be attached to at least one service");
+            }
+
+            $serviceAccount->accountName = $service->accountName;
+            $serviceAccount->displayName = $service->displayName;
+            $serviceAccount->emailAddress = !is_null($service->emailAddress) ? $service->emailAddress : '';
+            $serviceAccount->password = $service->password;
+            $serviceAccount->passwordChangeRequired = true;
+            $serviceAccount->locked = $service->locked;
+            $serviceAccount->enabled = $service->enabled;
+            $serviceAccount->isAdmin = $service->isAdmin;
+            $serviceAccount->accountType = 'service';
+
+            if (!is_null($service->ownerOrgRegNumber) && !empty($service->ownerOrgRegNumber)) {
+                $serviceOwnerOrg = $organizationController->getOrgByRegNumber($service->ownerOrgRegNumber);
+                if (!is_null($serviceOwnerOrg) && !empty($serviceOwnerOrg)) {
+                    $serviceAccount->ownerOrgId = (string) $serviceOwnerOrg->orgId;
+                }
+            }
+
+            try {
+                if ($isReset || $newService) {
+                    $this->sdoFactory->create($serviceAccount, 'auth/account');
+                    $newService = false;
+                } else {
+                    $this->sdoFactory->update($serviceAccount, 'auth/account');
+                }
+
+                if (!is_null($service->organizations) && !empty($service->organizations)) {
+                    $service->organizations = explode(';', $service->organizations);
+                    $this->deleteServicePosition((string) $serviceAccount->accountId);
+                    $this->importServicePositions((array) $service->organizations, (string) $serviceAccount->accountId);
+                }
+
+                $this->importServicePrivileges((array) explode(';', $service->privileges), (string) $serviceAccount->accountId);
+            } catch (\Exception $e) {
+                if ($transactionControl) {
+                    $this->sdoFactory->rollback();
+                }
+                throw $e;
+            }
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+    }
+
+
+    private function deleteAllServices()
+    {
+        $services = $this->index();
+
+        foreach ($services as $key => $service) {
+            $this->importDeleteService((string) $service->accountId);
+        }
+    }
+
+    /**
+     * Delete existing user
+     *
+     * @param auth/account $userAccount The user object unique identifier
+     *
+     * @return
+     */
+    public function importDeleteService($serviceAccountId)
+    {
+        // Delete service positions
+        $this->deleteServicePosition($serviceAccountId);
+
+        //delete service Privileges
+        $this->sdoFactory->deleteChildren("auth/servicePrivilege", array("accountId" => $serviceAccountId), 'auth/account');
+
+        $this->sdoFactory->delete($this->read($serviceAccountId));
+    }
+
+    /**
+     * Delete service position
+     *
+     * @param string $serviceAccountId Unique user identifier
+     *
+     * @return
+     */
+    private function deleteServicePosition($serviceAccountId)
+    {
+        $organizationController = \laabs::newController('organization/organization');
+        $servicePositionController = \laabs::newController('organization/servicePosition');
+        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
+
+        $currentServicePositions = $organizationSdoFactory->find('organization/servicePosition', "serviceAccountId = '" . $serviceAccountId . "'");
+
+        if (!empty($currentServicePositions)) {
+            foreach ($currentServicePositions as $key => $servicePosition) {
+                $organizationSdoFactory->delete($servicePosition, 'organization/servicePosition');
+            }
+        }
+    }
+
+    /**
+     * Import array of organizations org reg numbers
+     *
+     * @param array  $organizations    Array of orgRegNumber
+     * @param string $serviceAccountId Unique user identifier
+     *
+     * @return [type]                [description]
+     */
+    private function importServicePositions($organizations, $serviceAccountId)
+    {
+        $organizationSdoFactory = \laabs::dependency('sdo', 'organization')->getService('Factory')->newInstance();
+
+        foreach ($organizations as $key => $orgRegNumber) {
+            try {
+                $organization = $organizationSdoFactory->read("organization/organization", ['registrationNumber' => $orgRegNumber]);
+            } catch (\Exception $e) {
+                throw new \core\Exception\BadRequestException("Organization '%s' does not exists", 400, null, [$orgRegNumber]);
+            }
+
+            $servicePosition = \laabs::newInstance('organization/servicePosition');
+            $servicePosition->serviceAccountId = $serviceAccountId;
+            $servicePosition->orgId = (string) $organization->orgId;
+            $organizationSdoFactory->create($servicePosition, 'organization/servicePosition');
+        }
+    }
+
+    /**
+     * Import array of organizations org reg numbers
+     *
+     * @param array  $privileges       Array of privileges
+     * @param string $serviceAccountId Unique user identifier
+     *
+     * @return
+     */
+    private function importServicePrivileges($privileges, $serviceAccountId)
+    {
+        $this->sdoFactory->deleteChildren("auth/servicePrivilege", array("accountId" => $serviceAccountId), 'auth/account');
+        $existingPrivileges = $existingPrivileges = array_column(\laabs::configuration('auth')['servicePrivileges'], 'serviceURI');
+
+        // Check if privileges exists in conf file
+        if (!empty(array_diff($privileges, $existingPrivileges))) {
+            $differences = array_diff($privileges, $existingPrivileges);
+            throw new \core\Exception("Privileges %s does not exits", 400, null, $differences);
+        }
+
+        foreach ($privileges as $key => $privilege) {
+            $servicePrivilege = new \stdClass();
+            $servicePrivilege->serviceURI = $privilege;
+            $servicePrivilege->accountId = $serviceAccountId;
+
+            $this->sdoFactory->create($servicePrivilege, "auth/servicePrivilege");
+        }
     }
 }

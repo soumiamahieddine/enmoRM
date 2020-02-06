@@ -30,24 +30,29 @@ class descriptionField
 {
 
     protected $sdoFactory;
+    protected $csv;
 
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
+     * @param \dependency\csv\Csv     $csv        Csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
     }
 
     /**
      * List
      *
+     * @param integer $limit Max limit of results to return
+     *
      * @return recordsManagement/descriptionField[] The list of retention rules
      */
-    public function index()
+    public function index($limit = null)
     {
-        $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField');
+        $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
 
         foreach ($descriptionFields as $i => $descriptionField) {
             $descriptionFields[$descriptionField->name] = $descriptionField;
@@ -242,5 +247,66 @@ class descriptionField
     public function isUsed($descriptionField)
     {
         return (bool) $this->sdoFactory->count('recordsManagement/archiveDescription', "fieldName='$descriptionField->name'");
+    }
+
+    public function exportCsv($limit = null)
+    {
+        $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
+
+        $this->csv->write('php://output', (array) $descriptionFields, 'recordsManagement/descriptionField', false);
+    }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $descriptionFields = $this->index();
+
+                $archiveDescriptionSdoFactory = \laabs::dependency('sdo', 'recordsManagement')->getService('Factory')->newInstance();
+                foreach ($descriptionFields as $descriptionField) {
+                    $archiveDescriptions = $archiveDescriptionSdoFactory->find('recordsManagement/archiveDescription', "fieldName='$descriptionField->name'");
+
+                    foreach ($archiveDescriptions as $archiveDescription) {
+                        $archiveDescriptionSdoFactory->delete($archiveDescription, 'recordsManagement/archiveDescription');
+                    }
+
+                    $this->sdoFactory->delete($descriptionField, 'recordsManagement/descriptionField');
+                }
+            }
+
+            $filename = \laabs\tempnam();
+            file_put_contents($filename, $data);
+            $descriptionFields = $this->csv->read($filename, 'recordsManagement/descriptionField', $messageType = false);
+            foreach ($descriptionFields as $key => $descriptionField) {
+                if (is_null($descriptionField->name)) {
+                    throw new \core\Exception\BadRequestException("Name cannot be null");
+                }
+
+                if ($isReset
+                    || !$this->sdoFactory->exists('recordsManagement/descriptionField', $descriptionField->name)
+                ) {
+                    $this->sdoFactory->create($descriptionField, 'recordsManagement/descriptionField');
+                } else {
+                    $this->sdoFactory->update($descriptionField, 'recordsManagement/descriptionField');
+                }
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
     }
 }

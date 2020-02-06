@@ -1,0 +1,306 @@
+# importExport/messages
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Roles"
+msgstr "Rôles"
+
+msgid "Export referentiels"
+msgstr "Exporter un référentiel"
+
+msgid "Export"
+msgstr "Exporter"
+
+msgid "Description fields"
+msgstr "Dictionnaire de données descriptives"
+
+msgid "Organizations"
+msgstr "Organisations"
+
+msgid "Archival profiles"
+msgstr "Profils d'archive"
+
+msgid "Retention rules"
+msgstr "Règles de conservation"
+
+msgid "Service accounts"
+msgstr "Comptes de service"
+
+msgid "User accounts"
+msgstr "Comptes utilisateur"
+
+msgid "Import Referentiels"
+msgstr "Importer un référentiel"
+
+msgid "results"
+msgstr "Résultats"
+
+msgid "Import"
+msgstr "Importer"
+
+msgid "File successfully imported"
+msgstr "Fichier importé avec succès"
+
+msgid "Warning"
+msgstr "Attention"
+
+msgid "You are about to replace referentiel :"
+msgstr "Vous allez remplacer le référentiel :"
+
+msgid "Are you sure to do this ?"
+msgstr "Voulez-vous vraiment effectuer cette action ?"
+
+msgid "Import with data reset"
+msgstr "Remise à zéro"
+
+msgid "Import without data reset"
+msgstr "Sans remise à zéro"
+
+msgid "Click or drop a referentiel"
+msgstr "Cliquez ou déposez un référentiel"
+
+msgid "No file uploaded"
+msgstr "Aucun fichier versé"
+
+msgid "archivalprofiles"
+msgtxt "Profils d'archive"
+
+# ---------------------------------------------------------
+# Datatable Organization
+# ---------------------------------------------------------
+
+msgid "orgName"
+msgstr "Nom de l'organisation"
+
+msgid "displayName"
+msgstr "Nom affiché"
+
+msgid "orgRoleCodes"
+msgstr "Rôles"
+
+msgid "orgNames"
+msgstr "Nom des organisations"
+
+msgid "otherOrgName"
+msgstr "Autre nom affiché"
+
+msgid "legalClassification"
+msgstr "Classification légale"
+
+msgid "businessType"
+msgstr "Type d'organisation"
+
+msgid "description"
+msgstr "Description"
+
+msgid "orgTypeCode"
+msgstr "Code type de l'organisation"
+
+msgid "taxIdentifier"
+msgstr "Identifiant de taxe"
+
+msgid "beginDate"
+msgstr "Date de début"
+
+msgid "endDate"
+msgstr "Date de fin"
+
+msgid "parentOrgRegNumber"
+msgstr "Identifiant de l'organisation parente"
+
+msgid "ownerOrgRegNumber"
+msgstr "Identifiant de l'organisation mère d'appartenance"
+
+msgid "isOrgUnit"
+msgstr "Est une organisation"
+
+
+# ---------------------------------------------------------
+# Datatable User
+# ---------------------------------------------------------
+
+msgid "isAdmin"
+msgstr "Est un administateur"
+
+msgid "parentRegistrationNumber"
+msgstr "Nom d'enregistrement du parent"
+
+msgid "registrationNumber"
+msgstr "Nom d'enregistrement"
+
+msgid "accountName"
+msgstr "Nom de compte"
+
+msgid "emailAddress"
+msgstr "Adresse email"
+
+msgid "lastName"
+msgstr "Nom"
+
+msgid "firstName"
+msgstr "Prénom"
+
+msgid "title"
+msgstr "Titre"
+
+msgid "password"
+msgstr "Mot de passe"
+
+msgid "roleNames"
+msgstr "Rôles"
+
+msgid "locked"
+msgstr "Bloqué"
+
+msgid "enabled"
+msgstr "Activé"
+
+msgid "orgPosition"
+msgstr "Position dans l'organigramme"
+
+msgid "enumeration"
+msgstr "Énumération"
+
+# ---------------------------------------------------------
+# Datatable Roles
+# ---------------------------------------------------------
+
+msgid "roleId"
+msgstr "Identifiant du rôle"
+
+msgid "roleName"
+msgstr "Nom du rôle"
+
+msgid "privileges"
+msgstr "Privilèges"
+
+msgid "securityLevel"
+msgstr "Niveau de sécurité"
+
+# ---------------------------------------------------------
+# Datatable Archival Profiles
+# ---------------------------------------------------------
+
+msgid "reference"
+msgstr "Référence"
+
+msgid "name"
+msgstr "Nom"
+
+msgid "descriptionSchema"
+msgstr "Schéma de description"
+
+msgid "descriptionClass"
+msgstr "Classe de description"
+
+msgid "retentionStartDate"
+msgstr "Début de la date de conservation"
+
+msgid "retentionRuleCode"
+msgstr "Code de la règle de conservation"
+
+msgid "accessRuleCode"
+msgstr "Code de la règle d'accès"
+
+msgid "acceptUserIndex"
+msgstr "Index de l'utilisateur"
+
+msgid "acceptArchiveWithoutProfile"
+msgstr "Accepte des archives sans profil"
+
+msgid "fileplanLevel"
+msgstr "Niveau dans le plan"
+
+msgid "archiveDescriptions"
+msgstr "Description des archives"
+
+msgid "childrenProfiles"
+msgstr "Profils enfants"
+
+# ---------------------------------------------------------
+# Datatable Description Fields
+# ---------------------------------------------------------
+
+msgid "label"
+msgstr "Label"
+
+msgid "type"
+msgstr "Type"
+
+msgid "default"
+msgstr "Défaut"
+
+msgid "minLength"
+msgstr "Longueur minimale"
+
+msgid "maxLength"
+msgstr "longueur maximale"
+
+msgid "minValue"
+msgstr "Valeur minimale"
+
+msgid "maxValue"
+msgstr "Valeur maximale"
+
+msgid "facets"
+msgstr "Facettes"
+
+msgid "pattern"
+msgstr "Schéma"
+
+# ---------------------------------------------------------
+# Datatable Retention Rules
+# ---------------------------------------------------------
+
+msgid "code"
+msgstr "Code"
+
+msgid "duration"
+msgstr "Durée"
+
+msgid "finalDisposition"
+msgstr "Disposition finale"
+
+msgid "implementationDate"
+msgstr "Date de création"
+
+# ---------------------------------------------------------
+# Exception messages
+# ---------------------------------------------------------
+
+msgid "Wrong columns numbers with csv on line %s"
+msgstr "Mauvais nombre de colonnes dans le csv à la ligne %s"
+
+msgid "Undefined property %s"
+msgstr "Les en-têtes du csv ne correspondent pas avec le modèle sélectionné"
+
+msgid "Password cannot be null"
+msgstr "Le mot de passe ne doit pas être vide"
+
+msgid "User account must be attached to at least one service"
+msgstr "Un compte utilisateur doit être rattaché à au moins un service"
+
+msgid "Csv must have at least one superadmin"
+msgstr "Le csv doit avoir au moins un superadmin"
+
+msgid "Service account must be attached to at least one service"
+msgstr "Un compte de service doit être rattaché à au moins un service"
+
+msgid "Organization '%s' does not exists"
+msgstr "L'organisation %s n'existe pas"
+
+msgid "Privileges %s does not exits"
+msgstr "Le(s) privilège(s) %s n'existe(nt) pas"
+
+msgid "Organization of deleting user must be persisted in new scheme"
+msgstr "L'organisation de l'utilisateur mettant à jour doit être persisté"
+
+msgid "Organization orgRegNumber is mandatory"
+msgstr "La valeur orgRegNumber est obligatoire"
+
+msgid "Owner Organization is mandatory if not orgUnit"
+msgstr "La valeur ownerOrg est obligatoire si la valeur orgUnit est nulle ou fausse"
+
+msgid "Parent organization %s does not exists"
+msgstr "L'organisation parente %s n'existe pas"
+

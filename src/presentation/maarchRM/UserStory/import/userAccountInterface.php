@@ -1,0 +1,17 @@
+<?php
+
+namespace presentation\maarchRM\UserStory\Import;
+
+interface userAccountInterface
+{
+    /**
+     * Import a csv file with user account informations
+     *
+     * @param string  $data      Data base64 encoded or not in proper format
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @uses auth/userAccount/createImport
+     *
+     */
+    public function createImportUseraccounts($data, $isReset = false);
+}

@@ -43,6 +43,25 @@ interface archivalProfileInterface
      */
     public function readNew();
 
+    /**
+     * Create a csv file
+     *
+     * @param  integer $limit Max number of results to display
+     *
+     * @action recordsManagement/archivalProfile/exportCsv
+     *
+     */
+    public function readExport($limit = null);
+
+    /**
+     * @param string  $data     Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action recordsManagement/archivalProfile/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 
     /**
      * Edit a archival profile
@@ -105,7 +124,7 @@ interface archivalProfileInterface
     /**
      * Download the profile file
      *
-     * @action recordsManagement/archivalProfile/export
+     * @action recordsManagement/archivalProfile/exportFile
      */
     public function readArchivalprofileExport_profileReference_();
 
