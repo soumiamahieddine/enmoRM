@@ -10,27 +10,61 @@ class DateTime
     
     protected $format;
 
+    public $parts;
+
     /**
      * Construct a new date object
      * @param mixed  $datetime Either a date string or an existing datetime object
      * @param mixed  $timezone Either a timezone name or a timezone object
      * @param string $format   The default format for __toString
      */
-    public function __construct($datetime=null, $timezone=null, $format=false)
+    public function __construct($datetime = null, $timezone = null, $format = false)
     {
         // Default value for datetime is year+month+day hour+minute+second
         if (!$datetime) {
-            //$datetime = date("Y-m-d H:i:s");
-            $datetime = 'now';
+            $datetime = date("Y-m-d H:i:s");
         } else {
             $datetime = str_replace("/", "-", $datetime);
             $datetime = str_replace(",", ".", $datetime);
         }
 
-        if (!$timezone) {
-            $timezone = new TimeZone();
-        } elseif (is_string($timezone)) {
-            $timezone = new TimeZone($timezone);
+        // Parse datetime string to keep track of received parts
+        $this->parts = date_parse($datetime);
+        if ($this->parts['error_count'] > 0) {
+            throw new \core\Exception("Invalid date time.");
+        }
+
+        unset($this->parts['error_count']);
+        unset($this->parts['errors']);
+        unset($this->parts['warning_count']);
+        unset($this->parts['warnings']);
+
+        // Check if a timezone is provided on the datetime string
+        if ($this->parts['is_localtime']) {
+            // Ignore any received timezone parameter and use the timezone in datetime string
+            $timezone = null;
+
+            // Timezone expressed in minutes in PHP <= 7.1 with shift TO UTC from tz (Europe/Paris = -60)
+            // and seconds in PHP >= 7.2 whit shift FROM UTC to tz (Europe/Paris = 7200)
+            if (version_compare(PHP_VERSION, '52', '<')) {
+                $this->parts['zone'] = -($this->parts['zone']*60);
+            }
+        } elseif (!is_null($timezone)) {
+            // Default value for timezone is local server timezone
+            // String timezone is converted to timezone object
+            if (is_string($timezone)) {
+                $timezone = new TimeZone($timezone);
+            }
+
+            $this->parts['is_localtime'] = true;
+            $offset = $timezone->getOffset();
+            if ($offset[0] == '-') {
+                $hh = (int) substr($offset, 0, 3);
+            } else {
+                $hh = (int) substr($offset, 0, 2);
+            }
+            $mm = substr($offset, -2, 2);
+            $this->parts['zone'] = ($hh*3600)+($mm*60);
         }
 
         if (!$format) {
@@ -130,5 +164,4 @@ class DateTime
 
         return $newDate->sub($duration);
     }
-
 }

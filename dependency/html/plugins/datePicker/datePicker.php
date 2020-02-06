@@ -138,6 +138,6 @@ EOS;
         $variableScript = $this->element->ownerDocument->createElement('script');
         $variableCdataSection = $this->element->ownerDocument->createCDataSection($parametersScript);
         $variableScript->appendChild($variableCdataSection);
-        $this->element->ownerDocument->appendChild($variableScript);
+        $this->element->ownerDocument->getContainer()->appendChild($variableScript);
     }
 }
