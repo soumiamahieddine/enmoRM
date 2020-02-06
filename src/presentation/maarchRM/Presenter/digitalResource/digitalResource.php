@@ -48,18 +48,28 @@ class digitalResource
      */
     public function retrieve($resource)
     {
-        //$contents = base64_decode($resource->attachment->data);
-        switch ($resource->mimetype) {
-            case 'application/pdf':
-                $url = $this->getPDFPreview($resource);
-                break;
+        // Avoid preview if size exceeds 128Mb
+        if ($resource->size > 128000000) {
+            return $this->view->saveHtml();
+        }
 
-            case 'text/html':
-            case 'text/plain':
-                $url = $this->getMarkupLanguagePreview($resource);
-                break;
+        // Get preview if size exceeds 2Mb
+        if ($resource->size > 2000000) {
+            switch ($resource->mimetype) {
+                case 'application/pdf':
+                    $url = $this->getPDFPreview($resource);
+                    break;
 
-            default:
+                case 'text/html':
+                case 'text/plain':
+                    $url = $this->getMarkupLanguagePreview($resource);
+                    break;
+
+                default:
+            }
+        } else {
+            $contents = stream_get_contents($resource->attachment->data);
+            $url = \laabs::createPublicResource($contents);
         }
 
         if ($url) {
@@ -74,35 +84,32 @@ class digitalResource
 
     protected function getPDFPreview($resource)
     {
-        if ($resource->size > 65536) {
-            try {
-                $tempfile = \laabs\tempnam();
-                $fp = fopen($tempfile, 'r+');
-                stream_copy_to_stream($resource->attachment->data, $fp);
-                fclose($fp);
+        try {
+            $tempfile = \laabs\tempnam();
+            $fp = fopen($tempfile, 'r+');
+            stream_copy_to_stream($resource->attachment->data, $fp);
+            rewind($resource->attachment->data);
+            fclose($fp);
 
-                $fpdi = \laabs::newService('dependency/PDF/Factory')->getFpdi();
-                
-                $docpages = $fpdi->setSourceFile($tempfile);
-                if ($docpages > 2) {
-                    $page = $fpdi->importPage(1);
-                    $size = $fpdi->getTemplateSize($page);
-                    $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
-                    $fpdi->useTemplate($page);
+            $fpdi = \laabs::newService('dependency/PDF/Factory')->getFpdi();
+            
+            $docpages = $fpdi->setSourceFile($tempfile);
+            if ($docpages > 2) {
+                $page = $fpdi->importPage(1);
+                $size = $fpdi->getTemplateSize($page);
+                $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
+                $fpdi->useTemplate($page);
 
-                    $page = $fpdi->importPage(2);
-                    $size = $fpdi->getTemplateSize($page);
-                    $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
-                    $fpdi->useTemplate($page);
+                $page = $fpdi->importPage(2);
+                $size = $fpdi->getTemplateSize($page);
+                $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
+                $fpdi->useTemplate($page);
 
-                    $contents = $fpdi->Output('S');
-                } else {
-                    $contents = file_get_contents($tempfile);
-                }
-            } catch (\Exception $exception) {
-                $contents = stream_get_contents($resource->attachment->data);
+                $contents = $fpdi->Output('S');
+            } else {
+                $contents = file_get_contents($tempfile);
             }
-        } else {
+        } catch (\Exception $exception) {
             $contents = stream_get_contents($resource->attachment->data);
         }
 
@@ -113,12 +120,9 @@ class digitalResource
 
     protected function getMarkupLanguagePreview($resource)
     {
-        if ($resource->size > 65536) {
-            $contents = fread($resource->attachment->data, 65535);
-        } else {
-            $contents = stream_get_contents($resource->attachment->data);
-        }
-
+        rewind($resource->attachment->data);
+        $contents = fread($resource->attachment->data, 10000);
+        
         $contents = strip_tags($contents);
 
         $url = \laabs::createPublicResource($contents);
@@ -129,7 +133,7 @@ class digitalResource
     /**
      * Get resource contents
      * @param string $contents The digitalResource contents
-     * 
+     *
      * @return string
      **/
     public function contents($contents)
