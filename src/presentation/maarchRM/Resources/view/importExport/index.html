@@ -215,7 +215,7 @@
 
 
     var exportData =  {
-        load: function(ref, limit = null) {
+        load: function(ref, limit) {
             $("#listLoading").css('display', '');
             $('#exportButton').css('display', 'none').attr('data-ref', null);
             ajax($('#exportList'), {
