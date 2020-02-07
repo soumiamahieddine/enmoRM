@@ -242,6 +242,14 @@ trait archiveValidationTrait
      */
     public function validateManagementMetadata($archive)
     {
+        $organization = $this->sdoFactory->read('organization/organization', ['registrationNumber' => $archive->originatorOrgRegNumber]);
+
+        if (!is_null($organization->enabled) && $organization->enabled === false) {
+            throw new \core\Exception("The deposit is blocked because the activity is disabled.");
+        }
+
+        $this->checkRights($archive);
+
         if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->archivalProfileReference])) {
             throw new \core\Exception\NotFoundException("The archival profile reference not found");
         }

@@ -82,20 +82,6 @@ trait archiveEntryTrait
             $archive->archiveId = \laabs::newId();
         }
 
-        // Get originatorOrgRegNumber of parent if parentId exists
-        if (isset($archive->parentArchiveId)) {
-            $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
-            $archive->originatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
-        }
-
-        $organization = $this->sdoFactory->read('organization/organization', ['registrationNumber' => $archive->originatorOrgRegNumber]);
-
-        if (!is_null($organization->enabled) && $organization->enabled === false) {
-            throw new \core\Exception("The deposit is blocked because the activity is disabled.");
-        }
-
-        $this->checkRights($archive);
-
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();
 
@@ -257,7 +243,7 @@ trait archiveEntryTrait
         } else {
             $archive->archiveName = $filename;
         }
-        
+
         return $archive;
     }
 
@@ -415,6 +401,12 @@ trait archiveEntryTrait
 
     public function completeOriginator($archive)
     {
+        // Get originatorOrgRegNumber of parent if parentId exists
+        if (isset($archive->parentArchiveId)) {
+            $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+            $archive->originatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
+        }
+
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
             $currentOrg = \laabs::getToken("ORGANIZATION");
