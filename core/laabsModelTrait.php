@@ -490,13 +490,28 @@ trait laabsModelTrait
             case 'resource':
                 if (is_resource($sourceValue)) {
                     return $sourceValue;
-                } elseif (is_string($sourceValue) && filter_var(substr($sourceValue, 0, 128), FILTER_VALIDATE_URL)) {
-                    return fopen($sourceValue, 'r');
-                } elseif (is_scalar($sourceValue)) {
-                    return self::createTempStream((string) $sourceValue);
                 }
 
-                return self::createTempStream('');
+                switch (true) {
+                    case is_string($sourceValue) && filter_var(substr($sourceValue, 0, 128), FILTER_VALIDATE_URL):
+                        return fopen($sourceValue, 'r');
+
+                    case is_string($sourceValue) && preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $sourceValue):
+                        $handler = fopen('php://temp', 'r+');
+                        $filter = stream_filter_append($handler, 'convert.base64-decode', STREAM_FILTER_WRITE);
+                        fwrite($handler, $sourceValue);
+                        stream_filter_remove($filter);
+                        rewind($handler);
+
+                        return $handler;
+
+                    case is_scalar($sourceValue):
+                        return self::createTempStream((string) $sourceValue);
+                    
+                    default:
+                        return self::createTempStream('');
+                }
+                break;
 
             case 'NULL':
                 return $sourceValue;
