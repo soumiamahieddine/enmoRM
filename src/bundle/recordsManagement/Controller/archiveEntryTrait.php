@@ -101,8 +101,6 @@ trait archiveEntryTrait
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
-        } else {
-            $this->receiveAttachments($archive);
         }
 
         // Load archival profile, service level if specified
@@ -155,16 +153,14 @@ trait archiveEntryTrait
                 } elseif (is_resource($receivedHandler)) {
                     $handler = fopen('php://temp', 'r+');
                     $filter = stream_filter_append($handler, 'convert.base64-decode', STREAM_FILTER_WRITE);
-                    stream_copy_to_stream($receivedHandler, $handler);
+                    $digitalResource->size = stream_copy_to_stream($receivedHandler, $handler);
                     stream_filter_remove($filter);
                     rewind($handler);
                 }
-
                 unset($receivedHandler);
                 $digitalResource->setHandler($handler);
             }
         }
-
         if (is_array($archive->contents)) {
             foreach ($archive->contents as $contentArchive) {
                 $this->receiveAttachments($contentArchive);
@@ -299,7 +295,7 @@ trait archiveEntryTrait
         } else {
             $archive->archiveName = $filename;
         }
-        
+
         return $archive;
     }
 
