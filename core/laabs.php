@@ -80,6 +80,8 @@ class laabs
      */
     public static function init()
     {
+        $_SERVER['LAABS-INIT-TIME'] = microtime(true);
+
         chdir('..');
         static::$rootdir = getcwd();
 
@@ -1427,5 +1429,17 @@ class laabs
         $filename = str_replace($forbiddenChars, "_", $filename);
 
         return $filename;
+    }
+
+    /**
+     * Trace calls in log
+     * @param string $source
+     * @param string $callable
+     */
+    public static function trace($source)
+    {
+        $delay = round(microtime(true) - $_SERVER['LAABS-INIT-TIME'], 6);
+        $message = $source.' '.$delay.'s '.round(memory_get_usage()/1000000).'/'.round(memory_get_peak_usage()/1000000).'Mb';
+        static::log($message);
     }
 }

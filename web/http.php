@@ -48,7 +48,6 @@ switch (true) {
     case !\laabs::isServiceClient():
         \core\Kernel\PresentationKernel::start();
         \core\Kernel\PresentationKernel::run();
-        //\laabs::log($_SERVER['REQUEST_METHOD'].' '.$_SERVER['SCRIPT_NAME'].' : '.round(memory_get_peak_usage()/1048576));
         \core\Kernel\PresentationKernel::end();
         break;
 
