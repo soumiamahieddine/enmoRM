@@ -490,7 +490,9 @@ trait laabsModelTrait
             case 'resource':
                 if (is_resource($sourceValue)) {
                     return $sourceValue;
-                } else {
+                } elseif (is_string($sourceValue) && filter_var(substr($sourceValue, 0, 128), FILTER_VALIDATE_URL)) {
+                    return fopen($sourceValue, 'r');
+                } elseif (is_scalar($sourceValue)) {
                     return self::createTempStream((string) $sourceValue);
                 }
 
