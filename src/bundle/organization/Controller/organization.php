@@ -45,6 +45,7 @@ class organization
         $this->sdoFactory = $sdoFactory;
         $this->csv = $csv;
         $this->accountController = \laabs::newController('auth/userAccount');
+        $this->hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
     }
 
     /**
@@ -134,7 +135,10 @@ class organization
         $queryParts = array();
         $queryParams = array();
 
-        $securityLevel = $user->getSecurityLevel();
+        $securityLevel = null;
+        if ($this->hasSecurityLevel) {
+            $securityLevel = $user->getSecurityLevel();
+        }
         if ($securityLevel == $user::SECLEVEL_GENADMIN) {
             $queryParams['isOrgUnit'] = 'false';
             $queryParts['isOrgUnit'] = "isOrgUnit=:isOrgUnit";
@@ -147,14 +151,14 @@ class organization
             OR parentOrgId = '*".$term."*')";
         }
 
-        if($enabled !== 'all') {
+        if ($enabled !== 'all') {
             $queryParams['enabled'] = $enabled;
             $queryParts['enabled'] = "enabled=:enabled";
         }
 
         $queryString = "";
         if (count($queryParts)) {
-            $queryString = implode(' AND ', $queryParts );
+            $queryString = implode(' AND ', $queryParts);
         }
 
         $length = \laabs::configuration('presentation.maarchRM')['maxResults'];
@@ -244,7 +248,10 @@ class organization
             }
         }
 
-        $securityLevel = $user->getSecurityLevel();
+        $securityLevel = null;
+        if ($this->hasSecurityLevel) {
+            $securityLevel = $user->getSecurityLevel();
+        }
 
         if ($securityLevel == $user::SECLEVEL_GENADMIN) {
             $organizationList = $this->sdoFactory->find(
@@ -302,7 +309,6 @@ class organization
      */
     protected function buildTree($roots, $organizationList)
     {
-
         foreach ($roots as $organization) {
             $orgId = (string)$organization->orgId;
 
@@ -575,7 +581,10 @@ class organization
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        $securityLevel = $account->getSecurityLevel();
+        $securityLevel = null;
+        if ($this->hasSecurityLevel) {
+            $securityLevel = $account->getSecurityLevel();
+        }
         if ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
             if ($organization->ownerOrgId != $account->ownerOrgId) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
@@ -1440,7 +1449,10 @@ class organization
 
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
-        $securityLevel = $user->getSecurityLevel();
+        $securityLevel = null;
+        if ($this->hasSecurityLevel) {
+            $securityLevel = $user->getSecurityLevel();
+        }
 
         if (!$currentService) {
             $userPositions = $userPositionController->getMyPositions();
