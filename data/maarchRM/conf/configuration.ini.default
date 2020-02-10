@@ -312,6 +312,9 @@ menu = "[
 [auth]
 @include securityLevel.ini
 
+; Add stronger verification on user possibilities based on security level
+useSecurityLevel = false
+
 ; Encryption algorithm (MD5, SHA256, SHA512...)
 passwordEncryption = SHA256
 
