@@ -327,7 +327,7 @@ class userAccount
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
         if ($this->hasSecurityLevel) {
-            $this->checkPrivilegesAccess($account, $userAccount, $userAccount);
+            $this->checkPrivilegesAccess($account, $userAccount);
         }
 
         $organizationController = \laabs::newController('organization/organization');
@@ -1065,7 +1065,7 @@ class userAccount
     /**
      * If security level is activated in configuration, check if user has clearance
      *
-     * @param auth/account $account     account realising request
+     * @param auth/account $ownAccount  account realising request
      * @param auth/account $userAccount account to exert action to
      *
      * @return

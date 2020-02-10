@@ -37,6 +37,7 @@ class serviceAccount
     protected $organizationController;
     protected $servicePositionController;
     protected $userAccountController;
+    protected $hasSecurityLevel;
 
     /**
      * Constructor
@@ -54,6 +55,7 @@ class serviceAccount
         $this->organizationController = \laabs::newController('organization/organization');
         $this->servicePositionController = \laabs::newController('organization/servicePosition');
         $this->userAccountController = \laabs::newController('auth/userAccount');
+        $this->hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
     }
 
     /**
@@ -83,18 +85,20 @@ class serviceAccount
         $queryAssert = [];
         $queryAssert[] = "accountType='service'";
 
-        switch ($account->getSecurityLevel()) {
-            case $account::SECLEVEL_GENADMIN:
-                $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
-                break;
+        if ($this->hasSecurityLevel) {
+            switch ($account->getSecurityLevel()) {
+                case $account::SECLEVEL_GENADMIN:
+                    $queryAssert[] = "(isAdmin='TRUE' AND ownerOrgId!=null)";
+                    break;
 
-            case $account::SECLEVEL_FUNCADMIN:
-                $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
-                break;
+                case $account::SECLEVEL_FUNCADMIN:
+                    $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                    break;
 
-            case $account::SECLEVEL_USER:
-                $queryAssert[] = "((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
-                break;
+                case $account::SECLEVEL_USER:
+                    $queryAssert[] = "((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                    break;
+            }
         }
 
         $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
@@ -139,15 +143,8 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
-            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if ($serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
+        if ($this->hasSecurityLevel) {
+            $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
         $serviceAccount->enabled = true;
@@ -169,15 +166,8 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
-            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if ($serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
+        if ($this->hasSecurityLevel) {
+            $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
         $serviceAccount->enabled = false;
@@ -201,15 +191,8 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
-            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if (!$orgId || $serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
+        if ($this->hasSecurityLevel) {
+            $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
         if (!$orgId && !empty($orgId)) {
@@ -321,15 +304,8 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
-            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if ($serviceAccount->isAdmin && $serviceAccount->ownerOrgId != $account->ownerOrgId) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
+        if ($this->hasSecurityLevel) {
+            $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
         if ($orgId) {
@@ -505,7 +481,6 @@ class serviceAccount
     public function exportCsv($limit = null)
     {
         $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
-
 
         $servicePositionController = \laabs::newController('organization/servicePosition');
         $organizationController = \laabs::newController('organization/organization');
@@ -746,6 +721,28 @@ class serviceAccount
             $servicePrivilege->accountId = $serviceAccountId;
 
             $this->sdoFactory->create($servicePrivilege, "auth/servicePrivilege");
+        }
+    }
+
+    /**
+     * If security level is activated in configuration, check if user has clearance
+     *
+     * @param auth/account $ownAccount     account realising request
+     * @param auth/account $serviceAccount account to exert action to
+     *
+     * @return
+     */
+    protected function checkPrivilegesAccess($ownAccount, $serviceAccount)
+    {
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            if (!$serviceAccount->organizations || $serviceAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
         }
     }
 }
