@@ -728,6 +728,10 @@ class userAccount
 
     public function isAuthorized($securitiesLevel)
     {
+        if (!$this->hasSecurityLevel) {
+            return true;
+        }
+
         if (!is_array($securitiesLevel)) {
             $securitiesLevel = [$securitiesLevel];
         }
