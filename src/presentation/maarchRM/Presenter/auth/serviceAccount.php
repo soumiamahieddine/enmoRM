@@ -141,9 +141,8 @@ class serviceAccount
 
         if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
             $whatAmI = $account->securityLevel;
-        }
-        else {
-            $whatAmI = 'oldUser';
+        } else {
+            $whatAmI = 'userWithoutSecurityLevel';
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");

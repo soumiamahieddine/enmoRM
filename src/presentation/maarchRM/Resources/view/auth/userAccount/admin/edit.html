@@ -15,7 +15,6 @@
         <div class="col-md-6">
             <div class="panel panel-info">
                 <div class="panel-heading">User account</div>
-
                 <div class="panel-body">
                     <?merge user ?>
                     <form class='form-horizontal row' id="user_userAccountForm">
@@ -44,18 +43,19 @@
                                     <input type="password" class="form-control" id="verification" name="verification" placeholder="Password verification" autocomplete="off">
                                 </div>
                             </div>
+                            <?merge whatAmI.ifne('userWithoutSecurityLevel') ?>
                             <div class="form-group" id="adminRights">
                                 <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
                                 <div class="col-sm-6">
                                     <input type="checkbox" data-size="small" data-on="Oui" data-off="Non" data-toggle="toggle" name="adminUser" id="adminUser">
                                 </div>
-                            </div>                          
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-md-6">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#userInformationsTab" data-toggle="tab">User information</a></li>
@@ -117,12 +117,15 @@
         history.back();
     });
 
-    setAdminButton($('#whatAmI').text());
-    
+    var whatAmI = $('#whatAmI').text();
+    if (whatAmI != 'userWithoutSecurityLevel') {
+        setAdminButton(whatAmI);
+    }
+
 //create
     $("#user_saveUser").on('click', function () {
 
-        var user = serialize();
+        var user = serialize(whatAmI);
         let error = false;
 
         var securityLevel = $("#securityLevel").text();
@@ -146,7 +149,7 @@
             gritter.show($('#emptyOrganization_text').text(), false);
             error = true;
         }
-        
+
         if (securityLevel != "gen_admin" && (user.ownerOrgId == "" || user.ownerOrgId == null)) {
             gritter.show($('#emptyOrganization_text').text(), false);
             error = true;
@@ -185,19 +188,25 @@
         });
     });
 
-    function serialize() {
+    function serialize(whatAmI) {
+        var isUserWithSecurityLevel = true;
+        if (whatAmI == 'userWithoutSecurityLevel') {
+            isUserWithSecurityLevel = false;
+        }
+
         var userAccount = {
             accountId: $('#user_saveUser').attr("data-useraccountid"),
             organizations : [],
             modificationRight : $('#editMyProfile').html()
         };
 
-        user_security = $("#securityLevel").text();
-
-        if($('#adminUser').prop('checked')) {
-            userAccount['isAdmin'] = true;
-        } else {
-            userAccount['isAdmin'] = false;
+        if (isUserWithSecurityLevel) {
+            user_security = $("#securityLevel").text();
+            if($('#adminUser').prop('checked')) {
+                userAccount['isAdmin'] = true;
+            } else {
+                userAccount['isAdmin'] = false;
+            }
         }
 
         var userAccountInfo = $('#user_userAccountForm').find('input');
@@ -206,28 +215,28 @@
         var userPositions = $("#orgs").find('input');
         $.each(userPositions, function(){
             userAccount.organizations.push($(this).data('orgid'));
-            userAccount.ownerOrgId=$(this).data('ownerorgid');
+            userAccount.ownerOrgId = $(this).data('ownerorgid');
         })
 
         $.each(inputs, function () {
             userAccount[$(this).attr('name')] = jQuery.trim($(this).val());
         })
 
-        if (userAccount['isAdmin'] == true) {
+        if (userAccount['isAdmin'] == true && isUserWithSecurityLevel) {
             userAccount.organizations = [];
             userAccount.ownerOrgId = $("#orgSelect").val();
             if (user_security == "gen_admin") {
                 userAccount.ownerOrgId = null;
             }
         } else {
-            userAccount.ownerOrgId=$("#orgs").find('input').first().data('ownerorgid');
+            userAccount.ownerOrgId = $("#orgs").find('input').first().data('ownerorgid');
         }
 
         let roleConfig = $("#user_RoleContain").attr('data-restrictroles');
         //parametre.roleMembers.push(null);
-        if (!roleConfig){ 
+        if (!roleConfig){
             var roles = $("#listRoles").find('.active');
-            
+
             if (roles.size() > 0) {
                 userAccount.roles = [];
                 $.each(roles, function () {
@@ -264,7 +273,7 @@
                 $('#adminUser').bootstrapToggle("off");
                 $('#adminUser').parent().addClass('disabled');
                 $("#adminRights").hide();
-            } else if (whatAmI == "oldUser") {
+            } else if (whatAmI == "userWithoutSecurityLevel") {
                 $('#adminUser').bootstrapToggle("off");
                 $('#adminUser').parent().removeClass('disabled');
             }
