@@ -58,10 +58,8 @@ class archivalProfile
      *
      * @return string
      */
-    public function index()
+    public function index($archivalProfiles)
     {
-        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
-
         $this->view->addContentFile('recordsManagement/archivalProfile/index.html');
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];

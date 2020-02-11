@@ -75,7 +75,6 @@ class archivalProfile
         foreach ($archivalProfiles as $archivalProfile) {
             $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId, true);
         }
-
         return $archivalProfiles;
     }
 

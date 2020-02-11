@@ -1390,7 +1390,7 @@ class archive
         foreach ($userServices as $userService) {
             foreach ($originators as $originator) {
                 if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
-                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
+                    if (!empty((string) $originator->ownerOrgId) && !isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
                         $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
                         $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
@@ -1401,7 +1401,6 @@ class archive
                 }
             }
         }
-
         return $ownerOriginatorOrgs;
     }
 }
