@@ -47,7 +47,9 @@ switch (true) {
     // Instance has a view
     case !\laabs::isServiceClient():
         \core\Kernel\PresentationKernel::start();
+        \laabs::trace('PresentationKernel');
         \core\Kernel\PresentationKernel::run();
+        \laabs::trace($_SERVER['REQUEST_METHOD'].' '.$_SERVER['SCRIPT_NAME']);
         \core\Kernel\PresentationKernel::end();
         break;
 
@@ -55,6 +57,8 @@ switch (true) {
     case \laabs::isServiceClient():
     default:
         \core\Kernel\ServiceKernel::start();
+        \laabs::trace('ServiceKernel');
         \core\Kernel\ServiceKernel::run();
+        \laabs::trace($_SERVER['REQUEST_METHOD'].' '.$_SERVER['SCRIPT_NAME']);
         \core\Kernel\ServiceKernel::end();
 }

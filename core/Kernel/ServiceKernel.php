@@ -82,6 +82,9 @@ class ServiceKernel extends AbstractKernel
             // Parse request to get arguments from request content
             self::$instance->parseRequest();
 
+             // Validate request 
+            self::$instance->validateRequest();
+
             // Extract action arguments
             self::$instance->getActionArguments();
 
@@ -186,6 +189,7 @@ class ServiceKernel extends AbstractKernel
         }
 
         $bodyArguments = array();
+        
         $contents = stream_get_contents($this->request->body);
             
         if (isset($this->inputRouter)) {
@@ -207,16 +211,23 @@ class ServiceKernel extends AbstractKernel
                 case 'json':
                 default:
                     $bodyArguments = \core\Encoding\json::decode($contents);
+        
                     break;
             }
         }
+        
+        $this->userMessage = array_merge($queryArguments, $bodyArguments);
+    }
 
-        $requestArguments = array_merge($queryArguments, $bodyArguments);
-
-        $this->serviceRequest = $this->servicePath->getMessage($requestArguments);
-
+    /**
+     * Validate request
+     */
+    protected function validateRequest()
+    {
+        $this->serviceRequest = $this->servicePath->getMessage($this->userMessage);
+        
         $valid = \laabs::validateMessage($this->serviceRequest, $this->servicePath);
-
+        
         if (!$valid) {
             $e = new \core\Exception\BadRequestException();
             $e->errors = \laabs::getValidationErrors();

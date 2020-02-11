@@ -37,6 +37,12 @@ abstract class AbstractKernel
     public $request;
 
     /**
+     * The message parts
+     * @var array
+     */
+    public $userMessage = array();
+
+    /**
      * The laabs Response object
      * @var object $response
      */
