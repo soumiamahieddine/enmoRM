@@ -1,490 +1,537 @@
-INSERT INTO "auth"."account" VALUES ('aackermann', 'aackermann', 'Amanda ACKERMANN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Amanda', 'ACKERMANN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('aadams', 'aadams', 'Amy ADAMS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:20:33.964708', '127.0.0.1', NULL, 'Amy', 'ADAMS', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('aalambic', 'aalambic', 'Alain ALAMBIC', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-23 14:00:29.059065', '127.0.0.1', NULL, 'Alain', 'ALAMBIC', 'M.', NULL, NULL, '{"csrf": {"2019-09-23T14:05:44,406456Z": "a45c4a7784bd8ed0d7c25f74ce3029e24693f112e03fd606f38f508a61f9554b"}}', NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('aastier', 'aastier', 'Alexandre ASTIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:19:10.46925', '127.0.0.1', NULL, 'Alexandre', 'ASTIER', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('bbain', 'bbain', 'Barbara BAIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Barbara', 'BAIN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('bbardot', 'bbardot', 'Brigitte BARDOT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', true, '2019-03-14 15:55:48.901327', false, NULL, 0, NULL, NULL, NULL, 'Brigitte', 'BARDOT', 'Mme', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('bblier', 'bblier', 'Bernard BLIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-25 15:16:30.662578', '127.0.0.1', NULL, 'Bernard', 'BLIER', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T15:17:12,323803Z": "ce9030d24aceabfb1f1ba14895f7231822efdd979281ccf699b71c23a9ace679"}}', NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('bboule', 'bboule', 'Bruno BOULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Bruno', 'BOULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ccamus', 'ccamus', 'Cyril CAMUS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Cyril', 'CAMUS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('cchaplin', 'cchaplin', 'Charlie CHAPLIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlie', 'CHAPLIN', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ccharles', 'ccharles', 'Charlotte CHARLES', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlotte', 'CHARLES', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ccordy', 'ccordy', 'Chloé CORDY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-18 16:09:53.920859', '127.0.0.1', NULL, 'Chloé', 'CORDY', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ccox', 'ccox', 'Courtney COX', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Courtney', 'COX', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ddaull', 'ddaull', 'Denis DAULL', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Denis', 'DAULL', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ddenis', 'ddenis', 'Didier DENIS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Didier', 'DENIS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ddur', 'ddur', 'Dominique DUR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Dominique', 'DUR', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('eerina', 'eerina', 'Edith ERINA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Edith', 'ERINA', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ggrand', 'ggrand', 'George GRAND', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-25 12:07:44.170506', '127.0.0.1', NULL, 'George', 'GRAND', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T12:07:45,573625Z": "ba8478523dd582f81bd42c3052b7f5ce32db1245e3b2b9cf2b0226dd4baa428c"}}', NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('hhier', 'hhier', 'Hubert HIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Hubert', 'HIER', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('jjane', 'jjane', 'Jenny JANE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jenny', 'JANE', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('jjonasz', 'jjonasz', 'Jean JONASZ', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jean', 'JONASZ', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('kkaar', 'kkaar', 'Katy KAAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Katy', 'KAAR', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('kkrach', 'kkrach', 'Kevin KRACH', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:03.559857', '127.0.0.1', NULL, 'Kevin', 'KRACH', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('mmanfred', 'mmanfred', 'Martin MANFRED', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Martin', 'MANFRED', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('nnataly', 'nnataly', 'Nancy NATALY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 11:07:45.462923', '127.0.0.1', NULL, 'Nancy', 'NATALY', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', true);
-INSERT INTO "auth"."account" VALUES ('ppacioli', 'ppacioli', 'Paolo PACIOLI', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paolo', 'PACIOLI', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ppetit', 'ppetit', 'Patricia PETIT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Patricia', 'PETIT', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ppreboist', 'ppreboist', 'Paul PREBOIST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paul', 'PREBOIST', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ppruvost', 'ppruvost', 'Pierre PRUVOST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Pierre', 'PRUVOST', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('rrenaud', 'rrenaud', 'Robert RENAUD', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Robert', 'RENAUD', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('rreynolds', 'rreynolds', 'Ryan REYNOLDS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Ryan', 'REYNOLDS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ssaporta', 'ssaporta', 'Sabrina SAPORTA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sabrina', 'SAPORTA', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ssissoko', 'ssissoko', 'Sylvain SISSOKO', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvain', 'SISSOKO', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('sstallone', 'sstallone', 'Sylvester STALLONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvester', 'STALLONE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('sstar', 'sstar', 'Suzanne STAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Suzanne', 'STAR', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('superadmin', 'superadmin', 'super admin', 'user', 'info@maarch.org', true, '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, NULL, false, NULL, 0, '2019-09-25 15:17:16.573215', '127.0.0.1', NULL, 'SUPERAdmin', 'Super', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T15:17:21,027830Z": "68989a4ec19ac24a18ae116f229da4760f10b74f038237c79ffcdc35be259012"}}', NULL, NULL, true);
-INSERT INTO "auth"."account" VALUES ('System', 'Systeme', 'Systeme', 'service', 'info@maarch.org', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9OXNeNIrej2+v3UMzAsF3PSzDUlZ73kPvgqbQmZvza0eZO062uQu57Rdah9z3mdbTh6NBiiR8FQTnW6eVgQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '63ce15235abe97db0182e6857c1da763', '2019-03-19 07:54:33.464846', NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('SystemDepositor', 'Systeme versant', 'Systeme versant', 'service', 'info@maarch.org', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9ORUXZpbMim/ilUMpE9FzYG3TW0Eii0Oy1PaFyJ35aBqcMU3gvAq4v0ZY0Z/r0cPVzbAaymd1UEnsAe3MjqGLt7BxvxiHJQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '87eda47a7218326af0e3f4eaad7c2c22', '2019-03-19 07:56:55.287696', NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ttong', 'ttong', 'Tony TONG', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Tony', 'TONG', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('sstone', 'sstone', 'Sharon STONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:27.732025', '127.0.0.1', NULL, 'Sharon', 'STONE', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('ttule', 'ttule', 'Thierry TULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Thierry', 'TULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
-INSERT INTO "auth"."account" VALUES ('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false);
+INSERT INTO "auth"."account" ("accountId","accountName","displayName","accountType","emailAddress","enabled","password","passwordChangeRequired","passwordLastChange","locked","lockDate","badPasswordCount","lastLogin","lastIp","replacingUserAccountId","firstName","lastName","title","salt","tokenDate","authentication","preferences","ownerOrgId","isAdmin") VALUES 
+('aackermann', 'aackermann', 'Amanda ACKERMANN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Amanda', 'ACKERMANN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('aadams', 'aadams', 'Amy ADAMS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:20:33.964708', '127.0.0.1', NULL, 'Amy', 'ADAMS', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('aalambic', 'aalambic', 'Alain ALAMBIC', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-23 14:00:29.059065', '127.0.0.1', NULL, 'Alain', 'ALAMBIC', 'M.', NULL, NULL, '{"csrf": {"2019-09-23T14:05:44,406456Z": "a45c4a7784bd8ed0d7c25f74ce3029e24693f112e03fd606f38f508a61f9554b"}}', NULL, 'ACME', false),
+('aastier', 'aastier', 'Alexandre ASTIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:19:10.46925', '127.0.0.1', NULL, 'Alexandre', 'ASTIER', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('bbain', 'bbain', 'Barbara BAIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Barbara', 'BAIN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('bbardot', 'bbardot', 'Brigitte BARDOT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', true, '2019-03-14 15:55:48.901327', false, NULL, 0, NULL, NULL, NULL, 'Brigitte', 'BARDOT', 'Mme', NULL, NULL, NULL, NULL, 'ACME', false),
+('bblier', 'bblier', 'Bernard BLIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-25 15:16:30.662578', '127.0.0.1', NULL, 'Bernard', 'BLIER', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T15:17:12,323803Z": "ce9030d24aceabfb1f1ba14895f7231822efdd979281ccf699b71c23a9ace679"}}', NULL, 'ACME', false),
+('bboule', 'bboule', 'Bruno BOULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Bruno', 'BOULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ccamus', 'ccamus', 'Cyril CAMUS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Cyril', 'CAMUS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('cchaplin', 'cchaplin', 'Charlie CHAPLIN', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlie', 'CHAPLIN', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ccharles', 'ccharles', 'Charlotte CHARLES', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Charlotte', 'CHARLES', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ccordy', 'ccordy', 'Chloé CORDY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-18 16:09:53.920859', '127.0.0.1', NULL, 'Chloé', 'CORDY', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ccox', 'ccox', 'Courtney COX', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Courtney', 'COX', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ddaull', 'ddaull', 'Denis DAULL', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Denis', 'DAULL', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ddenis', 'ddenis', 'Didier DENIS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Didier', 'DENIS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ddur', 'ddur', 'Dominique DUR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Dominique', 'DUR', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('eerina', 'eerina', 'Edith ERINA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Edith', 'ERINA', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ggrand', 'ggrand', 'George GRAND', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-25 12:07:44.170506', '127.0.0.1', NULL, 'George', 'GRAND', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T12:07:45,573625Z": "ba8478523dd582f81bd42c3052b7f5ce32db1245e3b2b9cf2b0226dd4baa428c"}}', NULL, 'ACME', false),
+('hhier', 'hhier', 'Hubert HIER', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Hubert', 'HIER', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('jjane', 'jjane', 'Jenny JANE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jenny', 'JANE', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('jjonasz', 'jjonasz', 'Jean JONASZ', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Jean', 'JONASZ', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('kkaar', 'kkaar', 'Katy KAAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Katy', 'KAAR', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('kkrach', 'kkrach', 'Kevin KRACH', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:03.559857', '127.0.0.1', NULL, 'Kevin', 'KRACH', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('mmanfred', 'mmanfred', 'Martin MANFRED', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Martin', 'MANFRED', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('nnataly', 'nnataly', 'Nancy NATALY', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 11:07:45.462923', '127.0.0.1', NULL, 'Nancy', 'NATALY', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', true),
+('ppacioli', 'ppacioli', 'Paolo PACIOLI', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paolo', 'PACIOLI', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ppetit', 'ppetit', 'Patricia PETIT', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Patricia', 'PETIT', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ppreboist', 'ppreboist', 'Paul PREBOIST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Paul', 'PREBOIST', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ppruvost', 'ppruvost', 'Pierre PRUVOST', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Pierre', 'PRUVOST', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('rrenaud', 'rrenaud', 'Robert RENAUD', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Robert', 'RENAUD', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('rreynolds', 'rreynolds', 'Ryan REYNOLDS', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Ryan', 'REYNOLDS', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ssaporta', 'ssaporta', 'Sabrina SAPORTA', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sabrina', 'SAPORTA', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ssissoko', 'ssissoko', 'Sylvain SISSOKO', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvain', 'SISSOKO', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('sstallone', 'sstallone', 'Sylvester STALLONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Sylvester', 'STALLONE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('sstar', 'sstar', 'Suzanne STAR', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Suzanne', 'STAR', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('superadmin', 'superadmin', 'super admin', 'user', 'info@maarch.org', true, '186cf774c97b60a1c106ef718d10970a6a06e06bef89553d9ae65d938a886eae', false, NULL, false, NULL, 0, '2019-09-25 15:17:16.573215', '127.0.0.1', NULL, 'SUPERAdmin', 'Super', 'M.', NULL, NULL, '{"csrf": {"2019-09-25T15:17:21,027830Z": "68989a4ec19ac24a18ae116f229da4760f10b74f038237c79ffcdc35be259012"}}', NULL, NULL, true),
+('System', 'Systeme', 'Systeme', 'service', 'info@maarch.org', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9OXNeNIrej2+v3UMzAsF3PSzDUlZ73kPvgqbQmZvza0eZO062uQu57Rdah9z3mdbTh6NBiiR8FQTnW6eVgQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '63ce15235abe97db0182e6857c1da763', '2019-03-19 07:54:33.464846', NULL, NULL, 'ACME', false),
+('SystemDepositor', 'Systeme versant', 'Systeme versant', 'service', 'info@maarch.org', true, 'RJpzB36bmR+iuz/aHN9Zl9PDn8tZEs4mzsz9ORUXZpbMim/ilUMpE9FzYG3TW0Eii0Oy1PaFyJ35aBqcMU3gvAq4v0ZY0Z/r0cPVzbAaymd1UEnsAe3MjqGLt7BxvxiHJQ==', true, NULL, false, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '87eda47a7218326af0e3f4eaad7c2c22', '2019-03-19 07:56:55.287696', NULL, NULL, 'ACME', false),
+('ttong', 'ttong', 'Tony TONG', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Tony', 'TONG', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('sstone', 'sstone', 'Sharon STONE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 08:30:27.732025', '127.0.0.1', NULL, 'Sharon', 'STONE', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
+('ttule', 'ttule', 'Thierry TULE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Thierry', 'TULE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false),
+('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'info@maarch.org', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false)
+;
 
-INSERT INTO "auth"."role" VALUES ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', 'func_admin', true);
-INSERT INTO "auth"."role" VALUES ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', 'gen_admin', true);
-INSERT INTO "auth"."role" VALUES ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes, records managers et référents d''archives', 'user', true);
-INSERT INTO "auth"."role" VALUES ('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', 'user', true);
-INSERT INTO "auth"."role" VALUES ('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', 'user', true);
-INSERT INTO "auth"."role" VALUES ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', 'user', true);
+INSERT INTO "auth"."role" ("roleId","roleName","description","securityLevel","enabled") VALUES 
+('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', 'func_admin', true),
+('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', 'gen_admin', true),
+('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes, records managers et référents d''archives', 'user', true),
+('PRODUCTEUR', 'Producteur', 'Groupe des producteurs, versants', 'user', true),
+('RESPONSABLE_ACTIVITE', 'Responsable d''activité', 'Groupe des responsables de service et des activités', 'user', true),
+('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', 'user', true)
+;
 
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminAuthorization');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrganization');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgContact');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgUser');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminServiceaccount');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/adminUseraccount');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'adminFunc/batchScheduling');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'export/*');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_FONCTIONNEL', 'import/*');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminOrganization');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminAuthorization');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminFunc/adminUseraccount');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'adminTech/*');
-INSERT INTO "auth"."privilege" VALUES ('ADMIN_GENERAL', 'journal/audit');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/adminAccessRule');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/adminRetentionRule');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/archivalProfile');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminArchive/descriptionField');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/AdminArchivalProfileAccess');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgContact');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'adminTech/adminFormat');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveDeposit/deposit');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/addResource');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/checkIntegrity');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/filePlan');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/migration');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modifyDescription');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modify');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'archiveManagement/retrieve');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'destruction/destructionRequest');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'journal/certificate');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal');
-INSERT INTO "auth"."privilege" VALUES ('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive');
-INSERT INTO "auth"."privilege" VALUES ('PRODUCTEUR', 'archiveDeposit/deposit');
-INSERT INTO "auth"."privilege" VALUES ('PRODUCTEUR', 'archiveManagement/filePlan');
-INSERT INTO "auth"."privilege" VALUES ('PRODUCTEUR', 'archiveManagement/modifyDescription');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveDeposit/deposit');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/checkIntegrity');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/filePlan');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modifyDescription');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/modify');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'archiveManagement/retrieve');
-INSERT INTO "auth"."privilege" VALUES ('RESPONSABLE_ACTIVITE', 'destruction/destructionRequest');
+INSERT INTO "auth"."privilege" ("roleId","userStory") VALUES 
+('ADMIN_FONCTIONNEL', 'adminFunc/adminAuthorization'),
+('ADMIN_FONCTIONNEL', 'adminFunc/adminOrganization'),
+('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgContact'),
+('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgUser'),
+('ADMIN_FONCTIONNEL', 'adminFunc/adminServiceaccount'),
+('ADMIN_FONCTIONNEL', 'adminFunc/adminUseraccount'),
+('ADMIN_FONCTIONNEL', 'adminFunc/batchScheduling'),
+('ADMIN_FONCTIONNEL', 'export/*'),
+('ADMIN_FONCTIONNEL', 'import/*'),
+('ADMIN_GENERAL', 'adminFunc/adminOrganization'),
+('ADMIN_GENERAL', 'adminFunc/adminAuthorization'),
+('ADMIN_GENERAL', 'adminFunc/adminUseraccount'),
+('ADMIN_GENERAL', 'adminTech/*'),
+('ADMIN_GENERAL', 'journal/audit'),
+('CORRESPONDANT_ARCHIVES', 'adminArchive/adminAccessRule'),
+('CORRESPONDANT_ARCHIVES', 'adminArchive/adminRetentionRule'),
+('CORRESPONDANT_ARCHIVES', 'adminArchive/archivalProfile'),
+('CORRESPONDANT_ARCHIVES', 'adminArchive/descriptionField'),
+('CORRESPONDANT_ARCHIVES', 'adminFunc/AdminArchivalProfileAccess'),
+('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgContact'),
+('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization'),
+('CORRESPONDANT_ARCHIVES', 'adminTech/adminFormat'),
+('CORRESPONDANT_ARCHIVES', 'archiveDeposit/deposit'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/addResource'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/checkIntegrity'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/filePlan'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/migration'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/modifyDescription'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/modify'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/retrieve'),
+('CORRESPONDANT_ARCHIVES', 'destruction/destructionRequest'),
+('CORRESPONDANT_ARCHIVES', 'journal/certificate'),
+('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal'),
+('CORRESPONDANT_ARCHIVES', 'journal/searchLogArchive'),
+('PRODUCTEUR', 'archiveDeposit/deposit'),
+('PRODUCTEUR', 'archiveManagement/filePlan'),
+('PRODUCTEUR', 'archiveManagement/modifyDescription'),
+('RESPONSABLE_ACTIVITE', 'archiveDeposit/deposit'),
+('RESPONSABLE_ACTIVITE', 'archiveManagement/checkIntegrity'),
+('RESPONSABLE_ACTIVITE', 'archiveManagement/filePlan'),
+('RESPONSABLE_ACTIVITE', 'archiveManagement/modifyDescription'),
+('RESPONSABLE_ACTIVITE', 'archiveManagement/modify'),
+('RESPONSABLE_ACTIVITE', 'archiveManagement/retrieve'),
+('RESPONSABLE_ACTIVITE', 'destruction/destructionRequest')
+;
 
-INSERT INTO "auth"."roleMember" VALUES ('ADMIN_FONCTIONNEL', 'nnataly');
-INSERT INTO "auth"."roleMember" VALUES ('ADMIN_GENERAL', 'superadmin');
-INSERT INTO "auth"."roleMember" VALUES ('CORRESPONDANT_ARCHIVES', 'bblier');
-INSERT INTO "auth"."roleMember" VALUES ('CORRESPONDANT_ARCHIVES', 'ccharles');
-INSERT INTO "auth"."roleMember" VALUES ('CORRESPONDANT_ARCHIVES', 'ddenis');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'aalambic');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'bbain');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'bbardot');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ccamus');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ccordy');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ddaull');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ddur');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ggrand');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'hhier');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'jjane');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'jjonasz');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'kkaar');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'kkrach');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'mmanfred');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ppacioli');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ppetit');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ppreboist');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'rrenaud');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'rreynolds');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ssaporta');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ssissoko');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'sstar');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ttong');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'ttule');
-INSERT INTO "auth"."roleMember" VALUES ('PRODUCTEUR', 'vvictoire');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'aackermann');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'aadams');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'aastier');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'ccox');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'eerina');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'nnataly');
-INSERT INTO "auth"."roleMember" VALUES ('RESPONSABLE_ACTIVITE', 'sstone');
-INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'bboule');
-INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'cchaplin');
-INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'ccordy');
-INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'ppruvost');
-INSERT INTO "auth"."roleMember" VALUES ('UTILISATEUR', 'sstallone');
+INSERT INTO "auth"."roleMember" ("roleId","userAccountId") VALUES 
+('ADMIN_FONCTIONNEL', 'nnataly'),
+('ADMIN_GENERAL', 'superadmin'),
+('CORRESPONDANT_ARCHIVES', 'bblier'),
+('CORRESPONDANT_ARCHIVES', 'ccharles'),
+('CORRESPONDANT_ARCHIVES', 'ddenis'),
+('PRODUCTEUR', 'aalambic'),
+('PRODUCTEUR', 'bbain'),
+('PRODUCTEUR', 'bbardot'),
+('PRODUCTEUR', 'ccamus'),
+('PRODUCTEUR', 'ccordy'),
+('PRODUCTEUR', 'ddaull'),
+('PRODUCTEUR', 'ddur'),
+('PRODUCTEUR', 'ggrand'),
+('PRODUCTEUR', 'hhier'),
+('PRODUCTEUR', 'jjane'),
+('PRODUCTEUR', 'jjonasz'),
+('PRODUCTEUR', 'kkaar'),
+('PRODUCTEUR', 'kkrach'),
+('PRODUCTEUR', 'mmanfred'),
+('PRODUCTEUR', 'ppacioli'),
+('PRODUCTEUR', 'ppetit'),
+('PRODUCTEUR', 'ppreboist'),
+('PRODUCTEUR', 'rrenaud'),
+('PRODUCTEUR', 'rreynolds'),
+('PRODUCTEUR', 'ssaporta'),
+('PRODUCTEUR', 'ssissoko'),
+('PRODUCTEUR', 'sstar'),
+('PRODUCTEUR', 'ttong'),
+('PRODUCTEUR', 'ttule'),
+('PRODUCTEUR', 'vvictoire'),
+('RESPONSABLE_ACTIVITE', 'aackermann'),
+('RESPONSABLE_ACTIVITE', 'aadams'),
+('RESPONSABLE_ACTIVITE', 'aastier'),
+('RESPONSABLE_ACTIVITE', 'ccox'),
+('RESPONSABLE_ACTIVITE', 'eerina'),
+('RESPONSABLE_ACTIVITE', 'nnataly'),
+('RESPONSABLE_ACTIVITE', 'sstone'),
+('UTILISATEUR', 'bboule'),
+('UTILISATEUR', 'cchaplin'),
+('UTILISATEUR', 'ccordy'),
+('UTILISATEUR', 'ppruvost'),
+('UTILISATEUR', 'sstallone')
+;
 
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'audit/event/createChainjournal');
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'batchProcessing/scheduling/updateProcess');
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'lifeCycle/journal/createChainjournal');
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'recordsmanagement/archivecompliance/readperiodic');
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'recordsManagement/archives/deleteDisposablearchives');
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'recordsManagement/archives/updateArchivesretentionrule');
-INSERT INTO "auth"."servicePrivilege" VALUES ('System', 'recordsManagement/archives/updateIndexfulltext');
-INSERT INTO "auth"."servicePrivilege" VALUES ('SystemDepositor', 'recordsManagement/archive/create');
-INSERT INTO "auth"."servicePrivilege" VALUES ('SystemDepositor', 'recordsManagement/archive/createArchiveBatch');
+INSERT INTO "auth"."servicePrivilege" ("accountId","serviceURI") VALUES 
+('System', 'audit/event/createChainjournal'),
+('System', 'batchProcessing/scheduling/updateProcess'),
+('System', 'lifeCycle/journal/createChainjournal'),
+('System', 'recordsmanagement/archivecompliance/readperiodic'),
+('System', 'recordsManagement/archives/deleteDisposablearchives'),
+('System', 'recordsManagement/archives/updateArchivesretentionrule'),
+('System', 'recordsManagement/archives/updateIndexfulltext'),
+('SystemDepositor', 'recordsManagement/archive/create'),
+('SystemDepositor', 'recordsManagement/archive/createArchiveBatch')
+;
 
-INSERT INTO "batchProcessing"."logScheduling" VALUES ('maarchRM_5k7cwmpb4-0000-7v4gda', 'chainJournalAudit', 'System', 'superadmin', '2019-09-19 09:24:29.660848', true, '[{"message":"Timestamp file generated","fullMessage":"Timestamp file generated"},{"message":"New journal identifier : %s","variables":"maarchRM_py2ngt-16cc-ylua9s","fullMessage":"New journal identifier : maarchRM_py2ngt-16cc-ylua9s"}]');
+INSERT INTO "batchProcessing"."logScheduling" ("logId","schedulingId","executedBy","launchedBy","logDate","status","info") VALUES 
+('maarchRM_5k7cwmpb4-0000-7v4gda', 'chainJournalAudit', 'System', 'superadmin', '2019-09-19 09:24:29.660848', true, '[{"message":"Timestamp file generated","fullMessage":"Timestamp file generated"},{"message":"New journal identifier : %s","variables":"maarchRM_py2ngt-16cc-ylua9s","fullMessage":"New journal identifier : maarchRM_py2ngt-16cc-ylua9s"}]')
+;
 
-INSERT INTO "batchProcessing"."scheduling" VALUES ('chainJournalAudit', 'Chaînage audit', '01', '00;20;;;;;;;', NULL, 'System', '2019-09-19 09:24:29.658821', '2019-09-20 18:00:00', 'scheduled');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('processdestruction', 'Traiter les destructions', '04', '00;04;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
-INSERT INTO "batchProcessing"."scheduling" VALUES ('purge', 'Purge', '05', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused');
+INSERT INTO "batchProcessing"."scheduling" ("schedulingId","name","taskId","frequency","parameters","executedBy","lastExecution","nextExecution","status") VALUES 
+('chainJournalAudit', 'Chaînage audit', '01', '00;20;;;;;;;', NULL, 'System', '2019-09-19 09:24:29.658821', '2019-09-20 18:00:00', 'scheduled'),
+('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled'),
+('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled'),
+('processdestruction', 'Traiter les destructions', '04', '00;04;;;;;;;', NULL, 'System', NULL, NULL, 'paused'),
+('purge', 'Purge', '05', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused')
+;
 
-INSERT INTO "contact"."communicationMean" VALUES ('AH', 'World Wide Web', false);
-INSERT INTO "contact"."communicationMean" VALUES ('AL', 'Téléphone mobile', true);
-INSERT INTO "contact"."communicationMean" VALUES ('AO', 'URL', true);
-INSERT INTO "contact"."communicationMean" VALUES ('AU', 'FTP', true);
-INSERT INTO "contact"."communicationMean" VALUES ('EM', 'E-mail', true);
-INSERT INTO "contact"."communicationMean" VALUES ('FX', 'Fax', true);
-INSERT INTO "contact"."communicationMean" VALUES ('TE', 'Téléphone', true);
+INSERT INTO "contact"."communicationMean" ("code","name","enabled") VALUES 
+('AH', 'World Wide Web', false),
+('AL', 'Téléphone mobile', true),
+('AO', 'URL', true),
+('AU', 'FTP', true),
+('EM', 'E-mail', true),
+('FX', 'Fax', true),
+('TE', 'Téléphone', true)
+;
 
-INSERT INTO "digitalResource"."cluster" VALUES ('archives', 'Digital_resource_cluster_for_archives', 'Digital resource cluster for archives');
+INSERT INTO "digitalResource"."cluster" ("clusterId","clusterName","clusterDescription") VALUES 
+('archives', 'Digital_resource_cluster_for_archives', 'Digital resource cluster for archives')
+;
 
-INSERT INTO "digitalResource"."repository" VALUES ('archives_1', 'Digital resource repository for archives', 'repository_1', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_1', NULL, NULL, true);
-INSERT INTO "digitalResource"."repository" VALUES ('archives_2', 'Digital resource repository for archives 2', 'repository_2', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_2', NULL, NULL, true);
+INSERT INTO "digitalResource"."repository" ("repositoryId","repositoryName","repositoryReference","repositoryType","repositoryUri","parameters","maxSize","enabled") VALUES 
+('archives_1', 'Digital resource repository for archives', 'repository_1', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_1', NULL, NULL, true),
+('archives_2', 'Digital resource repository for archives 2', 'repository_2', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_2', NULL, NULL, true)
+;
 
-INSERT INTO "digitalResource"."clusterRepository" VALUES ('archives', 'archives_1', 1, 1, 1);
-INSERT INTO "digitalResource"."clusterRepository" VALUES ('archives', 'archives_2', 1, 2, 2);
+INSERT INTO "digitalResource"."clusterRepository" ("clusterId","repositoryId","writePriority","readPriority","deletePriority") VALUES 
+('archives', 'archives_1', 1, 1, 1),
+('archives', 'archives_2', 1, 2, 2)
+;
 
-INSERT INTO "digitalResource"."conversionRule" VALUES ('workflow_pod75x-151b-v9jsef', 'fmt/412', 'dependency/fileSystem/plugins/libreOffice', 'fmt/95');
-INSERT INTO "digitalResource"."conversionRule" VALUES ('workflow_pod763-1691-dli2t0', 'fmt/291', 'dependency/fileSystem/plugins/libreOffice', 'fmt/18');
+INSERT INTO "digitalResource"."conversionRule" ("conversionRuleId","puid","conversionService","targetPuid") VALUES 
+('workflow_pod75x-151b-v9jsef', 'fmt/412', 'dependency/fileSystem/plugins/libreOffice', 'fmt/95'),
+('workflow_pod763-1691-dli2t0', 'fmt/291', 'dependency/fileSystem/plugins/libreOffice', 'fmt/18')
+;
 
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s rejeté par %13$s (%12$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Validation du message %14$s : %16$s (%15$s)', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('organization/counting', 'orgName ownerOrgId', 'Compter le nombre d''objets numériques dans l''activité %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('organization/journal', 'orgName ownerOrgId', 'Lecture du journal de l''organisation %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('organization/listing', 'orgName ownerOrgId', 'Lister les identifiants d''objets numériques de l''activité %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de communicabilité de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation ajoutée avec l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/archivalProfileModification', 'archivalProfileReference', 'Modification du profil %6$s.', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/consultation', 'resId hash hashAlgorith address size originatorArchiveId', 'Consultation de la ressource %9$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size originatorArchiveId', 'Conversion du document %18$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation avec l''archive %6$s supprimée', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Communication de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt d''une ressource dans l''archive', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Destruction de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/destructionRequest', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Demande de destruction de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/destructionRequestCanceling', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Annulation de la demande de destruction de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Élimination de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Gel de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/integrityCheck', 'resId hash hashAlgorithm address requesterOrgRegNumber info originatorArchiveId', 'Validation d''intégrité', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/metadataModification', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification des métadonnées de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/periodicIntegrityCheck', 'startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked originatorArchiveId', 'Validation périodique de l''intégrité', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/profileCreation', 'archivalProfileReference', 'Création du profil %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/profileDestruction', 'archivalProfileReference', 'Destruction du profil %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Destruction de la ressource %9$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Restitution de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de conservation de l''archive %6$s', false);
-INSERT INTO "lifeCycle"."eventFormat" VALUES ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Dégel de l''archive %6$s', false);
+INSERT INTO "lifeCycle"."eventFormat" ("type","format","message","notification") VALUES 
+('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false),
+('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false),
+('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false),
+('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false),
+('medona/rejection', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s rejeté par %13$s (%12$s)', false),
+('medona/retry', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s réinitialisé par %13$s (%12$s)', false),
+('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)', false),
+('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Validation du message %14$s : %16$s (%15$s)', false),
+('organization/counting', 'orgName ownerOrgId', 'Compter le nombre d''objets numériques dans l''activité %6$s', false),
+('organization/journal', 'orgName ownerOrgId', 'Lecture du journal de l''organisation %6$s', false),
+('organization/listing', 'orgName ownerOrgId', 'Lister les identifiants d''objets numériques de l''activité %6$s', false),
+('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de communicabilité de l''archive %6$s', false),
+('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation ajoutée avec l''archive %6$s', false),
+('recordsManagement/archivalProfileModification', 'archivalProfileReference', 'Modification du profil %6$s.', false),
+('recordsManagement/consultation', 'resId hash hashAlgorith address size originatorArchiveId', 'Consultation de la ressource %9$s', false),
+('recordsManagement/conversion', 'resId hashAlgorithm hash address convertedResId convertedHashAlgorithm convertedHash convertedAddress software docId size originatorArchiveId', 'Conversion du document %18$s', false),
+('recordsManagement/deleteRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation avec l''archive %6$s supprimée', false),
+('recordsManagement/delivery', 'resId hashAlgorithm hash address requesterOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Communication de l''archive %6$s', false),
+('recordsManagement/deposit', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt de l''archive %6$s', false),
+('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt d''une ressource dans l''archive', false),
+('recordsManagement/destruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Destruction de l''archive %6$s', false),
+('recordsManagement/destructionRequest', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Demande de destruction de l''archive %6$s', false),
+('recordsManagement/destructionRequestCanceling', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Annulation de la demande de destruction de l''archive %6$s', false),
+('recordsManagement/elimination', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Élimination de l''archive %6$s', false),
+('recordsManagement/freeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Gel de l''archive %6$s', false),
+('recordsManagement/integrityCheck', 'resId hash hashAlgorithm address requesterOrgRegNumber info originatorArchiveId', 'Validation d''intégrité', false),
+('recordsManagement/metadataModification', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification des métadonnées de l''archive %6$s', false),
+('recordsManagement/periodicIntegrityCheck', 'startDatetime endDatetime nbArchivesToCheck nbArchivesInSample archivesChecked originatorArchiveId', 'Validation périodique de l''intégrité', false),
+('recordsManagement/profileCreation', 'archivalProfileReference', 'Création du profil %6$s', false),
+('recordsManagement/profileDestruction', 'archivalProfileReference', 'Destruction du profil %6$s', false),
+('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Destruction de la ressource %9$s', false),
+('recordsManagement/restitution', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber size originatorArchiveId', 'Restitution de l''archive %6$s', false),
+('recordsManagement/retentionRuleModification', 'resId hashAlgorithm hash address retentionStartDate retentionDuration finalDisposition previousStartDate previousDuration previousFinalDisposition originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de conservation de l''archive %6$s', false),
+('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Dégel de l''archive %6$s', false)
+;
 
-INSERT INTO "organization"."orgType" VALUES ('Collectivite', 'Collectivité');
-INSERT INTO "organization"."orgType" VALUES ('Direction', 'Direction d''une entreprise ou d''une collectivité');
-INSERT INTO "organization"."orgType" VALUES ('Division', 'Division d''une entreprise');
-INSERT INTO "organization"."orgType" VALUES ('Service', 'Service d''une entreprise ou d''une collectivité');
-INSERT INTO "organization"."orgType" VALUES ('Societe', 'Société');
+INSERT INTO "organization"."orgType" ("code","name") VALUES ('Collectivite', 'Collectivité'),
+('Direction', 'Direction d''une entreprise ou d''une collectivité'),
+('Division', 'Division d''une entreprise'),
+('Service', 'Service d''une entreprise ou d''une collectivité'),
+('Societe', 'Société')
+;
 
-INSERT INTO "organization"."organization" VALUES ('ACME', 'Archives Conservation et Mémoire Électronique', NULL, 'Archives Conservation et Mémoire Électronique', 'ACME', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-	INSERT INTO "organization"."organization" VALUES ('DAF', 'Direction Administrative et Financière', NULL, 'Direction Administrative et Financière', 'DAF', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('DSG', 'Services généraux', NULL, 'Direction des Services Généraux', 'DSG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('ACHAT', 'Achats Groupe', NULL, 'Achats Groupe', 'ACHAT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('AUTO', 'Gestion parc Auto', NULL, 'Gestion du Parc Automobile', 'AUTO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('NETT', 'Nettoyage des Locaux', NULL, 'Nettoyage des Locaux', 'NETT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('SJ', 'Service Juridique', NULL, 'Service Juridique', 'SJ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('ASSU', 'Assurances Groupe', NULL, 'Assurances du Groupe', 'ASSU', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('CONCOM', 'Contrats Commerciaux', NULL, 'Contrats Commerciaux', 'CONCOM', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('DSOC', 'Droit des sociétés', NULL, 'Droit des Sociétés', 'DSOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('CTBLE', 'Service Comptable', NULL, 'Service Comptable', 'CTBLE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('BILAN', 'Comptes de bilan', NULL, 'Comptes de Bilan et Clôture d''Exercice', 'BILAN', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('FISCA', 'Fiscalité', NULL, 'Fiscalité', 'FISCA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('FOUR', 'Achats/Fournisseurs', NULL, 'Comptabilité Achats/Fournisseurs', 'FOUR', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('GEN', 'Comptabilité Générale', NULL, 'Comptabilité Générale/Éditions comptables', 'GEN', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('SALES', 'Ventes/Clients', NULL, 'Comptabilité Ventes/Clients', 'SALES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('TRESO', 'Trésorerie', NULL, 'Trésorerie', 'TRESO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('DG', 'Direction Générale', NULL, 'Direction Générale', 'DG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('DOCSOC', 'Documents de société', NULL, 'Document de société', 'DOCSOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DG', 'ACME', true);
-			INSERT INTO "organization"."organization" VALUES ('LITIGES', 'Suivi litiges Contentieux', NULL, 'Suivi des litiges et contentieux', 'LITIGES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DG', 'ACME', true);
-	INSERT INTO "organization"."organization" VALUES ('DCIAL', 'Direction Commerciale', NULL, 'Direction Commerciale', 'DCIAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('CUST', 'Gestion Clients', NULL, 'Gestion Clients', 'CUST', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('DEAL', 'Offres Commerciales', NULL, 'Offres Commerciales', 'DEAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('MARK', 'Marketing', NULL, 'Marketing', 'MARK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('TENDER', 'Appels d''offres', NULL, 'Réponses aux Appels d''Offres/Collectivités', 'TENDER', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true);
-	INSERT INTO "organization"."organization" VALUES ('DSI', 'Direction des SI', NULL, 'Direction des Systèmes d''Information', 'DSI', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('SIG', 'Gestion systèmes d''informations', NULL, 'Gestion des Systèmes d''Information', 'SIG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('SYSRES', 'Système et Réseaux', NULL, 'Système et Réseaux', 'SYSRES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('SUPP', 'Support', NULL, 'Support', 'SUPP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true);
-	INSERT INTO "organization"."organization" VALUES ('GIC', 'Gestion et Conservation de l''Information', NULL, 'Gestion et Conservation de l''Information', 'GIC', NULL, NULL, NULL, NULL, NULL, NULL, 'owner', NULL, 'ACME', 'ACME', true);
-	INSERT INTO "organization"."organization" VALUES ('RH', 'Direction des Ressources Humaines', NULL, 'Direction des Ressources Humaines', 'RH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('DIP', 'Dossiers du personnel', NULL, 'Dossiers Individuels du Personnel', 'DIP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('MUT', 'Prévoyance/Mutuelle', NULL, 'Prévoyance/Mutuelle', 'MUT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('NOTFRA', 'Notes Frais', NULL, 'Gestion des Notes de Frais', 'NOTFRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('PAIE', 'Rémunération et Paie', NULL, 'Rémunération et Paie', 'PAIE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true);
-		INSERT INTO "organization"."organization" VALUES ('SOC', 'Charges Sociales', NULL, 'Charges Sociales', 'SOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true);
+INSERT INTO "organization"."organization" ("orgId","orgName","otherOrgName","displayName","registrationNumber","beginDate","endDate","legalClassification","businessType","description","orgTypeCode","orgRoleCodes","taxIdentifier","parentOrgId","ownerOrgId","isOrgUnit","enabled") VALUES 
+('ACME', 'Archives Conservation et Mémoire Électronique', NULL, 'Archives Conservation et Mémoire Électronique', 'ACME', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false, true),
+	('DAF', 'Direction Administrative et Financière', NULL, 'Direction Administrative et Financière', 'DAF', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, true),
+		('DSG', 'Services généraux', NULL, 'Direction des Services Généraux', 'DSG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, true),
+			('ACHAT', 'Achats Groupe', NULL, 'Achats Groupe', 'ACHAT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true, true),
+			('AUTO', 'Gestion parc Auto', NULL, 'Gestion du Parc Automobile', 'AUTO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true, true),
+			('NETT', 'Nettoyage des Locaux', NULL, 'Nettoyage des Locaux', 'NETT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSG', 'ACME', true, true),
+		('SJ', 'Service Juridique', NULL, 'Service Juridique', 'SJ', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, true),
+			('ASSU', 'Assurances Groupe', NULL, 'Assurances du Groupe', 'ASSU', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true, true),
+			('CONCOM', 'Contrats Commerciaux', NULL, 'Contrats Commerciaux', 'CONCOM', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true, true),
+			('DSOC', 'Droit des sociétés', NULL, 'Droit des Sociétés', 'DSOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SJ', 'ACME', true, true),
+		('CTBLE', 'Service Comptable', NULL, 'Service Comptable', 'CTBLE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, true),
+			('BILAN', 'Comptes de bilan', NULL, 'Comptes de Bilan et Clôture d''Exercice', 'BILAN', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, true),
+			('FISCA', 'Fiscalité', NULL, 'Fiscalité', 'FISCA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, true),
+			('FOUR', 'Achats/Fournisseurs', NULL, 'Comptabilité Achats/Fournisseurs', 'FOUR', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, true),
+			('GEN', 'Comptabilité Générale', NULL, 'Comptabilité Générale/Éditions comptables', 'GEN', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, true),
+			('SALES', 'Ventes/Clients', NULL, 'Comptabilité Ventes/Clients', 'SALES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, true),
+			('TRESO', 'Trésorerie', NULL, 'Trésorerie', 'TRESO', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'CTBLE', 'ACME', true, true),
+		('DG', 'Direction Générale', NULL, 'Direction Générale', 'DG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, true),
+			('DOCSOC', 'Documents de société', NULL, 'Document de société', 'DOCSOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DG', 'ACME', true, true),
+			('LITIGES', 'Suivi litiges Contentieux', NULL, 'Suivi des litiges et contentieux', 'LITIGES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DG', 'ACME', true, true),
+	('DCIAL', 'Direction Commerciale', NULL, 'Direction Commerciale', 'DCIAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, true),
+		('CUST', 'Gestion Clients', NULL, 'Gestion Clients', 'CUST', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, true),
+		('DEAL', 'Offres Commerciales', NULL, 'Offres Commerciales', 'DEAL', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, true),
+		('MARK', 'Marketing', NULL, 'Marketing', 'MARK', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, true),
+		('TENDER', 'Appels d''offres', NULL, 'Réponses aux Appels d''Offres/Collectivités', 'TENDER', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DCIAL', 'ACME', true, true),
+	('DSI', 'Direction des SI', NULL, 'Direction des Systèmes d''Information', 'DSI', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, true),
+		('SIG', 'Gestion systèmes d''informations', NULL, 'Gestion des Systèmes d''Information', 'SIG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true, true),
+		('SYSRES', 'Système et Réseaux', NULL, 'Système et Réseaux', 'SYSRES', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true, true),
+		('SUPP', 'Support', NULL, 'Support', 'SUPP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DSI', 'ACME', true, true),
+	('GIC', 'Gestion et Conservation de l''Information', NULL, 'Gestion et Conservation de l''Information', 'GIC', NULL, NULL, NULL, NULL, NULL, NULL, 'owner', NULL, 'ACME', 'ACME', true, true),
+	('RH', 'Direction des Ressources Humaines', NULL, 'Direction des Ressources Humaines', 'RH', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, true),
+		('DIP', 'Dossiers du personnel', NULL, 'Dossiers Individuels du Personnel', 'DIP', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, true),
+		('MUT', 'Prévoyance/Mutuelle', NULL, 'Prévoyance/Mutuelle', 'MUT', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, true),
+		('NOTFRA', 'Notes Frais', NULL, 'Gestion des Notes de Frais', 'NOTFRA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, true),
+		('PAIE', 'Rémunération et Paie', NULL, 'Rémunération et Paie', 'PAIE', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, true),
+		('SOC', 'Charges Sociales', NULL, 'Charges Sociales', 'SOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, true)
+;
 
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DAF', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DIP', 'DOSIP', true, NULL, NULL);
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DSI', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('FOUR', 'FACACH', true, NULL, '{"history": {}, "subProfile": {}, "processingStatuses": {"NEW": {"actions": {"qualify": {}, "cancelQualify": {}}}, "APPROVED": {"actions": {"pay": {}, "updateMetadata": {}}}, "REJECTED": {"actions": {"cancelQualify": {}, "sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}}, "MISQUALIFIED": {"actions": {"qualify": {}}}}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('FOUR', 'FACJU', true, NULL, NULL);
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('SALES', 'FACVEN', true, NULL, NULL);
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DSG', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('PAIE', 'BULPAI', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DAF', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DCIAL', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('RH', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DSI', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('GIC', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('TENDER', 'PM', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('TENDER', 'COUNM', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DOCSOC', 'FICCR', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DOCSOC', 'LETC', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DOCSOC', 'FICI', true, NULL, '{"subProfile": {}, "processingStatuses": {}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('MARK', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}}}');
-INSERT INTO "organization"."archivalProfileAccess" VALUES ('DCIAL', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}');
+INSERT INTO "organization"."archivalProfileAccess" ("orgId","archivalProfileReference","originatorAccess","serviceLevelReference","userAccess") VALUES 
+('DAF', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}'),
+('DIP', 'DOSIP', true, NULL, NULL),
+('DSI', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}'),
+('FOUR', 'FACACH', true, NULL, '{"history": {}, "subProfile": {}, "processingStatuses": {"NEW": {"actions": {"qualify": {}, "cancelQualify": {}}}, "APPROVED": {"actions": {"pay": {}, "updateMetadata": {}}}, "REJECTED": {"actions": {"cancelQualify": {}, "sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}}, "MISQUALIFIED": {"actions": {"qualify": {}}}}}'),
+('FOUR', 'FACJU', true, NULL, NULL),
+('SALES', 'FACVEN', true, NULL, NULL),
+('DSG', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}'),
+('PAIE', 'BULPAI', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('DAF', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('DCIAL', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('RH', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('DSI', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('GIC', 'NOTSER', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('TENDER', 'PM', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('TENDER', 'COUNM', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('DOCSOC', 'FICCR', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('DOCSOC', 'LETC', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('DOCSOC', 'FICI', true, NULL, '{"subProfile": {}, "processingStatuses": {}}'),
+('MARK', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}}}'),
+('DCIAL', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}')
+;
 
-INSERT INTO "organization"."servicePosition" VALUES ('System', 'GIC');
-INSERT INTO "organization"."servicePosition" VALUES ('SystemDepositor', 'GIC');
+INSERT INTO "organization"."servicePosition" ("serviceAccountId","orgId") VALUES 
+('System', 'GIC'),
+('SystemDepositor', 'GIC')
+;
 
-INSERT INTO "organization"."userPosition" VALUES ('aackermann', 'FOUR', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('aadams', 'DAF', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('aalambic', 'FOUR', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('aastier', 'DSG', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('bbain', 'SJ', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('bbardot', 'GEN', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('bblier', 'GIC', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('bboule', 'SALES', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ccamus', 'TRESO', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('cchaplin', 'RH', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ccharles', 'GIC', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ccordy', 'FOUR', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ccox', 'SJ', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ddaull', 'DAF', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ddenis', 'GIC', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ddur', 'SALES', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('eerina', 'SALES', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ggrand', 'RH', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('hhier', 'PAIE', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('jjane', 'DOCSOC', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('jjonasz', 'LITIGES', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('kkaar', 'TENDER', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('kkrach', 'MARK', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('mmanfred', 'DEAL', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ppacioli', 'NETT', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ppetit', 'CTBLE', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ppreboist', 'DSI', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ppruvost', 'DSI', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('rrenaud', 'DSG', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('rreynolds', 'ACHAT', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ssaporta', 'AUTO', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ssissoko', 'CUST', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('sstallone', 'SUPP', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('sstar', 'SUPP', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('sstone', 'DCIAL', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ttong', 'SALES', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('ttule', 'SYSRES', NULL, true);
-INSERT INTO "organization"."userPosition" VALUES ('vvictoire', 'RH', NULL, true);
+INSERT INTO "organization"."userPosition" ("userAccountId","orgId","function","default") VALUES 
+('aackermann', 'FOUR', NULL, true),
+('aadams', 'DAF', NULL, true),
+('aalambic', 'FOUR', NULL, true),
+('aastier', 'DSG', NULL, true),
+('bbain', 'SJ', NULL, true),
+('bbardot', 'GEN', NULL, true),
+('bblier', 'GIC', NULL, true),
+('bboule', 'SALES', NULL, true),
+('ccamus', 'TRESO', NULL, true),
+('cchaplin', 'RH', NULL, true),
+('ccharles', 'GIC', NULL, true),
+('ccordy', 'FOUR', NULL, true),
+('ccox', 'SJ', NULL, true),
+('ddaull', 'DAF', NULL, true),
+('ddenis', 'GIC', NULL, true),
+('ddur', 'SALES', NULL, true),
+('eerina', 'SALES', NULL, true),
+('ggrand', 'RH', NULL, true),
+('hhier', 'PAIE', NULL, true),
+('jjane', 'DOCSOC', NULL, true),
+('jjonasz', 'LITIGES', NULL, true),
+('kkaar', 'TENDER', NULL, true),
+('kkrach', 'MARK', NULL, true),
+('mmanfred', 'DEAL', NULL, true),
+('ppacioli', 'NETT', NULL, true),
+('ppetit', 'CTBLE', NULL, true),
+('ppreboist', 'DSI', NULL, true),
+('ppruvost', 'DSI', NULL, true),
+('rrenaud', 'DSG', NULL, true),
+('rreynolds', 'ACHAT', NULL, true),
+('ssaporta', 'AUTO', NULL, true),
+('ssissoko', 'CUST', NULL, true),
+('sstallone', 'SUPP', NULL, true),
+('sstar', 'SUPP', NULL, true),
+('sstone', 'DCIAL', NULL, true),
+('ttong', 'SALES', NULL, true),
+('ttule', 'SYSRES', NULL, true),
+('vvictoire', 'RH', NULL, true)
+;
 
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('BULPAI', 'P5Y', 'destruction', 'Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12', 'Bulletins de paie', NULL);
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('COM', 'P10Y', 'destruction', 'Code du commerce, Article L123-22', 'Documents comptables', NULL);
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('DIP', 'P90Y', 'destruction', 'Convention Collective nationale de retraite et de prévoyance des cadres, art. 23', 'Dossier individuel du personnel', NULL);
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('IMP', 'P6Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 : Livres, registres, documents ou pièces sur lesquels peuvent s''exercer les droits de communication, d''enquête et de contrôle de l''administration', 'Contrôle de l''impôt', NULL);
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('IMPA', 'P3Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 3', 'Taxe professionnelle', NULL);
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('IMPS', 'P10Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 2: Les registres tenus en application du 9 de l''article 298 sexdecies F du code général des impôts et du 5 de l''article 298 sexdecies G du même code', 'Impôt sur les sociétés et liasses fiscales', NULL);
-INSERT INTO "recordsManagement"."retentionRule" VALUES ('GES', 'P5Y', 'destruction', 'Documents de gestion', 'Documents de gestion', NULL);
+INSERT INTO "recordsManagement"."retentionRule" ("code","duration","finalDisposition","description","label","implementationDate") VALUES 
+('BULPAI', 'P5Y', 'destruction', 'Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12', 'Bulletins de paie', NULL),
+('COM', 'P10Y', 'destruction', 'Code du commerce, Article L123-22', 'Documents comptables', NULL),
+('DIP', 'P90Y', 'destruction', 'Convention Collective nationale de retraite et de prévoyance des cadres, art. 23', 'Dossier individuel du personnel', NULL),
+('IMP', 'P6Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 : Livres, registres, documents ou pièces sur lesquels peuvent s''exercer les droits de communication, d''enquête et de contrôle de l''administration', 'Contrôle de l''impôt', NULL),
+('IMPA', 'P3Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 3', 'Taxe professionnelle', NULL),
+('IMPS', 'P10Y', 'destruction', 'Livre des Procédures Fiscales, art 102 B et L 169 alinea 2: Les registres tenus en application du 9 de l''article 298 sexdecies F du code général des impôts et du 5 de l''article 298 sexdecies G du même code', 'Impôt sur les sociétés et liasses fiscales', NULL),
+('GES', 'P5Y', 'destruction', 'Documents de gestion', 'Documents de gestion', NULL)
+;
 
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('1', 'COUA', 'Courrier Administratif', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('2', 'PRVN', 'Procès-Verbal de Négociation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('3', 'PRVIF', 'Procès-verbal à Incidence Financière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('4', 'ETAR', 'État de Rapprochement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('5', 'RELCC', 'Relevé de Contrôle de Caisse', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('6', 'CTRF', 'Contrat Fournisseur', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('7', 'DCLTVA', 'Déclaration de TVA', NULL, NULL, 'originatingDate', 'IMP', NULL, NULL, true, true, 'file', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('8', 'QUTP', 'Quittance de Paiement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('9', 'FICIC', 'Fiche d''Imputation Comptable', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('10', 'FACJU', 'Facture Justificative', NULL, NULL, 'originatingDate', 'COM', NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('11', 'FICREC', 'Fiche Récapitulative', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('12', 'DOSC', 'Dossiers Caisse', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('13', 'PIECD', 'Pièce de Caisse-Dépense', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('14', 'PIEJ', 'Pièce Justificative', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('15', 'DOSB', 'Dossiers Banque', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('16', 'PIEBD', 'Pièce de Banque-Dépense', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('17', 'FICDG', 'Fiche DG', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('18', 'NOTSER', 'Note de service', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('19', 'PM', 'Passation de marché', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('20', 'BORT', 'Bordereau de transmission', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('21', 'COUNM', 'Courrier de notification de marché', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('22', 'PRVA', 'Procès-Verbal d''Attribution', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('23', 'PRVOP', 'Proces-Verbal d''Ouverture des Plis', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('24', 'RAPEO', 'Rapport d’Évaluation des Offres', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('26', 'DEMC', 'Demande de Cotation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('27', 'RAPFOR', 'Rapport de Formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('28', 'DOSIP', 'Dossier Individuel du Personnel', NULL, NULL, 'originatingDate', 'DIP', NULL, NULL, true, true, 'file', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('29', 'ETAC', 'Etat Civil', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('30', 'CURV', 'Curriculum Vitae', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('31', 'EXTAN', 'Extrait d''Acte de Naissance', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('33', 'CASJU', 'Casier Judiciaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('34', 'ATTSU', 'Attestation de succès', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('35', 'CTRTRV', 'Contrat de Travail', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('37', 'ATTT', 'Attestation de Travail', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('39', 'CNSS', 'Caisse Nationale de Sécurité Sociale', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('41', 'CAR', 'Carrière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('42', 'DECIN', 'Décision de nomination', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('43', 'DECIR', 'Décision de redéploiement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('47', 'ATTF', 'Attestation de formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('53', 'COURRN', 'Courrier Répartition du Résultat Net', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('54', 'COUDS', 'Courrier Domiciliation de Salaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('55', 'FICP', 'Fiche de Poste', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('56', 'FICF', 'Fiche de Fonction', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('57', 'DEMA', 'Demandes Administratives', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('58', 'COUAA', 'Courrier Autorisation d''Absence', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('59', 'COUCA', 'Courrier Congés Administratifs', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('60', 'COUDE', 'Courrier Demande d''Emploi', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('61', 'DOSETU', 'Dossier de Synthèse et d’Étude', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('62', 'FICRM', 'Fiche de Remontée Mensuelle', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('63', 'RAPT', 'Rapport Trimestriel', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('64', 'RAPMOE', '	Rapport de Mise en Œuvre', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('65', 'RAPA', 'Rapport d''Activité', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('66', 'RAPSE', 'Rapport de Suivi et Évaluation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('67', 'RAPGES', 'Rapport de Gestion', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('68', 'TDRE', 'Termes de Références des Études', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('69', 'DCRN', 'Décret de Nomination', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('70', 'FICCR', 'Fiche de compte rendu', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('71', 'LETC', 'Lettre circulaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('72', 'FICI', 'Fiche d''instruction', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('73', 'RAPAMI', 'Rapport d''Audit et Missions Internes', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('74', 'RAPAE', 'Rapport d''Audit Externe', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('75', 'RAPER', 'Rapport d’Études et Recherches', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('76', 'COUABID', 'Courrier Arrivée BID', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('77', 'SMIROP', 'Fiche de visite SMIROP', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('78', 'VISA', 'Visas obtenus', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('79', 'FACVEN', 'Facture de vente', NULL, NULL, 'originatingDate', 'COM', NULL, NULL, true, true, 'item', NULL);
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('80', 'FACACH', 'Facture d''achat', NULL, NULL, 'description/dueDate', 'COM', NULL, NULL, true, false, 'item', '{"NEW": {"type": "initial", "label": "Nouvelle(s) facture(s)", "actions": {"qualify": {}, "cancelQualify": {}}, "default": true, "position": 0, "filterUserAccess": false}, "PAYED": {"type": "final", "label": "Payée", "actions": {}, "default": false, "position": 6, "filterUserAccess": false}, "APPROVED": {"type": "intermediate", "label": "À payer", "actions": {"pay": {}, "updateMetadata": {}}, "default": false, "position": 5, "filterUserAccess": true}, "REJECTED": {"type": "intermediate", "label": "Rejetée(s)", "actions": {"sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}, "default": false, "position": 3, "filterUserAccess": true}, "CANCELLED": {"type": "final", "label": "Annulée", "actions": {}, "default": false, "position": 7, "filterUserAccess": false}, "QUALIFIED": {"type": "intermediate", "label": "À valider", "actions": {"reject": {}, "redirect": {}, "validate": {}}, "default": false, "position": 1, "filterUserAccess": true}, "VALIDATED": {"type": "intermediate", "label": "À approuver", "actions": {"reject": {}, "approve": {}}, "default": false, "position": 4, "filterUserAccess": true}, "MISQUALIFIED": {"type": "intermediate", "label": "À requalifier", "actions": {"qualify": {}}, "default": false, "position": 2, "filterUserAccess": true}}');
-INSERT INTO "recordsManagement"."archivalProfile" VALUES ('81', 'BULPAI', 'Bulletins de paie', NULL, NULL, NULL, 'BULPAI', NULL, NULL, false, false, 'item', '{}');
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId","reference","name","descriptionSchema","descriptionClass","retentionStartDate","retentionRuleCode","description","accessRuleCode","acceptUserIndex","acceptArchiveWithoutProfile","fileplanLevel","processingStatuses") VALUES 
+('1', 'COUA', 'Courrier Administratif', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('2', 'PRVN', 'Procès-Verbal de Négociation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('3', 'PRVIF', 'Procès-verbal à Incidence Financière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('4', 'ETAR', 'État de Rapprochement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('5', 'RELCC', 'Relevé de Contrôle de Caisse', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('6', 'CTRF', 'Contrat Fournisseur', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('7', 'DCLTVA', 'Déclaration de TVA', NULL, NULL, 'originatingDate', 'IMP', NULL, NULL, true, true, 'file', NULL),
+('8', 'QUTP', 'Quittance de Paiement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('9', 'FICIC', 'Fiche d''Imputation Comptable', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('10', 'FACJU', 'Facture Justificative', NULL, NULL, 'originatingDate', 'COM', NULL, NULL, true, true, 'item', NULL),
+('11', 'FICREC', 'Fiche Récapitulative', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('12', 'DOSC', 'Dossiers Caisse', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL),
+('13', 'PIECD', 'Pièce de Caisse-Dépense', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('14', 'PIEJ', 'Pièce Justificative', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('15', 'DOSB', 'Dossiers Banque', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL),
+('16', 'PIEBD', 'Pièce de Banque-Dépense', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('17', 'FICDG', 'Fiche DG', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('18', 'NOTSER', 'Note de service', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('19', 'PM', 'Passation de marché', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL),
+('20', 'BORT', 'Bordereau de transmission', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('21', 'COUNM', 'Courrier de notification de marché', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('22', 'PRVA', 'Procès-Verbal d''Attribution', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('23', 'PRVOP', 'Proces-Verbal d''Ouverture des Plis', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('24', 'RAPEO', 'Rapport d’Évaluation des Offres', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('26', 'DEMC', 'Demande de Cotation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('27', 'RAPFOR', 'Rapport de Formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('28', 'DOSIP', 'Dossier Individuel du Personnel', NULL, NULL, 'originatingDate', 'DIP', NULL, NULL, true, true, 'file', NULL),
+('29', 'ETAC', 'Etat Civil', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('30', 'CURV', 'Curriculum Vitae', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('31', 'EXTAN', 'Extrait d''Acte de Naissance', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('33', 'CASJU', 'Casier Judiciaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('34', 'ATTSU', 'Attestation de succès', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('35', 'CTRTRV', 'Contrat de Travail', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('37', 'ATTT', 'Attestation de Travail', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('39', 'CNSS', 'Caisse Nationale de Sécurité Sociale', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('41', 'CAR', 'Carrière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('42', 'DECIN', 'Décision de nomination', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('43', 'DECIR', 'Décision de redéploiement', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('47', 'ATTF', 'Attestation de formation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('53', 'COURRN', 'Courrier Répartition du Résultat Net', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('54', 'COUDS', 'Courrier Domiciliation de Salaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('55', 'FICP', 'Fiche de Poste', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('56', 'FICF', 'Fiche de Fonction', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('57', 'DEMA', 'Demandes Administratives', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('58', 'COUAA', 'Courrier Autorisation d''Absence', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('59', 'COUCA', 'Courrier Congés Administratifs', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('60', 'COUDE', 'Courrier Demande d''Emploi', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('61', 'DOSETU', 'Dossier de Synthèse et d’Étude', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'file', NULL),
+('62', 'FICRM', 'Fiche de Remontée Mensuelle', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('63', 'RAPT', 'Rapport Trimestriel', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('64', 'RAPMOE', '	Rapport de Mise en Œuvre', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('65', 'RAPA', 'Rapport d''Activité', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('66', 'RAPSE', 'Rapport de Suivi et Évaluation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('67', 'RAPGES', 'Rapport de Gestion', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('68', 'TDRE', 'Termes de Références des Études', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('69', 'DCRN', 'Décret de Nomination', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('70', 'FICCR', 'Fiche de compte rendu', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('71', 'LETC', 'Lettre circulaire', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('72', 'FICI', 'Fiche d''instruction', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('73', 'RAPAMI', 'Rapport d''Audit et Missions Internes', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('74', 'RAPAE', 'Rapport d''Audit Externe', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('75', 'RAPER', 'Rapport d’Études et Recherches', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('76', 'COUABID', 'Courrier Arrivée BID', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('77', 'SMIROP', 'Fiche de visite SMIROP', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('78', 'VISA', 'Visas obtenus', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
+('79', 'FACVEN', 'Facture de vente', NULL, NULL, 'originatingDate', 'COM', NULL, NULL, true, true, 'item', NULL),
+('80', 'FACACH', 'Facture d''achat', NULL, NULL, 'description/dueDate', 'COM', NULL, NULL, true, false, 'item', '{"NEW": {"type": "initial", "label": "Nouvelle(s) facture(s)", "actions": {"qualify": {}, "cancelQualify": {}}, "default": true, "position": 0, "filterUserAccess": false}, "PAYED": {"type": "final", "label": "Payée", "actions": {}, "default": false, "position": 6, "filterUserAccess": false}, "APPROVED": {"type": "intermediate", "label": "À payer", "actions": {"pay": {}, "updateMetadata": {}}, "default": false, "position": 5, "filterUserAccess": true}, "REJECTED": {"type": "intermediate", "label": "Rejetée(s)", "actions": {"sendValidation": {}, "updateMetadata": {}, "sendToApprobation": {}}, "default": false, "position": 3, "filterUserAccess": true}, "CANCELLED": {"type": "final", "label": "Annulée", "actions": {}, "default": false, "position": 7, "filterUserAccess": false}, "QUALIFIED": {"type": "intermediate", "label": "À valider", "actions": {"reject": {}, "redirect": {}, "validate": {}}, "default": false, "position": 1, "filterUserAccess": true}, "VALIDATED": {"type": "intermediate", "label": "À approuver", "actions": {"reject": {}, "approve": {}}, "default": false, "position": 4, "filterUserAccess": true}, "MISQUALIFIED": {"type": "intermediate", "label": "À requalifier", "actions": {"qualify": {}}, "default": false, "position": 2, "filterUserAccess": true}}'),
+('81', 'BULPAI', 'Bulletins de paie', NULL, NULL, NULL, 'BULPAI', NULL, NULL, false, false, 'item', '{}')
+;
 
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('7', '8');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('7', '9');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('7', '10');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('7', '11');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('12', '9');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('12', '13');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('12', '14');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('15', '9');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('15', '14');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('15', '16');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '2');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '18');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '20');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '21');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '22');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '23');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '24');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('19', '26');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '1');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '29');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '30');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '31');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '33');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '34');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '35');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '37');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '39');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '41');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '42');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '43');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '47');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '53');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '54');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '55');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '56');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '57');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '58');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '59');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '60');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '77');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('28', '78');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '1');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '17');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '63');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '64');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '65');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '66');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '67');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '68');
-INSERT INTO "recordsManagement"."archivalProfileContents" VALUES ('61', '69');
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId","containedProfileId") VALUES 
+('7', '8'),
+('7', '9'),
+('7', '10'),
+('7', '11'),
+('12', '9'),
+('12', '13'),
+('12', '14'),
+('15', '9'),
+('15', '14'),
+('15', '16'),
+('19', '2'),
+('19', '18'),
+('19', '20'),
+('19', '21'),
+('19', '22'),
+('19', '23'),
+('19', '24'),
+('19', '26'),
+('28', '1'),
+('28', '29'),
+('28', '30'),
+('28', '31'),
+('28', '33'),
+('28', '34'),
+('28', '35'),
+('28', '37'),
+('28', '39'),
+('28', '41'),
+('28', '42'),
+('28', '43'),
+('28', '47'),
+('28', '53'),
+('28', '54'),
+('28', '55'),
+('28', '56'),
+('28', '57'),
+('28', '58'),
+('28', '59'),
+('28', '60'),
+('28', '77'),
+('28', '78'),
+('61', '1'),
+('61', '17'),
+('61', '63'),
+('61', '64'),
+('61', '65'),
+('61', '66'),
+('61', '67'),
+('61', '68'),
+('61', '69')
+;
 
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('1', 'org', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('2', 'org', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('3', 'org', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('4', 'org', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('5', 'org', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('6', 'org', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'empid', true, 1, false, NULL, NULL);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'fullname', false, 0, false, NULL, NULL);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('28', 'reference_addresses', false, 2, false, NULL, NULL);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('61', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('69', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('70', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('71', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('72', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('73', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('74', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('75', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('76', 'service', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('79', 'customer', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('79', 'salesPerson', false, 0, false, false, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'dueDate', false, 4, false, NULL, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'netPayable', false, 3, false, NULL, true);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'orderNumber', false, 5, false, NULL, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'service', false, 0, false, NULL, true);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'supplier', false, 2, false, NULL, true);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('80', 'taxIdentifier', true, 1, false, NULL, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('81', 'empid', true, 0, false, NULL, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('81', 'fullname', true, 1, false, NULL, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('81', 'service', false, 2, false, NULL, false);
-INSERT INTO "recordsManagement"."archiveDescription" VALUES ('81', 'org', true, 3, false, NULL, false);
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId","fieldName","required","position","isImmutable","isRetained","isInList") VALUES 
+('1', 'org', false, 0, false, false, false),
+('2', 'org', false, 0, false, false, false),
+('3', 'org', false, 0, false, false, false),
+('4', 'org', false, 0, false, false, false),
+('5', 'org', false, 0, false, false, false),
+('6', 'org', false, 0, false, false, false),
+('28', 'empid', true, 1, false, NULL, NULL),
+('28', 'fullname', false, 0, false, NULL, NULL),
+('28', 'reference_addresses', false, 2, false, NULL, NULL),
+('61', 'service', false, 0, false, false, false),
+('69', 'service', false, 0, false, false, false),
+('70', 'service', false, 0, false, false, false),
+('71', 'service', false, 0, false, false, false),
+('72', 'service', false, 0, false, false, false),
+('73', 'service', false, 0, false, false, false),
+('74', 'service', false, 0, false, false, false),
+('75', 'service', false, 0, false, false, false),
+('76', 'service', false, 0, false, false, false),
+('79', 'customer', false, 0, false, false, false),
+('79', 'salesPerson', false, 0, false, false, false),
+('80', 'dueDate', false, 4, false, NULL, false),
+('80', 'netPayable', false, 3, false, NULL, true),
+('80', 'orderNumber', false, 5, false, NULL, false),
+('80', 'service', false, 0, false, NULL, true),
+('80', 'supplier', false, 2, false, NULL, true),
+('80', 'taxIdentifier', true, 1, false, NULL, false),
+('81', 'empid', true, 0, false, NULL, false),
+('81', 'fullname', true, 1, false, NULL, false),
+('81', 'service', false, 2, false, NULL, false),
+('81', 'org', true, 3, false, NULL, false)
+;
 
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('customer', 'Client', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('documentId', 'Identifiant de document', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('dueDate', 'Date d''échéance', 'date', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('empid', 'Matricule', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('fullname', 'Nom complet', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('netPayable', 'Net à payer', 'number', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('orderNumber', 'Numéro de commande', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('org', 'Organisation', 'name', NULL, NULL, NULL, NULL, NULL, '["ACME Paris","ACME Dakar","ACME Cotonou"]', NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('salesPerson', 'Vendeur', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('service', 'Service Concerné', 'name', NULL, NULL, NULL, NULL, NULL, '["MARK","DSG","DSI","DAF"]', NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('supplier', 'Fournisseur', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
-INSERT INTO "recordsManagement"."descriptionField" VALUES ('taxIdentifier', 'N° TVA Intraco.', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false);
+INSERT INTO "recordsManagement"."descriptionField" ("name","label","type","default","minLength","maxLength","minValue","maxValue","enumeration","facets","pattern","isArray") VALUES 
+('customer', 'Client', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('documentId', 'Identifiant de document', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('dueDate', 'Date d''échéance', 'date', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('empid', 'Matricule', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('fullname', 'Nom complet', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('netPayable', 'Net à payer', 'number', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('orderNumber', 'Numéro de commande', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('org', 'Organisation', 'name', NULL, NULL, NULL, NULL, NULL, '["ACME Paris","ACME Dakar","ACME Cotonou"]', NULL, NULL, false),
+('salesPerson', 'Vendeur', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('service', 'Service Concerné', 'name', NULL, NULL, NULL, NULL, NULL, '["MARK","DSG","DSI","DAF"]', NULL, NULL, false),
+('supplier', 'Fournisseur', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
+('taxIdentifier', 'N° TVA Intraco.', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false)
+;
 
-INSERT INTO "recordsManagement"."serviceLevel" VALUES ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50);
-INSERT INTO "recordsManagement"."serviceLevel" VALUES ('ServiceLevel_002', 'serviceLevel_002', 'archives', NULL, true, 2, 50);
+INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId","reference","digitalResourceClusterId","control","default","samplingFrequency","samplingRate") VALUES 
+('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50),
+('ServiceLevel_002', 'serviceLevel_002', 'archives', NULL, true, 2, 50)
+;
