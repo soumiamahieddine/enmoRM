@@ -44,6 +44,7 @@ class role
     {
         $this->sdoFactory = $sdoFactory;
         $this->csv = $csv;
+        $this->hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
     }
 
     /**
@@ -51,7 +52,8 @@ class role
      *
      * @return array Array of auth/role object
      */
-    public function getAll() {
+    public function getAll()
+    {
         return $this->sdoFactory->find("auth/role");
     }
 
@@ -70,20 +72,22 @@ class role
         $query = [];
         foreach ($roleMembers as $roleMember) {
             $role = $this->sdoFactory->read("auth/role", $roleMember->roleId);
-            switch ($role->securityLevel) {
-                case $role::SECLEVEL_GENADMIN:
-                    $query[] = "securityLevel ='". $role::SECLEVEL_GENADMIN ."'";
-                    $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
-                    $query[] = "securityLevel = null";
-                    break;
-                case $role::SECLEVEL_FUNCADMIN:
-                    $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
-                    $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
-                    $query[] = "securityLevel = null";
-                    break;
-                case $role::SECLEVEL_USER:
-                    $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
-                    $query[] = "securityLevel = null";
+            if ($this->hasSecurityLevel) {
+                switch ($role->securityLevel) {
+                    case $role::SECLEVEL_GENADMIN:
+                        $query[] = "securityLevel ='". $role::SECLEVEL_GENADMIN ."'";
+                        $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
+                        $query[] = "securityLevel = null";
+                        break;
+                    case $role::SECLEVEL_FUNCADMIN:
+                        $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
+                        $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
+                        $query[] = "securityLevel = null";
+                        break;
+                    case $role::SECLEVEL_USER:
+                        $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
+                        $query[] = "securityLevel = null";
+                }
             }
         }
         $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)), null, null, null, $limit);
@@ -206,7 +210,6 @@ class role
                     $roleMemberController->create($roleId, $member);
                 }
             }
-
         } catch (\Exception $exception) {
             $this->sdoFactory->rollback();
             throw \laabs::newException("auth/adminRoleException", "Role not updated");
@@ -317,16 +320,17 @@ class role
     public function addPrivilege($role, $userStory)
     {
         if (isset(\laabs::configuration('auth')['privileges'])
-            && isset(\laabs::configuration('auth')['securityLevel']))
-        {
+            && isset(\laabs::configuration('auth')['securityLevel'])
+            && $this->hasSecurityLevel
+        ) {
             $privileges = \laabs::configuration('auth')['privileges'];
             $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
 
             if ($privilegesSecurityLevel[$role->securityLevel] === '0') {
                 $bitmask = ['1', '2', '4'];
-            } else if ($privilegesSecurityLevel[$role->securityLevel] === '3') {
+            } elseif ($privilegesSecurityLevel[$role->securityLevel] === '3') {
                 $bitmask = ['1', '2'];
-            } else if ($privilegesSecurityLevel[$role->securityLevel] === '6') {
+            } elseif ($privilegesSecurityLevel[$role->securityLevel] === '6') {
                 $bitmask = ['4', '2'];
             } else {
                 $bitmask = [$privilegesSecurityLevel[$role->securityLevel]];
@@ -353,6 +357,7 @@ class role
                 return false;
             }
         }
+
         $privilege = \laabs::newInstance("auth/privilege");
         $privilege->userStory = $userStory;
         $privilege->roleId = $role->roleId;
