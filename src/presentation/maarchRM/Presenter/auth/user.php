@@ -122,7 +122,7 @@ class user
         if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
             $whatAmI = $account->securityLevel;
         } else {
-            $whatAmI = 'oldUser';
+            $whatAmI = 'userWithoutSecurityLevel';
         }
 
         $sizeRoles = count($roles);
@@ -204,7 +204,7 @@ class user
         if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
             $whatAmI = $account->securityLevel;
         } else {
-            $whatAmI = 'oldUser';
+            $whatAmI = 'userWithoutSecurityLevel';
         }
 
         $sizeRoles = count($roles);
@@ -215,7 +215,7 @@ class user
             if ($whatAmI == \bundle\auth\Model\account::SECLEVEL_GENADMIN
                 && $roles[$i]->securityLevel !== \bundle\auth\Model\account::SECLEVEL_FUNCADMIN) {
                 unset($roles[$i]);
-            } else if ($whatAmI == \bundle\auth\Model\account::SECLEVEL_FUNCADMIN
+            } elseif ($whatAmI == \bundle\auth\Model\account::SECLEVEL_FUNCADMIN
                 && $roles[$i]->securityLevel !== \bundle\auth\Model\account::SECLEVEL_USER) {
                 unset($roles[$i]);
             }
