@@ -158,7 +158,7 @@ class PresentationKernel
                     break;
 
                 case 'json':
-                    $bodyArguments = \core\Encoding\json::decodeStream($this->request->body);
+                    $bodyArguments = (array) \core\Encoding\json::decodeStream($this->request->body);
                     break;
 
                 default:
