@@ -66,13 +66,14 @@ class orgTree
     {
         $orgRole = \laabs::configuration('organization')['orgUnitRoles'];
         $isOrgTree = \laabs::configuration('organization')['isOrgTree'];
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
         $countriesCodes = \laabs::callService("organization/orgContact/readCountriesCodes");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
         $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
-        
+
         // Sort archival profile by reference
         usort($archivalProfile, function ($a, $b) {
             return strcmp($a->reference, $b->reference);
@@ -80,10 +81,10 @@ class orgTree
 
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
-        
+
         $manageUserInOrg = true;
 
-        if ($user->getSecurityLevel() == $user::SECLEVEL_USER) {
+        if ($hasSecurityLevel && $user->getSecurityLevel() == $user::SECLEVEL_USER) {
             $manageUserInOrg = false;
         }
 
@@ -122,7 +123,7 @@ class orgTree
             $profileType = \laabs::configuration('recordsManagement')['archivalProfileType'];
         }
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
-        
+
         $this->view->setSource("hideAccess", $publicArchives || ($profileType == 1));
         $this->view->merge();
         $this->view->translate();
