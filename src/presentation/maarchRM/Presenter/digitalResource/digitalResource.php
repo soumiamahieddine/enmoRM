@@ -48,65 +48,92 @@ class digitalResource
      */
     public function retrieve($resource)
     {
-        $contents = base64_decode($resource->attachment->data);
+        // Avoid preview if size exceeds 128Mb
+        if ($resource->size > 128000000) {
+            return $this->view->saveHtml();
+        }
 
-        if (strlen($contents) > 65536) {
-            try {
-                switch ($resource->mimetype) {
-                    case 'application/pdf':
-                        $fp = fopen('php://temp', 'r+');
-                        fwrite($fp, $contents);
+        // Get preview if size exceeds 2Mb
+        if ($resource->size > 2000000) {
+            switch ($resource->mimetype) {
+                case 'application/pdf':
+                    $url = $this->getPDFPreview($resource);
+                    break;
 
-                        $fpdi = \laabs::newService('dependency/PDF/Factory')->getFpdi();
-                        
-                        $docpages = $fpdi->setSourceFile($fp);
-                        if ($docpages > 2) {
-                            $page = $fpdi->importPage(1);
-                            $size = $fpdi->getTemplateSize($page);
-                            $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
-                            $fpdi->useTemplate($page);
+                case 'text/html':
+                case 'text/plain':
+                    $url = $this->getMarkupLanguagePreview($resource);
+                    break;
 
-                            $page = $fpdi->importPage(2);
-                            $size = $fpdi->getTemplateSize($page);
-                            $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
-                            $fpdi->useTemplate($page);
-
-                            $contents = $fpdi->Output('S');
-                        }
-                        break;
-
-                    case 'text/html' :
-                    case 'text/plain':
-                        $contents = substr($contents, 0, 65536);
-                        break;
-                }
-            } catch (\Exception $exception) {
-                \laabs::setResponseCode('500');
+                default:
             }
         } else {
-            switch ($resource->mimetype) {
-                case 'text/html' :
-                case 'text/plain':
-                        $contents = strip_tags($contents);
-                        break;
-            }
+            $contents = stream_get_contents($resource->attachment->data);
+            $url = \laabs::createPublicResource($contents);
+        }
 
+        if ($url) {
+            $oldBrowserWarningText = $this->translator->getText("Old Browser download");
+            $this->view->addContent(
+                '<object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'"><p>' . $oldBrowserWarningText . '</p></object>'
+            );
+        }
+
+        return $this->view->saveHtml();
+    }
+
+    protected function getPDFPreview($resource)
+    {
+        try {
+            $tempfile = \laabs\tempnam();
+            $fp = fopen($tempfile, 'r+');
+            stream_copy_to_stream($resource->attachment->data, $fp);
+            rewind($resource->attachment->data);
+            fclose($fp);
+
+            $fpdi = \laabs::newService('dependency/PDF/Factory')->getFpdi();
+            
+            $docpages = $fpdi->setSourceFile($tempfile);
+            if ($docpages > 2) {
+                $page = $fpdi->importPage(1);
+                $size = $fpdi->getTemplateSize($page);
+                $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
+                $fpdi->useTemplate($page);
+
+                $page = $fpdi->importPage(2);
+                $size = $fpdi->getTemplateSize($page);
+                $fpdi->AddPage($size['orientation'], [round($size['width']), round($size['height'])]);
+                $fpdi->useTemplate($page);
+
+                $contents = $fpdi->Output('S');
+            } else {
+                $contents = file_get_contents($tempfile);
+            }
+        } catch (\Exception $exception) {
+            $contents = stream_get_contents($resource->attachment->data);
         }
 
         $url = \laabs::createPublicResource($contents);
 
-        $oldBrowserWarningText = $this->translator->getText("Old Browser download");
-        $this->view->addContent(
-            '<object class="embed-responsive-item" data="'.$url.'"" type="'.$resource->mimetype.'"><p>' . $oldBrowserWarningText . '</p></object>'
-        );
+        return $url;
+    }
 
-        return $this->view->saveHtml();
+    protected function getMarkupLanguagePreview($resource)
+    {
+        rewind($resource->attachment->data);
+        $contents = fread($resource->attachment->data, 10000);
+        
+        $contents = strip_tags($contents);
+
+        $url = \laabs::createPublicResource($contents);
+
+        return $url;
     }
 
     /**
      * Get resource contents
      * @param string $contents The digitalResource contents
-     * 
+     *
      * @return string
      **/
     public function contents($contents)

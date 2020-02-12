@@ -258,14 +258,13 @@ class archive
             return $contents;
         }
 
-        $contents = base64_decode($digitalResource->attachment->data);
         $mimetype = $digitalResource->mimetype;
 
         \laabs::setResponseType($mimetype);
         $response = \laabs::kernel()->response;
         $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->attachment->filename."");
 
-        return $contents;
+        return $digitalResource->attachment->data;
     }
 
     /**
@@ -986,7 +985,7 @@ class archive
      */
     public function view($digitalResource)
     {
-        $this->json->url = \laabs::createPublicResource($digitalResource->getContents());
+        $this->json->url = \laabs::createPublicResource($digitalResource->getHandler());
 
         return $this->json->save();
     }

@@ -87,8 +87,6 @@ class digitalResource
             return false;
         }
 
-        $contents = file_get_contents($filename);
-
         $resource = $this->newResource();
 
         $UTF8filename = $filename;
@@ -113,7 +111,7 @@ class digitalResource
         $resource->size = filesize($filename);
         $resource->mimetype = $this->finfo->file($filename, \FILEINFO_MIME_TYPE);
 
-        $resource->setContents($contents);
+        $resource->setFilename($filename);
 
         return $resource;
     }
@@ -141,22 +139,41 @@ class digitalResource
             }
         }
 
-        $resource->setContents($contents);
+        $tmpfile = \laabs\tempnam();
+        file_put_contents($tmpfile, $contents);
+        $handler = fopen($tmpfile, 'r+');
+
+        $resource->sethandler($handler, $isTemp = true);
 
         return $resource;
     }
 
     /**
      * Get information about resource stream contents
-     * @param string $stream The data stream to store
+     * @param string $stream   The data stream to store
+     * @param string $filename The original filename
      *
      * @return digitalResource/digitalResource The digitalResource
      */
-    public function createFromStream($stream)
+    public function createFromStream($stream, $filename = null)
     {
-        $contents = stream_get_contents($stream);
+        $resource = $this->newResource();
 
-        return $this->createFromContents($contents);
+        $resource->setHandler($stream);
+
+        $this->getHash($resource);
+        $this->getMimetype($resource);
+        $this->getSize($resource);
+
+        if ($filename) {
+            $pathinfo = pathinfo($filename);
+            $resource->fileName = $pathinfo['basename'];
+            if (isset($pathinfo['extension'])) {
+                $resource->fileExtension = $pathinfo['extension'];
+            }
+        }
+
+        return $resource;
     }
 
     protected function newResource()
@@ -183,7 +200,38 @@ class digitalResource
         }
 
         $resource->hashAlgorithm = $hashAlgorithm;
-        $resource->hash = hash($hashAlgorithm, $resource->getContents());
+        $resource->hash = \laabs\hash_stream($hashAlgorithm, $resource->gethandler());
+    }
+
+    /**
+     * Get the mimetype for a given resource
+     * @param digitalResource/digitalResource $resource The resource
+     */
+    public function getMimetype($resource)
+    {
+        $handler = $resource->gethandler();
+        $metadata = stream_get_meta_data($handler);
+        if ($metadata['wrapper_type'] == 'plainfile') {
+            $resource->mimetype = $this->finfo->file($metadata['uri'], \FILEINFO_MIME_TYPE);
+        }
+    }
+
+    /**
+     * Get the size for a given resource
+     * @param digitalResource/digitalResource $resource The resource
+     */
+    public function getSize($resource)
+    {
+        $handler = $resource->gethandler();
+        $metadata = stream_get_meta_data($handler);
+        if ($metadata['wrapper_type'] == 'plainfile') {
+            $resource->size = filesize($metadata['uri']);
+        } else {
+            $fstats = fstat($handler);
+            if (isset($fstats['size'])) {
+                $resource->size = $fstats['size'];
+            }
+        }
     }
 
     /**
@@ -262,17 +310,20 @@ class digitalResource
      */
     public function storeDigitalResource($resource)
     {
-        $contents = $resource->getContents();
         if (empty($resource->size)) {
-            $resource->size = strlen($contents);
-        } else {
-            if ($resource->size != strlen($contents)) {
-            }
+            $this->getSize($resource);
         }
 
         if (empty($resource->mimetype)) {
-            $resource->mimetype = $this->finfo->buffer($contents, \FILEINFO_MIME_TYPE);
+            $this->getMimetype($resource);
         }
+
+        if (empty($resource->hash)) {
+            $this->getHash($resource);
+        }
+
+        $resource->clusterId = $this->currentCluster->clusterId;
+        $resource->created = \laabs::newTimestamp();
 
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -281,25 +332,22 @@ class digitalResource
         }
 
         try {
-            $resource->clusterId = $this->currentCluster->clusterId;
-            $resource->created = \laabs::newTimestamp();
-
-            if (!isset($resource->hash)) {
-                $this->getHash($resource);
-            }
-
             $this->sdoFactory->create($resource, 'digitalResource/digitalResource');
 
             $this->clusterController->storeResource($this->currentCluster, $resource);
 
             if ($resource->relatedResource) {
                 foreach ($resource->relatedResource as $relatedResource) {
-                    $relatedResource->relatedResId = $resource->resId;
-                    $relatedResource->archiveId = $resource->archiveId;
+                    if (empty($relatedResource->relatedResId)) {
+                        $relatedResource->relatedResId = $resource->resId;
+                    }
+                    if (empty($relatedResource->archiveId)) {
+                        $relatedResource->archiveId = $resource->archiveId;
+                    }
+
                     $this->storeDigitalResource($relatedResource);
                 }
             }
-
         } catch (\Exception $exception) {
             $this->clusterController->rollbackStorage($resource);
 
@@ -374,29 +422,9 @@ class digitalResource
 
         $cluster = $this->useCluster($resource->clusterId, Cluster::MODE_READ, false);
         $resource->cluster = $cluster;
-        $contents = $this->clusterController->retrieveResource($cluster, $resource);
+        $handler = $this->clusterController->retrieveResource($cluster, $resource);
 
-        if (!$contents) {
-            $packedResources = $this->sdoFactory->find('digitalResource/packedResource', "resId='".$resource->resId."'");
-            if (count($packedResources) > 0) {
-                $packageController = \laabs::newController('digitalResource/package');
-                foreach ($packedResources as $packedResource) {
-                    try {
-                        $package = $this->sdoFactory->read('digitalResource/package', $packedResource->packageId);
-                        $package->resource = $this->retrieve($packedResource->packageId);
-                        $contents = $packageController->getPackedContents($package, $packedResource->name);
-                        // Check hash
-                        $this->checkHash($contents, $resource->hash, $resource->hashAlgorithm);
-
-                        $resource->setContents($contents);
-                    } catch (\Exception $exception) {
-                        throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
-                    }
-                }
-            }
-        }
-
-        if (!$contents) {
+        if (!$handler) {
             throw \laabs::newException("digitalResource/clusterException", "Resource %s could not be retrieved.", 404, null, [$resource->resId]);
         }
 
@@ -408,9 +436,9 @@ class digitalResource
         return $resource;
     }
 
-    public function checkHash($contents, $hash, $hashAlgorithm)
+    public function checkHash($handler, $hash, $hashAlgorithm)
     {
-        $hash_calculated = strtolower(hash($hashAlgorithm, $contents));
+        $hash_calculated = \laabs\hash_stream($hashAlgorithm, $handler);
 
         if ($hash_calculated !== strtolower($hash)) {
             throw \laabs::newException("digitalResource/invalidHashException", "Invalid hash.");
@@ -438,12 +466,12 @@ class digitalResource
             $address = $this->sdoFactory->read("digitalResource/address", array('resId' => $resId, 'repositoryId' => $clusterRepository->repositoryId));
 
             if ($address) {
-                $contents = null;
-                if (!$contents) {
+                $handler = null;
+                if (!$handler) {
                     try {
-                        $contents = $repositoryService->readObject($address->path);
+                        $handler = $repositoryService->readObject($address->path);
 
-                        $this->checkHash($contents, $resource->hash, $resource->hashAlgorithm);
+                        $this->checkHash($handler, $resource->hash, $resource->hashAlgorithm);
                     } catch (\Exception $e) {
                         // TODO : throw exception if resource not available on repo, based on options ?
                     }
@@ -453,11 +481,11 @@ class digitalResource
             }
         }
 
-        if (!$contents) {
+        if (!$handler) {
             throw \laabs::newException("digitalResource/clusterException", "Resource unavailable");
         }
 
-        return $contents;
+        return $handler;
     }
 
     /**
@@ -643,18 +671,23 @@ class digitalResource
             }
         }
 
-
-        $contents = $digitalResource->getContents();
-
-        $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
-
-        if (isset($digitalResource->fileName)) {
-            $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->fileName;
+        $handler = $digitalResource->getHandler();
+        $metadata = stream_get_meta_data($handler);
+        if ($metadata['wrapper_type'] == 'plainfile') {
+            $srcfile = $handler;
         } else {
-            $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
-        }
+            $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
 
-        file_put_contents($srcfile, $contents);
+            if (isset($digitalResource->fileName)) {
+                $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->fileName;
+            } else {
+                $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
+            }
+
+            $tgtfp = fopen($srcfile, 'w');
+            stream_copy_to_stream($handler, $tgtfp);
+            fclose($tgtfp);
+        }
 
         $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
@@ -662,12 +695,16 @@ class digitalResource
 
         $tgtfile = $converter->convert($srcfile, $outputFormats[$conversionRule->targetPuid]);
 
+        // Is tempdir was set, delete temp file
+        if (isset($tempdir)) {
+            unlink($srcfile);
+        }
+
         if (!file_exists($tgtfile)) {
             return false;
         }
 
         $convertedResource = $this->createFromFile($tgtfile);
-        $convertedResource->resId = \laabs::newId();
         $convertedResource->archiveId = $digitalResource->archiveId;
         $convertedResource->puid = $conversionRule->targetPuid;
         $convertedResource->softwareName = $convertService["softwareName"];

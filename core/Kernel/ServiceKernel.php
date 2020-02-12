@@ -82,17 +82,18 @@ class ServiceKernel extends AbstractKernel
             // Parse request to get arguments from request content
             self::$instance->parseRequest();
 
+            // Validate request
+            self::$instance->validateRequest();
+
             // Extract action arguments
             self::$instance->getActionArguments();
 
             /* Call Action */
             self::$instance->callAction();
-
         } catch (\Exception $exception) {
             $handled = self::$instance->handleException($exception);
             
             if (!$handled) {
-
                 self::$instance->response->setBody((string) $exception);
                 self::$instance->response->setCode($exception->getCode());
 
@@ -150,7 +151,6 @@ class ServiceKernel extends AbstractKernel
 
             \core\Observer\Dispatcher::notify(LAABS_INPUT, $this->inputRouter->input, $this->request);
         } catch (\Exception $e) {
-
         }
     }
 
@@ -161,7 +161,6 @@ class ServiceKernel extends AbstractKernel
 
             \core\Observer\Dispatcher::notify(LAABS_OUTPUT, $this->outputRouter->output, $this->response);
         } catch (\Exception $e) {
-
         }
     }
 
@@ -186,6 +185,7 @@ class ServiceKernel extends AbstractKernel
         }
 
         $bodyArguments = array();
+            
         if (isset($this->inputRouter)) {
             if ($this->response->mode == 'http') {
                 $this->response->setHeader("X-Laabs-Parser", $this->inputRouter->uri . "; type=" . $this->request->contentType);
@@ -195,28 +195,35 @@ class ServiceKernel extends AbstractKernel
         } else {
             switch ($this->request->contentType) {
                 case 'php':
-                    $bodyArguments = $this->request->body;
+                    $bodyArguments = stream_get_contents($this->request->body);
                     break;
 
                 case 'url':
-                    $bodyArguments = \core\Encoding\url::decode($this->request->body);
+                    $contents = stream_get_contents($this->request->body);
+                    $bodyArguments = \core\Encoding\url::decode($contents);
                     break;
 
                 case 'json':
-                    $bodyArguments = \core\Encoding\json::decode($this->request->body);
+                    $bodyArguments = \core\Encoding\json::decodeStream($this->request->body);
                     break;
 
                 default:
                     $bodyArguments = [$this->request->body];
             }
         }
+        
+        $this->userMessage = array_merge($queryArguments, $bodyArguments);
+    }
 
-        $requestArguments = array_merge($queryArguments, $bodyArguments);
-       
-        $this->serviceRequest = $this->servicePath->getMessage($requestArguments);
-
+    /**
+     * Validate request
+     */
+    protected function validateRequest()
+    {
+        $this->serviceRequest = $this->servicePath->getMessage($this->userMessage);
+        
         $valid = \laabs::validateMessage($this->serviceRequest, $this->servicePath);
-
+        
         if (!$valid) {
             $e = new \core\Exception\BadRequestException();
             $e->errors = \laabs::getValidationErrors();
@@ -272,7 +279,6 @@ class ServiceKernel extends AbstractKernel
                 array_pop($this->actionArguments);
             }
         } while ($arg === null && count($this->actionArguments));
-
     }
 
     /**
@@ -296,7 +302,6 @@ class ServiceKernel extends AbstractKernel
         $this->serviceReturn = $this->actionReturn;
 
         \core\Observer\Dispatcher::notify(LAABS_SERVICE_RETURN, $serviceReturn);
-
     }
 
     /**

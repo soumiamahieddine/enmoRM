@@ -101,6 +101,8 @@ trait archiveEntryTrait
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
         }
 
         // Load archival profile, service level if specified
@@ -131,6 +133,41 @@ trait archiveEntryTrait
     }
 
     /**
+     * Receives attachments
+     * @param object $archive
+     */
+    protected function receiveAttachments($archive)
+    {
+        if (is_array($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $receivedHandler = $digitalResource->getHandler();
+
+                switch (true) {
+                    case is_string($receivedHandler)
+                        && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
+                        $handler = fopen($receivedHandler, 'r');
+                        break;
+
+                    case is_string($receivedHandler) &&
+                        preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler):
+                        $handler = \laabs::createTempStream(base64_decode($receivedHandler));
+                        break;
+                
+                    case is_resource($receivedHandler):
+                        $handler = \core\Encoding\Base64::decode($receivedHandler);
+                }
+
+                $digitalResource->setHandler($handler);
+            }
+        }
+        if (is_array($archive->contents)) {
+            foreach ($archive->contents as $contentArchive) {
+                $this->receiveAttachments($contentArchive);
+            }
+        }
+    }
+
+    /**
      * Process a zipContainer
      *
      * @param recordsManagement/archive $archive The archive
@@ -145,7 +182,7 @@ trait archiveEntryTrait
 
         $archive->digitalResources = [];
         $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
-        $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
+        $directory = $zipDirectory.DIRECTORY_SEPARATOR.reset($cleanZipDirectory);
 
         if (!is_dir($directory)) {
             throw new \core\Exception("The container file is non-compliant");
@@ -165,24 +202,26 @@ trait archiveEntryTrait
      */
     private function extractZip($zip)
     {
-        $packageDir = \laabs\tempdir() . DIRECTORY_SEPARATOR . "MaarchRM" . DIRECTORY_SEPARATOR;
+        $packageDir = \laabs\tempdir().DIRECTORY_SEPARATOR."MaarchRM".DIRECTORY_SEPARATOR;
 
         if (!is_dir($packageDir)) {
             mkdir($packageDir, 0777, true);
         }
 
         $name = \laabs::newId();
-        $zipfile = $packageDir . $name . ".zip";
+        $zipfile = $packageDir.$name.".zip";
 
-        if (!is_dir($packageDir . $name)) {
-            mkdir($packageDir . $name, 0777, true);
+        if (!is_dir($packageDir.$name)) {
+            mkdir($packageDir.$name, 0777, true);
         }
 
         file_put_contents($zipfile, base64_decode($zip->getContents()));
 
         $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
 
-        return $packageDir . $name;
+        unset($zipfile);
+
+        return $packageDir.$name;
     }
 
     /**
@@ -195,14 +234,13 @@ trait archiveEntryTrait
         $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
 
         foreach ($scannedDirectory as $filename) {
-            if (is_link($directory . DIRECTORY_SEPARATOR . $filename)) {
+            if (is_link($directory.DIRECTORY_SEPARATOR.$filename)) {
                 throw new \core\Exception("The container file contains symbolic links");
             }
 
-            if (is_file($directory . DIRECTORY_SEPARATOR . $filename)) {
-                if (!empty($archive->archivalProfileReference) && \laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
-                    $resource = $this->extractResource($directory, $filename);
-                    $resource->setContents(base64_encode($resource->getContents()));
+            if (is_file($directory.DIRECTORY_SEPARATOR.$filename)) {
+                if (!empty($archive->archivalProfileReference) && \laabs::strStartsWith($filename, $archive->archivalProfileReference." ")) {
+                    $resource = $this->digitalResourceController->createFromFile($directory.DIRECTORY_SEPARATOR.$filename, $filename);
                     $archive->digitalResources[] = $resource;
                 } else {
                     $archiveUnit = $this->extractArchiveUnit($filename);
@@ -210,18 +248,17 @@ trait archiveEntryTrait
                     $archiveUnit->fileplanLevel = 'item';
                     $archive->contents[] = $archiveUnit;
 
-                    $resource = $this->extractResource($directory, $filename);
-                    $resource->setContents(base64_encode($resource->getContents()));
+                    $resource = $this->digitalResourceController->createFromFile($directory.DIRECTORY_SEPARATOR.$filename, $filename);
                     $archiveUnit->digitalResources[] = $resource;
                 }
             }
 
-            if (is_dir($directory . DIRECTORY_SEPARATOR . $filename)) {
+            if (is_dir($directory.DIRECTORY_SEPARATOR.$filename)) {
                 $archiveUnit = $this->extractArchiveUnit($filename);
                 $archiveUnit->archiveId = \laabs::newId();
                 $archive->contents[] = $archiveUnit;
 
-                $this->extractDir($directory . DIRECTORY_SEPARATOR . $filename, $archiveUnit);
+                $this->extractDir($directory.DIRECTORY_SEPARATOR.$filename, $archiveUnit);
             }
         }
     }
@@ -249,7 +286,7 @@ trait archiveEntryTrait
                 $this->useArchivalProfile($archivalProfileReference);
                 $archiveName = substr($filename, strlen($archivalProfileReference)+1);
                 $archiveName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $archiveName);
-                $archive->archiveName = $archiveName . " _ " . $this->currentArchivalProfile->name;
+                $archive->archiveName = $archiveName." _ ".$this->currentArchivalProfile->name;
                 $archive->archivalProfileReference = $archivalProfileReference;
             } catch (\Exception $e) {
                 $archive->archiveName = $filename;
@@ -257,7 +294,7 @@ trait archiveEntryTrait
         } else {
             $archive->archiveName = $filename;
         }
-        
+
         return $archive;
     }
 
@@ -271,7 +308,7 @@ trait archiveEntryTrait
      */
     private function extractResource($resourceDirectory, $filename)
     {
-        $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename, false);
+        $resource = $this->digitalResourceController->createFromFile($resourceDirectory.DIRECTORY_SEPARATOR.$filename, false);
 
         $this->digitalResourceController->getHash($resource, \laabs::configuration('auth')['passwordEncryption']);
 
@@ -305,7 +342,7 @@ trait archiveEntryTrait
 
         foreach ($archives as $archive) {
             foreach ($archive->digitalResources as $digitalResource) {
-                $filePath = $batchDirectory . DIRECTORY_SEPARATOR . $digitalResource->fileName;
+                $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
 
                 $fileContent = file_get_contents($filePath);
                 $digitalResource->handler = base64_encode($fileContent);

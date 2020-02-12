@@ -269,11 +269,11 @@ abstract class abstractBusinessMessage extends abstractMessage
         }
 
         $attachmentElement->setAttribute('filename', $resource->fileName);
-        if ($content = $resource->getContents()) {
-            file_put_contents($this->messageDirectory . DIRECTORY_SEPARATOR . $this->message->messageId. DIRECTORY_SEPARATOR . $resource->fileName, $content);
-        }
 
-       
+        $attachmentFilename = $this->messageDirectory.DIRECTORY_SEPARATOR.$this->message->messageId.DIRECTORY_SEPARATOR.$resource->fileName;
+        $handler = fopen($attachmentFilename, 'w+');
+        stream_copy_to_stream($resource->getHandler(), $handler);
+        fclose($handler);
     }
 
     protected function addArchiveDescriptiveMetadata($archive, $parentElement)
