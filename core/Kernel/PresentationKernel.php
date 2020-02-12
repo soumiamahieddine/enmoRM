@@ -133,15 +133,13 @@ class PresentationKernel
      */
     protected function parseRequest()
     {
-        $contents = stream_get_contents($this->request->body);
-
         if (isset($this->userInputRouter)) {
             if ($this->response->mode == 'http') {
                 $this->response->setHeader("X-Laabs-Composer", $this->userInputRouter->uri);
             }
 
             $composer = $this->userInputRouter->composer->newInstance();
-
+            $contents = stream_get_contents($this->request->body);
             $this->userMessage = $this->userInputRouter->userInput->compose($composer, $contents, $this->request->query);
         } else {
             switch ($this->request->queryType) {
@@ -157,15 +155,17 @@ class PresentationKernel
 
             switch ($this->request->contentType) {
                 case 'url':
+                    $contents = stream_get_contents($this->request->body);
                     $bodyArguments = \core\Encoding\url::decode($contents);
                     break;
 
                 case 'json':
                 default:
-                    $bodyArguments = \core\Encoding\json::decode($contents);
+                    //$contents = stream_get_contents($this->request->body);
+                    $bodyArguments = \core\Encoding\json::decodeStream($this->request->body);
                     break;
             }
-
+        
             $this->userMessage = array_merge($queryArguments, $bodyArguments);
         }
     }
@@ -198,6 +198,8 @@ class PresentationKernel
         try {  
             // cast message
             $serviceMessage = $servicePath->getMessage($this->userMessage);
+            \laabs::trace(__FILE__.'::'.__LINE__);
+        
         } catch (\core\Exception $e) {
             $badRequestException = new \core\Exception\BadRequestException();
 
