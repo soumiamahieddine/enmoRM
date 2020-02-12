@@ -274,7 +274,6 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receiveAttachments($message, $data, $attachments, $filename=false)
     {
-        var_dump($attachments);exit;
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
         $message->attachments = [];
