@@ -151,8 +151,8 @@ interface archiveInterface
 
     /**
      * Add a resource to an archive
-     * @param string $contents
-     * @param string $filename
+     * @param resource $contents
+     * @param string   $filename
      *
      * @action recordsManagement/archive/addResource
      *

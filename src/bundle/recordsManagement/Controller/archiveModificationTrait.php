@@ -667,19 +667,21 @@ trait archiveModificationTrait
      */
     public function addResource($archiveId, $contents, $filename = null, $checkAccess = true)
     {
-        // Valid URL file:// http:// data://
-        if (filter_var(substr($contents, 0, 10), FILTER_VALIDATE_URL) || is_file($contents)) {
-            $handler = fopen($contents, 'r');
-        } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
-            $contents = base64_decode($contents);
+        switch (true) {
+            case is_string($contents)
+                && (filter_var(substr($contents, 0, 10), FILTER_VALIDATE_URL) || is_file($contents)):
+                $handler = fopen($contents, 'r');
+                break;
 
-            $handler = fopen('php://temp', 'w+');
-            fwrite($handler, $contents);
-            rewind($handler);
-        } else {
-            throw new \core\Exception\BadRequestException();
+            case is_string($contents) &&
+                preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents):
+                $handler = \laabs::createTempStream(base64_decode($contents));
+                break;
+        
+            case is_resource($contents):
+                $handler = \core\Encoding\Base64::decode($contents);
         }
-
+        
         $digitalResource = $this->digitalResourceController->createFromStream($handler, $filename);
 
         $digitalResource->archiveId = $archiveId;

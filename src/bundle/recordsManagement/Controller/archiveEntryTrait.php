@@ -101,6 +101,8 @@ trait archiveEntryTrait
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
         }
 
         // Load archival profile, service level if specified
@@ -138,26 +140,23 @@ trait archiveEntryTrait
     {
         if (is_array($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
-                // Valid URL file:// http:// data://
                 $receivedHandler = $digitalResource->getHandler();
-                if (is_string($receivedHandler)) {
-                    if (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)) {
-                        $handler = fopen($receivedHandler, 'r');
-                    } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler)) {
-                        $receivedHandler = base64_decode($receivedHandler);
 
-                        $handler = fopen('php://temp', 'r+');
-                        fwrite($handler, $receivedHandler);
-                        rewind($handler);
-                    }
-                } elseif (is_resource($receivedHandler)) {
-                    $handler = fopen('php://temp', 'r+');
-                    $filter = stream_filter_append($handler, 'convert.base64-decode', STREAM_FILTER_WRITE);
-                    $digitalResource->size = stream_copy_to_stream($receivedHandler, $handler);
-                    stream_filter_remove($filter);
-                    rewind($handler);
+                switch (true) {
+                    case is_string($receivedHandler)
+                        && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
+                        $handler = fopen($receivedHandler, 'r');
+                        break;
+
+                    case is_string($receivedHandler) &&
+                        preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler):
+                        $handler = \laabs::createTempStream(base64_decode($receivedHandler));
+                        break;
+                
+                    case is_resource($receivedHandler):
+                        $handler = \core\Encoding\Base64::decode($receivedHandler);
                 }
-                unset($receivedHandler);
+
                 $digitalResource->setHandler($handler);
             }
         }
