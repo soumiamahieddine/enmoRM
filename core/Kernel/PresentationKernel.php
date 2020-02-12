@@ -65,7 +65,6 @@ class PresentationKernel
 
             /* Call Command */
             self::$instance->callUserCommand();
-
         } catch (\Exception $exception) {
             if (!self::$instance->handleException($exception)) {
                 self::$instance->response->setBody((string) $exception);
@@ -139,8 +138,8 @@ class PresentationKernel
             }
 
             $composer = $this->userInputRouter->composer->newInstance();
-
-            $this->userMessage = $this->userInputRouter->userInput->compose($composer, $this->request->body, $this->request->query);
+            $contents = stream_get_contents($this->request->body);
+            $this->userMessage = $this->userInputRouter->userInput->compose($composer, $contents, $this->request->query);
         } else {
             switch ($this->request->queryType) {
                 case 'lql':
@@ -154,17 +153,18 @@ class PresentationKernel
             }
             switch ($this->request->contentType) {
                 case 'url':
-                    $bodyArguments = \core\Encoding\url::decode($this->request->body);
+                    $contents = stream_get_contents($this->request->body);
+                    $bodyArguments = \core\Encoding\url::decode($contents);
                     break;
 
                 case 'json':
-                    $bodyArguments = \core\Encoding\json::decode($this->request->body);
+                    $bodyArguments = \core\Encoding\json::decodeStream($this->request->body);
                     break;
 
                 default:
                     $bodyArguments = [$this->request->body];
             }
-
+        
             $this->userMessage = array_merge($queryArguments, $bodyArguments);
         }
     }
@@ -185,7 +185,6 @@ class PresentationKernel
 
         // Notify of command for authorizations and log
         \core\Observer\Dispatcher::notify(LAABS_COMMAND_RETURN, $this->serviceReturns);
-
     }
 
     protected function callService($service)
@@ -194,7 +193,7 @@ class PresentationKernel
         $servicePath = $pathRouter->path;
 
         // Get service message from request arguments and parsed body
-        try {  
+        try {
             // cast message
             $serviceMessage = $servicePath->getMessage($this->userMessage);
         } catch (\core\Exception $e) {

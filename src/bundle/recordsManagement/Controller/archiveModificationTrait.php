@@ -665,24 +665,24 @@ trait archiveModificationTrait
      *
      * @return The new resource identifier
      */
-    public function addResource($archiveId, $contents, $filename = false, $checkAccess = true)
+    public function addResource($archiveId, $contents, $filename = null, $checkAccess = true)
     {
-        // Valid URL file:// http:// data://
-        if (is_string($contents)) {
-            if (filter_var($contents, FILTER_VALIDATE_URL)) {
-                $contents = stream_get_contents($contents);
-            } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents)) {
-                $contents = base64_decode($contents);
-            } elseif (is_file($contents)) {
-                if (empty($filename)) {
-                    $filename = basename($contents);
-                }
-                $contents = file_get_contents($contents);
-            }
-            $digitalResource = $this->digitalResourceController->createFromContents($contents, $filename);
-        } elseif (is_resource($contents)) {
-            $digitalResource = $this->digitalResourceController->createFromStream($contents, $filename);
+        switch (true) {
+            case is_string($contents)
+                && (filter_var(substr($contents, 0, 10), FILTER_VALIDATE_URL) || is_file($contents)):
+                $handler = fopen($contents, 'r');
+                break;
+
+            case is_string($contents) &&
+                preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents):
+                $handler = \laabs::createTempStream(base64_decode($contents));
+                break;
+        
+            case is_resource($contents):
+                $handler = \core\Encoding\Base64::decode($contents);
         }
+        
+        $digitalResource = $this->digitalResourceController->createFromStream($handler, $filename);
         $digitalResource->archiveId = $archiveId;
         $digitalResource->resId = \laabs::newId();
 
@@ -700,7 +700,7 @@ trait archiveModificationTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $this->validateDigitalResource($digitalResource);
-
+    
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {

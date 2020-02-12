@@ -98,7 +98,10 @@
                 DocumentInformation.form.find("#convertResource").removeClass('hide');
             }
             if (resource.format) {
-                var formatname = resource.format.name + ' ' + resource.format.version;
+                var formatname = resource.format.name;
+                if (resource.format.version != null) {
+                    formatname += ' ' + resource.format.version
+                }
                 DocumentInformation.form.find('[name="format"]').text(formatname).attr('title', formatname);
 
                 var iconI = DocumentInformation.form.find(".infoIcon");

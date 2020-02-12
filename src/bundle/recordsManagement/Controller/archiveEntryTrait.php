@@ -101,6 +101,8 @@ trait archiveEntryTrait
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
         }
 
         // Load archival profile, service level if specified
@@ -128,6 +130,41 @@ trait archiveEntryTrait
         $this->sendResponse($archive);
 
         return $archive->archiveId;
+    }
+
+    /**
+     * Receives attachments
+     * @param object $archive
+     */
+    protected function receiveAttachments($archive)
+    {
+        if (is_array($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $receivedHandler = $digitalResource->getHandler();
+
+                switch (true) {
+                    case is_string($receivedHandler)
+                        && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
+                        $handler = fopen($receivedHandler, 'r');
+                        break;
+
+                    case is_string($receivedHandler) &&
+                        preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler):
+                        $handler = \laabs::createTempStream(base64_decode($receivedHandler));
+                        break;
+                
+                    case is_resource($receivedHandler):
+                        $handler = \core\Encoding\Base64::decode($receivedHandler);
+                }
+
+                $digitalResource->setHandler($handler);
+            }
+        }
+        if (is_array($archive->contents)) {
+            foreach ($archive->contents as $contentArchive) {
+                $this->receiveAttachments($contentArchive);
+            }
+        }
     }
 
     /**
@@ -181,6 +218,8 @@ trait archiveEntryTrait
         file_put_contents($zipfile, base64_decode($zip->getContents()));
 
         $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
+
+        unset($zipfile);
 
         return $packageDir.$name;
     }
@@ -255,7 +294,7 @@ trait archiveEntryTrait
         } else {
             $archive->archiveName = $filename;
         }
-        
+
         return $archive;
     }
 

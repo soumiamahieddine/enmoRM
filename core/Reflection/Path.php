@@ -227,7 +227,7 @@ class Path
             switch (true) {
                 // Value available from request arguments or body: cast into message part type
                 case isset($requestArgs[$parameter->name]) :
-                    $value = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
+                    $requestArgs[$parameter->name] = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
                     break;
 
                 // Value available from request arguments or body: cast into message part type
@@ -237,22 +237,22 @@ class Path
 
                 // Default value
                 case $parameter->isDefaultValueAvailable():
-                    $value = $parameter->getDefaultValue();
+                    $requestArgs[$parameter->name] = $parameter->getDefaultValue();
                     break;
 
                 // Optional : null
                 case $parameter->isOptional():
-                    $value = null;
+                    $requestArgs[$parameter->name] = null;
                     break;
 
                 // No other case should raise an exception
                 default:
                     // Throw exception
-                    $value = null;
+                    $requestArgs[$parameter->name] = null;
             }
-            $messageParts[$parameter->name] = $value;
+            $messageParts[$parameter->name] = $requestArgs[$parameter->name];
         }
-       
+
         // Backward remove null values from array
         do {
             $arg = end($messageParts);

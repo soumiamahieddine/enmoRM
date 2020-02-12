@@ -985,7 +985,7 @@ class archive
      */
     public function view($digitalResource)
     {
-        $this->json->url = \laabs::createPublicResource($digitalResource->getContents());
+        $this->json->url = \laabs::createPublicResource($digitalResource->getHandler());
 
         return $this->json->save();
     }

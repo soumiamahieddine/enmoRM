@@ -372,13 +372,13 @@ class message
      */
     public function getDataObjectAttachment($digitalResource)
     {
-        $contents = $digitalResource->getContents();
         $mimetype = $digitalResource->mimetype;
         \laabs::setResponseType($mimetype);
 
         switch ($mimetype) {
             case 'application/xml':
             case 'text/xml':
+                $contents = $digitalResource->getContents();
                 $dom = new \DOMDocument();
                 $dom->formatOutput = true;
 
@@ -386,13 +386,12 @@ class message
 
                 $contents = "<pre>".htmlentities(preg_replace('#\>\n(\s*\n)*#', ">\n", $dom->saveXml()))."</pre>";
                 \laabs::setResponseType("text/html");
-                break;
+
+                return $contents;
 
             default:
-                break;
+                return $digitalResource->getHandler();
         }
-
-        return $contents;
     }
 
     /**
