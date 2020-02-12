@@ -63,6 +63,7 @@ class serviceAccount
     {
         $this->view->addContentFile("auth/serviceAccount/index.html");
         $this->view->setSource("serviceAccounts", $serviceAccounts);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
@@ -70,7 +71,7 @@ class serviceAccount
         $securityLevel = $account->securityLevel;
 
         $manageUserRights = true;
-        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+        if ($hasSecurityLevel && $securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
             $manageUserRights = false;
         }
 
