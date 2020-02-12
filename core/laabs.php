@@ -80,6 +80,8 @@ class laabs
      */
     public static function init()
     {
+        $_SERVER['LAABS-INIT-TIME'] = microtime(true);
+
         chdir('..');
         static::$rootdir = getcwd();
 
@@ -633,7 +635,11 @@ class laabs
      */
     public static function createPublicResource($content, $path = LAABS_TMP)
     {
-        $uid = hash('md5', $content);
+        if (is_scalar($content)) {
+            $uid = hash('md5', $content);
+        } else {
+            $uid = \laabs\uniqid();
+        }
 
         $dir = "..".DIRECTORY_SEPARATOR.LAABS_WEB;
         if ($path) {
@@ -652,8 +658,14 @@ class laabs
         $uri = LAABS_URI_SEPARATOR.$pathUri.LAABS_URI_SEPARATOR.$uid;
 
         if (!is_file($file)) {
-            if (!file_put_contents($file, $content)) {
-                throw new Exception("Unable to copy resource to '$file'");
+            if (is_scalar($content)) {
+                if (!file_put_contents($file, $content)) {
+                    throw new Exception("Unable to copy resource to '$file'");
+                }
+            } elseif (is_resource($content)) {
+                $fp = fopen($file, 'w');
+                stream_copy_to_stream($content, $fp);
+                fclose($fp);
             }
         }
 
@@ -691,6 +703,22 @@ class laabs
     public static function createMemoryStream($contents)
     {
         $stream = fopen('php://memory', 'r+');
+        fwrite($stream, $contents);
+        rewind($stream);
+
+        return $stream;
+    }
+
+    /**
+     * Create a stream resource in temp with a given content
+     * @param string $contents
+     *
+     * @return resource
+     * @author
+     **/
+    public static function createTempStream($contents)
+    {
+        $stream = fopen('php://temp', 'r+');
         fwrite($stream, $contents);
         rewind($stream);
 
@@ -1401,5 +1429,17 @@ class laabs
         $filename = str_replace($forbiddenChars, "_", $filename);
 
         return $filename;
+    }
+
+    /**
+     * Trace calls in log
+     * @param string $source
+     * @param string $callable
+     */
+    public static function trace($source)
+    {
+        $delay = round(microtime(true) - $_SERVER['LAABS-INIT-TIME'], 6);
+        $message = $source.' '.$delay.'s '.round(memory_get_usage()/1000000).'/'.round(memory_get_peak_usage()/1000000).'Mb';
+        static::log($message);
     }
 }

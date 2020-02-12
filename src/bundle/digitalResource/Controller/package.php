@@ -104,7 +104,9 @@ class package {
             $packedResource->resId = $resource->resId;
             $packedResource->name = str_pad($pos, 8, "0", \STR_PAD_LEFT);
 
-            file_put_contents($packageDir.DIRECTORY_SEPARATOR.$packedResource->name, $resource->getContents());
+            $handler = fopen($packageDir.DIRECTORY_SEPARATOR.$packedResource->name, 'w+');
+            stream_copy_to_stream($resource->getHandler(), $handler);
+            fclose($handler);
 
             if ($resMetadata = $resource->getMetadata()) {
                 file_put_contents($packageDir.DIRECTORY_SEPARATOR.$packedResource->name.'.metadata', $resMetadata);
@@ -169,10 +171,12 @@ class package {
         mkdir($packageDir, 0775, true);
 
         $zipfile = $packageDir.DIRECTORY_SEPARATOR.$package->packageId.'.7z';
-        file_put_contents($zipfile, $package->resource->getContents());
-
+        $handler = fopen($zipfile, 'w+');
+        stream_copy_to_stream($package->resource->getHandler(), $handler);
+        fclose($handler);
+        
         $this->zip->extract($zipfile, $packageDir, $name);
 
-        return file_get_contents($packageDir.DIRECTORY_SEPARATOR.$name);
+        return fopen($packageDir.DIRECTORY_SEPARATOR.$name, 'r+');
     }
 }

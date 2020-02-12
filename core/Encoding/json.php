@@ -32,20 +32,38 @@ class json
 
     /**
      * Decode a json contents into an associative array of parameters
-     * @param string $json
+     * @param string $params
      * 
      * @return mixed
      */
-    public static function decode($json)
+    public static function decode($params)
     {
-        $data = \json_decode($json);
+        $params = \json_decode($params);
         
-        $params = array();
+        if (is_object($params)) {
+            $params = get_object_vars($params);
+        }
+        
+        return $params;
+    }
 
-        if ($data) {
-            foreach ($data as $name => $value) {
-                $params[$name] = $value;
-            }
+    /**
+     * Decode a json stream
+     * @param resource $stream
+     * 
+     * @return mixed
+     */
+    public static function decodeStream($stream)
+    {
+        require_once __DIR__.'/JsonTokenizer.php';
+        require_once __DIR__.'/JsonParser.php';
+
+        $parser = new \JsonParser();
+
+        $params = $parser->parse($stream);
+        
+        if (is_object($params)) {
+            $params = get_object_vars($params);
         }
         
         return $params;

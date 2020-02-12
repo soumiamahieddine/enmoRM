@@ -258,14 +258,13 @@ class archive
             return $contents;
         }
 
-        $contents = base64_decode($digitalResource->attachment->data);
         $mimetype = $digitalResource->mimetype;
 
         \laabs::setResponseType($mimetype);
         $response = \laabs::kernel()->response;
         $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->attachment->filename."");
 
-        return $contents;
+        return $digitalResource->attachment->data;
     }
 
     /**
@@ -986,7 +985,7 @@ class archive
      */
     public function view($digitalResource)
     {
-        $this->json->url = \laabs::createPublicResource($digitalResource->getContents());
+        $this->json->url = \laabs::createPublicResource($digitalResource->getHandler());
 
         return $this->json->save();
     }
@@ -1390,7 +1389,7 @@ class archive
         foreach ($userServices as $userService) {
             foreach ($originators as $originator) {
                 if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
-                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
+                    if (!empty((string) $originator->ownerOrgId) && !isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
                         $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
                         $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
@@ -1401,7 +1400,6 @@ class archive
                 }
             }
         }
-
         return $ownerOriginatorOrgs;
     }
 }

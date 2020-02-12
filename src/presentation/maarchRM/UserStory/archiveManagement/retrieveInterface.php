@@ -29,9 +29,9 @@ interface retrieveInterface
     /**
      * Search form
      *
-     * @return recordsManagement/archive/searchForm
-     *
      * @uses recordsManagement/archivalProfile/readIndex
+     *
+     * @return recordsManagement/archive/searchForm
      *
      * @throws records/exception/orgException organization/organization/noOriginatorException
      * @throws records/exception/defaultJson Exception
