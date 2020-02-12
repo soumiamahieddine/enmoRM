@@ -71,11 +71,12 @@ class user
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $securityLevel = $account->securityLevel;
 
         $manageUserRights = true;
-        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+        if ($hasSecurityLevel && $securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
             $manageUserRights = false;
         }
 
