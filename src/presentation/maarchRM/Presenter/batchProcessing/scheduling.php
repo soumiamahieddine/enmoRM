@@ -66,7 +66,7 @@ class scheduling
         foreach ($serviceAccounts as $key => $serviceAccount) {
             $serviceURI = [];
             $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
-            if(!$serviceAccount->enabled){
+            if (!$serviceAccount->enabled) {
                 unset($serviceAccounts[$key]);
                 continue;
             }
@@ -117,14 +117,18 @@ class scheduling
             $scheduledTask->frequencyUnit = $frequency[6];
             $scheduledTask->endMinutes = $frequency[7];
             $scheduledTask->endHours = $frequency[8];
-            
+
             $scheduledTask->json = json_encode($scheduledTask);
         }
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
-        if (is_null($account->securityLevel) || $account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER) {
+        if (is_null($account->securityLevel)
+            || $account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
+            || !$hasSecurityLevel
+        ) {
             $isUser = true;
         } else {
             $isUser = false;
