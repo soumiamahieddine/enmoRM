@@ -209,7 +209,7 @@ class digitalResource
      */
     public function setFilename($path, $isTemp = false)
     {
-        $this->handler = $path;
+        $this->handler = fopen($path, 'r+');
         $this->isTemp = $isTemp;
     }
 
@@ -223,7 +223,6 @@ class digitalResource
         file_put_contents($tmpfile, $contents);
         $this->isTemp = true;
         $this->handler = fopen($tmpfile, 'r+');
-        $this->setInformation($tmpfile);
     }
 
     /**
@@ -233,13 +232,9 @@ class digitalResource
      */
     public function getContents()
     {
-        if (is_string($this->handler)) {
-            $contents = file_get_contents($this->handler);
-        } elseif (is_resource($this->handler)) {
-            $contents = stream_get_contents($this->handler);
-            rewind($this->handler);
-        }
-
+        $contents = stream_get_contents($this->handler);
+        rewind($this->handler);
+        
         return $contents;
     }
 
@@ -268,14 +263,10 @@ class digitalResource
     public function __destruct()
     {
         if ($this->isTemp) {
-            if (is_string($this->handler)) {
-                unlink($this->handler);
-            } elseif (is_resource($this->handler)) {
-                $metadata = stream_get_meta_data($this->handler);
-                fclose($this->handler);
-                if ($metadata['wrapper_type'] == 'plainfile') {
-                    unlink($metadata['uri']);
-                }
+            $metadata = stream_get_meta_data($this->handler);
+            fclose($this->handler);
+            if ($metadata['wrapper_type'] == 'plainfile') {
+                unlink($metadata['uri']);
             }
         }
     }
