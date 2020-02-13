@@ -741,7 +741,7 @@ class serviceAccount
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
-            if (!$serviceAccount->isAdmin) {
+            if ($serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
