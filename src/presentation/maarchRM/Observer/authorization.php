@@ -27,11 +27,11 @@ namespace presentation\maarchRM\Observer;
  */
 class authorization
 {
-    
     protected $userAccountController;
     protected $blacklistUserStories;
     protected $securityLevelUserStories;
     protected $securityLevel;
+    protected $hasSecurityLevel;
 
     /**
      * Constructor
@@ -40,15 +40,18 @@ class authorization
     {
         $this->userAccountController = \laabs::newController('auth/userAccount');
 
-        if(isset(\laabs::configuration('auth')['blacklistUserStories'])) {
+        if (isset(\laabs::configuration('auth')['blacklistUserStories'])) {
             $this->blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
         } else {
             $this->blacklistUserStories = null;
         }
 
+        $this->hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
+
         if (isset(\laabs::configuration('auth')['privileges'])
-            && isset(\laabs::configuration('auth')['securityLevel']))
-        {
+            && isset(\laabs::configuration('auth')['securityLevel'])
+            && $this->hasSecurityLevel
+        ) {
             $this->securityLevelUserStories = \laabs::configuration('auth')['privileges'];
             $this->securityLevel = \laabs::configuration('auth')['securityLevel'];
         } else {
@@ -59,6 +62,7 @@ class authorization
 
     /**
      * Check user privilege against requested route
+     *
      * @param array &$userStories The reflection of user stories
      * @param array &$args        The arguments
      *
@@ -66,9 +70,8 @@ class authorization
      *
      * @subject LAABS_USER_STORY
      */
-    public function filterPrivilege(&$userStories, array &$args=null)
+    public function filterPrivilege(&$userStories, array &$args = null)
     {
-
         $account = \laabs::getToken('AUTH');
         $accountSecurityLevels = $this->getAccountSecurityRole($account);
         foreach ($userStories as $i => $userStory) {
@@ -103,9 +106,9 @@ class authorization
                     $value = $this->securityLevel[$accountSecurityLevel];
                     if ($value === '0') {
                         $bitmask = ['1', '2', '4'];
-                    } else if ($value === '3') {
+                    } elseif ($value === '3') {
                         $bitmask = ['1', '2'];
-                    } else if ($value === '6') {
+                    } elseif ($value === '6') {
                         $bitmask = ['4', '2'];
                     } else {
                         $bitmask = [$value];
@@ -137,7 +140,8 @@ class authorization
         }
     }
 
-    private function getAccountSecurityRole($account) {
+    private function getAccountSecurityRole($account)
+    {
         if (!$account) {
             return false;
         }
@@ -153,6 +157,7 @@ class authorization
 
         return $securityRole;
     }
+
     /**
      * Check user privilege against requested route
      * @param \core\Reflection\Command &$userCommand The reflection of requested user story command
