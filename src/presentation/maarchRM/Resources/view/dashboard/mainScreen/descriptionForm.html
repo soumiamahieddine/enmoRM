@@ -317,6 +317,19 @@ input:invalid {
                 field.attr("disabled", true);
             }
 
+            if (descriptionField.default === "now") {
+                let date = new Date();
+                var day = date.getDate();
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+
+                let now = day + '-' + month + '-' + year;
+                if (descriptionField.format === "datetime") {
+                    now += ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                }
+                field.val(now);
+            }
+
             field.getValue = function() {
                 if(field.data('required')){
                     checkErrorInput(field);
