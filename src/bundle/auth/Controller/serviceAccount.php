@@ -303,7 +303,6 @@ class serviceAccount
         $organizationController = \laabs::newController("organization/organization");
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
-
         if ($this->hasSecurityLevel) {
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
@@ -736,13 +735,13 @@ class serviceAccount
      */
     protected function checkPrivilegesAccess($ownAccount, $serviceAccount)
     {
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
-            if (!$serviceAccount->ownerOrgId || !$serviceAccount->isAdmin) {
+        $securityLevel = $ownAccount->getSecurityLevel();
+        if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
+            if (!isset($serviceAccount->ownerOrgId) || !$serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if (!$serviceAccount->organizations || $serviceAccount->isAdmin) {
+        } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
+            if ($serviceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
