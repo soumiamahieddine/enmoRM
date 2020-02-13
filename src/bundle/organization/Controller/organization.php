@@ -573,7 +573,8 @@ class organization
      *
      * @return bool The result of the change
      */
-    public function changeStatus($orgId, $status) {
+    public function changeStatus($orgId, $status)
+    {
         $this->accountController->isAuthorized(['func_admin']);
 
         $organization = $this->sdoFactory->read('organization/organization', $orgId);
