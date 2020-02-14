@@ -1076,12 +1076,12 @@ class userAccount
      */
     protected function checkPrivilegesAccess($ownAccount, $userAccount)
     {
-        $securityLevel = $account->getSecurityLevel();
-        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+        $securityLevel = $ownAccount->getSecurityLevel();
+        if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
             if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+        } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
             if (!$userAccount->organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }

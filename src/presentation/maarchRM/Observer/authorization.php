@@ -74,6 +74,7 @@ class authorization
     {
         $account = \laabs::getToken('AUTH');
         $accountSecurityLevels = $this->getAccountSecurityRole($account);
+
         foreach ($userStories as $i => $userStory) {
             if (is_array($this->blacklistUserStories)) {
                 foreach ($this->blacklistUserStories as $blacklistUserStory) {
@@ -102,7 +103,15 @@ class authorization
             ) {
                 $hasPrivilege = false;
                 $domain = strtok($userStory->uri, LAABS_URI_SEPARATOR);
+                // if value is set to null or false in database after upgrade from 2.5 version
+                if (empty($accountSecurityLevels)) {
+                    $hasPrivilege = true;
+                }
+
                 foreach ($accountSecurityLevels as $accountSecurityLevel) {
+                    if (!isset($this->securityLevel[$accountSecurityLevel])) {
+                        throw new \core\Exception("User has an unknown security level");
+                    }
                     $value = $this->securityLevel[$accountSecurityLevel];
                     if ($value === '0') {
                         $bitmask = ['1', '2', '4'];
