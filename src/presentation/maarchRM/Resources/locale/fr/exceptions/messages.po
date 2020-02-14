@@ -484,3 +484,6 @@ msgstr "Le versement est bloqué parce que l'activité est désactivée."
 
 msgid "Wrong columns numbers with csv on line %s"
 msgstr "Mauvais nombre de colonnes dans le csv à la ligne %s"
+
+msgid "User has an unknown security level"
+msgstr "L'utilisateur a un niveau de sécurité non renseigné dans la configuration. Veuillez contacter votre administrateur système"
