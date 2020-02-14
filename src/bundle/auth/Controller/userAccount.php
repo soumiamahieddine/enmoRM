@@ -1084,7 +1084,7 @@ class userAccount
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
-            if (!$userAccount->organizations || !$userAccount->isAdmin) {
+            if (!$userAccount->organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
