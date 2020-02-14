@@ -116,12 +116,18 @@ class user
 
         $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
+        if (!is_null($account->securityLevel)
+            && $account->securityLevel != ""
+            && $hasSecurityLevel
+        ) {
             $whatAmI = $account->securityLevel;
+        } elseif ($hasSecurityLevel) {
+            $whatAmI = 'userWithoutSecurityLevelYet';
         } else {
             $whatAmI = 'userWithoutSecurityLevel';
         }
