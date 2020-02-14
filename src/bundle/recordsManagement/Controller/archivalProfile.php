@@ -468,7 +468,7 @@ class archivalProfile
 
             $archivalProfile = \laabs::castMessage($archivalProfile, 'recordsManagement/archivalProfileImportExport');
             if ($containedProfiles) {
-                $lastIndex = count($privileges) -1;
+                $lastIndex = count($containedProfiles) -1;
                 foreach ($containedProfiles as $index => $containedProfile) {
                     $archivalProfile->childrenProfiles .= $containedProfile->reference;
 

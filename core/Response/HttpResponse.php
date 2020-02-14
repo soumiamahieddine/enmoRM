@@ -112,7 +112,7 @@ class HttpResponse
 
         if (is_scalar($this->body)) {
             echo $this->body;
-        } else {
+        } elseif (is_stream($this->body)) {
             $output = fopen('php://output', 'w+');
             stream_copy_to_stream($this->body, $output);
         }

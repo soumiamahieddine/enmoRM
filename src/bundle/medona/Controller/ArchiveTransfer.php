@@ -161,18 +161,21 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receiveStream($message, $messageFile, $attachments, $filename)
     {
-        // Valid URL file:// http:// data://
-        if (filter_var($messageFile, FILTER_VALIDATE_URL)) {
-            $data = stream_get_contents($messageFile);
-        } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $messageFile)) {
-            $data = base64_decode($messageFile);
-        } elseif (is_file($messageFile)) {
-            if (empty($filename)) {
-                $filename = basename($messageFile);
-            }
-            $data = file_get_contents($messageFile);
-        } else {
-            $data = $messageFile;
+        switch (true) {
+            case is_string($messageFile)
+                && (filter_var(substr($messageFile, 0, 10), FILTER_VALIDATE_URL) || is_file($messageFile)):
+                $data = file_get_contents($messageFile);
+                break;
+
+            case is_string($messageFile) &&
+                preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $messageFile):
+                $data = base64_decode($messageFile);
+                break;
+        
+            case is_resource($messageFile):
+                $handler = \core\Encoding\Base64::decode($messageFile);
+                $data = stream_get_contents($handler);
+                break;
         }
 
         $mediatype = $this->finfo->buffer($data);
@@ -300,6 +303,11 @@ class ArchiveTransfer extends abstractMessage
                     } elseif (is_file($attachment->data)) {
                         $data = file_get_contents($attachment->data);
                     }
+                    file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
+                    $message->attachments[] = $attachment->filename;
+                } elseif (is_resource($attachment)) {
+                    $handler = \core\Encoding\Base64::decode($attachment);
+                    $data = stream_get_contents($handler);
                     file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
                     $message->attachments[] = $attachment->filename;
                 }
