@@ -241,6 +241,8 @@ class ArchiveRestitution extends abstractMessage
 
             $this->create($message);
 
+            $this->logValidationErrors($message, $e);
+
             throw $e;
         }
 
@@ -298,7 +300,7 @@ class ArchiveRestitution extends abstractMessage
         $archiveRestitutionRequestController = \laabs::newController("medona/ArchiveRestitutionRequest");
 
         if (!$identifier) {
-            $identifier = "archiveRestitutionRequest_".date("Y-m-d-H-i-s");
+            $identifier = "archiveRestitutionRequest_".date("Y-m-d_H-i-s");
         }
 
         $reference = $identifier;

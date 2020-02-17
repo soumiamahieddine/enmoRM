@@ -54,7 +54,7 @@ class ArchiveTransferReply extends abstractMessage
         $message->receptionDate = $message->date;
         $message->replyCode = $replyCode;
 
-        $message->reference = $transferMessage->reference.'_Reply';
+        $message->reference = $transferMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
 
         $lifeCycleEvents = $this->lifeCycleJournalController->getObjectEvents($transferMessage->messageId, 'medona/message');
         foreach ($lifeCycleEvents as $lifeCycleEvent) {

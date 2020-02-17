@@ -52,7 +52,7 @@ class AuthorizationOriginatingAgencyRequestReply extends abstractMessage
             $message->comment[] = $comment;
         }
 
-        $message->reference = $requestMessage->reference.'_Reply';
+        $message->reference = $requestMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
         $message->requestReference = $requestMessage->reference;
         $message->authorizationReason = $requestMessage->authorizationReason;
         $requestMessage->replyReference = $message->reference;
@@ -97,6 +97,11 @@ class AuthorizationOriginatingAgencyRequestReply extends abstractMessage
             $this->update($requestMessage);
         } catch (\Exception $e) {
             $message->status = "invalid";
+            $this->create($message);
+
+            $this->logValidationErrors($message, $e);
+
+            throw $e;
         }
 
         $this->create($message);

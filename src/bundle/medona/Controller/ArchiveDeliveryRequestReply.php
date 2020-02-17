@@ -121,7 +121,7 @@ class ArchiveDeliveryRequestReply extends abstractMessage
             $message->authorizationReason = $authorizationMessage[0]->type;
         }
 
-        $message->reference = $requestMessage->reference.'_Reply';
+        $message->reference = $requestMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
         $message->requestReference = $requestMessage->reference;
 
         $message->senderOrgRegNumber = $requestMessage->recipientOrgRegNumber;
@@ -164,6 +164,8 @@ class ArchiveDeliveryRequestReply extends abstractMessage
             $operationResult = false;
 
             $this->create($message);
+
+            $this->logValidationErrors($message, $e);
 
             throw $e;
         }

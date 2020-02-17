@@ -83,10 +83,12 @@ class AuthorizationOriginatingAgencyRequest extends AuthorizationRequest
                 $this->generate($message);
                 $this->save($message);
             }
-            $operationResult = true;
         } catch (\Exception $e) {
             $message->status = "invalid";
-            $operationResult = false;
+            $this->create($message);
+            $this->logValidationErrors($message, $e);
+
+            throw $e;
         }
 
         $this->lifeCycleJournalController->logEvent(

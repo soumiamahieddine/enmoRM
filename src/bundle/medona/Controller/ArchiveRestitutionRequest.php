@@ -217,7 +217,8 @@ class ArchiveRestitutionRequest extends abstractMessage
         } catch (\Exception $e) {
             $message->status = "invalid";
             $this->create($message);
-            $operationResult = false;
+
+            $this->logValidationErrors($message, $e);
 
             throw $e;
         }
@@ -283,7 +284,8 @@ class ArchiveRestitutionRequest extends abstractMessage
         } catch (\Exception $e) {
             $message->status = "invalid";
             $this->create($message);
-            $operationResult = false;
+
+            $this->logValidationErrors($message, $e);
 
             throw $e;
         }
