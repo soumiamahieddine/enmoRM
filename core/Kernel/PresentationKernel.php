@@ -421,8 +421,8 @@ class PresentationKernel
         if (is_scalar($this->response->body)) {
             $mimeType = $finfo->buffer($this->response->body, FILEINFO_MIME_TYPE);
             $encoding = $finfo->buffer($this->response->body, FILEINFO_MIME_ENCODING);
-        } elseif (is_resource($this->reponse->body)) {
-            $metadata = stream_get_meta_data($this->reponse->body);
+        } elseif (is_resource($this->response->body)) {
+            $metadata = stream_get_meta_data($this->response->body);
             if ($metadata['wrapper_type'] == 'plainfile') {
                 $mimeType = $finfo->file($metadata['uri'], FILEINFO_MIME_TYPE);
                 $encoding = $finfo->file($metadata['uri'], FILEINFO_MIME_ENCODING);
