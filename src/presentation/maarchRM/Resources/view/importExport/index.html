@@ -16,13 +16,9 @@
                         <div class="row">
                             <div class="list-group col-md-5" id="exportList">
                                 <input type="hidden" id="maxResults" data-value="[?merge maxResults ?]">
-                                <a class="list-group-item" data-value="useraccounts">User accounts</a>
-                                <a class="list-group-item" data-value="serviceaccounts">Service accounts</a>
-                                <!-- <a class="list-group-item" data-value="roles">Roles</a> -->
-                                <a class="list-group-item" data-value="organizations">Organizations</a>
-                                <a class="list-group-item" data-value="archivalprofiles">Archival profiles</a>
-                                <a class="list-group-item" data-value="descriptionfields">Description fields</a>
-                                <a class="list-group-item" data-value="retentionrules">Retention rules</a>
+                                <?merge menu ?>
+                                    <?merge ['href'].ifne('#').then('folderNode link') @class ?>
+                                    <a class="list-group-item" data-value="[?merge ['value'] ?]"><?merge ['label'] ?></a>
                             </div>
                             <div class="col-md-7">
                                 <?merge isExport ?>

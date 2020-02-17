@@ -1,6 +1,6 @@
 <?php
 
-namespace presentation\maarchRM\UserStory\Import;
+namespace presentation\maarchRM\UserStory\import;
 
 interface descriptionFieldInterface
 {

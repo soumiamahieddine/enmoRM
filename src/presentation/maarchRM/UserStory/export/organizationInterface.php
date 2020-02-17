@@ -1,6 +1,6 @@
 <?php
 
-namespace presentation\maarchRM\UserStory\Export;
+namespace presentation\maarchRM\UserStory\export;
 
 interface organizationInterface
 {

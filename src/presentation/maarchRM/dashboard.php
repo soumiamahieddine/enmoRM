@@ -88,12 +88,18 @@ class dashboard
                 if (isset($parser['scheme'])) {
                     continue;
                 }
+
                 try {
-                    $command = \laabs::command('READ', substr($parser['path'], 1));
+                    if (isset($item['method'])) {
+                        $command = \laabs::command($item['method'], substr($parser['path'], 1));
+                    } else {
+                        $command = \laabs::command('READ', substr($parser['path'], 1));
+                    }
+
                     if (!$this->hasUserPrivilege($command)) {
                         unset($menu[$i]);
                     }
-                } catch (\Exception $e) {
+                } catch (\core\Exception $e) {
                     unset($menu[$i]);
                 }
             }

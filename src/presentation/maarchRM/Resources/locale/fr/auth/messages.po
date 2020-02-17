@@ -832,10 +832,6 @@ msgid "import"
 msgstr "Importer des référentiels"
 msgctxt "userStoryGroup"
 
-msgid "home"
-msgstr "Page d'accueil"
-msgctxt "userStory"
-
 msgid "organization"
 msgstr "Gérer les organisations"
 msgctxt "userStory"
