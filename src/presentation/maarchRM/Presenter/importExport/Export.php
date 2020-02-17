@@ -68,9 +68,9 @@ class Export
     public function listCsv($data, $limit = null, $ref = null)
     {
         $limit = filter_var($limit, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
-
-        $csv = ob_get_contents();
-        ob_end_clean();
+        
+        $filename = sys_get_temp_dir()."/export.csv";
+        $csv = file_get_contents($filename) ;
 
         if (is_null($limit)) {
             return $this->exportIntoFile($csv, $ref);

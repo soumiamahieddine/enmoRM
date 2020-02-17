@@ -253,7 +253,8 @@ class descriptionField
     {
         $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
 
-        $this->csv->write('php://output', (array) $descriptionFields, 'recordsManagement/descriptionField', false);
+        $outputFilename = sys_get_temp_dir()."/export.csv";
+        $this->csv->write($outputFilename, (array) $descriptionFields, 'recordsManagement/descriptionField', false);
     }
 
     public function import($data, $isReset = false)
