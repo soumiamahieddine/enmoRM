@@ -1612,7 +1612,8 @@ class organization
             $organizations[$key] = $organization;
         }
 
-        $this->csv->write('php://output', (array) $organizations, 'organization/organizationImportExport', true);
+        $outputFilename = sys_get_temp_dir()."/export.csv";
+        $this->csv->write($outputFilename, (array) $organizations, 'organization/organizationImportExport', true);
     }
 
     /**
