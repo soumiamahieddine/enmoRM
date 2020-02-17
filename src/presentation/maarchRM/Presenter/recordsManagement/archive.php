@@ -1364,7 +1364,7 @@ class archive
      */
     protected function getOwnerOriginatorsOrgs($currentService)
     {
-        $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
+        $originators = \laabs::callService('organization/organization/readIndex', null, 'isOrgUnit=true');
 
         $userPositionController = \laabs::newController('organization/userPosition');
         $orgController = \laabs::newController('organization/organization');
