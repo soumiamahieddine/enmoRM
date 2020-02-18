@@ -163,7 +163,7 @@ class ArchiveDeliveryRequest extends abstractMessage
         }
 
         if (!$identifier) {
-            $identifier = "archiveDeliveryRequest_".date("Y-m-d-H-i-s");
+            $identifier = "archiveDeliveryRequest_".date("Y-m-d_H-i-s");
         }
 
         $reference = $identifier;
@@ -285,8 +285,8 @@ class ArchiveDeliveryRequest extends abstractMessage
         } catch (\Exception $e) {
             $message->status = "invalid";
             $this->create($message);
-            $operationResult = false;
-
+            $this->logValidationErrors($message, $e);
+            
             throw $e;
         }
 
@@ -461,8 +461,16 @@ class ArchiveDeliveryRequest extends abstractMessage
             $operationResult = true;
         } catch (\Exception $e) {
             $message->status = "error";
-            $operationResult = false;
             $this->update($message);
+
+            $this->lifeCycleJournalController->logEvent(
+                'medona/processing',
+                'medona/message',
+                $message->messageId,
+                $message,
+                false
+            );
+
             throw $e;
         }
 
@@ -471,7 +479,7 @@ class ArchiveDeliveryRequest extends abstractMessage
             'medona/message',
             $message->messageId,
             $message,
-            $operationResult
+            true
         );
 
         $message->status = "processed";

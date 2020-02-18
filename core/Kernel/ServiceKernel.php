@@ -356,6 +356,8 @@ class ServiceKernel extends AbstractKernel
             $serializer = $this->outputRouter->serializer->newInstance();
 
             $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);
+        } elseif (is_resource($this->serviceReturn)) {
+            $content = $this->serviceReturn;
         } else {
             if (is_null($this->serviceReturn)) {
                 return;

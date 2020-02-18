@@ -155,7 +155,7 @@ class ArchiveTransferSending extends abstractMessage
 
         if (!empty($archives)) {
             if (!$identifier) {
-                $identifier = "archiveTransfer_".date("Y-m-d-H-i-s");
+                $identifier = "archiveTransfer_".date("Y-m-d_H-i-s");
             }
 
             $reference = $identifier;
@@ -239,7 +239,8 @@ class ArchiveTransferSending extends abstractMessage
         } catch (\Exception $e) {
             $message->status = "invalid";
             $this->create($message);
-            $operationResult = false;
+            
+            $this->logValidationErrors($message, $e);
 
             throw $e;
         }

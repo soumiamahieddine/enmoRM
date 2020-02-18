@@ -241,4 +241,24 @@ abstract class abstractMessage extends message
             }
         }
     }
+
+    protected function logValidationErrors($message, $exception)
+    {
+        $eventInfo = get_object_vars($message);
+        $eventInfo['code'] = $exception->getCode();
+        $eventInfo['info'] = $exception->getMessage();
+        foreach ((array) $exception->errors as $error) {
+            if (is_string($error) || (is_object($error) && method_exists($error, '__toString'))) {
+                $eventInfo['info'] .= PHP_EOL. (string) $error;
+            }
+        }
+
+        $event = $this->lifeCycleJournalController->logEvent(
+            'medona/validation',
+            'medona/message',
+            $message->messageId,
+            $eventInfo,
+            false
+        );
+    }
 }

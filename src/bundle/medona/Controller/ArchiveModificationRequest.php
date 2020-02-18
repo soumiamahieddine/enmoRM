@@ -58,7 +58,7 @@ class ArchiveModificationRequest extends abstractMessage
         }
 
         if (!$identifier) {
-            $identifier = "archiveModificationRequest_".date("Y-m-d-H-i-s");
+            $identifier = "archiveModificationRequest_".date("Y-m-d_H-i-s");
         }
 
         $messages = [];

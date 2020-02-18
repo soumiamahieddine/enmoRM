@@ -74,7 +74,7 @@ class AuthorizationRequestReply extends abstractMessage
         $message->date = \laabs::newDatetime(null, "UTC");
         $message->receptionDate = $message->date;
 
-        $message->reference = $requestMessage->reference.'_Reply';
+        $message->reference = $requestMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
         $message->requestReference = $requestMessage->reference;
         $requestMessage->replyReference = $message->reference;
 
@@ -91,6 +91,10 @@ class AuthorizationRequestReply extends abstractMessage
             $this->update($requestMessage);
         } catch (\Exception $e) {
             $message->status = "invalid";
+            $this->create($message);
+            $this->logValidationErrors($message, $e);
+
+            throw $e;
         }
 
         $this->create($message);
