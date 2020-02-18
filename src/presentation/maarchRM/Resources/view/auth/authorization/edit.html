@@ -516,7 +516,7 @@
             role : serialize()
         };
 
-        if(parameters.role.roleName === "" || typeof parameters.role.securityLevel === "undefined") {
+        if((parameters.role.roleName === "" || typeof parameters.role.securityLevel === "undefined") && hasSecurityLevel) {
             gritter.show($('#empty_text').text(),false);
             return false;
         }
