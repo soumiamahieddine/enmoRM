@@ -245,7 +245,7 @@ trait archiveValidationTrait
         $organization = $this->sdoFactory->read('organization/organization', ['registrationNumber' => $archive->originatorOrgRegNumber]);
 
         if (!is_null($organization->enabled) && $organization->enabled === false) {
-            throw new \core\Exception("The deposit is blocked because the activity is disabled.");
+            throw new \core\Exception("The deposit has been blocked because activity is disabled.");
         }
 
         $this->checkRights($archive);
