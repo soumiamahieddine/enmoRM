@@ -65,7 +65,7 @@ class orgTree
     public function index($organizations, $orgType)
     {
         $orgRole = \laabs::configuration('organization')['orgUnitRoles'];
-        $isOrgTree = \laabs::configuration('organization')['isOrgTree'];
+        $isOrgTree = isset(\laabs::configuration('organization')['isOrgTree']) ? (bool) \laabs::configuration('organization')['isOrgTree'] : true;
         $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $this->view->addContentFile("organization/organizationIndex.html");
