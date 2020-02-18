@@ -726,20 +726,20 @@ class serviceAccount
     /**
      * If security level is activated in configuration, check if user has clearance
      *
-     * @param auth/account $ownAccount     account realising request
-     * @param auth/account $serviceAccount account to exert action to
+     * @param auth/account $ownAccount           account realising request
+     * @param auth/account $targetServiceAccount account to exert action to
      *
      * @return
      */
-    protected function checkPrivilegesAccess($ownAccount, $serviceAccount)
+    protected function checkPrivilegesAccess($ownAccount, $targetServiceAccount)
     {
         $securityLevel = $ownAccount->getSecurityLevel();
         if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
-            if (!isset($serviceAccount->ownerOrgId) || !$serviceAccount->isAdmin) {
+            if (!isset($targetServiceAccount->ownerOrgId) || !$targetServiceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("Only a General administrator can do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
-            if (!$serviceAccount->isAdmin) {
+            if (!$targetServiceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
             }
         }
