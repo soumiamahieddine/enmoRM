@@ -272,9 +272,23 @@ class archiveDescription
     protected function getDateString($value, $descriptionField)
     {
         if (is_string($value)) {
-            $dateFormat = \laabs::configuration()['dependency.localisation']['dateFormat'];
-            $dateTimeFormat = \laabs::configuration()['dependency.localisation']['dateTimeFormat'];
-            $timezone = \laabs::configuration()['dependency.localisation']['timezone'];
+            $dateFormat = 'Y-m-d';
+            $dateTimeFormat = 'Y-m-d H:i:s';
+            $timezone = "";
+
+            $localizationConfig = \laabs::configuration()['dependency.localisation'];
+
+            if (isset($localizationConfig['dateFormat'])) {
+                $dateFormat = $localizationConfig['dateFormat'];
+            }
+
+            if (isset($localizationConfig['dateTimeFormat'])) {
+                $dateTimeFormat = $localizationConfig['dateTimeFormat'];
+            }
+
+            if (isset($localizationConfig['timezone'])) {
+                $timezone = $localizationConfig['timezone'];
+            }
 
             $parts = date_parse_from_format('Y-m-d\TH:i:s.uP', $value);
             
