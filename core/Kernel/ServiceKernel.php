@@ -356,7 +356,9 @@ class ServiceKernel extends AbstractKernel
             $serializer = $this->outputRouter->serializer->newInstance();
 
             $content = $this->outputRouter->output->serialize($serializer, $this->serviceReturn);
-        } elseif (is_string($this->serviceReturn)) {
+        } elseif (is_resource($this->serviceReturn)) {
+            $content = $this->serviceReturn;
+        } else {
             if (is_null($this->serviceReturn)) {
                 return;
             }
@@ -381,8 +383,6 @@ class ServiceKernel extends AbstractKernel
             if ($this->guessRequestMode() == 'http') {
                 $this->response->setContentType($mimetype);
             }
-        } else {
-            $content = $this->serviceReturn;
         }
 
         $this->response->setBody($content);
