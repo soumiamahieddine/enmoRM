@@ -65,22 +65,21 @@ class Export
         return $this->view->saveHtml();
     }
 
-    public function listCsv($data, $limit = null, $ref = null)
+    public function listCsv($handler, $limit = null, $ref = null)
     {
         $limit = filter_var($limit, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
-        
-        $filename = sys_get_temp_dir()."/export.csv";
-        $csv = file_get_contents($filename) ;
-
         if (is_null($limit)) {
-            return $this->exportIntoFile($csv, $ref);
+            return $this->exportIntoFile($handler, $ref);
         }
-
-        return $this->exportIntoView($csv);
+        
+        return $this->exportIntoView($handler);
     }
 
-    public function exportIntoView($csv)
+    public function exportIntoView($handler)
     {
+        $csv = stream_get_contents($handler) ;
+        rewind($handler);
+
         $lines = \laabs\explode("\n", $csv);
 
         $keys = str_getcsv($lines[0]);
@@ -106,13 +105,13 @@ class Export
         return $this->view->saveHtml();
     }
 
-    public function exportIntoFile($csv, $ref)
+    public function exportIntoFile($handler, $ref)
     {
         $filename = "export" . ucfirst($ref) . ".csv";
         \laabs::setResponseType("text/csv");
         $response = \laabs::kernel()->response;
         $response->setHeader('Content-Disposition', 'attachment; filename=' . $filename);
 
-        return $csv;
+        return $handler;
     }
 }
