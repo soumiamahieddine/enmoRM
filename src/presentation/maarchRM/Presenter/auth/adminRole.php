@@ -242,8 +242,6 @@ class adminRole
                 $interface->securityLevel = \bundle\auth\Model\role::SECLEVEL_GENADMIN . " " . \bundle\auth\Model\role::SECLEVEL_FUNCADMIN . " " . \bundle\auth\Model\role::SECLEVEL_USER;
             } else {
                 $interface->parentStatus = $userStoryDomains[$domain]->privilegeStatus;
-
-                $userStoryDomains[$domain]->userStory[] = $interface;
             }
 
             $userStoryDomains[$domain]->userStory[] = $interface;
