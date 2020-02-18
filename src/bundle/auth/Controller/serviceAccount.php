@@ -738,11 +738,11 @@ class serviceAccount
         $securityLevel = $ownAccount->getSecurityLevel();
         if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
             if (!isset($serviceAccount->ownerOrgId) || !$serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                throw new \core\Exception\UnauthorizedException("Only a General administrator can do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
             if (!$serviceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
             }
         }
     }
