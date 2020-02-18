@@ -1072,19 +1072,19 @@ class userAccount
      * If security level is activated in configuration, check if user has clearance
      *
      * @param auth/account $ownAccount  account realising request
-     * @param auth/account $userAccount account to exert action to
+     * @param auth/account $targetUserAccount account to exert action to
      *
      * @return
      */
-    protected function checkPrivilegesAccess($ownAccount, $userAccount)
+    protected function checkPrivilegesAccess($ownAccount, $targetUserAccount)
     {
         $securityLevel = $ownAccount->getSecurityLevel();
         if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
-            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+            if (!$targetUserAccount->ownerOrgId || !$targetUserAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
-            if (!$userAccount->organizations || !$userAccount->isAdmin) {
+            if (!$targetUserAccount->organizations || $targetUserAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
