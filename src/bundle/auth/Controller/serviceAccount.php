@@ -537,8 +537,9 @@ class serviceAccount
             $serviceAccounts[$key] = $serviceAccount;
         }
 
-        $outputFilename = sys_get_temp_dir()."/export.csv";
-        $this->csv->write($outputFilename, (array) $serviceAccounts, 'auth/serviceAccountImportExport', true);
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $serviceAccounts, 'auth/serviceAccountImportExport', true);
+        return $handler;
     }
 
     /**
