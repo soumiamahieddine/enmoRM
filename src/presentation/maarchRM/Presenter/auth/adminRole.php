@@ -109,20 +109,21 @@ class adminRole
         $genAdmin = $funcAdmin = $user = false;
         if (!$hasSecurityLevel) {
             $genAdmin = $funcAdmin = $user = true;
-        }
-
-        foreach ($roleMembers as $roleMember) {
-            $r = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
-            if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_GENADMIN) {
-                $genAdmin = $funcAdmin = true;
-            } elseif ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
-                $funcAdmin = $user = true;
-            } elseif ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_USER) {
-                $user = true;
-            } else {
-                $genAdmin = $funcAdmin = $user = true;
+        } else {
+            foreach ($roleMembers as $roleMember) {
+                $r = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
+                if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_GENADMIN) {
+                    $genAdmin = $funcAdmin = true;
+                } elseif ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
+                    $funcAdmin = $user = true;
+                } elseif ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_USER) {
+                    $user = true;
+                } else {
+                    $genAdmin = $funcAdmin = $user = true;
+                }
             }
         }
+
 
         if (isset(\laabs::configuration('auth')['blacklistUserStories'])) {
             $blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
