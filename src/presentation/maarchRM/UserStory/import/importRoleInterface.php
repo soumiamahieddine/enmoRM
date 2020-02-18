@@ -2,16 +2,16 @@
 
 namespace presentation\maarchRM\UserStory\import;
 
-interface retentionRuleInterface
+interface importRoleInterface
 {
     /**
-     * Import a csv file with retention rules informations
+     * Import a csv file with role informations
      *
      * @param string  $data      Data base64 encoded or not in proper format
      * @param boolean $isReset  Reset tables or not
      *
-     * @uses recordsManagement/retentionRule/createImport
+     * @uses auth/role/createImport
      *
      */
-    public function createImportRetentionrules($data, $isReset = false);
+    public function createImportRoles($data, $isReset = false);
 }

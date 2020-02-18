@@ -832,22 +832,58 @@ msgid "import"
 msgstr "Importer des référentiels"
 msgctxt "userStoryGroup"
 
-msgid "organization"
-msgstr "Gérer les organisations"
+msgid "importOrganization"
+msgstr "Organisations"
 msgctxt "userStory"
 
-msgid "retentionRule"
-msgstr "Gérer les règles de conservation"
+msgid "importRetentionRule"
+msgstr "Conservation"
 msgctxt "userStory"
 
-msgid "role"
-msgstr "Gérer les rôles"
+msgid "importRole"
+msgstr "Rôles"
 msgctxt "userStory"
 
-msgid "serviceAccount"
-msgstr "Gérer les comptes de service"
+msgid "importServiceAccount"
+msgstr "Comptes de service"
 msgctxt "userStory"
 
-msgid "userAccount"
-msgstr "Gérer les comptes d'utilisateur"
+msgid "importUserAccount"
+msgstr "Utilisateurs"
+msgctxt "userStory"
+
+msgid "exportOrganization"
+msgstr "Organisations"
+msgctxt "userStory"
+
+msgid "exportRetentionRule"
+msgstr "Conservation"
+msgctxt "userStory"
+
+msgid "exportRole"
+msgstr "Rôles"
+msgctxt "userStory"
+
+msgid "exportServiceAccount"
+msgstr "Comptes de service"
+msgctxt "userStory"
+
+msgid "exportUserAccount"
+msgstr "Utilisateurs"
+msgctxt "userStory"
+
+msgid "exportArchivalProfile"
+msgstr "Profils d'archive"
+msgctxt "userStory"
+
+msgid "exportDescriptionField"
+msgstr "Champs de description"
+msgctxt "userStory"
+
+msgid "importArchivalProfile"
+msgstr "Profils d'archive"
+msgctxt "userStory"
+
+msgid "importDescriptionField"
+msgstr "Champs de description"
 msgctxt "userStory"

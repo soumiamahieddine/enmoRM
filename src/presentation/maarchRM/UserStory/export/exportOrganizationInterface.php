@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\export;
 
-interface organizationInterface
+interface exportOrganizationInterface
 {
     /**
      * Get organizations infos

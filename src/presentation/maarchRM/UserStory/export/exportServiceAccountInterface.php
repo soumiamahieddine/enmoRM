@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\export;
 
-interface serviceAccountInterface
+interface exportServiceAccountInterface
 {
     /**
      * Get service accounts infos

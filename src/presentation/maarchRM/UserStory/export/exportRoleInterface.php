@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\export;
 
-interface roleInterface
+interface exportRoleInterface
 {
     /**
      * Get roles infos

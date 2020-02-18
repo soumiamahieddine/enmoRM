@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\import;
 
-interface organizationInterface
+interface importOrganizationInterface
 {
     /**
      * Import a csv file with organization informations

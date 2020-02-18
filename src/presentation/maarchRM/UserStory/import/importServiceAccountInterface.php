@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\import;
 
-interface serviceAccountInterface
+interface importServiceAccountInterface
 {
     /**
      * Import a csv file with service account informations

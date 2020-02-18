@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\import;
 
-interface descriptionFieldInterface
+interface importDescriptionFieldInterface
 {
     /**
      * Import a csv file with description field informations

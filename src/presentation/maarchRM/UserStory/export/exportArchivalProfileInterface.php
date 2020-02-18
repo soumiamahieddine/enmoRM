@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\export;
 
-interface archivalProfileInterface
+interface exportArchivalProfileInterface
 {
     /**
      * Get archival profiles infos

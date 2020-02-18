@@ -2,7 +2,7 @@
 
 namespace presentation\maarchRM\UserStory\export;
 
-interface descriptionFieldInterface
+interface exportDescriptionFieldInterface
 {
     /**
      * Get description fields infos
