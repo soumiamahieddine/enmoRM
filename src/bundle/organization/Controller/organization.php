@@ -32,6 +32,7 @@ class organization
     protected $sdoFactory;
     protected $csv;
     protected $accountController;
+    protected $hasSecurityLevel;
 
     /**
      * Constructor
