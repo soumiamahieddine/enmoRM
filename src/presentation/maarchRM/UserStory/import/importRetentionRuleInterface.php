@@ -1,8 +1,8 @@
 <?php
 
-namespace presentation\maarchRM\UserStory\Import;
+namespace presentation\maarchRM\UserStory\import;
 
-interface retentionRuleInterface
+interface importRetentionRuleInterface
 {
     /**
      * Import a csv file with retention rules informations

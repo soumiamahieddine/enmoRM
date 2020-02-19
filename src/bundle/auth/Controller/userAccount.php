@@ -825,7 +825,9 @@ class userAccount
             $userAccounts[$key] = $userAccount;
         }
 
-        $this->csv->write('php://output', (array) $userAccounts, 'auth/userAccountImportExport', true);
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $userAccounts, 'auth/userAccountImportExport', true);
+        return $handler;
     }
 
     /**

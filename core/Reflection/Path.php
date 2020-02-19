@@ -215,10 +215,10 @@ class Path
     /**
      * Get message
      * @param array $requestArgs The received arguments
-     * 
+     *
      * @return array The service arguments
      */
-    public function getMessage(array $requestArgs=array())
+    public function getMessage(array $requestArgs = array())
     {
         // Get message parts using route definition
         $parameters = $this->getParameters();
@@ -226,31 +226,30 @@ class Path
         foreach ($parameters as $i => $parameter) {
             switch (true) {
                 // Value available from request arguments or body: cast into message part type
-                case isset($requestArgs[$parameter->name]) :
-                    $requestArgs[$parameter->name] = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
+                case isset($requestArgs[$parameter->name]):
+                    $messageParts[$parameter->name]  = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
                     break;
 
                 // Value available from request arguments or body: cast into message part type
-                case isset($requestArgs[$i]) :
-                    $value = \laabs::cast($requestArgs[$i], $parameter->getType(), true);
+                case isset($requestArgs[$i]):
+                    $messageParts[$parameter->name] = \laabs::cast($requestArgs[$i], $parameter->getType(), true);
                     break;
 
                 // Default value
                 case $parameter->isDefaultValueAvailable():
-                    $requestArgs[$parameter->name] = $parameter->getDefaultValue();
+                    $messageParts[$parameter->name] = $parameter->getDefaultValue();
                     break;
 
                 // Optional : null
                 case $parameter->isOptional():
-                    $requestArgs[$parameter->name] = null;
+                    $messageParts[$parameter->name] = null;
                     break;
 
                 // No other case should raise an exception
                 default:
                     // Throw exception
-                    $requestArgs[$parameter->name] = null;
+                    $messageParts[$parameter->name] = null;
             }
-            $messageParts[$parameter->name] = $requestArgs[$parameter->name];
         }
 
         // Backward remove null values from array

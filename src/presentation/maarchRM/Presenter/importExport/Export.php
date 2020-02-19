@@ -32,6 +32,7 @@ class Export
     public $json;
     protected $translator;
     public $maxResults;
+    protected $dashboardPresenter;
 
     protected $userArchivalProfiles = [];
 
@@ -49,15 +50,41 @@ class Export
 
         $this->translator = $translator;
         $this->translator->setCatalog('importExport/messages');
-
+        $this->dashboardPresenter = \laabs::newService('presentation/dashboard');
         $this->maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+    }
+
+    protected function buildMenu()
+    {
+        $menu = [];
+        foreach ([
+            'useraccounts' => 'User accounts',
+            'serviceaccounts' => 'Service accounts',
+            // 'roles' => 'Roles',
+            'organizations' => 'Organizations',
+            'archivalprofiles' => 'Archival profiles',
+            'descriptionfields' => 'Description fields',
+            'retentionrules' => 'Retention rules',
+        ] as $key => $value) {
+            $ref = [];
+            $ref['value'] = $key;
+            $ref['label'] = $value;
+            $ref['href'] = '/export/' . $key;
+            $menu[] = $ref;
+        }
+
+        return $menu;
     }
 
     public function home()
     {
         $this->view->addContentFile('importExport/index.html');
+
+        $menu = $this->dashboardPresenter->filterMenuAuth($this->buildMenu());
+
         $this->view->setSource("isExport", true);
         $this->view->setSource("maxResults", $this->maxResults);
+        $this->view->setSource('menu', $menu);
 
         $this->view->merge();
         $this->view->translate();
@@ -65,22 +92,21 @@ class Export
         return $this->view->saveHtml();
     }
 
-    public function listCsv($data, $limit = null, $ref = null)
+    public function listCsv($handler, $limit = null, $ref = null)
     {
         $limit = filter_var($limit, FILTER_VALIDATE_INT, FILTER_NULL_ON_FAILURE);
-
-        $csv = ob_get_contents();
-        ob_end_clean();
-
         if (is_null($limit)) {
-            return $this->exportIntoFile($csv, $ref);
+            return $this->exportIntoFile($handler, $ref);
         }
-
-        return $this->exportIntoView($csv);
+        
+        return $this->exportIntoView($handler);
     }
 
-    public function exportIntoView($csv)
+    public function exportIntoView($handler)
     {
+        $csv = stream_get_contents($handler) ;
+        rewind($handler);
+
         $lines = \laabs\explode("\n", $csv);
 
         $keys = str_getcsv($lines[0]);
@@ -106,13 +132,13 @@ class Export
         return $this->view->saveHtml();
     }
 
-    public function exportIntoFile($csv, $ref)
+    public function exportIntoFile($handler, $ref)
     {
         $filename = "export" . ucfirst($ref) . ".csv";
         \laabs::setResponseType("text/csv");
         $response = \laabs::kernel()->response;
         $response->setHeader('Content-Disposition', 'attachment; filename=' . $filename);
 
-        return $csv;
+        return $handler;
     }
 }

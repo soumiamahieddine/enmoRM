@@ -1,8 +1,8 @@
 <?php
 
-namespace presentation\maarchRM\UserStory\Import;
+namespace presentation\maarchRM\UserStory\import;
 
-interface serviceAccountInterface
+interface importServiceAccountInterface
 {
     /**
      * Import a csv file with service account informations

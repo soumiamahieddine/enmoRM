@@ -31,6 +31,7 @@ class Import
     public $view;
     public $json;
     protected $translator;
+    protected $dashboardPresenter;
 
     protected $userArchivalProfiles = [];
 
@@ -48,17 +49,43 @@ class Import
 
         $this->translator = $translator;
         $this->translator->setCatalog('importExport/messages');
+        $this->dashboardPresenter = \laabs::newService('presentation/dashboard');
+    }
+
+    protected function buildMenu()
+    {
+        $menu = [];
+        foreach ([
+            'useraccounts' => 'User accounts',
+            'serviceaccounts' => 'Service accounts',
+            // 'roles' => 'Roles',
+            'organizations' => 'Organizations',
+            'archivalprofiles' => 'Archival profiles',
+            'descriptionfields' => 'Description fields',
+            'retentionrules' => 'Retention rules',
+        ] as $key => $value) {
+            $ref = [];
+            $ref['value'] = $key;
+            $ref['label'] = $value;
+            $ref['href'] = '/import/' . $key;
+            $ref['method'] = 'CREATE';
+            $menu[] = $ref;
+        }
+
+        return $menu;
     }
 
     public function home()
     {
         $this->view->addContentFile('importExport/index.html');
+        $menu = $this->dashboardPresenter->filterMenuAuth($this->buildMenu());
 
-        $title = 'Import referentiels';
         $this->view->setSource("isExport", false);
+        $this->view->setSource('menu', $menu);
         $this->view->merge();
 
         $this->view->translate();
+
         return $this->view->saveHtml();
     }
 
