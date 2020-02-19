@@ -99,37 +99,38 @@ class authorization
             ) {
                 $hasPrivilege = false;
                 $domain = strtok($userStory->uri, LAABS_URI_SEPARATOR);
-                foreach ($accountSecurityLevels as $accountSecurityLevel) {
-                    $value = $this->securityLevel[$accountSecurityLevel];
-                    if ($value === '0') {
-                        $bitmask = ['1', '2', '4'];
-                    } else if ($value === '3') {
-                        $bitmask = ['1', '2'];
-                    } else if ($value === '6') {
-                        $bitmask = ['4', '2'];
-                    } else {
-                        $bitmask = [$value];
-                    }
 
-                    foreach ($bitmask as $j) {
-                        if ($domain === 'app') {
-                            $hasPrivilege = true;
-                            continue 2;
+                if ($domain === 'app') {
+                    $hasPrivilege = true;
+                } else {
+                    foreach ($accountSecurityLevels as $accountSecurityLevel) {
+                        $value = $this->securityLevel[$accountSecurityLevel];
+                        if ($value === '0') {
+                            $bitmask = ['1', '2', '4'];
+                        } else if ($value === '3') {
+                            $bitmask = ['1', '2'];
+                        } else if ($value === '6') {
+                            $bitmask = ['4', '2'];
+                        } else {
+                            $bitmask = [$value];
                         }
 
-                        if (in_array($domain . '/', $this->securityLevelUserStories[$j])) {
-                            $hasPrivilege = true;
-                            continue 2;
-                        }
-
-                        foreach ($this->securityLevelUserStories[$j] as $securityLevelUserStory) {
-                            if (fnmatch($securityLevelUserStory, $userStory->uri)) {
+                        foreach ($bitmask as $j) {
+                            if (in_array($domain . '/', $this->securityLevelUserStories[$j])) {
                                 $hasPrivilege = true;
-                                continue 3;
+                                continue 2;
+                            }
+
+                            foreach ($this->securityLevelUserStories[$j] as $securityLevelUserStory) {
+                                if (fnmatch($securityLevelUserStory, $userStory->uri)) {
+                                    $hasPrivilege = true;
+                                    continue 3;
+                                }
                             }
                         }
                     }
                 }
+
                 if (!$hasPrivilege) {
                     unset($userStories[$i]);
                 }
