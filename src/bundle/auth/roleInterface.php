@@ -52,7 +52,7 @@ interface roleInterface
 
     /**
      * @param resource  $data     Data base64 encoded or not
-     * @param boolean $isReset  Reset tables or not
+     * @param boolean   $isReset  Reset tables or not
      *
      * @action auth/role/import
      *

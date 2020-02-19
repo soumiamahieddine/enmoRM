@@ -545,10 +545,10 @@ class serviceAccount
     /**
      * Import Service account function and create or update them
      *
-     * @param resource   $data     Array of serviceAccountImportExort Message
-     * @param boolean $isReset  Reset tables or not
+     * @param resource  $data       Array of serviceAccountImportExort Message
+     * @param boolean   $isReset    Reset tables or not
      *
-     * @return boolean          Success of operation or not
+     * @return boolean              Success of operation or not
      */
     public function import($data, $isReset = false)
     {
