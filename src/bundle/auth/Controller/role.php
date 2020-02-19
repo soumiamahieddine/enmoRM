@@ -443,9 +443,7 @@ class role
                 }
             }
 
-            $filename = \laabs\tempnam();
-            file_put_contents($filename, $data);
-            $roles = $this->csv->read($filename, 'auth/roleImportExport', true);
+            $roles = $this->csv->readStream($data, 'auth/roleImportExport', true);
             foreach ($roles as $key => $role) {
                 if ($isReset
                     || !$this->sdoFactory->exists('auth/role', $role->roleId)

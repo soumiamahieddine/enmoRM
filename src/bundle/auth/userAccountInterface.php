@@ -245,7 +245,7 @@ interface userAccountInterface
     public function updatePasswordchangerequest_userAccountId_();
 
     /**
-     * @param string  $data     Data base64 encoded or not
+     * @param resource  $data     Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action auth/userAccount/import

@@ -511,9 +511,7 @@ class archivalProfile
                 }
             }
 
-            $filename = \laabs\tempnam();
-            file_put_contents($filename, $data);
-            $archivalProfiles = $this->csv->read($filename, 'recordsManagement/archivalProfileImportExport', true);
+            $archivalProfiles = $this->csv->readStream($data, 'recordsManagement/archivalProfileImportExport', true);
             $archivalProfileContents = [];
             $archivalProfilesReferences = [];
             foreach ($archivalProfiles as $key => $archivalProfile) {

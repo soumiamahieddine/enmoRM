@@ -346,7 +346,7 @@ interface organizationInterface
     public function read_orgId_ChangeStatus_status_();
 
     /**
-     * @param string  $data     Data base64 encoded or not
+     * @param resource  $data     Data base64 encoded or not
      * @param boolean $isReset  Reset tables or not
      *
      * @action organization/organization/import

@@ -194,9 +194,7 @@ class retentionRule
                 }
             }
 
-            $filename = \laabs\tempnam();
-            file_put_contents($filename, $data);
-            $retentionRules = $this->csv->read($filename, 'recordsManagement/retentionRule', true);
+            $retentionRules = $this->csv->readStream($data, 'recordsManagement/retentionRule', true);
             foreach ($retentionRules as $key => $retentionRule) {
 
                 if ($isReset

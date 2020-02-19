@@ -182,16 +182,11 @@
                 return;
             }
 
-            var data = {
-                'data': file[0].handler,
-                'isReset' : isReset
-            };
-
             ajax($('#exportContainer'), {
-                url: '/import/' + referentiel,
+                url: '/import/' + referentiel + '?isReset=' + isReset,
                 type: 'POST',
-                data: JSON.stringify(data),
-                contentType: 'application/json',
+                data: file[0].handler,
+                contentType: 'text/csv',
                 success: function (response) {
                     gritter.show($("#file_success").text(), 'true');
                 },

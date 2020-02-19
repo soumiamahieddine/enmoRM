@@ -282,9 +282,7 @@ class descriptionField
                 }
             }
 
-            $filename = \laabs\tempnam();
-            file_put_contents($filename, $data);
-            $descriptionFields = $this->csv->read($filename, 'recordsManagement/descriptionField', $messageType = false);
+            $descriptionFields = $this->csv->readStream($data, 'recordsManagement/descriptionField', $messageType = false);
             foreach ($descriptionFields as $key => $descriptionField) {
                 if (is_null($descriptionField->name)) {
                     throw new \core\Exception\BadRequestException("Name cannot be null");

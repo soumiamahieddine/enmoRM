@@ -833,8 +833,8 @@ class userAccount
     /**
      * Import User account function and create or update them
      *
-     * @param array   $data     Array of userAccountImportExort Message
-     * @param boolean $isReset  Reset tables or not
+     * @param resource   $data     Array of userAccountImportExort Message
+     * @param boolean    $isReset  Reset tables or not
      *
      * @return boolean          Success of operation or not
      */
@@ -844,9 +844,7 @@ class userAccount
         $organizationController = \laabs::newController('organization/organization');
         $roleController = \laabs::newController('auth/role');
 
-        $filename = \laabs\tempnam();
-        file_put_contents($filename, $data);
-        $users = $this->csv->read($filename, 'auth/userAccountImportExport', $messageType = true);
+        $users = $this->csv->readStream($data, 'auth/userAccountImportExport', $messageType = true);
 
         $transactionControl = !$this->sdoFactory->inTransaction();
 
@@ -957,7 +955,7 @@ class userAccount
             }
         }
 
-        if (!hasSuperAdmin) {
+        if (!$hasSuperAdmin) {
             throw new \Exception("Csv must have at least one superadmin");
         }
     }
