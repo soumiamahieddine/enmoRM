@@ -8,6 +8,7 @@
 ### Sécurité
 - `Fixed` Erreur courante `Attemp to access without a valid token` du module de protection CSRF, et traduction du message en français
 - `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur fonctionnel à une organisation (au lieu d'un service) 
+- `Fixed` Faille XSS en faux positif sur la modale 404 "La page demandée n'existe pas"
 - `Added` Gestion renforcée de la sécurité (option de configuration) : Gestion de niveaux de sécurité sur les rôles et privilèges, en lien avec les niveaux d'utilisateur
 - `Changed` Filtrage des comptes d'utilisateurs et comptes de service en fonction du niveau de sécurité, notamment pour le compte utilisé dans le planificateur de tâches (si activé)
 
