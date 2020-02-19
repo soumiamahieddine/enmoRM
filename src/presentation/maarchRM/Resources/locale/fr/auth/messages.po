@@ -837,7 +837,7 @@ msgstr "Organisations"
 msgctxt "userStory"
 
 msgid "importRetentionRule"
-msgstr "Conservation"
+msgstr "Règles de conservation"
 msgctxt "userStory"
 
 msgid "importRole"
@@ -849,7 +849,7 @@ msgstr "Comptes de service"
 msgctxt "userStory"
 
 msgid "importUserAccount"
-msgstr "Utilisateurs"
+msgstr "Comptes utilisateurs"
 msgctxt "userStory"
 
 msgid "exportOrganization"
@@ -857,7 +857,7 @@ msgstr "Organisations"
 msgctxt "userStory"
 
 msgid "exportRetentionRule"
-msgstr "Conservation"
+msgstr "Règles de conservation"
 msgctxt "userStory"
 
 msgid "exportRole"
@@ -869,7 +869,7 @@ msgstr "Comptes de service"
 msgctxt "userStory"
 
 msgid "exportUserAccount"
-msgstr "Utilisateurs"
+msgstr "Comptes utilisateurs"
 msgctxt "userStory"
 
 msgid "exportArchivalProfile"
