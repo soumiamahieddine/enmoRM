@@ -483,7 +483,9 @@ class archivalProfile
             $archivalProfiles[$key] = $archivalProfile;
         }
 
-        $this->csv->write('php://output', (array) $archivalProfiles, 'recordsManagement/archivalProfileImportExport', true);
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $archivalProfiles, 'recordsManagement/archivalProfileImportExport', true);
+        return $handler;
     }
 
     public function import($data, $isReset = false)
