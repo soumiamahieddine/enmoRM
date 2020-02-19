@@ -1620,7 +1620,7 @@ class organization
     /**
      * Import organization and create or update them
      *
-     * @param resource   $data     Array of serviceAccountImportExort Message
+     * @param resource   $data     Array of serviceAccountImportExport Message
      * @param boolean    $isReset  Reset tables or not
      *
      * @return boolean          Success of operation or not

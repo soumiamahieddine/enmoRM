@@ -833,7 +833,7 @@ class userAccount
     /**
      * Import User account function and create or update them
      *
-     * @param resource   $data      Array of userAccountImportExort Message
+     * @param resource   $data      Array of userAccountImportExport Message
      * @param boolean    $isReset   Reset tables or not
      *
      * @return boolean              Success of operation or not
