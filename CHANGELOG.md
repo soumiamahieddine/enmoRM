@@ -16,13 +16,15 @@
 - `Added` Fonctions d'import de référentiels par téléversement de CSV, avec option de remise à blanc ou de modification/fusion
 - `Added` Fonctions d'export de référentiels par téléchargement de CSV
 
-### Echanges transactionnels
+### Echanges transactionnels, versement, ressortie d'archive
 - `Fixed` Traitements concurrents sur les mêmes bordereaux (hors versement, déjà corrigé en V2.5)
 - `Fixed` Impossibilité de transmettre des chemins de fichiers ou URI pour les données transmises
+- `Added` Possibilité de verser des archives compressées d'arborescence de dossiers sans nommage particulier (lien avec profil) pour le vrac numérique
 
-### Traitement des binaires (versement et accès)
+### Traitement des binaires
 - `Changed` Réécriture complète des macanismes de traitement des contenus binaires reçus et transmis, afin de permettre la gestion de document numériques de grande taille (sup. à 1Go) sans dépassament de la mémoire
 - `Changed` Dans l'adaptateur `FileSystem`, création des répertoires de stockage après résolution des parties variables et non plus récursivement pour améliorer les performances lors du stockage CEPH sur interface POSIX
+- `Changed` Suppression de fichiers temporaires utilisés lors de versement et ressorties, tous modes (à l'exlusion de la consultation)
 
 ### Description
 - `Added` Option pour activer la valeur par défaut à la date du jour pour les métadonnées de type date et date+heure
@@ -47,6 +49,7 @@
 - `Fixed` Fichier sans extension ni nom lors du téléchargement de fichier de profil d'archivage (SEDA par exemple)
 - `Fixed` Affichage du point de menu "Echanges transactionnels" même lorsque l'utilisateur n'a accès à aucune transaction
 - `Fixed` Erreur lors du classement de plusieurs archives das un dossier virtuel, après versement ou modification des métadonnées de l'une des archives de la liste de résultat
+- `Fixed` Mauvaise gestion de l'activation/désactivation du bouton de validation de la modale de confirmation avant envoi d'un message transactionnel (modification, communication...)
 - `Added` Fonction pour déplier/replier toute un branche de l'organigramme des services
 - `Added` Fonction de téléchargement des données de liste de résultat dans l'écran de gestion de l'Archive
 - `Added` Mode de vue en liste pour la gestion de l'organisation (option de configuration) pour gérer les grands tableaux de gestion (milliers d'entrées)
@@ -55,8 +58,15 @@
 ### Pérennisation
 - `Fixed` Erreur non interceptée lors de la détection de format lorsqu'un outil tiers appelé en ligne de commande (7z en l'occurence) se terminait en erreur
 
+___
+
 ## Version 2.5.3
+
 - `Fixed` Contenu binaire corrompu lors du dépôt direct d'objet numérique dans les archives
+- `Fixed` Erreur à l'initialisation du plugin `dataTable`
+- `Fixed` Actions impossibles sur les éléments de liste de résultat au-delà de la première page
+
+___
 
 ## Version 2.5.2
 
@@ -69,9 +79,13 @@
 
 - `Added` Ajout de la possiblité d'utiliser des fichiers CSV ou SKOS personnalisés comme référentiels de thesaurus (fonctionnalité de l'extension *archives publiques*).
 
+___
+
 ## Version 2.5.1
 
 - `Fixed` Correctif sur la vérification de validité du token de 'Mot de passe oublié'
+
+___
 
 ## Version 2.5
 
@@ -137,6 +151,8 @@
 ### Modèle conceptuel
 
 - `Added` Ajout de plusieurs index afin d'améliorer les performances de l'application.
+
+___
 
 ## Version 2.4.4
 
