@@ -14,7 +14,7 @@
 
 ### Traitement des binaires (versement et accès)
 - `Changed` Réécriture complète des macanismes de traitement des contenus binaires reçus et transmis, afin de permettre la gestion de document numériques de grande taille (sup. à 1Go) sans dépassament de la mémoire
-- `` 
+- `Changed` Dans l'adaptateur `FileSystem`, création des répertoires de stockage après résolution des parties variables et non plus récursivement pour améliorer les performances lors du stockage CEPH sur interface POSIX
 
 ### Classement
 - `Fixed` Impossibilité de déplacer les services à la racine de l'organisation
