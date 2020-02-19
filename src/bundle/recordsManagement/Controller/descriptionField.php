@@ -253,7 +253,9 @@ class descriptionField
     {
         $descriptionFields = $this->sdoFactory->find('recordsManagement/descriptionField', null, null, null, null, $limit);
 
-        $this->csv->write('php://output', (array) $descriptionFields, 'recordsManagement/descriptionField', false);
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $descriptionFields, 'recordsManagement/descriptionField', false);
+        return $handler;
     }
 
     public function import($data, $isReset = false)

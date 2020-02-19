@@ -166,7 +166,9 @@ class retentionRule
         $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule', null, null, null, null, $limit);
         $retentionRules = \laabs::castMessageCollection($retentionRules, 'recordsManagement/retentionRule');
 
-        $this->csv->write('php://output', (array) $retentionRules, 'recordsManagement/retentionRule', true);
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $retentionRules, 'recordsManagement/retentionRule', true);
+        return $handler;
     }
 
     public function import($data, $isReset = false)

@@ -412,7 +412,9 @@ class role
             }
         }
 
-        $this->csv->write('php://output', (array) $roles, 'auth/roleImportExport', true);
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $roles, 'auth/roleImportExport', true);
+        return $handler;
     }
 
     public function import($data, $isReset = false)

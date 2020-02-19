@@ -110,6 +110,14 @@ class Csv
      */
     public function write($filename, $collection, $className, $messageType = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
+        $handler = fopen($filename, 'w');
+
+        return $this->writeStream($handler, $collection, $className, $messageType, $delimiter, $enclosure, $escape);
+    }
+
+    public function writeStream($handler, $collection, $className, $messageType = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    {
+
         if ($messageType) {
             $class = \laabs::getMessage($className);
         } else {
@@ -117,8 +125,6 @@ class Csv
         }
 
         $properties = $class->getProperties();
-
-        $handler = fopen($filename, 'w');
 
         fputcsv($handler, array_keys($properties), $delimiter, $enclosure, $escape);
 
@@ -132,5 +138,6 @@ class Csv
         foreach ($collection as $object) {
             fputcsv($handler, get_object_vars($object), $delimiter, $enclosure, $escape);
         }
+        rewind($handler);
     }
 }
