@@ -620,8 +620,10 @@
                     }
                 }
 
-                if (privileges && ($.inArray(route, privileges) !== -1 || $.inArray("*", privileges) !== -1)) {
-                    $("#serviceAccountId").val($(this).val());
+                if (!privileges || ($.inArray(route, privileges) === -1 && $.inArray("*", privileges) === -1)) {
+                    $(this).addClass('hide');
+                } else {
+                    $(this).removeClass('hide');
                 }
             });
         },
