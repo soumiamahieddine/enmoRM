@@ -3,18 +3,40 @@
 ## Version 2.6
 
 ### Externalisation des fonctions Coffre-Fort Numérique
+- `Changed` Le bundle `digitalSafe` a été déplacé vers la nouvelle extension éponyme, disponible dans le projet GitLab ![lien](https://labs.maarch.org/maarch/digitalSafe)
 
-### Journal du cycle de vie
-- `Added` Ajout d'un champ organisation dans la recherche d'évènement de journal, il assistera l'utilisateur avec une autocompletion regroupant l'ensemble des services et des organisations auxquels l'utilisateur est rattaché.
-- `Added` Ajout de la possibilité de rechercher selon l'identifiant métier (renseigné par le client) en plus de l'identifiant technique dans la recherche d'évènement de journal.
-
-### Niveau de sécurité
-
+### Sécurité
+- `Fixed` Erreur courante `Attemp to access without a valid token` du module de protection CSRF, et traduction du message en français
+- `Fixed` Impossibilité de rattacher un comtpe de service de niveau Administrateur fonctionnel à une organisation (au lieu d'un service) 
 
 ### Import et export de référentiels
 
 
 ### Traitement des binaires (versement et accès)
+- `Changed` Réécriture complète des macanismes de traitement des contenus binaires reçus et transmis, afin de permettre la gestion de document numériques de grande taille (sup. à 1Go) sans dépassament de la mémoire
+- `` 
+
+### Classement
+- `Fixed` Impossibilité de déplacer les services à la racine de l'organisation
+- `Fixed` Erreur lorsqu'un service/une activité n'avait pas de rôle
+
+### Traçabilité
+- `Fixed` Recherche par terme impossible dans le journal de l'application
+- `Fixed` Absence des données de règle de conservation avant modification dans le détail de l'événement
+- `Fixed` Absence des noms d'organisation et services acteurs dans le détail des événements d'échange transactionnel
+- `Added` Ajout d'un champ organisation dans la recherche d'évènement de journal, il assistera l'utilisateur avec une autocompletion regroupant l'ensemble des services et des organisations auxquels l'utilisateur est rattaché.
+- `Added` Ajout de la possibilité de rechercher selon l'identifiant métier (renseigné par le client) en plus de l'identifiant technique dans la recherche d'évènement de journal.
+- `Added` Information de résultat d'opération dans le tableau des événement des objets (archive et messages d'échange)
+ 
+### IHM
+- `Fixed` Bouton de validation du formulaire de modification de règle de conservation qui se déplaçait au survol du curseur
+- `Fixed` Effacement de la date déjà renseignée dans la zone de saisie, lorsque la même date était sélectionnée dans le sélecteur de date
+- `Fixed` Fichier sans extension ni nom lors du téléchargement de fichier de profil d'archivage (SEDA par exemple)
+- `Fixed` Affichage du point de menu "Echanges transactionnels" même lorsque l'utilisateur n'a accès à aucune transaction
+
+
+### Pérennisation
+- `Fixed` Erreur non interceptée lors de la détection de format lorsqu'un outil tiers appelé en ligne de commande (7z en l'occurence) se terminait en erreur
 
 
 ## Version 2.5.2
