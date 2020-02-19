@@ -71,11 +71,12 @@ class user
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $securityLevel = $account->securityLevel;
 
         $manageUserRights = true;
-        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+        if ($hasSecurityLevel && $securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
             $manageUserRights = false;
         }
 
@@ -115,14 +116,20 @@ class user
 
         $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
+        if (!is_null($account->securityLevel)
+            && $account->securityLevel != ""
+            && $hasSecurityLevel
+        ) {
             $whatAmI = $account->securityLevel;
+        } elseif ($hasSecurityLevel) {
+            $whatAmI = 'userWithoutSecurityLevelYet';
         } else {
-            $whatAmI = 'oldUser';
+            $whatAmI = 'userWithoutSecurityLevel';
         }
 
         $sizeRoles = count($roles);
@@ -204,7 +211,7 @@ class user
         if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
             $whatAmI = $account->securityLevel;
         } else {
-            $whatAmI = 'oldUser';
+            $whatAmI = 'userWithoutSecurityLevel';
         }
 
         $sizeRoles = count($roles);
@@ -215,7 +222,7 @@ class user
             if ($whatAmI == \bundle\auth\Model\account::SECLEVEL_GENADMIN
                 && $roles[$i]->securityLevel !== \bundle\auth\Model\account::SECLEVEL_FUNCADMIN) {
                 unset($roles[$i]);
-            } else if ($whatAmI == \bundle\auth\Model\account::SECLEVEL_FUNCADMIN
+            } elseif ($whatAmI == \bundle\auth\Model\account::SECLEVEL_FUNCADMIN
                 && $roles[$i]->securityLevel !== \bundle\auth\Model\account::SECLEVEL_USER) {
                 unset($roles[$i]);
             }

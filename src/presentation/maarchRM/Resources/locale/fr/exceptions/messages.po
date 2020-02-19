@@ -476,11 +476,20 @@ msgstr "Vous n'êtes pas autorisé à créer une organisation"
 msgid "You are not allowed to do this action"
 msgstr "Vous n'êtes pas autorisé à effectuer cette action"
 
+msgid "Only a General administrator can do this action"
+msgstr "Seul un Administrateur Général peut réaliser cette action"
+
+msgid "Only a Functional administrator can do this action"
+msgstr "Seul un Administrateur Fonctionnel peut réaliser cette action"
+
 msgid "An organization can't be disabled."
 msgstr "Une organisation ne peut pas être désactivée."
 
-msgid "The deposit is blocked because the activity is disabled."
+msgid "The deposit has been blocked because activity is disabled."
 msgstr "Le versement est bloqué parce que l'activité est désactivée."
 
 msgid "Wrong columns numbers with csv on line %s"
 msgstr "Mauvais nombre de colonnes dans le csv à la ligne %s"
+
+msgid "User has an unknown security level"
+msgstr "L'utilisateur a un niveau de sécurité non renseigné dans la configuration. Veuillez contacter votre administrateur système"

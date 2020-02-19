@@ -32,6 +32,7 @@
                                     <option value="[?merge .orgId ?]" name="orgId"><?merge .displayName ?></option>
                                 </select>
                             </div>
+                            <?merge whatAmI.ifne('userWithoutSecurityLevel') ?>
                             <div id="selectOrgGroup" class="input-group col-md-12">
                                 <select id="orgSelect" class="form-control">
                                     <option></option>
@@ -50,6 +51,7 @@
                             <input type="checkbox" data-size="small" class="form-control" data-on="Oui" data-off="Non" name="enabled" id="serviceEnabled" data-toggle="toggle"/>
                         </div>
                     </div>
+                    <?merge whatAmI.ifne('userWithoutSecurityLevel') ?>
                     <div class="form-group" id="adminRights"">
                         <label class="col-md-3 control-label" for="adminUser">Admin Rights</label>
                         <div>
@@ -227,7 +229,7 @@
     });
 
     //save
-    $("#submitServiceAccount").on("click", function(){
+    $("#submitServiceAccount").on("click", function() {
         var url = '/serviceAccount';
         var type = 'POST';
 
@@ -247,7 +249,7 @@
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
-        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").prop("data-ownerorgid");
+        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").attr("data-ownerorgid");
         serviceAccount.emailAddress = '';
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
@@ -256,7 +258,7 @@
             serviceAccount.ownerOrgId = $("#orgSelect").val();
             orgId = "";
         } else {
-            serviceAccount.ownerOrgId=$("#originatorOwnerOrgName").prop("data-ownerorgid");
+            serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").attr("data-ownerorgid");
         }
 
         var servicesURI = new Array();
@@ -317,7 +319,7 @@
             var option = $("#selectPrivilegeURI").val('').find('option[data-serviceuri="'+serviceURI+'"]');
 
             option.hide();
-            
+
             if(navigator.userAgent.indexOf('MSIE')!==-1
             || navigator.appVersion.indexOf('Trident/') > -1){
                 /* Microsoft Internet Explorer detected in. */
@@ -432,14 +434,20 @@
         $("#orgTypeahead").prop('org', suggestion);
         $("#serviceOrgId").val(suggestion.orgId);
         $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
-        $("#originatorOwnerOrgName").prop("data-ownerorgid", suggestion.ownerOrgId);
+        $("#originatorOwnerOrgName").attr("data-ownerorgid", suggestion.ownerOrgId);
     });
 
     $('#orgTypeahead').keyup(function () {
-
-        if(!$(this).val()){
+        var whatAmI = $('#whatAmI').text();
+        if (!$(this).val() && whatAmI != 'userWithoutSecurityLevel') {
             $("#originatorOwnerOrgName").val('');
             $("#serviceOrgId").val('');
+        } else if (!$(this).val() && whatAmI == 'userWithoutSecurityLevel') {
+            $("#originatorOwnerOrgName").val('');
+            $("#serviceOrgId").val('');
+            $("#orgGroup").addClass('hide');
+        } else if (whatAmI == 'userWithoutSecurityLevel') {
+            $("#orgGroup").removeClass('hide');
         }
     });
 
@@ -497,15 +505,15 @@
             $('#adminUser').parent().addClass('disabled');
         } else {
             if(whatAmI == "adminG") {
-                    $('#adminUser').bootstrapToggle('on');
-                    $('#adminUser').parent().addClass('disabled');
+                $('#adminUser').bootstrapToggle('on');
+                $('#adminUser').parent().addClass('disabled');
             } else if (whatAmI == "func_admin") {
-                    $('#adminUser').bootstrapToggle("off");
-                    $('#adminUser').parent().addClass('disabled');
-                    $("#adminRights").hide();
-            } else if (whatAmI == "oldUser") {
-                    $('#adminUser').bootstrapToggle("off");
-                    $('#adminUser').parent().removeClass('disabled');
+                $('#adminUser').bootstrapToggle("off");
+                $('#adminUser').parent().addClass('disabled');
+                $("#adminRights").hide();
+            } else if (whatAmI == "userWithoutSecurityLevel") {
+                // $('#adminUser').bootstrapToggle("off");
+                // $('#adminUser').parent().removeClass('disabled');
             }
         }
     }
