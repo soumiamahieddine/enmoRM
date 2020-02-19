@@ -31,13 +31,18 @@ class Csv
      */
     public function read($filename, $className, $messageType = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
     {
+        $handler = fopen($filename, 'r');
+
+        return $this->readStream($handler, $className, $messageType, $delimiter, $enclosure, $escape);
+    }
+
+    public function readStream($handler, $className, $messageType = false, $delimiter = ',', $enclosure = '"', $escape = '\\')
+    {
         if ($messageType) {
             $class = \laabs::getMessage($className);
         } else {
             $class = \laabs::getClass($className);
         }
-
-        $handler = fopen($filename, 'r');
 
         $header = fgetcsv($handler, 0, $delimiter, $enclosure, $escape);
 
@@ -57,6 +62,7 @@ class Csv
         fclose($handler);
 
         return $collection;
+
     }
 
     protected function getPropertiesFromHeader($header, $class)

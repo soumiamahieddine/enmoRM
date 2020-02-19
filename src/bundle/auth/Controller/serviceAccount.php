@@ -519,16 +519,14 @@ class serviceAccount
     /**
      * Import Service account function and create or update them
      *
-     * @param array   $data     Array of serviceAccountImportExort Message
-     * @param boolean $isReset  Reset tables or not
+     * @param resource  $data       Array of serviceAccountImportExport Message
+     * @param boolean   $isReset    Reset tables or not
      *
-     * @return boolean          Success of operation or not
+     * @return boolean              Success of operation or not
      */
     public function import($data, $isReset = false)
     {
-        $filename = \laabs\tempnam();
-        file_put_contents($filename, $data);
-        $services = $this->csv->read($filename, 'auth/serviceAccountImportExport', $messageType = true);
+        $services = $this->csv->readStream($data, 'auth/serviceAccountImportExport', $messageType = true);
         $organizationController = \laabs::newController('organization/organization');
 
         $transactionControl = !$this->sdoFactory->inTransaction();

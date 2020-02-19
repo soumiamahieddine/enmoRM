@@ -126,8 +126,8 @@ interface serviceAccountInterface
     public function readQuery_query_($query = null);
 
     /**
-     * @param string  $data     Data base64 encoded or not
-     * @param boolean $isReset  Reset tables or not
+     * @param resource  $data     Data base64 encoded or not
+     * @param boolean   $isReset  Reset tables or not
      *
      * @action auth/serviceAccount/import
      *

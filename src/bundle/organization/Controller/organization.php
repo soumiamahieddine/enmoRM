@@ -1634,16 +1634,15 @@ class organization
     /**
      * Import organization and create or update them
      *
-     * @param array   $data     Array of serviceAccountImportExort Message
-     * @param boolean $isReset  Reset tables or not
+     * @param resource   $data     Array of serviceAccountImportExport Message
+     * @param boolean    $isReset  Reset tables or not
      *
      * @return boolean          Success of operation or not
      */
     public function import($data, $isReset = false)
     {
-        $filename = \laabs\tempnam();
-        file_put_contents($filename, $data);
-        $organizations = $this->csv->read($filename, 'organization/organizationImportExport', $messageType = true);
+        
+        $organizations = $this->csv->readStream($data, 'organization/organizationImportExport', $messageType = true);
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
