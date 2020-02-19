@@ -1,8 +1,8 @@
 <?php
 
-namespace presentation\maarchRM\UserStory\Export;
+namespace presentation\maarchRM\UserStory\export;
 
-interface descriptionFieldInterface
+interface exportDescriptionFieldInterface
 {
     /**
      * Get description fields infos

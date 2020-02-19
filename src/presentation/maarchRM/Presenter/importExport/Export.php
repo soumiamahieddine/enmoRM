@@ -32,6 +32,7 @@ class Export
     public $json;
     protected $translator;
     public $maxResults;
+    protected $dashboardPresenter;
 
     protected $userArchivalProfiles = [];
 
@@ -49,15 +50,41 @@ class Export
 
         $this->translator = $translator;
         $this->translator->setCatalog('importExport/messages');
-
+        $this->dashboardPresenter = \laabs::newService('presentation/dashboard');
         $this->maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+    }
+
+    protected function buildMenu()
+    {
+        $menu = [];
+        foreach ([
+            'useraccounts' => 'User accounts',
+            'serviceaccounts' => 'Service accounts',
+            // 'roles' => 'Roles',
+            'organizations' => 'Organizations',
+            'archivalprofiles' => 'Archival profiles',
+            'descriptionfields' => 'Description fields',
+            'retentionrules' => 'Retention rules',
+        ] as $key => $value) {
+            $ref = [];
+            $ref['value'] = $key;
+            $ref['label'] = $value;
+            $ref['href'] = '/export/' . $key;
+            $menu[] = $ref;
+        }
+
+        return $menu;
     }
 
     public function home()
     {
         $this->view->addContentFile('importExport/index.html');
+
+        $menu = $this->dashboardPresenter->filterMenuAuth($this->buildMenu());
+
         $this->view->setSource("isExport", true);
         $this->view->setSource("maxResults", $this->maxResults);
+        $this->view->setSource('menu', $menu);
 
         $this->view->merge();
         $this->view->translate();

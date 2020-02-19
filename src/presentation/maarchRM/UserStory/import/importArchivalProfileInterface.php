@@ -1,8 +1,8 @@
 <?php
 
-namespace presentation\maarchRM\UserStory\Import;
+namespace presentation\maarchRM\UserStory\import;
 
-interface archivalProfileInterface
+interface importArchivalProfileInterface
 {
     /**
      * Import a csv file with archival profile informations
