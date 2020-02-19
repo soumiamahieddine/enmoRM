@@ -36,6 +36,13 @@ Il faut ajouter des routes en liste blanche pour la protection contre les requê
 csrfWhiteList = "['user/login', 'user/password', 'user/prompt', 'user/logout', 'user/generateResetToken']"
 ```
 
+### Mise à jour des fichiers de signature DROID
+Mise à jour des fichiers signature et container permettant la détection du format des fichiers
+```
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V96.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20200121.xml"
+```
+
 ## Schéma SQL
 
 Voir le fichier spécifique

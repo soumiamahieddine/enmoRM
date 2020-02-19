@@ -681,8 +681,8 @@ Password                        = %password%
 
 ; Path to the UK National Archives DROID signature file for file format detection
 ; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
-signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V94.xml"
-containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20180920.xml"
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V96.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20200121.xml"
 
 ; Path to libreOffice executable
 ;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"

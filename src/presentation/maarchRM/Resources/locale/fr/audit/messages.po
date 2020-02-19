@@ -369,7 +369,7 @@ msgid "recordsManagement/archives/read"
 msgstr "Lecture de toutes les archives"
 
 msgid "recordsManagement/archives/readList"
-msgstr "Lecture du plan de classements"
+msgstr "Lecture du plan de classement"
 
 msgid "recordsManagement/archives/updateFreeze"
 msgstr "Gel d'une archive"
@@ -529,6 +529,9 @@ msgstr "Création d'un journal de l'application"
 
 msgid "recordsManagement/archivalProfile/readArchivalprofileExport_profileReference_"
 msgstr "Export du profil"
+
+msgid "recordsManagement/descriptionRef/read_name_"
+msgstr "Lecture d'un référentiel de métadonnées descriptives"
 
 msgid "documentManagement/fulltext/read"
 msgstr "Lecture plein texte"

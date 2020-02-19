@@ -57,6 +57,7 @@
 
 ### Pérennisation
 - `Fixed` Erreur non interceptée lors de la détection de format lorsqu'un outil tiers appelé en ligne de commande (7z en l'occurence) se terminait en erreur
+- `Changed` Mise à jour des fichiers de signature DROID pour ladétection de format (V96 - 2020-01-21)
 
 ___
 
