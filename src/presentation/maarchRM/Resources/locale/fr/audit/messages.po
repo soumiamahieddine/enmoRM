@@ -369,7 +369,7 @@ msgid "recordsManagement/archives/read"
 msgstr "Lecture de toutes les archives"
 
 msgid "recordsManagement/archives/readList"
-msgstr "Lecture du plan de classements"
+msgstr "Lecture du plan de classement"
 
 msgid "recordsManagement/archives/updateFreeze"
 msgstr "Gel d'une archive"
