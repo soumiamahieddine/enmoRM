@@ -172,7 +172,7 @@ class ServiceKernel extends AbstractKernel
     {
         switch ($this->request->queryType) {
             case 'arg':
-                $queryArguments = (array) $this->request->query;
+                $this->userMessage = (array) $this->request->query;
                 break;
 
             case 'lql':
@@ -180,39 +180,41 @@ class ServiceKernel extends AbstractKernel
 
             case 'url':
             default:
-                $queryArguments = $_GET;
+                $this->userMessage = $_GET;
                 break;
         }
 
         $bodyArguments = array();
+
+        if (!is_null($this->request->body)) {   
+            if (isset($this->inputRouter)) {
+                if ($this->response->mode == 'http') {
+                    $this->response->setHeader("X-Laabs-Parser", $this->inputRouter->uri . "; type=" . $this->request->contentType);
+                }
+                $parser = $this->inputRouter->parser->newInstance();
+                $bodyArguments = $this->inputRouter->input->parse($parser, $this->request->body);
+            } else {
+                switch ($this->request->contentType) {
+                    case 'php':
+                        $bodyArguments = stream_get_contents($this->request->body);
+                        break;
+
+                    case 'url':
+                        $contents = stream_get_contents($this->request->body);
+                        $bodyArguments = \core\Encoding\url::decode($contents);
+                        break;
+
+                    case 'json':
+                        $bodyArguments = (array) \core\Encoding\json::decodeStream($this->request->body);
+                        break;
+
+                    default:
+                        $bodyArguments = [$this->request->body];
+                }
+            }
             
-        if (isset($this->inputRouter)) {
-            if ($this->response->mode == 'http') {
-                $this->response->setHeader("X-Laabs-Parser", $this->inputRouter->uri . "; type=" . $this->request->contentType);
-            }
-            $parser = $this->inputRouter->parser->newInstance();
-            $bodyArguments = $this->inputRouter->input->parse($parser, $this->request->body);
-        } else {
-            switch ($this->request->contentType) {
-                case 'php':
-                    $bodyArguments = stream_get_contents($this->request->body);
-                    break;
-
-                case 'url':
-                    $contents = stream_get_contents($this->request->body);
-                    $bodyArguments = \core\Encoding\url::decode($contents);
-                    break;
-
-                case 'json':
-                    $bodyArguments = (array) \core\Encoding\json::decodeStream($this->request->body);
-                    break;
-
-                default:
-                    $bodyArguments = [$this->request->body];
-            }
+            $this->userMessage = array_merge($this->userMessage, $bodyArguments);
         }
-        
-        $this->userMessage = array_merge($queryArguments, $bodyArguments);
     }
 
     /**
