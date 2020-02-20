@@ -1871,3 +1871,39 @@ msgstr "Coffre fort numérique : Valider l'intégrité d'un objet numérique"
 
 msgid "digitalSafe/digitalSafe/create_originatorOwnerOrgRegNumber__originatorOrgRegNumber_"
 msgstr "Coffre fort numérique : Création d'un objet numérique"
+
+msgid "auth/serviceAccount/readExport"
+msgstr "Export du référentiel de compte de service"
+
+msgid "auth/userAccount/readExport"
+msgstr "Export du référentiel utilisateur"
+
+msgid "organization/organization/readExport"
+msgstr "Export du référentiel d'organisation"
+
+msgid "recordsManagement/archivalProfile/readExport"
+msgstr "Export du référentiel de profil d'archive"
+
+msgid "recordsManagement/descriptionField/readExport"
+msgstr "Export du référentiel de champ de description"
+
+msgid "recordsManagement/retentionRule/readExport"
+msgstr "Export du référentiel de règle de conservation"
+
+msgid "auth/serviceAccount/createImport"
+msgstr "Import du référentiel de compte de service" 
+
+msgid "organization/organization/createImport"
+msgstr "Import du référentiel d'organisation"
+
+msgid "auth/userAccount/createImport"
+msgstr "Import du référentiel utilisateur"
+
+msgid "recordsManagement/archivalProfile/createImport"
+msgstr "Import du référentiel de profil d'archive"
+
+msgid "recordsManagement/descriptionField/createImport"
+msgstr "Import du référentiel de champ de description"
+
+msgid "recordsManagement/retentionRule/createImport"
+msgstr "Import du référentiel de règle de conservation"
