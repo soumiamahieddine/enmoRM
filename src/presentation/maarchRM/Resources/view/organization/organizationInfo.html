@@ -55,6 +55,9 @@
 
                             <dt>Tax identifier</dt>
                             <dd id="orgInfo_taxIdentifier"></dd>
+
+                            <dt>Enabled</dt>
+                            <dd id="orgInfo_enabled"></dd>
                         </dl>
                     </div>
                     <?merge adminOrg.not().then('hide') @class ?>
@@ -121,7 +124,14 @@
             $('#orgInfo_displayName').text(organization.displayName);
             $('#informationTab').find('dt, dd').css('display', 'none');
             $.each(organization, function(key, value) {
-                if (value !=null) {
+                if (key === 'enabled' && isOrgUnit === true) {
+                    if (value) {
+                        content = '<i class="fa fa-check"></i>';
+                    } else {
+                        content = '<i class="fa fa-ban"></i>';
+                    }
+                    $('#orgInfo_' + key).css('display', '').html(content).prev().css('display', '');
+                }else if (value !=null && key !== 'enabled') {
                     $('#orgInfo_' + key).css('display', '').text(value).prev().css('display', '');
                 }
             });

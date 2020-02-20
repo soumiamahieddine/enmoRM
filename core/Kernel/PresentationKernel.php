@@ -144,28 +144,30 @@ class PresentationKernel
             switch ($this->request->queryType) {
                 case 'lql':
                     // Parse query string
-                    //$queryArguments = \laabs::parseQueryString($this->request->query);
+                    //$this->userMessages = \laabs::parseQueryString($this->request->query);
 
                 case 'url':
                 default:
-                    $queryArguments = $_GET;
+                    $this->userMessage = $_GET;
                     break;
             }
-            switch ($this->request->contentType) {
-                case 'url':
-                    $contents = stream_get_contents($this->request->body);
-                    $bodyArguments = \core\Encoding\url::decode($contents);
-                    break;
+            if (!is_null($this->request->body)) {
+                switch ($this->request->contentType) {
+                    case 'url':
+                        $contents = stream_get_contents($this->request->body);
+                        $bodyArguments = \core\Encoding\url::decode($contents);
+                        break;
 
-                case 'json':
-                    $bodyArguments = (array) \core\Encoding\json::decodeStream($this->request->body);
-                    break;
+                    case 'json':
+                        $bodyArguments = (array) \core\Encoding\json::decodeStream($this->request->body);
+                        break;
 
-                default:
-                    $bodyArguments = [$this->request->body];
+                    default:
+                        $bodyArguments = [$this->request->body];
+                }
+
+                $this->userMessage = array_merge($this->userMessage, $bodyArguments);
             }
-        
-            $this->userMessage = array_merge($queryArguments, $bodyArguments);
         }
     }
 
