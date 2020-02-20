@@ -534,8 +534,27 @@ class serviceAccount
         if ($transactionControl) {
             $this->sdoFactory->beginTransaction();
         }
+        $isServiceAccountQueryOriginator = false;
 
         if ($isReset) {
+            $accountToken = \laabs::getToken('AUTH');
+            $account = $this->read($accountToken->accountId);
+            if ($account->accountType == 'service') {
+                // Check if service deleting is present in csv
+                $sameServicePresent = false;
+                foreach ($services as $service) {
+                    if ($service->accountName == $account->accountName) {
+                        $sameServicePresent = true;
+                    }
+                }
+
+                if (!$sameServicePresent) {
+                    throw new \core\Exception\BadRequestException("Service account resetting must be present in csv");
+                }
+
+                $isServiceAccountQueryOriginator = true;
+                $deletingService = $this->read((string) $account->accountId);
+            }
             try {
                 $this->deleteAllServices();
             } catch (\Exception $e) {
@@ -550,6 +569,13 @@ class serviceAccount
             if ($isReset) {
                 $serviceAccount = $this->newService();
                 $serviceAccount->accountId = \laabs::newId();
+
+                if (isset($isServiceAccountQueryOriginator)
+                    && $isServiceAccountQueryOriginator
+                    && $service->accountName == $deletingService->accountName
+                ) {
+                    $serviceAccount->accountId = $deletingService->accountId;
+                }
             } else {
                 $serviceAccount = $this->sdoFactory->find('auth/account', 'accountName="' . $service->accountName . '" ');
                 if (!isset($serviceAccount) || empty($serviceAccount)) {
