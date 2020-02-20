@@ -335,7 +335,7 @@ class serviceAccount
                     $servicePosition = $this->servicePositionController->getPosition($serviceAccount->accountId);
 
                     if (isset($servicePosition->organization)) {
-                        $this->organizationController->deleteServicePosition($orgId, $serviceAccount->accountId);
+                        $this->organizationController->deleteServicePosition($servicePosition->orgId, $serviceAccount->accountId);
                     }
                     $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
                 }
