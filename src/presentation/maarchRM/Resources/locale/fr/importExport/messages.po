@@ -63,7 +63,7 @@ msgid "No file uploaded"
 msgstr "Aucun fichier versé"
 
 msgid "archivalprofiles"
-msgtxt "Profils d'archive"
+msgstr "Profils d'archive"
 
 # ---------------------------------------------------------
 # Datatable Organization
@@ -85,19 +85,19 @@ msgid "otherOrgName"
 msgstr "Autre nom affiché"
 
 msgid "legalClassification"
-msgstr "Classification légale"
+msgstr "Forme juridique"
 
 msgid "businessType"
-msgstr "Type d'organisation"
+msgstr "Nature de l'activité"
 
 msgid "description"
 msgstr "Description"
 
 msgid "orgTypeCode"
-msgstr "Code type de l'organisation"
+msgstr "Type d'organisation"
 
 msgid "taxIdentifier"
-msgstr "Identifiant de taxe"
+msgstr "Numéro TVA intraco"
 
 msgid "beginDate"
 msgstr "Date de début"
@@ -109,7 +109,7 @@ msgid "parentOrgRegNumber"
 msgstr "Identifiant de l'organisation parente"
 
 msgid "ownerOrgRegNumber"
-msgstr "Identifiant de l'organisation mère d'appartenance"
+msgstr "Identifiant de l'organisation racine"
 
 msgid "isOrgUnit"
 msgstr "Est une organisation"
