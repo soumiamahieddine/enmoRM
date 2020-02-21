@@ -29,6 +29,7 @@
         </div>
     </div>
 </div>
+<span class="hide" id="whatAmI"><?merge whatAmI ?></span>
 <span class="hide" id="ownerOrgId"><?merge user.ownerOrgId ?></span>
 <span class="hide" id="noServiceFound">No service found</span>
 <span class="hide" id="editMyProfile">true</span>
@@ -37,10 +38,7 @@
 
     window.localStorage.clear();
     var whatAmI = $('#whatAmI').text();
-    var displayOrganizationsUrl = '/organizations/todisplay';
-    if (whatAmI != 'userWithoutSecurityLevel') {
-        displayOrganizationsUrl += '?orgUnit=true&ownerOrg=false';
-    }
+    var displayOrganizationsUrl = '/organizations/todisplay?orgUnit=true';
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
