@@ -24,6 +24,8 @@ class dashboard
 
     public $userPrivileges = array();
 
+    public $blacklistUserStories;
+
     /**
      * Constructor of dashboard
      * @param array  $menu        Menu of the dashboard
@@ -51,6 +53,12 @@ class dashboard
 
         if ($currentOrganization = \laabs::getToken("ORGANIZATION")) {
             $this->storage->currentOrganization = $currentOrganization;
+        }
+
+        if (isset(\laabs::configuration('auth')['blacklistUserStories'])) {
+            $this->blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
+        } else {
+            $this->blacklistUserStories = null;
         }
 
         $this->storage->menu = $this->filterMenuAuth($menu);
@@ -140,6 +148,15 @@ class dashboard
     {
         // At least one requirement must be fulfilled
         foreach ($requirement as $requirementItem) {
+            // Check privilege exists (avoid blacklisted)
+            if (is_array($this->blacklistUserStories)) {
+                foreach ($this->blacklistUserStories as $blacklistUserStory) {
+                    if (fnmatch($blacklistUserStory, $requirementItem)) {
+                        continue 2;
+                    }
+                }
+            }
+
             if (substr($requirementItem, -2) == '/*') {
                 foreach ($this->userPrivileges as $userPrivilege) {
                     $domain = explode('/', $userPrivilege)[0].'/?';
