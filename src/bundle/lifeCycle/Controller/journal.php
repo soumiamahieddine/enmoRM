@@ -930,7 +930,7 @@ class journal
         }
         $resources = $archiveController->getDigitalResources($journal->archiveId, $checkAccess = false);
         $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
-        $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId);
+        $resIntegrity = $archiveController->verifyIntegrity($journal->archiveId, false);
 
         if (is_array($resIntegrity["error"]) && !empty($resIntegrity["error"])) {
             throw \laabs::newException(
