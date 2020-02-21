@@ -310,7 +310,8 @@ menu = "[
 ]"
 
 [auth]
-@include securityLevel.ini
+; If useSecurityLevel = true, uncomment the next lign
+;@include securityLevel.ini
 
 ; Add stronger verification on user possibilities based on security level
 useSecurityLevel = false
