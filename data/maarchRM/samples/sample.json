@@ -10,7 +10,7 @@
                     "address_type" : {
                         "title" : "Intitulé de l'adresse",
                         "type" : "string",
-                        "enum" : ["Personnelle", "Professionelle" ,"Secondaire"]
+                        "enum" : ["Personnelle", "Professionnelle" ,"Secondaire"]
                     },
                     "streetNumber" : {
                         "title" : "Numéro de voie",
