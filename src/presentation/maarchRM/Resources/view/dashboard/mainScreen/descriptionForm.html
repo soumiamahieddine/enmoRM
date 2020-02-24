@@ -319,8 +319,8 @@ input:invalid {
 
             if (descriptionField.default === "now") {
                 let date = new Date();
-                var day = date.getDate();
-                var month = date.getMonth() + 1;
+                var day = ('0' + (date.getDate())).slice(-2);
+                var month = ('0' + (date.getMonth()+1)).slice(-2);
                 var year = date.getFullYear();
 
                 let now = day + '-' + month + '-' + year;
