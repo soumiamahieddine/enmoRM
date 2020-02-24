@@ -935,7 +935,7 @@ input:invalid {
                     field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
                 } else {
-                    data = new Date(data).toLocaleDateString().replace(/\//g, "-");
+                    data = new Date(data).toLocaleDateString("fr").replace(/\//g, "-");
                     field.datepicker('setDate', data);
                 }
             }
