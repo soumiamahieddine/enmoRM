@@ -96,7 +96,7 @@ class AuthorizationOriginatingAgencyRequest extends AuthorizationRequest
             'medona/message',
             $message->messageId,
             $message,
-            $operationResult
+            true
         );
 
         $this->create($message);
