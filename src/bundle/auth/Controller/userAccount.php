@@ -53,7 +53,7 @@ class userAccount
         $this->sdoFactory = $sdoFactory;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
-        $this->adminUsers = $adminUsers;
+        $this->adminUsers = \laabs::configuration('auth')['adminUsers'];
         $this->hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
     }
 
@@ -98,7 +98,6 @@ class userAccount
         }
 
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
-        $queryAssert[] = "accountId!=['".$accountId."']";
 
         if (!empty($this->adminUsers) && !in_array($account->accountName, $this->adminUsers)) {
             $queryAssert[] = "accountId!=['".\laabs\implode("','", $this->adminUsers)."']";

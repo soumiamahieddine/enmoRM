@@ -23,7 +23,7 @@ namespace presentation\maarchRM\UserStory\app;
  * Interface for service
  *
  */
-interface serviceInterface
+interface accountInterface
 {
     /**
      * List all services to display
@@ -31,4 +31,11 @@ interface serviceInterface
      * @uses auth/serviceAccount/readIndex
      */
     public function readServiceTodisplay();
+
+    /**
+     * List all users to display
+     *
+     * @uses auth/userAccount/readUserlist
+     */
+    public function readUserTodisplay();
 }
