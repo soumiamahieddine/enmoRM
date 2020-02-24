@@ -686,6 +686,7 @@ class digitalResource
 
             $tgtfp = fopen($srcfile, 'w');
             stream_copy_to_stream($handler, $tgtfp);
+            rewind ($handler);
             fclose($tgtfp);
         }
 
