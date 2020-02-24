@@ -350,7 +350,7 @@ trait archiveEntryTrait
     {
         // Set archive name when mono document
         if (empty($archive->archiveName)) {
-            if (count($archive->digitalResources)) {
+            if (is_array($archive->digitalResources) && count($archive->digitalResources)) {
                 foreach ($archive->digitalResources as $digitalResource) {
                     if (isset($digitalResource->fileName)) {
                         $archive->archiveName = pathinfo($digitalResource->fileName, \PATHINFO_FILENAME);
