@@ -674,7 +674,7 @@ class digitalResource
         $handler = $digitalResource->getHandler();
         $metadata = stream_get_meta_data($handler);
         if ($metadata['wrapper_type'] == 'plainfile') {
-            $srcfile = $handler;
+            $srcfile = $metadata['uri'];
         } else {
             $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
 
