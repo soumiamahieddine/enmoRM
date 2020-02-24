@@ -38,7 +38,7 @@ class retentionRule
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
      * @param \dependency\csv\Csv     $csv        Csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv = null)
     {
         $this->sdoFactory = $sdoFactory;
         $this->csv = $csv;

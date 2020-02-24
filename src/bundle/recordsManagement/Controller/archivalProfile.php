@@ -44,12 +44,12 @@ class archivalProfile
      * @param bool                    $notifyModification The state of the fonction of notification modification
      * @param string                  $profilesDirectory  The profile directory
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv, $notifyModification, $profilesDirectory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv = null, $notifyModification, $profilesDirectory)
     {
         $this->sdoFactory = $sdoFactory;
         $this->csv = $csv;
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
-        $this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme'); 
+        $this->descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
         //$this->descriptionFields = \Laabs::newController('recordsManagement/descriptionField')->index();
 
         if (!is_dir($profilesDirectory) && !empty($profilesDirectory)) {
