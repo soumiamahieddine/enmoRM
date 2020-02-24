@@ -531,7 +531,10 @@ msgid "recordsManagement/archivalProfile/readArchivalprofileExport_profileRefere
 msgstr "Export du profil"
 
 msgid "recordsManagement/descriptionRef/read_name_"
-msgstr "Lecture d'un référentiel de métadonnées descriptives"
+msgstr "Lecture d'un référentiel descriptif"
+
+msgid "recordsManagement/descriptionRef/read_name__key_"
+msgstr "Lecture d'un identifiant de référentiel descriptif"
 
 msgid "documentManagement/fulltext/read"
 msgstr "Lecture plein texte"
@@ -827,7 +830,7 @@ msgstr "Acceptation d'un bordereau de demande de restitution"
 msgid "medona/archiveRestitution/updateRequestreplyrejection"
 msgstr "Rejet d'un bordereau de demande de restitution"
 
-msgid "medona/archiveRestitution/updateProcessBatch"
+msgid "medona/archiveRestitution/updateProcessbatch"
 msgstr "Traitement des demandes de restitution"
 
 msgid "medona/archiveRestitution/updateProcess_message_"
@@ -1097,6 +1100,12 @@ msgstr "Lecture des membres de tous les rôles"
 msgid "auth/role/readIndex"
 msgstr "Lecture de tous les rôles"
 
+msgid "auth/role/readExport"
+msgstr "Lecture des référentiels exportables"
+
+msgid "auth/role/createImport"
+msgstr "Import d'un référentiel"
+
 msgid "organization/orgType/readList"
 msgstr "Lecture de tous les types d'organisation"
 
@@ -1183,6 +1192,13 @@ msgstr "Lecture de tous les contacts d'une organisation"
 
 #msgid "organization/organization/create_orgId_Contact_contactId_"
 #msgstr "Création d'un contact dans une organisation"
+
+msgid "organization/organization/deleteArchivalprofileaccess"
+msgstr "Suppression du lien entre un profil d'archive et une activité"
+
+
+msgid "organization/organization/readAccountpositions_accountId_"
+msgstr "Lecture de la position d'un utilisateur"
 
 msgid "organization/servicePosition/updateCurrent_orgId_"
 msgstr "Changement de position de travail d'un compte de service"
@@ -1315,6 +1331,12 @@ msgstr "Création d'un jeton pour un compte de service"
 
 msgid "auth/serviceAccount/readQuery_query_"
 msgstr "Auto-complétion des comptes de service"
+
+msgid "auth/userAccount/updateMyProfile"
+msgstr "Mise à jour d'un profil utilisateur"
+
+msgid "auth/userAccount/readSecurityLevel"
+msgstr "Lecture du niveau de sécurité d'un utilisateur"
 
 msgid "auth/userAccount/readIndex"
 msgstr "Liste des utilisateurs"
@@ -1538,8 +1560,11 @@ msgstr "Modification d'une archive publique"
 msgid "archivesPubliques/content/delete_contentId_"
 msgstr "Suppression d'une archive publique"
 
+msgid "archivesPubliques/thesaurus/read_name_"
+msgstr "Lecture d'un thésaurus dans le registre"
+
 msgid "archivesPubliques/thesaurus/read_name__query_"
-msgstr "Recherche thésaurus dans le registre"
+msgstr "Recherche d'un thésaurus dans le registre"
 
 msgid "recordsManagement/descriptionField/create"
 msgstr "Création d'un champ de description"
@@ -1555,6 +1580,15 @@ msgstr "Lecture d'un champ de description"
 
 msgid "recordsManagement/descriptionField/update"
 msgstr "Modification d'un champ de description"
+
+msgid "recordsManagement/descriptionRef/read_name__key_"
+msgstr "Lecture d'une entrée dans un référentiel descriptif"
+
+msgid "recordsManagement/descriptionScheme/read_name_"
+msgstr "Lecture d'un schéma de description"
+
+msgid "recordsManagement/descriptionScheme/read_name_Descriptionfields"
+msgstr "Lecture des champs d'un schéma de description"
 
 msgid "filePlan/filePlan/readTree"
 msgstr "Lecture du plan de classement"
