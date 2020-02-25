@@ -672,23 +672,19 @@ class digitalResource
         }
 
         $handler = $digitalResource->getHandler();
-        $metadata = stream_get_meta_data($handler);
-        if ($metadata['wrapper_type'] == 'plainfile') {
-            $srcfile = $metadata['uri'];
+
+        $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
+
+        if (isset($digitalResource->fileName)) {
+            $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->fileName;
         } else {
-            $tempdir = str_replace("/", DIRECTORY_SEPARATOR, \laabs\tempdir());
-
-            if (isset($digitalResource->fileName)) {
-                $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->fileName;
-            } else {
-                $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
-            }
-
-            $tgtfp = fopen($srcfile, 'w');
-            stream_copy_to_stream($handler, $tgtfp);
-            rewind ($handler);
-            fclose($tgtfp);
+            $srcfile = $tempdir.DIRECTORY_SEPARATOR.$digitalResource->resId;
         }
+
+        $tgtfp = fopen($srcfile, 'w');
+        stream_copy_to_stream($handler, $tgtfp);
+        rewind($handler);
+        fclose($tgtfp);
 
         $conversionRule = $this->sdoFactory->read("digitalResource/conversionRule", array('puid' => $digitalResource->puid));
 
@@ -696,10 +692,7 @@ class digitalResource
 
         $tgtfile = $converter->convert($srcfile, $outputFormats[$conversionRule->targetPuid]);
 
-        // Is tempdir was set, delete temp file
-        if (isset($tempdir)) {
-            unlink($srcfile);
-        }
+        unlink($srcfile);
 
         if (!file_exists($tgtfile)) {
             return false;
