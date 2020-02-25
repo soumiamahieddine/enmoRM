@@ -163,19 +163,4 @@ class conversionRule
 
         return $this->json->save();
     }
-
-    /**
-     * Cluster exception
-     * @param digitalResource/Exception/conversionRuleException $conversionRuleException
-     *
-     * @return string
-     */
-    public function conversionRuleException($conversionRuleException)
-    {
-        $this->json->message = $conversionRuleException->getMessage();
-        $this->json->message = $this->translator->getText($this->json->message);
-        $this->json->status = false;
-
-        return $this->json->save();
-    }
 }
