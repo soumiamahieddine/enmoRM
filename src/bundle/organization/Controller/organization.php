@@ -276,12 +276,6 @@ class organization
         foreach ($organizationList as $organization) {
             $parentOrgId = (string)$organization->parentOrgId;
 
-            if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
-                if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
-                    continue;
-                }
-            }
-
             if (empty($parentOrgId) && $owner) {
                 $tree[] = $organization;
                 continue;
@@ -290,6 +284,12 @@ class organization
                 || (string)$organization->orgId == (string) $user->ownerOrgId) {
                 $tree[] = $organization;
                 continue;
+            }
+
+            if ($user->ownerOrgId && $organization->ownerOrgId != $user->ownerOrgId) {
+                if (empty($parentOrgId) && $organization->orgId != $user->ownerOrgId) {
+                    continue;
+                }
             }
 
             if (!isset($organizationByParent[$parentOrgId])) {
