@@ -209,11 +209,6 @@ class ArchiveRestitutionRequest extends abstractMessage
                 $this->generate($message);
                 $this->save($message);
             }
-
-            $operationResult = true;
-
-            $message->object->unitIdentifier = $message->unitIdentifier;
-            $this->create($message);
         } catch (\Exception $e) {
             $message->status = "invalid";
             $this->create($message);
@@ -223,12 +218,14 @@ class ArchiveRestitutionRequest extends abstractMessage
             throw $e;
         }
 
+        $this->create($message);
+
         $this->lifeCycleJournalController->logEvent(
             'medona/sending',
             'medona/message',
             $message->messageId,
             $message,
-            $operationResult
+            true
         );
 
         return $message;
@@ -354,7 +351,7 @@ class ArchiveRestitutionRequest extends abstractMessage
         );
 
         $archiveRestitutionRequestReplyController = \laabs::newController('medona/ArchiveRestitutionRequestReply');
-        $replyMessage = $archiveRestitutionRequestReplyController->send($messageId, "400", $comment);
+        $replyMessage = $archiveRestitutionRequestReplyController->send($message, "400", $comment);
 
         return $replyMessage;
     }
