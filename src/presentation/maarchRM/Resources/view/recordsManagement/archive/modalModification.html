@@ -440,4 +440,12 @@
         }
     };
 
+    $("#modificationModal").on("shown.bs.modal", function() {
+        isModalOpen = true;
+    });
+
+    $("#modificationModal").on("hidden.bs.modal", function() {
+        isModalOpen = false;
+    });
+
 </script>
