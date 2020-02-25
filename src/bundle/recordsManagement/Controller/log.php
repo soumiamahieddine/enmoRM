@@ -468,14 +468,17 @@ class log implements archiveDescriptionInterface
         return $path;
     }
 
-    public function contents ($type, $archiveId, $resourceId) {
+    public function contents($type, $archiveId, $resourceId)
+    {
         $archiveController = \laabs::newController('recordsManagement/archive');
 
         $res = $archiveController->consultation($archiveId, $resourceId);
 
+        $stream = (stream_get_contents($res->attachment->data));
+
         $journal = $type . PHP_EOL;
         $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
-        $journal .= base64_decode($res->attachment->data);
+        $journal .= $stream;
 
         return $journal;
     }
