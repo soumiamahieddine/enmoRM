@@ -42,6 +42,9 @@ $("#archiveList").on('click', ".viewDocument", function() {
 
 // view the archive description
 $('#archiveList').on('click', '.viewArchive', function () {
+    if ($(this).closest('tr').attr('id') == undefined) {
+        return;
+    }
     archiveInfoModal.load($(this).closest('tr').attr('id'));
 });
 
