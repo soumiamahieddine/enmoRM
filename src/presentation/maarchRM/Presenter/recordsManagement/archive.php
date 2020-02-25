@@ -208,6 +208,29 @@ class archive
         $dataTable->setUnsearchableColumns(0);
         $dataTable->setSorting(array(array(5, 'desc')));
 
+        $titleExport = $this->view->translator->getText(
+            "Export to ",
+            false,
+            "recordsManagement/messages"
+        );
+
+        $dataTable->setColumnsToExport([1, 2, 3, 4, 5, 6, 7]);
+        $dataTable->setExport(
+            [
+                [
+                    "exportType" => "csv",
+                    "text" => "<i class='fa fa-download'></i> CSV",
+                    "titleAttr" => $titleExport . "CSV"
+                ],
+                [
+                    "exportType" => "pdf",
+                    "text" => "<i class='fa fa-download'></i> PDF",
+                    "titleAttr" => $titleExport . "PDF"
+                ]
+            ],
+            false
+        );
+
         $this->readPrivilegesOnArchives();
 
         $this->view->setSource("accessRules", $accessRules);
@@ -235,14 +258,13 @@ class archive
             return $contents;
         }
 
-        $contents = base64_decode($digitalResource->attachment->data);
         $mimetype = $digitalResource->mimetype;
 
         \laabs::setResponseType($mimetype);
         $response = \laabs::kernel()->response;
         $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->attachment->filename."");
 
-        return $contents;
+        return $digitalResource->attachment->data;
     }
 
     /**
@@ -318,6 +340,7 @@ class archive
         $this->view->setSource("acceptArchiveWithoutProfile", $archive->acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $archive->acceptUserIndex);
 
+
         $this->view->translate();
         $this->view->merge();
         return $this->view->saveHtml();
@@ -355,7 +378,7 @@ class archive
 
         $canDeleteResource = $canAddResource = false ;
 
-        if (($currentService->registrationNumber == $archive->archiverOrgRegNumber || in_array("owner", $currentService->orgRoleCodes))
+        if (($currentService->registrationNumber == $archive->archiverOrgRegNumber || ($currentService->orgRoleCodes && in_array("owner", $currentService->orgRoleCodes)))
             && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/addResource")
             && $archive->status === 'preserved') {
             $canDeleteResource = $canAddResource = true ;
@@ -405,6 +428,36 @@ class archive
             $archive->descriptionObject = $archive->descriptionObject[0];
         }
 
+        $thesaurusNames = [
+            "corpname",
+            "famname",
+            "geogname",
+            "name",
+            "occupation",
+            "persname",
+            "subject",
+            "genreform",
+            "function"
+            ];
+
+        $thesaurusList = new \stdClass();
+        // Set default thesaurus
+        $thesaurusList->subject = "T1";
+        $thesaurusList->genreform = "T3";
+        $thesaurusList->function = "T2";
+
+        $conf = \laabs::Configuration()['recordsManagement'];
+        
+        if (isset($conf['refDirectory']) || is_dir($conf['refDirectory'])) {
+            $refDirectory = $conf['refDirectory'];
+            foreach ($thesaurusNames as $thesaurusName) {
+                if (glob($conf['refDirectory'].'/'.$thesaurusName.'.*')) {
+                    $thesaurusList->$thesaurusName = $thesaurusName;
+                }
+            }
+        }
+
+        $this->view->setSource('thesaurus', $thesaurusList);
         $this->view->setSource('languageCodes', $languageCodes);
         $this->view->setSource("archive", $archive);
 
@@ -932,7 +985,7 @@ class archive
      */
     public function view($digitalResource)
     {
-        $this->json->url = \laabs::createPublicResource($digitalResource->getContents());
+        $this->json->url = \laabs::createPublicResource($digitalResource->getHandler());
 
         return $this->json->save();
     }
@@ -1310,7 +1363,7 @@ class archive
      */
     protected function getOwnerOriginatorsOrgs($currentService)
     {
-        $originators = \laabs::callService('organization/organization/readIndex', 'isOrgUnit=true');
+        $originators = \laabs::callService('organization/organization/readIndex', null, 'isOrgUnit=true');
 
         $userPositionController = \laabs::newController('organization/userPosition');
         $orgController = \laabs::newController('organization/organization');
@@ -1336,7 +1389,7 @@ class archive
         foreach ($userServices as $userService) {
             foreach ($originators as $originator) {
                 if ($owner || $originator->registrationNumber == $userService->registrationNumber) {
-                    if (!isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
+                    if (!empty((string) $originator->ownerOrgId) && !isset($ownerOriginatorOrgs[(string) $originator->ownerOrgId])) {
                         $orgObject = \laabs::callService('organization/organization/read_orgId_', (string) $originator->ownerOrgId);
                         $ownerOriginatorOrgs[(string) $orgObject->orgId] = new \stdClass();
                         $ownerOriginatorOrgs[(string) $orgObject->orgId]->displayName = $orgObject->displayName;
@@ -1347,7 +1400,6 @@ class archive
                 }
             }
         }
-
         return $ownerOriginatorOrgs;
     }
 }

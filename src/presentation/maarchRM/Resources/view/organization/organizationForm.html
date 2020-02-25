@@ -35,6 +35,10 @@
                 <input type="text" class="form-control" name="registrationNumber" placeholder="Registration number">
                 <small class="help-block">You must use only letters and the special character '_'</small>
             </div>
+            <div class="form-group" id="orgForm_enabled" style="display: none">
+                <label>Enabled</label>
+                <input type="checkbox" name="enabled" id="enabled" data-toggle="toggle">
+            </div>
             <div id="organization_orgUnitInfo">
                 <div class="form-group">
                     <label>Organization role</label>
@@ -127,7 +131,7 @@
         $('#organization_orgNames').find('input[name="displayName"]').val($(this).val());
     })
 
-    // Submit 
+    // Submit
     $('#organization_submit').on('click', function() {
         OrganizationForm.submit();
     })
@@ -137,7 +141,7 @@
         OrganizationForm.closeForm();
     })
 
-    // Show orgNames 
+    // Show orgNames
     $('#organization_showOrgNamesForm').on('click', function() {
         var icon = $(this).find('i');
 
@@ -188,6 +192,7 @@
             var orgForm = $('#organization_organizationForm');
 
             orgForm.css('display', '');
+            $('#orgForm_enabled').css('display', 'none');
             if (parentName != undefined) {
                 orgForm.find('small.displayName').text($('#parent_text').html() + ' : ' + parentName);
                 orgForm.find('input[name="parentOrgId"]').val(parentId);
@@ -220,8 +225,20 @@
             }
 
             if (organization.isUsed) {
-                orgForm.find('[name="registrationNumber"]').prop('readonly', true); 
+                orgForm.find('[name="registrationNumber"]').prop('readonly', true);
                 orgForm.find('.orgFormTitle').text($('#orgUnit_text').html());
+            }
+
+
+            if (organization.isOrgUnit) {
+                $('#orgForm_enabled').css('display', '');
+                if (organization.enabled) {
+                    $('#enabled').bootstrapToggle('on');
+                } else {
+                    $('#enabled').bootstrapToggle('off');
+                }
+            } else {
+                $('#orgForm_enabled').css('display', 'none');
             }
 
             if (organization.orgRoleCodes) {
@@ -249,7 +266,7 @@
                 var action = "/organization/" + organization.orgId;
                 var method = "PUT";
             }
-            
+
             if(organization.displayName == null || organization.registrationNumber == null) {
                 gritter.show($('#empty_text').html(),false);
                 return false;
@@ -268,9 +285,9 @@
                         
                         if(method == "POST") {
                             organization.orgId = response.orgId;
-                            Tree.addNode(organization.parentOrgId, organization);
+                            Org.add(organization.parentOrgId, organization);
                         } else {
-                            Tree.updateNode(organization);
+                            Org.update(organization);
                         }
                     }
                 },
@@ -316,9 +333,14 @@
                 if(value == "") {
                     value = null;
                 }
-                orgObject[$(this).attr('name')] = value;
-            })
-
+                if ($(this).attr('name') !== "enabled") {
+                    orgObject[$(this).attr('name')] = value;
+                } else if ($('#orgForm_enabled').is(':visible')) {
+                    orgObject.enabled = $('#enabled').prop('checked');
+                } else {
+                    orgObject.enabled = true;
+                }
+            });
             orgObject.isOrgUnit = $('#organization_organizationForm').find('[name="isOrgUnit"]').prop('checked');
 
             var orgRoles = $('#organization_orgRoleList').find('div');
@@ -358,7 +380,7 @@
                 nameForm.click();
             }
 
-            Tree.unselect();
+            Org.unselect();
         }
     }
 
@@ -375,5 +397,20 @@
         } else {
             formGroup.removeClass('has-success').addClass('has-error');
         }
+    });
+
+    $('#enabled').on("click", function(){
+        var status = $('#enabled').prop('checked');
+        $.ajax({
+            url         : "/organization/"+orgId+"/status/"+status,
+            type        : "PUT",
+            dataType  : 'json',
+            success     : function(response) {
+                gritter.show(response.message, response.status, response.errors);
+            },
+            error    : function(response) {
+                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+            }
+        })
     });
 </script>

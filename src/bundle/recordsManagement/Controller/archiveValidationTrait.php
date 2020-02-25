@@ -242,6 +242,14 @@ trait archiveValidationTrait
      */
     public function validateManagementMetadata($archive)
     {
+        $organization = $this->sdoFactory->read('organization/organization', ['registrationNumber' => $archive->originatorOrgRegNumber]);
+
+        if (!is_null($organization->enabled) && $organization->enabled === false) {
+            throw new \core\Exception("The deposit has been blocked because activity is disabled.");
+        }
+
+        $this->checkRights($archive);
+
         if (isset($archive->archivalProfileReference) && !$this->sdoFactory->exists("recordsManagement/archivalProfile", ["reference"=>$archive->archivalProfileReference])) {
             throw new \core\Exception\NotFoundException("The archival profile reference not found");
         }
@@ -384,15 +392,26 @@ trait archiveValidationTrait
      */
     public function validateDigitalResource($digitalResource)
     {
-        if ($digitalResource->size === 0) {
+        if ($digitalResource->size == 0) {
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
-        $contents = base64_decode($digitalResource->getContents());
-        $digitalResource->setContents($contents);
+        // Create temp file
+        $handler = $digitalResource->getHandler();
         $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
-        file_put_contents($filename, $contents);
+        $temp = fopen($filename, 'w');
+        stream_copy_to_stream($handler, $temp);
+        rewind($handler);
+        fclose($temp);
 
+        $digitalResource->size = filesize($filename);
+
+        if (!isset($digitalResource->mimetype)) {
+            $finfo = new \finfo();
+            $mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
+            $digitalResource->mimetype = $mimetype;
+        }
+        
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {
             $format = $this->formatController->identifyFormat($filename);

@@ -71,8 +71,9 @@ class datePicker
         
         $this->parameters = new \StdClass();
         $this->parameters->weekstart = 1;
-        $this->parameters->autoclose = 'true';
+        $this->parameters->autoclose = true;
         $this->parameters->todayHighlight = true;
+        $this->parameters->todayBtn = 'linked';
 
         $format = \laabs::getDateFormat();
         $format = str_replace('y', 'yy', $format);   // 2 digits year
@@ -137,6 +138,6 @@ EOS;
         $variableScript = $this->element->ownerDocument->createElement('script');
         $variableCdataSection = $this->element->ownerDocument->createCDataSection($parametersScript);
         $variableScript->appendChild($variableCdataSection);
-        $this->element->ownerDocument->appendChild($variableScript);
+        $this->element->ownerDocument->getContainer()->appendChild($variableScript);
     }
 }

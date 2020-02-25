@@ -48,6 +48,17 @@ interface serviceAccountInterface
      */
     public function readNewservice();
 
+
+    /**
+     * Create a csv file
+     *
+     * @param  integer $limit Max number of results to display
+     *
+     * @action auth/serviceAccount/exportCsv
+     *
+     */
+    public function readExport($limit = null);
+
     /**
      * Prepares access control object for update or create
      *
@@ -107,9 +118,20 @@ interface serviceAccountInterface
 
     /**
      * Search the service account for typehead
+     *
      * @param string $query The query string
      *
      * @action auth/serviceAccount/queryServiceAccounts
      */
     public function readQuery_query_($query = null);
+
+    /**
+     * @param resource  $data     Data base64 encoded or not
+     * @param boolean   $isReset  Reset tables or not
+     *
+     * @action auth/serviceAccount/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }

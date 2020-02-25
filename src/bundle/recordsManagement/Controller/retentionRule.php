@@ -30,26 +30,31 @@ class retentionRule
 {
 
     protected $sdoFactory;
+    protected $csv;
     protected $lifeCycleJournalController;
 
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory The sdo factory
+     * @param \dependency\csv\Csv     $csv        Csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv = null)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
         $this->lifeCycleJournalController = \laabs::newController("lifeCycle/journal");
     }
 
     /**
      * List the retention rules
      *
+     * @param integer $limit Maximal number of results to dispay
+     *
      * @return recordsManagement/retentionRule[] The list of retention rules
      */
-    public function index()
+    public function index($limit = null)
     {
-        $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule');
+        $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule', null, null, null, null, $limit);
 
         return $retentionRules;
     }
@@ -154,5 +159,63 @@ class retentionRule
         $retentionRule = $this->sdoFactory->find('recordsManagement/retentionRule', "code = '$code'");
 
         return $retentionRule;
+    }
+
+    public function exportCsv($limit = null)
+    {
+        $retentionRules = $this->sdoFactory->find('recordsManagement/retentionRule', null, null, null, null, $limit);
+        $retentionRules = \laabs::castMessageCollection($retentionRules, 'recordsManagement/retentionRule');
+
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $retentionRules, 'recordsManagement/retentionRule', true);
+        return $handler;
+    }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $retentionRules = $this->index();
+
+                foreach ($retentionRules as $retentionRule) {
+                    $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', "retentionRuleCode='$retentionRule->code'");
+                    foreach ($archivalProfiles as $archivalProfile) {
+                        $archivalProfile->retentionRuleCode = null;
+                        $this->sdoFactory->update($archivalProfile, 'recordsManagement/archivalProfile');
+                    }
+
+                    $this->sdoFactory->delete($retentionRule, 'recordsManagement/retentionRule');
+                }
+            }
+
+            $retentionRules = $this->csv->readStream($data, 'recordsManagement/retentionRule', true);
+            foreach ($retentionRules as $key => $retentionRule) {
+
+                if ($isReset
+                    || !$this->sdoFactory->exists('recordsManagement/retentionRule', $retentionRule->code)
+                ) {
+                    $this->sdoFactory->create($retentionRule, 'recordsManagement/retentionRule');
+                } else {
+                    $this->sdoFactory->update($retentionRule, 'recordsManagement/retentionRule');
+                }
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
     }
 }

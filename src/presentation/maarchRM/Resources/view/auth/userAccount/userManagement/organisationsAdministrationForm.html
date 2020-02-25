@@ -1,5 +1,6 @@
 <div class="form-group">
     <div class="form-group">
+        <?merge whatAmI.ifne('userWithoutSecurityLevel') ?>
         <div id="selectOrgGroup" class="input-group col-md-12">
             <select id="orgSelect" class="form-control">
                 <option></option>
@@ -28,6 +29,7 @@
         </div>
     </div>
 </div>
+<span class="hide" id="whatAmI"><?merge whatAmI ?></span>
 <span class="hide" id="ownerOrgId"><?merge user.ownerOrgId ?></span>
 <span class="hide" id="noServiceFound">No service found</span>
 <span class="hide" id="editMyProfile">true</span>
@@ -35,11 +37,12 @@
 <script>
 
     window.localStorage.clear();
-
+    var whatAmI = $('#whatAmI').text();
+    var displayOrganizationsUrl = '/organizations/todisplay?orgUnit=true';
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplay?orgUnit=true&ownerOrg=false', ttl: '0'},
+        prefetch: {url: displayOrganizationsUrl, ttl: '0'},
         limit: 100
     });
 
@@ -61,15 +64,23 @@
                 },
                 suggestion: function(organization) {
                     var display;
-                    if(organization.displayName) {
+                    if(organization.displayName && whatAmI != 'userWithoutSecurityLevel') {
                         display =
                             "<span>"
                             + "<span class='fa fa-user' >&nbsp;</span>"
                             + "<span style='font-family:Helvetica, sans-serif;'>"
                             + organization.displayName
                             + "</span></span><br>";
-                    }
-                    else {
+                    } else if (organization.ownerOrgName && whatAmI == 'userWithoutSecurityLevel') {
+                        display =
+                            "<span>"
+                            + "<span class='fa fa-user' >&nbsp;</span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>"
+                            + organization.ownerOrgName
+                            + " > "
+                            + organization.displayName
+                            + "</span></span><br>";
+                    } else {
                         display = this.empty();
                     }
                     return display;
@@ -91,17 +102,19 @@
         $("#orgTypeahead").prop('org', suggestion);
     });
 
-    $.ajax({
-        type: 'GET',
-        url: '/organizations/todisplay?orgUnit=false&ownerOrg=true',
-        contentType : 'application/json',
-        dataType    : 'json',
-        success: function (response) {
-            $.each(response, function(index, org){
-                addSelectOrgs(org);
-            })
-        }
-    });
+    if (whatAmI != 'userWithoutSecurityLevel') {
+        $.ajax({
+            type: 'GET',
+            url: '/organizations/todisplay?orgUnit=false&ownerOrg=true',
+            contentType : 'application/json',
+            dataType    : 'json',
+            success: function (response) {
+                $.each(response, function(index, org){
+                    addSelectOrgs(org);
+                })
+            }
+        });
+    }
 
     function addSelectOrgs(org){
         var orgSelect = $('#orgSelect');
@@ -111,7 +124,7 @@
             .val(org.orgId)
             .text(org.displayName)
             .appendTo(orgSelect);
-            
+
         if (ownerOrgId == org.orgId) {
             option.prop('selected', true);
         }
@@ -175,7 +188,9 @@
             .prependTo(btn);
     }
 
-    selectOrTypeheadOrg();
+    if (whatAmI != 'userWithoutSecurityLevel') {
+        selectOrTypeheadOrg();
+    }
 
     $("#adminUser").on('change', function () {
         selectOrTypeheadOrg();

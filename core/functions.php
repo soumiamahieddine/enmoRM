@@ -620,3 +620,30 @@ function in_array($value, $object)
 
     return false;
 }
+
+/**
+ * Calculates hash from a resource
+ *
+ * @param string   $algo
+ * @param resource $handler
+ *
+ * @return string
+ */
+function hash_stream($algo, $handler)
+{
+    $metadata = stream_get_meta_data($handler);
+
+    if ($metadata['wrapper_type'] == 'plainfile') {
+        $hash = strtolower(hash_file($algo, $metadata['uri']));
+    } else {
+        $tmpfile = tempnam();
+        $tmphdl = fopen($tmpfile, 'w');
+        stream_copy_to_stream($handler, $tmphdl);
+        rewind($handler);
+        fclose($tmphdl);
+        $hash = strtolower(hash_file($algo, $tmpfile));
+        unlink($tmpfile);
+    }
+    
+    return $hash;
+}

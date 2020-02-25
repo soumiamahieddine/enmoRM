@@ -13,6 +13,14 @@
                 <i>Select a new position for the organization</i>
             </div>
             <br/>
+            <?merge isOrgTree.bool().not() ?>
+            <div class="form-group ">
+                <label class='col-md-2 control-label'>New position</label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control input-sm" placeholder="Organization or activity" id="organization_typeahead"/>
+                </div>
+            </div>
+            <br>
             <div class="form control">
                 <button type="button" class="btn btn-success" id="organization_submitMove" title="Move">Move</button>
                 <button type="button" class="btn btn-warning" id="organization_cancelMove" title="Cancel">Cancel</button>
@@ -21,8 +29,81 @@
     </div>
     <span class="hide" id="root_text">Root</span>
 </div>
-
+<span class="hide" id="no_org_found_text">No org found</span>
 <script>
+
+    $('#organization_moveForm').ready(function() {
+        var orgs = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {url: '/organizations/todisplay?orgUnit=true&ownerOrg=true', ttl: '0'},
+            limit: 100
+        });
+        orgs.initialize();
+
+        // initialize typeahead
+        $('#organization_typeahead').typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 2
+            },
+            {
+                name: 'users',
+                displayKey: 'displayName',
+                templates: {
+                    empty: function() {
+                        return "<span class='well well-sm'>"+$('#no_org_found_text').text()+"</span>";
+                    },
+                    suggestion: function(org) {
+                        var display;
+
+                        if (org.ownerOrgName !== undefined) {
+                            display =
+                                "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>"
+                                + org.ownerOrgName
+                                + " > "
+                                + org.displayName
+                                + "</span></span><br>";
+                        } else {
+                            display =
+                                "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>"
+                                + org.displayName
+                                + "</span></span><br>";
+                        }
+
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    orgs.search(query, function(suggestions) {
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        ).on('typeahead:selected', function($event, suggestion, source) {
+            $("#organization_typeahead").data('org', suggestion);
+            $('#organization_submitMove').prop('disabled', false);
+            $('#organization_newParent').text(suggestion.displayName);
+
+            var orgForm = $('#organization_moveForm');
+            orgForm.find('input[name="newParentOrgId"]').val(suggestion.orgId);
+            orgForm.find('input[name="newOwnerOrgId"]').val(suggestion.ownerOrgId);
+        });
+    });
+
+    $('#organization_typeahead').on('keyup', function(){
+        var btn = $('#organization_submitMove');
+        var input = $(this);
+
+        btn.prop('disabled', true);
+    })
+
     //cancel
     $("#organization_cancelMove").on('click', function() {
         OrganizationShifting.close();
@@ -54,7 +135,7 @@
                 $('#organization_orgTree').find('.organizationNode').children('input[type="checkbox"]').not(select).removeClass('hide');
                 $('#organization_submitMove').prop('disabled', false).data("orgType", "organization");
             } else {
-                $('#organization_orgTree').find('.orgUnitNode input[type="checkbox"]').not(select).removeClass('hide');
+                $('#organization_orgTree').find('input[type="checkbox"]').not(select).removeClass('hide');
                 $('#organization_submitMove').prop('disabled', true).data("orgType", "orgUnit");
             }
 
@@ -103,7 +184,7 @@
                 success: function(response) {
                     gritter.show(response.message, response.status, response.errors);
                     if (response.status) {
-                        Tree.loadTree();
+                        Org.load();
                         OrganizationShifting.close();
                     }
                 },
@@ -118,6 +199,7 @@
             $('#organization_moveForm').find('input').val('');
             $('#organization_orgTree').find('input[type="checkbox"]').prop('checked', false).addClass('hide');
             $('#organization_newParent').text($('#root_text').html());
+            $('#organization_typeahead').typeahead('val','');
         }
     }
 

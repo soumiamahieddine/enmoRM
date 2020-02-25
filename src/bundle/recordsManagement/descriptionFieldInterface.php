@@ -40,6 +40,16 @@ interface descriptionFieldInterface
     public function create($descriptionField);
 
     /**
+     * Create a csv file
+     *
+     * @param  integer $limit Max number of results to display
+     *
+     * @action recordsManagement/descriptionField/exportCsv
+     *
+     */
+    public function readExport($limit = null);
+
+    /**
      * Read a description field
      *
      * @action recordsManagement/descriptionField/read
@@ -63,4 +73,14 @@ interface descriptionFieldInterface
      *
      */
     public function delete_name_();
+
+    /**
+     * @param resource  $data     Data base64 encoded or not
+     * @param boolean   $isReset  Reset tables or not
+     *
+     * @action recordsManagement/descriptionField/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }

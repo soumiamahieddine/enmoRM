@@ -197,7 +197,7 @@
         pathList       : [],
         showArchivePath: false,
 
-        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, locked, acceptArchivesWithoutProfiles, pathList) {
+        getfolderContents: function(orgRegNumber, folderId, archivalProfiles, disabled, locked, acceptArchivesWithoutProfiles, pathList) {
             this.orgRegNumber = orgRegNumber;
             this.folderId = folderId;
             this.pathList = pathList;
@@ -221,13 +221,17 @@
                 $('#folderToolbarImport').removeAttr('disabled');
             }
 
+            if (disabled) {
+                $('#folderToolbarImport').attr('disabled', 'disabled');
+            }
+
             $.ajax({
                 url         : url,
                 type        : "GET",
                 dataType    : 'json',
                 success     : function (response) {
                     ArchiveFolderList.buildResultList(response.archives);
-                    if (locked) {
+                    if (locked || disabled) {
                         ArchiveFolderList.folderPanel.find('.addChildrenArchive').remove();
                     }
                 },
@@ -255,7 +259,15 @@
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives, options = null, showArchivePath = false) {
+        buildResultList: function(archives, options, showArchivePath) {
+            // to inititate default value and avoid bug on IE 11
+            if (options === undefined) {
+                options = null;
+            }
+            if (showArchivePath === undefined) {
+                showArchivePath = false;
+            }
+
             trigger("clearDetail.recordsManagement");
             this.showArchivePath = showArchivePath;
 
@@ -364,7 +376,7 @@
                     var title = ""
 
                     if (archive.hasClass('bg-info')) {
-                        $('#folderContentList').find('.bg-info').each(function() {
+                        $('#folderContentList').find('.archive.selected').each(function() {
                             archiveIds.push($(this).attr('id'));
                             title = archiveIds.length + ' ' + $('#archives_text').text();
                         })
@@ -456,10 +468,10 @@
         ArchiveFolderList.initDragNDrop();
     });
 
-    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList) {
+    $('#folderPanel').onEvent("loadFolder.recordsManagement", function(e, path, orgRegNumber, folderId, profiles, disabled, locked, acceptArchiveWithoutProfile, pathList) {
         ArchiveFolderList.show();
         FolderBreadcrumb.load(path);
-        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, locked, acceptArchiveWithoutProfile, pathList);
+        ArchiveFolderList.getfolderContents(orgRegNumber, folderId, profiles, disabled, locked, acceptArchiveWithoutProfile, pathList);
     })
 
     $('#folderPanel').onEvent("showFolder.recordsManagement", function() {

@@ -385,10 +385,10 @@ var DataList = {
 
         if (checkbox.hasClass('fa-square-o')) {
             checkbox.removeClass('fa-square-o').addClass('fa-check-square-o')
-                    .closest('.dataListElement').addClass('bg-info');
+                    .closest('.dataListElement').addClass('bg-info selected');
         } else {
             checkbox.removeClass('fa-check-square-o').addClass('fa-square-o')
-                    .closest('.dataListElement').removeClass('bg-info');
+                    .closest('.dataListElement').removeClass('bg-info selected');
         }
     },
 

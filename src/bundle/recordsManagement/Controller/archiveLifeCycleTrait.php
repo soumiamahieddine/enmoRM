@@ -54,7 +54,9 @@ trait archiveLifeCycleTrait
 
         if ($digitalResource && $logDigitalResources) {
             $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
-            $eventItems['address'] = $digitalResource->address[0]->path;
+            if (is_array($digitalResource->address) && !empty($digitalResource->address)) {
+                $eventItems['address'] = $digitalResource->address[0]->path;
+            }
 
             $res = $this->lifeCycleJournalController->logEvent(
                 $type,
@@ -63,13 +65,14 @@ trait archiveLifeCycleTrait
                 $eventItems,
                 $operationResult
             );
-
         } elseif (!empty($archive->digitalResources) && $logDigitalResources) {
             $res = [];
 
             foreach ($archive->digitalResources as $digitalResource) {
                 $eventItems = array_merge($eventItems, get_object_vars($digitalResource));
-                $eventItems['address'] = $digitalResource->address[0]->path;
+                if (is_array($digitalResource->address) && !empty($digitalResource->address)) {
+                    $eventItems['address'] = $digitalResource->address[0]->path;
+                }
 
                 $res[] = $this->lifeCycleJournalController->logEvent(
                     $type,
@@ -79,7 +82,6 @@ trait archiveLifeCycleTrait
                     $operationResult
                 );
             }
-
         } else {
             $eventItems['address'] = $archive->storagePath;
 
@@ -347,10 +349,10 @@ trait archiveLifeCycleTrait
         $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'retentionStartDate' => (string) $retentionRule->retentionStartDate,
+            'retentionStartDate' => $retentionRule->retentionStartDate,
             'retentionDuration' => (string) $retentionRule->retentionDuration,
             'finalDisposition' => (string) $retentionRule->finalDisposition,
-            'previousStartDate' => (string) $retentionRule->previousStartDate,
+            'previousStartDate' => $retentionRule->previousStartDate,
             'previousDuration' => (string) $retentionRule->previousDuration,
             'previousFinalDisposition' => (string) $retentionRule->previousFinalDisposition,
         );
@@ -377,9 +379,9 @@ trait archiveLifeCycleTrait
         $eventInfo = array(
             'originatorOrgRegNumber' => $archive->originatorOrgRegNumber,
             'archiverOrgRegNumber' => $archive->archiverOrgRegNumber,
-            'accessRuleStartDate' => (string) $accessRule->accessRuleStartDate,
+            'accessRuleStartDate' => $accessRule->accessRuleStartDate,
             'accessRuleDuration' => (string) $accessRule->accessRuleDuration,
-            'previousAccessRuleStartDate' => (string) $accessRule->previousAccessRuleStartDate,
+            'previousAccessRuleStartDate' => $accessRule->previousAccessRuleStartDate,
             'previousAccessRuleDuration' => (string) $accessRule->previousAccessRuleDuration,
         );
 

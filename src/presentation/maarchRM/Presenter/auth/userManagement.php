@@ -32,9 +32,9 @@ class userManagement
      *
      */
     public $view;
-    
+
     protected $json;
-    protected $transletor;
+    protected $translator;
 
 
     /**
@@ -42,22 +42,21 @@ class userManagement
      * @param object $view A new empty Html document
      */
     public function __construct(
-            \dependency\html\Document $view,
-            \dependency\json\JsonObject $json,
-            \dependency\localisation\TranslatorInterface $transletor)
-    {
+        \dependency\html\Document $view,
+        \dependency\json\JsonObject $json,
+        \dependency\localisation\TranslatorInterface $translator
+    ) {
         $this->view = $view;
-        
         $this->json = $json;
-        $this->transletor = $transletor;
-        $this->transletor->setCatalog('auth/authenticationMessages');
+        $this->translator = $translator;
+        $this->translator->setCatalog('auth/authenticationMessages');
         $this->json->status = true;
     }
 
     /**
      * View for the users to display
      * @param array $users An array of user objects to display
-     * 
+     *
      * @return string The html view string
      */
     public function indexJson($users)
@@ -83,7 +82,7 @@ class userManagement
             $content = stream_get_contents($user->picture);
 
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_buffer($finfo,$content, FILEINFO_MIME_TYPE);
+            $mimeType = finfo_buffer($finfo, $content, FILEINFO_MIME_TYPE);
             $user->picture = "data:".$mimeType.";base64,".base64_encode($content);
         }
 
@@ -97,7 +96,7 @@ class userManagement
 
     /**
      * View edit user password
-     * 
+     *
      * @return string The html view string
      */
     public function editUserPassword()
@@ -113,18 +112,16 @@ class userManagement
 
         return $view->saveHtml();
     }
-    
+
     //JSON
     /**
      * Org unit users typeahead
      * @param array $users An array of users matching the user query
      *
      * @return string
-     * @author 
      **/
     public function queryUsers($users)
     {
         return json_encode($users);
     }
-    
 }

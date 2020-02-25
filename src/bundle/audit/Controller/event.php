@@ -212,11 +212,10 @@ class event
      * @param string    $accountId
      * @param string    $status
      * @param string    $term      Term to search
-     * @param string    $wording   Wording to search
      *
      * @return audit/event[] Array of audit/event object
      */
-    public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
+    public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null)
     {
         $queryParts = array();
         $queryParams = array();
@@ -244,24 +243,7 @@ class event
             }
         }
         if ($term) {
-            $wordings = explode(",", $wording);
-            $queryParts['term'] = null;
-            
-            foreach ($wordings as $wording) {
-                if($wording == 'all') {
-                    $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
-                } else {
-                    if ($queryParts['term']) {
-                        $queryParts['term'] .= " OR ".$wording." = '*".$term."*'";
-                    } else {
-                        $queryParts['term'] = "(".$wording." = '*".$term."*'";
-                    }
-                }
-            }
-            
-           if ($wording != 'all') {
-               $queryParts['term'] .= ")";
-           }
+            $queryParts['term'] = "(info ='*".$term."*' OR input = '*".$term."*' OR variables = '*".$term."*')";
         }
         if ($this->separateInstance) {
             $queryParts['instanceName'] = "instanceName = '".\laabs::getInstanceName()."'";

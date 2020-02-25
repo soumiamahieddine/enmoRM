@@ -155,11 +155,11 @@ interface archiveRestitutionInterface extends messageInterface
 
 
     /**
-     * Processes messages 
+     * Processes messages
      *
      * @action medona/ArchiveRestitutionRequest/processBatch
      */
-    public function updateProcessBatch();
+    public function updateProcessbatch();
 
     /**
      * Flag archives for restitution

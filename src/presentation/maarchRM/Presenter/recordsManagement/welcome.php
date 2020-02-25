@@ -120,6 +120,7 @@ class welcome
 
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
+        $this->view->setSource('locale', \laabs::configuration('dependency.localisation')['lang']);
         $this->view->merge();
         $this->view->translate();
         return $this->view->saveHtml();

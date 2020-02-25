@@ -84,9 +84,11 @@
 
 
     FilePlanLevelToggle = {
-        load: function (isWithoutProfile = true) {
+        load: function (isWithoutProfile) {
+            if (isWithoutProfile === undefined) {
+                isWithoutProfile = true;
+            }
             if(isWithoutProfile == true) {
-
                 if($('#fileplanLevelDiv').is(":hidden")) {
                     $('#fileplanLevelDiv').show();
                 }
@@ -118,10 +120,6 @@
             }
         }
     };
-
-    $('#app_maarchRM_main').ready(function () {
-        $("#managementMetadataForm").find("[name=retentionStartDate]").data("datepicker").setDate(new Date());
-    });
 
     $("#archiveForm").keypress(function(e) {
     //To disable Enter keypress in this form
@@ -337,7 +335,12 @@
             retentionRuleText = retentionRuleText.replace(/%2\$s/g, numeric+' '+unit);
             $('#retentionRuleText').text(retentionRuleText);
         },
-        syncSerialize : function(action = "add") {
+        syncSerialize : function(action) {
+            // to inititate default value and avoid bug on IE 11
+            if (action === undefined)
+            {
+                action = "add";
+            }
             var form = $('#archiveForm, #managementMetadataForm');
             var inputs = form.find('.archiveInput');
             var archive = {

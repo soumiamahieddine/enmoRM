@@ -27,7 +27,8 @@
             <?hinclude /recordsManagement/archive/archiveInfo/managementMetadata.html ?>
         </div>
         <div role="tabpanel" class="tab-pane fade in" id="lifeCycleTab" style="padding:14px">
-            <?hinclude /recordsManagement/archive/lifeCycle.html ?>
+            <?merge archive.lifeCycleEvent $lifeCycleEvent ?>
+            <?hinclude /lifeCycle/objectLifeCycle.html ?>
         </div>
         <div role="tabpanel" class="tab-pane fade in" id="relationshipTab" style="padding:14px">
             <?hinclude /recordsManagement/archive/archiveInfo/relationships.html ?>
@@ -56,3 +57,9 @@
         font-size: 16px !important;
     }
 </style>
+
+<script>
+    $("#lifeCycleTab").on('click', '.attestation', function () {
+        eventCertificate.load($(this).data('eventid'));
+    });
+</script>

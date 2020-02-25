@@ -65,13 +65,15 @@ class orgTree
     public function index($organizations, $orgType)
     {
         $orgRole = \laabs::configuration('organization')['orgUnitRoles'];
+        $isOrgTree = isset(\laabs::configuration('organization')['isOrgTree']) ? (bool) \laabs::configuration('organization')['isOrgTree'] : true;
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $this->view->addContentFile("organization/organizationIndex.html");
         $communicationMeans = \laabs::callService("contact/communicationMean/readIndex");
         $countriesCodes = \laabs::callService("organization/orgContact/readCountriesCodes");
         $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readIndex');
         $serviceLevel = \laabs::callService('recordsManagement/serviceLevel/readIndex');
-        
+
         // Sort archival profile by reference
         usort($archivalProfile, function ($a, $b) {
             return strcmp($a->reference, $b->reference);
@@ -79,10 +81,10 @@ class orgTree
 
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
-        
+
         $manageUserInOrg = true;
 
-        if ($user->getSecurityLevel() == $user::SECLEVEL_USER) {
+        if ($hasSecurityLevel && $user->getSecurityLevel() == $user::SECLEVEL_USER) {
             $manageUserInOrg = false;
         }
 
@@ -108,6 +110,7 @@ class orgTree
         $this->view->setSource("adminContact", $adminContact);
         $this->view->setSource("orgType", $orgType);
         $this->view->setSource("orgRole", $orgRole);
+        $this->view->setSource("isOrgTree", $isOrgTree);
         $this->view->setSource("communicationMeans", $communicationMeans);
         $this->view->setSource("countriesCodes", $countriesCodes);
         $this->view->setSource("archivalProfile", $archivalProfile);
@@ -120,19 +123,10 @@ class orgTree
             $profileType = \laabs::configuration('recordsManagement')['archivalProfileType'];
         }
         $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
-        
+
         $this->view->setSource("hideAccess", $publicArchives || ($profileType == 1));
         $this->view->merge();
         $this->view->translate();
-
-        /*if (sizeof($organizations) != 0) {
-        $tree = $this->contructTree($organizations);
-
-        if ($tree != null) {
-        $orgList = $this->view->getElementsByClass('dataTree')->item(0);
-        $orgList->appendChild($tree);
-        }
-        }*/
 
         return $this->view->saveHtml();
     }
@@ -146,97 +140,14 @@ class orgTree
     public function getTree($organizations)
     {
         $adminOrg = \laabs::callService('auth/userAccount/readHasprivilege', "adminFunc/adminOrganization");
-        /*
-        $html = '';
-        if (sizeof($organizations) > 0) {
-        $tree = $this->contructTree($organizations);
-        //$this->view->appendChild($tree);
-        foreach ($tree->childNodes as $branch) {
-        $html .= $this->view->saveHtml($branch);
-        }
-        }
 
-        return $html;
-
-         */
-        $this->view->addContentFile("organization/orgTree.html");
+        $this->view->addContentFile("organization/orgTree/orgTree.html");
         $this->view->setSource("adminOrg", $adminOrg);
         $this->view->setSource("organizations", $organizations);
         $this->view->merge();
         $this->view->translate();
 
         return $this->view->saveHtml();
-    }
-
-    /**
-     * contructTree
-     * @param array $organizations The tree representing the orgs
-     *
-     * @return view View with the tree
-     */
-    protected function contructTree($organizations)
-    {
-        $orgTree = $this->view->createDocumentFragment();
-
-        // Organization fragment
-        $orgFragmentTemplate = $this->view->createDocumentFragment();
-        $orgFragmentTemplate->appendHtmlFile("organization/organizationItem.html");
-        $this->view->translate($orgFragmentTemplate);
-
-        // OrgUnit fragment
-        $orgUnitFragmentTemplate = $this->view->createDocumentFragment();
-        $orgUnitFragmentTemplate->appendHtmlFile("organization/orgUnitItem.html");
-        $this->view->translate($orgUnitFragmentTemplate);
-
-        // Person fragment
-        $personFragmentTemplate = $this->view->createDocumentFragment();
-        $personFragmentTemplate->appendHtmlFile("organization/personItem.html");
-        $this->view->translate($personFragmentTemplate);
-
-        // Service fragment
-        $serviceFragmentTemplate = $this->view->createDocumentFragment();
-        $serviceFragmentTemplate->appendHtmlFile("organization/serviceItem.html");
-        $this->view->translate($serviceFragmentTemplate);
-
-        // Contact fragment
-        $contactFragmentTemplate = $this->view->createDocumentFragment();
-        $contactFragmentTemplate->appendHtmlFile("organization/contactItem.html");
-        $this->view->translate($contactFragmentTemplate);
-
-        //Organization
-        foreach ($organizations as $organization) {
-            $treeNode = $this->view->createElement('ul');
-            $orgFragment = $orgFragmentTemplate->cloneNode(true);
-            $orgItem = $orgTree->appendChild($treeNode);
-            $treeNode->appendChild($orgFragment);
-
-            $this->view->merge($orgItem, $organization);
-
-            // Creation of the children container
-            if (!empty($organization->organization) || !empty($organization->userPosition) || !empty($organization->servicePosition) || !empty($organization->orgContact)) {
-                $orgElement = $orgItem->getElementsByTagName('li')->item(0);
-                $childrenContainer = $this->view->createElement('ul');
-                $orgElement->appendChild($childrenContainer);
-
-                if (!empty($organization->organization)) {
-                    $this->mergeOrgUnits($organization, $childrenContainer, $orgFragmentTemplate, $orgUnitFragmentTemplate, $personFragmentTemplate, $serviceFragmentTemplate, $contactFragmentTemplate);
-                }
-
-                if (!empty($organization->userPosition)) {
-                    $this->mergeUserPosition($organization, $childrenContainer, $personFragmentTemplate);
-                }
-
-                if (!empty($organization->servicePosition)) {
-                    $this->mergeServicePosition($organization, $childrenContainer, $serviceFragmentTemplate);
-                }
-
-                if (!empty($organization->orgContact)) {
-                    $this->mergeContactPosition($organization, $childrenContainer, $contactFragmentTemplate);
-                }
-            }
-        }
-
-        return $orgTree;
     }
 
     protected function mergeOrgUnits($parent, $container, $orgFragmentTemplate, $orgUnitFragmentTemplate, $personFragmentTemplate, $serviceFragmentTemplate, $contactFragmentTemplate)
@@ -576,5 +487,12 @@ class orgTree
         }
 
         return json_encode($orgs);
+    }
+
+    public function changeStatus() {
+        $this->json->message = "Status changed";
+        $this->json->message = $this->translator->getText($this->json->message);
+
+        return $this->json->save();
     }
 }

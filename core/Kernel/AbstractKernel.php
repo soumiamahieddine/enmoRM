@@ -37,6 +37,12 @@ abstract class AbstractKernel
     public $request;
 
     /**
+     * The message parts
+     * @var array
+     */
+    public $userMessage = array();
+
+    /**
      * The laabs Response object
      * @var object $response
      */
@@ -265,7 +271,7 @@ abstract class AbstractKernel
         // Buffer will return void if "LAABS_CLEAN_BUFFER" directive set for app
         $this->useBuffer();
 
-        if (!is_null($this->response->body) && !is_scalar($this->response->body)) {
+        if (!is_null($this->response->body) && !is_scalar($this->response->body) && !is_resource($this->response->body)) {
             throw new \core\Exception("Response content can not be displayed");
         }
 

@@ -32,7 +32,7 @@ interface organizationInterface
      * @action organization/organization/index
      *
      */
-    public function readIndex($query = null);
+    public function readIndex($limit = null, $query = null);
 
     /**
      * Tree of organizations
@@ -45,18 +45,14 @@ interface organizationInterface
 
     /**
      * Search organization
-     * @param string $name
-     * @param string $businessType
-     * @param string $orgRoleCode
-     * @param string $orgTypeCode
-     * @param string $registrationNumber
-     * @param string $taxIdentifier
+     * @param string $term
+     * @param string $enabled
      *
      * @return organization/organization[] An array of organizations
      *
      * @action organization/organization/search
      */
-    public function readSearch($name = null, $businessType = null, $orgRoleCode = null, $orgTypeCode = null, $registrationNumber = null, $taxIdentifier = null);
+    public function readSearch($term = null, $enabled = "all");
 
     /**
      * Create an organization
@@ -324,6 +320,16 @@ interface organizationInterface
     public function readOriginator();
 
     /**
+     * Create a csv file
+     *
+     * @param  integer $limit Max number of results to display
+     *
+     * @action organization/organization/exportCsv
+     *
+     */
+    public function readExport($limit = null);
+
+    /**
      * Read an organization by his orgId
      *
      * @return organization/organization the organization
@@ -331,4 +337,21 @@ interface organizationInterface
      * @action organization/organization/read
      */
     public function read_orgId_();
+
+    /**
+     * Change status of organization
+     *
+     * @action organization/organization/changeStatus
+     */
+    public function read_orgId_ChangeStatus_status_();
+
+    /**
+     * @param resource  $data     Data base64 encoded or not
+     * @param boolean   $isReset  Reset tables or not
+     *
+     * @action organization/organization/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }

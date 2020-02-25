@@ -89,7 +89,7 @@ class adminRole
 
         $publicUserStories = array();
         $publicUserStories[] = 'app/*';
-        
+
         return $this->edit($role, $publicUserStories);
     }
 
@@ -102,6 +102,29 @@ class adminRole
      */
     public function edit($role = null, $publicUserStories = array())
     {
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $roleMembers = \laabs::callService("auth/roleMember/readByuseraccount_userAccountId_", $accountId);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
+
+        $genAdmin = $funcAdmin = $user = false;
+        if (!$hasSecurityLevel) {
+            $genAdmin = $funcAdmin = $user = true;
+        } else {
+            foreach ($roleMembers as $roleMember) {
+                $r = \laabs::callService("auth/role/read_roleId_", $roleMember->roleId);
+                if ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_GENADMIN) {
+                    $genAdmin = $funcAdmin = true;
+                } elseif ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
+                    $funcAdmin = $user = true;
+                } elseif ($r->securityLevel == \bundle\auth\Model\role::SECLEVEL_USER) {
+                    $user = true;
+                } else {
+                    $genAdmin = $funcAdmin = $user = true;
+                }
+            }
+        }
+
+
         if (isset(\laabs::configuration('auth')['blacklistUserStories'])) {
             $blacklistUserStories = \laabs::configuration('auth')['blacklistUserStories'];
         } else {
@@ -114,6 +137,7 @@ class adminRole
             if (count($role->roleMembers) > 0) {
                 $role->roleMembers = \laabs::callService(
                     'auth/userAccount/readIndex',
+                    null,
                     "accountId=['".implode("', '", $role->roleMembers)."']"
                 );
             }
@@ -181,20 +205,60 @@ class adminRole
                 }
             }
 
-            $interface->parentStatus = $userStoryDomains[$domain]->privilegeStatus;
+            if (isset(\laabs::configuration('auth')['privileges'])
+                && isset(\laabs::configuration('auth')['securityLevel'])
+                && $hasSecurityLevel
+            ) {
+                $privileges = \laabs::configuration('auth')['privileges'];
+                $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
+                $securityLevel = [];
+                foreach ($privilegesSecurityLevel as $key => $value) {
+                    if ($value === '0') {
+                        $bitmask = ['1', '2', '4'];
+                    } elseif ($value === '3') {
+                        $bitmask = ['1', '2'];
+                    } elseif ($value === '6') {
+                        $bitmask = ['4', '2'];
+                    } else {
+                        $bitmask = [$value];
+                    }
+
+                    foreach ($bitmask as $i) {
+                        if (in_array($domain.'/', $privileges[$i]) || in_array($domain.'/*', $privileges[$i])) {
+                            $securityLevel[] = $key;
+                        }
+
+                        foreach ($privileges[$i] as $privilege) {
+                            if (fnmatch($privilege, $userStoryName)) {
+                                $securityLevel[] = $key;
+                            }
+                        }
+                    }
+                }
+
+                $interface->securityLevel = \laabs\implode(" ", array_unique($securityLevel));
+                $interface->parentStatus = $userStoryDomains[$domain]->privilegeStatus;
+            } elseif ($hasSecurityLevel) {
+                $interface->securityLevel = \bundle\auth\Model\role::SECLEVEL_GENADMIN . " " . \bundle\auth\Model\role::SECLEVEL_FUNCADMIN . " " . \bundle\auth\Model\role::SECLEVEL_USER;
+            } else {
+                $interface->parentStatus = $userStoryDomains[$domain]->privilegeStatus;
+            }
 
             $userStoryDomains[$domain]->userStory[] = $interface;
-
         }
-        $this->view->setSource("userStories", $userStoryDomains);
 
-        $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
-        $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
-        
-        $this->view->setSource('hideUsers', $publicArchives || $restrictUserRoles);
+        $this->view->setSource("userStories", $userStoryDomains);
         $this->view->setSource('role', $role);
+        $publicArchives = isset(\laabs::configuration('presentation.maarchRM')['publicArchives']) && \laabs::configuration('presentation.maarchRM')['publicArchives'];
+        $restrictUserRoles = isset(\laabs::configuration('auth')['restrictUserRoles']) && \laabs::configuration('auth')['restrictUserRoles'];
+        $this->view->setSource('hideUsers', $publicArchives || $restrictUserRoles);
+        if ($hasSecurityLevel) {
+            $this->view->setSource('genAdmin', $genAdmin);
+            $this->view->setSource('funcAdmin', $funcAdmin);
+            $this->view->setSource('user', $user);
+        }
         $this->view->merge();
-        
+
         $this->view->translate();
         return $this->view->saveHtml();
     }
@@ -202,7 +266,7 @@ class adminRole
     // JSON
     /**
      * Serializer JSON for create method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function create()
@@ -215,7 +279,7 @@ class adminRole
 
     /**
      * Serializer JSON for update method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function update()
@@ -228,7 +292,7 @@ class adminRole
 
     /**
      * Serializer JSON for delete method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function delete()
@@ -241,7 +305,7 @@ class adminRole
 
     /**
      * Serializer JSON for changeStatus method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function changeStatus()
@@ -267,7 +331,7 @@ class adminRole
     /**
      * Exception
      * @param auth/Exception/adminRoleException $adminRoleException
-     * 
+     *
      * @return string
      */
     public function adminRoleException($adminRoleException)

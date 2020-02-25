@@ -10,7 +10,7 @@
                     "address_type" : {
                         "title" : "Intitulé de l'adresse",
                         "type" : "string",
-                        "enum" : ["Personelle", "Professionelle" ,"Secondaire"]
+                        "enum" : ["Personnelle", "Professionnelle" ,"Secondaire"]
                     },
                     "streetNumber" : {
                         "title" : "Numéro de voie",
@@ -30,7 +30,8 @@
                     },
                     "country" : {
                         "title" : "Pays",
-                        "type" : "string"
+                        "type" : "string",
+                        "ref" : true
                     }
                 }
             }

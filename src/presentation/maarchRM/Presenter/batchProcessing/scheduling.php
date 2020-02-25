@@ -61,13 +61,19 @@ class scheduling
 
         $tasks = \laabs::callService('batchProcessing/scheduling/readTasks');
 
-        $serviceAccounts = \laabs::callService('auth/serviceAccount/readSearch');
+        $serviceAccounts = \laabs::callService('auth/serviceAccount/readIndex');
 
         foreach ($serviceAccounts as $key => $serviceAccount) {
             $serviceURI = [];
             $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
-            if(!$serviceAccount->enabled){
+            if (!$serviceAccount->enabled) {
                 unset($serviceAccounts[$key]);
+                continue;
+            }
+
+            if ($serviceAccount->isAdmin) {
+                unset($serviceAccounts[$key]);
+                continue;
             }
             foreach ($privileges as $privilege) {
                 $serviceURI[] = $privilege->serviceURI;
@@ -111,8 +117,21 @@ class scheduling
             $scheduledTask->frequencyUnit = $frequency[6];
             $scheduledTask->endMinutes = $frequency[7];
             $scheduledTask->endHours = $frequency[8];
-            
+
             $scheduledTask->json = json_encode($scheduledTask);
+        }
+
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
+
+        if (is_null($account->securityLevel)
+            || $account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
+            || !$hasSecurityLevel
+        ) {
+            $isUser = true;
+        } else {
+            $isUser = false;
         }
 
         $this->view->translate();
@@ -120,6 +139,7 @@ class scheduling
         $this->view->setSource("tasks", $tasks);
         $this->view->setSource("scheduledTasks", $scheduledTasks);
         $this->view->setSource("timezone", date_default_timezone_get());
+        $this->view->setSource("isUser", $isUser);
         $this->view->merge();
 
         return $this->view->saveHtml();

@@ -90,6 +90,15 @@ class Error
             $this->message = $message;
         }
     }
+
+    /**
+     * Returns a string representation
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->message;
+    }
     
     /**
      * Get the error message. 

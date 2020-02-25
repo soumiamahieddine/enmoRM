@@ -9588,3 +9588,7 @@ table.dataTable thead .sorting:after {
 .show-grid {
   margin: 15px 0;
 }
+.no_padding {
+  padding-left: 0;
+  padding-right: 0;
+}

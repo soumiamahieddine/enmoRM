@@ -55,6 +55,9 @@
 
                             <dt>Tax identifier</dt>
                             <dd id="orgInfo_taxIdentifier"></dd>
+
+                            <dt>Enabled</dt>
+                            <dd id="orgInfo_enabled"></dd>
                         </dl>
                     </div>
                     <?merge adminOrg.not().then('hide') @class ?>
@@ -82,6 +85,7 @@
 <?hinclude contact/contact/contactModal.html ?>
 
 <script>
+    var orgId;
     $("#modifyOrganization").on('click', function() {
         OrgInfo.close();
         OrganizationForm.load($(this).data('organization'));
@@ -91,8 +95,10 @@
         load: function(organization) {
             $("#modifyOrganization").data('organization', organization);
 
+            orgId = organization.orgId;
             // Is orgUnit ?
-            if(organization.isOrgUnit) {
+            var isOrgUnit = organization.isOrgUnit;
+            if(isOrgUnit) {
                 $('#organizationInfo_usersTab').css('display', '');
                 $('#organizationInfo_profileTab').css('display','');
             } else {
@@ -118,7 +124,14 @@
             $('#orgInfo_displayName').text(organization.displayName);
             $('#informationTab').find('dt, dd').css('display', 'none');
             $.each(organization, function(key, value) {
-                if (value !=null) {
+                if (key === 'enabled' && isOrgUnit === true) {
+                    if (value) {
+                        content = '<i class="fa fa-check"></i>';
+                    } else {
+                        content = '<i class="fa fa-ban"></i>';
+                    }
+                    $('#orgInfo_' + key).css('display', '').html(content).prev().css('display', '');
+                }else if (value !=null && key !== 'enabled') {
                     $('#orgInfo_' + key).css('display', '').text(value).prev().css('display', '');
                 }
             });

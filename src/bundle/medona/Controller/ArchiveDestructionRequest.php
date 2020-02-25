@@ -308,9 +308,9 @@ class ArchiveDestructionRequest extends abstractMessage
     {
         $results = array();
 
-        $index = $this->sdoFactory->index(
+        $messageIds = $this->sdoFactory->index(
             'medona/message',
-            array('messageId'),
+            ['messageId'],
             '(
                 type = "ArchiveDestructionRequest"
                 OR type = "ArchiveRestitution"
@@ -322,7 +322,14 @@ class ArchiveDestructionRequest extends abstractMessage
              AND status = "validated"'
         );
 
-        foreach ($index as $messageId) {
+        foreach ($messageIds as $messageId) {
+            // Avoid parallel processing
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+            if ($message->status != 'validated') {
+                continue;
+            }
+            $this->changeStatus($message->messageId, "processing");
+
             $results[(string) $messageId] = $this->process($messageId);
         }
 

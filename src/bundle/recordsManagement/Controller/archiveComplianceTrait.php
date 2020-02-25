@@ -167,10 +167,11 @@ trait archiveComplianceTrait
     /**
      * Check integrity of one or several archives giving their identifiers
      * @param object  $archiveIds An array of archive identifier or an archive identifier
+     * @param boolean $checkRight Check right for originator or archiver. if false, caller MUST control access before or after
      *
      * @return recordsManagement/archive[] Array of archive object
      */
-    public function verifyIntegrity($archiveIds)
+    public function verifyIntegrity($archiveIds, $checkRight = true)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -181,7 +182,7 @@ trait archiveComplianceTrait
         $archives = $this->sdoFactory->find("recordsManagement/archive", "archiveId=['".implode("', '", $archiveIds)."']");
 
         foreach ($archives as $archive) {
-            if ($this->checkArchiveIntegrity($archive)) {
+            if ($this->checkArchiveIntegrity($archive, $checkRight)) {
                 $res['success'][] = (string) $archive->archiveId;
             } else {
                 $res['error'][] = (string) $archive->archiveId;
@@ -208,10 +209,11 @@ trait archiveComplianceTrait
     /**
      * Verify archives integrity
      * @param archive $archive The archive object
+     * @param boolean $checkRight Check right for originator or archiver. if false, caller MUST control access before or after
      *
      * @return bool The result of the integrity check
      */
-    protected function checkArchiveIntegrity($archive)
+    protected function checkArchiveIntegrity($archive, $checkRights = true)
     {
         $valid = true;
         $info = 'Checking succeeded';
@@ -220,6 +222,10 @@ trait archiveComplianceTrait
 
         if (!$currentOrganization) {
             throw \laabs::newException("recordsManagement/logException", "An organization is required to check an archive integrity");
+        }
+
+        if ($checkRights) {
+            $this->checkRights($archive, true);
         }
 
         $archive->digitalResources = $this->getDigitalResources($archive->archiveId, $checkAccess = false);
@@ -234,7 +240,6 @@ trait archiveComplianceTrait
                     $errors[] = $e->getMessage();
                     $this->logIntegrityCheck($archive, $e->getMessage(), $digitalResource, false);
                 }
-
             }
         }
 

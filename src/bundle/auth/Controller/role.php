@@ -21,6 +21,8 @@
 
 namespace bundle\auth\Controller;
 
+use bundle\digitalSafe\Exception\Exception;
+
 /**
  * Controler for the role
  *
@@ -31,14 +33,18 @@ class role
 {
 
     public $sdoFactory;
+    protected $csv;
 
     /**
      * Constructor of adminRole class
      * @param \dependency\sdo\Factory $sdoFactory The factory
+     * @param \dependency\csv\Csv     $csv        The dependency csv
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\csv\Csv $csv)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->csv = $csv;
+        $this->hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
     }
 
     /**
@@ -46,9 +52,47 @@ class role
      *
      * @return array Array of auth/role object
      */
-    public function index()
+    public function getAll()
     {
         return $this->sdoFactory->find("auth/role");
+    }
+
+    /**
+     * List roles
+     *
+     * @param integer $limit Maximal number of results to dispay
+     *
+     * @return array Array of auth/role object
+     */
+    public function index($limit = null)
+    {
+        $roleMemberController = \laabs::newController("auth/roleMember");
+        $roleMembers = $roleMemberController->readByUserAccount(\laabs::getToken("AUTH")->accountId);
+
+        $query = [];
+        foreach ($roleMembers as $roleMember) {
+            $role = $this->sdoFactory->read("auth/role", $roleMember->roleId);
+            if ($this->hasSecurityLevel) {
+                switch ($role->securityLevel) {
+                    case $role::SECLEVEL_GENADMIN:
+                        $query[] = "securityLevel ='". $role::SECLEVEL_GENADMIN ."'";
+                        $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
+                        $query[] = "securityLevel = null";
+                        break;
+                    case $role::SECLEVEL_FUNCADMIN:
+                        $query[] = "securityLevel ='". $role::SECLEVEL_FUNCADMIN ."'";
+                        $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
+                        $query[] = "securityLevel = null";
+                        break;
+                    case $role::SECLEVEL_USER:
+                        $query[] = "securityLevel ='". $role::SECLEVEL_USER ."'";
+                        $query[] = "securityLevel = null";
+                }
+            }
+        }
+        $roles = $this->sdoFactory->find("auth/role", \laabs\implode(' OR ', array_unique($query)), null, null, null, $limit);
+
+        return $roles;
     }
 
     /**
@@ -104,13 +148,14 @@ class role
             $roleInstance->roleId = \laabs::newId();
             $roleInstance->roleName = $role->roleName;
             $roleInstance->description = $role->description;
+            $roleInstance->securityLevel = $role->securityLevel;
             $roleInstance->enabled = $role->enabled;
 
             $this->sdoFactory->create($roleInstance);
 
             if (!empty($role->privileges)) {
                 foreach ($role->privileges as $userStory) {
-                    $this->addPrivilege($roleInstance->roleId, $userStory);
+                    $this->addPrivilege($roleInstance, $userStory);
                 }
             }
 
@@ -153,7 +198,7 @@ class role
             $this->sdoFactory->deleteChildren("auth/privilege", $role, "auth/role");
             if (!empty($role->privileges)) {
                 foreach ($role->privileges as $userStory) {
-                    $this->addPrivilege($roleId, $userStory);
+                    $this->addPrivilege($role, $userStory);
                 }
             }
 
@@ -165,7 +210,6 @@ class role
                     $roleMemberController->create($roleId, $member);
                 }
             }
-
         } catch (\Exception $exception) {
             $this->sdoFactory->rollback();
             throw \laabs::newException("auth/adminRoleException", "Role not updated");
@@ -268,16 +312,55 @@ class role
 
     /**
      * Create privileges
-     * @param id     $roleId    The roel to add privilege
+     * @param role     $role   The role where privilege is added
      * @param string $userStory Privilege userStory
      *
      * @return boolean The operation result
      */
-    public function addPrivilege($roleId, $userStory)
+    public function addPrivilege($role, $userStory)
     {
+        if (isset(\laabs::configuration('auth')['privileges'])
+            && isset(\laabs::configuration('auth')['securityLevel'])
+            && $this->hasSecurityLevel
+        ) {
+            $privileges = \laabs::configuration('auth')['privileges'];
+            $privilegesSecurityLevel = \laabs::configuration('auth')['securityLevel'];
+
+            if ($privilegesSecurityLevel[$role->securityLevel] === '0') {
+                $bitmask = ['1', '2', '4'];
+            } elseif ($privilegesSecurityLevel[$role->securityLevel] === '3') {
+                $bitmask = ['1', '2'];
+            } elseif ($privilegesSecurityLevel[$role->securityLevel] === '6') {
+                $bitmask = ['4', '2'];
+            } else {
+                $bitmask = [$privilegesSecurityLevel[$role->securityLevel]];
+            }
+
+            $domain = strtok($userStory, LAABS_URI_SEPARATOR);
+            foreach ($bitmask as $i) {
+                if (in_array($domain . '/', $privileges[$i])) {
+                    continue;
+                }
+
+                foreach ($privileges[$i] as $privilege) {
+                    if (fnmatch($privilege, $userStory)) {
+                        continue 2;
+                    }
+
+                    $domainPrivileges = strtok($privilege, LAABS_URI_SEPARATOR);
+                    if ($domain . '/*' == $userStory
+                        && $domain == $domainPrivileges
+                    ) {
+                        continue 2;
+                    }
+                }
+                return false;
+            }
+        }
+
         $privilege = \laabs::newInstance("auth/privilege");
         $privilege->userStory = $userStory;
-        $privilege->roleId = $roleId;
+        $privilege->roleId = $role->roleId;
 
         return $this->sdoFactory->create($privilege);
     }
@@ -307,6 +390,105 @@ class role
                 $this->sdoFactory->rollback();
             }
             throw \laabs::newException("auth/sdoException");
+        }
+
+        if ($transactionControl) {
+            $this->sdoFactory->commit();
+        }
+
+        return true;
+    }
+
+    public function exportCsv($limit = null) {
+        $roles = $this->sdoFactory->find('auth/role', null, null, null, null, $limit);
+        $roles = \laabs::castMessageCollection($roles, 'auth/roleImportExport');
+
+        foreach ($roles as $role) {
+            $privileges = $this->getPrivilege($role->roleId);
+            if (!empty($privileges)) {
+                $lastIndex = count($privileges) -1;
+                foreach ($privileges as $index => $privilege) {
+                    $role->privileges .= $privilege;
+
+                    if ($lastIndex !== $index) {
+                        $role->privileges .= ";";
+                    }
+                }
+            }
+        }
+
+        $handler = fopen('php://temp', 'w+');
+        $this->csv->writeStream($handler, (array) $roles, 'auth/roleImportExport', true);
+        return $handler;
+    }
+
+    public function import($data, $isReset = false)
+    {
+        $transactionControl = !$this->sdoFactory->inTransaction();
+
+        if ($transactionControl) {
+            $this->sdoFactory->beginTransaction();
+        }
+
+        try {
+            if ($isReset) {
+                $roles = $this->getAll();
+
+                foreach ($roles as $role) {
+                    $roleMembers = $this->sdoFactory->find('auth/roleMember', "roleId='$role->roleId'");
+                    foreach ($roleMembers as $roleMember) {
+                        $this->sdoFactory->delete($roleMember, 'auth/roleMember');
+                    }
+
+                    $privileges = $this->sdoFactory->find('auth/privilege', "roleId='$role->roleId'");
+                    foreach ($privileges as $privilege) {
+                        $this->sdoFactory->delete($privilege, 'auth/privilege');
+                    }
+                    $this->sdoFactory->delete($role, 'auth/role');
+                }
+            }
+
+            $roles = $this->csv->readStream($data, 'auth/roleImportExport', true);
+            foreach ($roles as $key => $role) {
+                if ($isReset
+                    || !$this->sdoFactory->exists('auth/role', $role->roleId)
+                ) {
+                    $newRole = \laabs::newInstance('auth/role');
+                    $newRole->roleId = $role->roleId;
+                    $newRole->roleName = $role->roleName;
+                    $newRole->description = $role->description;
+                    $newRole->enabled = (bool) $role->enabled;
+                    $newRole->securityLevel = $role->securityLevel;
+
+                    $this->sdoFactory->create($newRole, 'auth/role');
+                } else {
+                    $changedRole = $this->sdoFactory->read('auth/role', $role->roleId);
+                    $changedRole->roleName = $role->roleName;
+                    $changedRole->description = $role->description;
+                    $changedRole->enabled = (bool) $role->enabled;
+                    $changedRole->securityLevel = $role->securityLevel;
+                    $this->sdoFactory->update($changedRole, 'auth/role');
+
+                    $privileges = $this->sdoFactory->find('auth/privilege', "roleId='$role->roleId'");
+                    foreach ($privileges as $privilege) {
+                        $this->sdoFactory->delete($privilege, 'auth/privilege');
+                    }
+                }
+
+                $userStories = explode(';', $role->privileges);
+                foreach ($userStories as $userStory) {
+                    $privilege = \laabs::newInstance('auth/privilege');
+                    $privilege->roleId = $role->roleId;
+                    $privilege->userStory = $userStory;
+
+                    $this->sdoFactory->create($privilege, 'auth/privilege');
+                }
+            }
+        } catch (\Exception $e) {
+            if ($transactionControl) {
+                $this->sdoFactory->rollback();
+            }
+            throw $e;
         }
 
         if ($transactionControl) {

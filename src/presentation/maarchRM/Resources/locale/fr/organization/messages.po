@@ -159,6 +159,12 @@ msgstr "Déplacer vers :"
 msgid "Select a new position for the organization"
 msgstr "Sélectionnez une nouvelle position pour l'organisation"
 
+msgid "New position"
+msgstr "Nouvelle position"
+
+msgid "Organization or activity"
+msgstr "Organisation ou activité"
+
 msgid "Move"
 msgstr "Déplacer"
 
@@ -170,6 +176,9 @@ msgstr "Gérer les contacts"
 
 msgid "Owner Organization Id"
 msgstr "Identifiant de l'organisation parente"
+
+msgid "Parent name"
+msgstr "Nom du parent"
 
 msgid "Organization contacts"
 msgstr "Contacts de l'organisation"
@@ -339,6 +348,12 @@ msgstr "Autoriser les archives sans profil"
 msgid "Export the file plan"
 msgstr "Exporter le plan de classement"
 
+msgid "Drop the organizations list down"
+msgstr "Déplier l'organigramme"
+
+msgid "Wrap the organizations list"
+msgstr "Replier l'organigramme"
+
 msgid "Metadatas"
 msgstr "Métadonnées"
 
@@ -369,3 +384,12 @@ msgstr "Liaison supprimée"
 
 msgid "Select a profile"
 msgstr "Selectionnez un profil"
+
+msgid "Status changed"
+msgstr "Statut de l'activité modifié"
+
+msgid "Identifier or name"
+msgstr "Identifiant ou nom de l'organisation"
+
+msgid "No org found"
+msgstr "Aucune organisation trouvée"

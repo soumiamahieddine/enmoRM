@@ -311,13 +311,23 @@ input:invalid {
                         .attr('type', 'text')
                         .addClass('form-control')
                         .addClass('input-sm');
-            if (descriptionField.default !== null && descriptionField.default !== undefined && descriptionField.default !== "") {
-                field.val(descriptionField.default);
-            }
 
             if(descriptionField.readonly && Metadata.isModification) {
                 field.attr("readonly", true);
                 field.attr("disabled", true);
+            }
+
+            if (descriptionField.default === "now") {
+                let date = new Date();
+                var day = ('0' + (date.getDate())).slice(-2);
+                var month = ('0' + (date.getMonth()+1)).slice(-2);
+                var year = date.getFullYear();
+
+                let now = day + '-' + month + '-' + year;
+                if (descriptionField.format === "datetime") {
+                    now += ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+                }
+                field.val(now);
             }
 
             field.getValue = function() {
@@ -575,7 +585,7 @@ input:invalid {
                 }
                 formGroup = Metadata.getFormGroup(this);
 
-                item = $("<li class='col-12'></li>");
+                var item = $("<li class='col-12'></li>");
                 item.append(formGroup);
 
                 item.data('formgroup', formGroup);
@@ -781,7 +791,14 @@ input:invalid {
             itemList.append(previous);
         },
 
-        addCustomField : function(source = "", target = $("#customFields")) {
+        addCustomField : function(source, target) {
+            // to inititate default value and avoid bug on IE 11
+            if (source === undefined) {
+                source = "";
+            }
+            if (target === undefined) {
+                target = $("#customFields");
+            }
             var formGroup = $('<div class="form-group" />');
             var label = $('<div class="col-md-3"/>');
             var name = $('<input type="text" class="form-control input-sm name" />');
@@ -918,7 +935,7 @@ input:invalid {
                     field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
                 } else {
-                    data = new Date(data).toLocaleDateString().replace(/\//g, "-");
+                    data = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
                     field.datepicker('setDate', data);
                 }
             }

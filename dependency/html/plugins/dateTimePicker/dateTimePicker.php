@@ -73,6 +73,7 @@ class dateTimePicker
         //$this->parameters->inline = false;
         //$this->parameters->sideBySide = false;
         $this->parameters->format = 'DD-MM-YYYY HH:mm:ss';
+        $this->parameters->showTodayButton = true;
         //$this->parameters->useCurrent = false;
         //$this->parameters->focusOnShow = false;
 
@@ -144,6 +145,6 @@ EOS;
         $variableScript = $this->element->ownerDocument->createElement('script');
         $variableCdataSection = $this->element->ownerDocument->createCDataSection($parametersScript);
         $variableScript->appendChild($variableCdataSection);
-        $this->element->ownerDocument->appendChild($variableScript);
+        $this->element->ownerDocument->getContainer()->appendChild($variableScript);
     }
 }

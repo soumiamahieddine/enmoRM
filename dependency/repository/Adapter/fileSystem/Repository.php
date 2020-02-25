@@ -18,14 +18,14 @@
  * along with dependency repository.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace dependency\repository\Adapter\fileSystem;
+
 /**
  * Class for repository
  *
  * @package Dependency\Repository
  * @author  Maarch Alexis Ragot <alexis.ragot@maarch.org>
  */
-class Repository
-    implements \dependency\repository\RepositoryInterface
+class Repository implements \dependency\repository\RepositoryInterface
 {
     /* Properties */
     protected $name;
@@ -42,7 +42,7 @@ class Repository
      *
      * @return void
      */
-    public function __construct($name, array $options=null)
+    public function __construct($name, array $options = null)
     {
         $root = str_replace("/", DIRECTORY_SEPARATOR, $name);
 
@@ -68,10 +68,10 @@ class Repository
      * Delete a container
      * @param string $name     The name of container
      * @param mixed  $metadata The object or array of metadata
-     * 
+     *
      * @return mixed The address/uri/identifier of created container on repository
      */
-    public function createContainer($name, $metadata=null)
+    public function createContainer($name, $metadata = null)
     {
         $name = str_replace("/", DIRECTORY_SEPARATOR, $name);
 
@@ -90,34 +90,31 @@ class Repository
      * Update a container metadata
      * @param string $name     The name of container
      * @param mixed  $metadata The object or array of metadata
-     * 
+     *
      * @return bool
      */
     public function updateContainer($name, $metadata)
-    {
-        
+    {   
     }
 
     /**
      * Read a container metadata
      * @param string $name The name of container
-     * 
+     *
      * @return mixed The object or array of metadata if available
      */
     public function readContainer($name)
-    {
-        
+    { 
     }
 
     /**
      * Delete a container
      * @param string $name The name of container
-     * 
+     *
      * @return bool
      */
     public function deleteContainer($name)
     {
-        
     }
 
     // OBJECTS
@@ -142,21 +139,21 @@ class Repository
      * Get a resource in repository
      * @param mixed   $path The path/uri/identifier of stored resource on repository
      * @param integer $mode A bitmask of what to read 0=nothing - only touch | 1=data | 2=metadata | 3 data+metadata
-     * 
+     *
      * @return mixed The contents of resource
      */
-    public function readObject($path, $mode=1)
+    public function readObject($path, $mode = 1)
     {
         switch ($mode) {
-            case 0 :
+            case 0:
                 return $this->checkFile($path);
 
-            case 1 :
+            case 1:
                 return $this->readFile($path);
 
-            case 2 :
+            case 2:
                 return $this->readFile($path . '.metadata');
-            case 3 :
+            case 3:
                 $data = array();
                 $data[0] = $this->readFile($path);
                 if ($this->checkFile($path . ".metadata")) {
@@ -167,21 +164,20 @@ class Repository
 
                 return $data;
 
-            default :
+            default:
                 throw new \Exception("This mode '$mode' isn't avalaible");
         }
-        
     }
 
      /**
      * Update a resource
      * @param string $path     The URI of the resource
      * @param string $data     The content
-     * @param object $metadata The new metadata to update or insert 
+     * @param object $metadata The new metadata to update or insert
      *
      * @return bool
      */
-    public function updateObject($path, $data=null, $metadata=null)
+    public function updateObject($path, $data = null, $metadata = null)
     {
         if (!is_null($data)) {
             $this->updateFile($path, $data);
@@ -215,13 +211,13 @@ class Repository
         return true;
     }
 
-    /* 
+    /*
      * Non public methods
      */
     /**
      * Get the directory to store
      * @param string $pattern The name or pattern for the collection
-     * 
+     *
      * @return string The diretory name
      */
     protected function getDir($pattern)
@@ -234,10 +230,10 @@ class Repository
             $step = $this->getName($step, $dir);
 
             $dir .= DIRECTORY_SEPARATOR . $step;
-
-            if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
-                mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
-            } 
+        }
+        
+        if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
+            mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
         }
 
         return $dir;
@@ -270,7 +266,6 @@ class Repository
                         $name = str_replace($variable, date($format), $name);
                         break;
                 }
-
             }
         }
 
@@ -307,7 +302,6 @@ class Repository
                     return $package;
                 }
             }
-            
         }
 
         $package = str_pad('1', 8, "0", STR_PAD_LEFT);
@@ -330,25 +324,33 @@ class Repository
         if (!$fp = fopen($filename, 'x')) {
             throw new \Exception("Can't open file at path $path for creation.");
         }
-        $wl = fwrite($fp, $data);
-        if (!$wl) {
-            throw new \Exception("Can't write at path $path.");
+
+        if (is_string($data)) {
+            $wl = fwrite($fp, $data);
+            if (!$wl) {
+                throw new \Exception("Can't write at path $path.");
+            }
+
+            if ($wl != strlen($data)) {
+                if (!unlink($filename)) {
+                    throw new \Exception("Error writing at path $path, and the partial resource couldn't be deleted.");
+                }
+                throw new \Exception("Error writing at path $path.");
+            }
+
+            if (hash('md5', $data) != hash_file('md5', $filename)) {
+                if (!unlink($filename)) {
+                    throw new \Exception("Error writing at path $path, but the partial resource couldn't be deleted.");
+                }
+                throw new \Exception("Error writing at path $path.");
+            }
+        } elseif (is_resource($data)) {
+            rewind($data);
+            $wl = stream_copy_to_stream($data, $fp);
+            rewind($data);
         }
 
-        if ($wl != strlen($data)) {
-            if (!unlink($filename)) {
-                throw new \Exception("Error writing at path $path, and the partial resource couldn't be deleted.");
-            }
-            throw new \Exception("Error writing at path $path.");
-        }
         fclose($fp);
-
-        if (hash('md5', $data) != hash_file('md5', $filename)) {
-            if (!unlink($filename)) {
-                throw new \Exception("Error writing at path $path, but the partial resource couldn't be deleted.");
-            }
-            throw new \Exception("Error writing at path $path.");
-        }
         
         return $dir . DIRECTORY_SEPARATOR . $name;
     }
@@ -372,7 +374,7 @@ class Repository
             throw new \Exception("Can not find resource at path $path");
         }
 
-        if (!$data = file_get_contents($filename)) {
+        if (!$data = fopen($filename, 'r')) {
             throw new \Exception("Can not read at path $path");
         }
 
@@ -435,7 +437,7 @@ class Repository
     }
 
     private function deleteFile($path)
-    {  
+    {
         $filename = $this->root . DIRECTORY_SEPARATOR . $path;
 
         if (!file_exists($filename)) {
@@ -622,5 +624,4 @@ class Repository
 
         fclose($mdh);
     }
-
 }

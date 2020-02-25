@@ -1291,6 +1291,9 @@ msgstr "Update public archive"
 msgid "archivesPubliques/content/delete_contentId_"
 msgstr "Delete public archive"
 
+msgid "archivesPubliques/thesaurus/read_name_"
+msgstr "Read thesaurus in register"
+
 msgid "archivesPubliques/thesaurus/read_name__query_"
 msgstr "Search thesaurus in register"
 
@@ -1309,6 +1312,14 @@ msgstr "Read description field"
 msgid "recordsManagement/descriptionField/update"
 msgstr "Update description field"
 
+msgid "recordsManagement/descriptionRef/read_name__key_"
+msgstr "Read an entry from a data repository"
+
+msgid "recordsManagement/descriptionScheme/read_name_"
+msgstr "Read name of a description scheme"
+
+msgid "recordsManagement/descriptionScheme/read_name_Descriptionfields"
+msgstr "Read description fields of a description scheme"
 
 msgid "recordsManagement/archive/create_archiveId_Digitalresource"
 msgstr "Create digital resource inside an archive"

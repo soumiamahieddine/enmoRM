@@ -55,7 +55,21 @@
 
 
     var SearchTab = {
-        run : function (orgRegNumber = null, folderId = null, title = null, profiles = null) {
+        run : function (orgRegNumber, folderId, titre, profiles) {
+            // to inititate default value and avoid bug on IE 11
+            if (orgRegNumber === undefined) {
+                orgRegNumber = null;
+            }
+            if (folderId = undefined) {
+                folderId = null;
+            }
+            if (title = undefined) {
+                title = null;
+            }
+            if (profiles = undefined) {
+                profiles = null;
+            }
+
             var uniqId = new Date().getUTCMilliseconds();
 
             this.tabCreation(uniqId, title);

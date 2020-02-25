@@ -567,7 +567,7 @@ msgid "registrationNumber"
 msgstr "Identifiant"
 
 msgid "Undefined user command for route %1$s %2$s"
-msgstr "La page demandée '%1$s %2$s' n'existe pas ou n'est pas accessible."
+msgstr "La page demandée n'existe pas ou n'est pas accessible."
 
 msgid "accountName"
 msgstr "Identifiant"
@@ -610,3 +610,6 @@ msgstr "Pas de statut de traitement"
 
 msgid "Resource size is null"
 msgstr "La taille de la ressource est nulle"
+
+msgid "Attempt to access without a valid token"
+msgstr "Une erreur est survenue. Si le problème persiste, veuillez recharger la page."

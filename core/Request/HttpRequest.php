@@ -46,19 +46,26 @@ class HttpRequest
 
         if (isset($this->headers['X-Laabs-Max-Count'])) {
             $this->maxCount = $this->headers['X-Laabs-Max-Count'];
-        } 
+        }
 
         $this->host = $_SERVER['HTTP_HOST'];
 
         $this->getAuthentication();
 
-        $this->body = @file_get_contents('php://input');
+        $this->body = fopen('php://temp', 'w+');
+        $input = fopen('php://input', 'r');
+        $length = stream_copy_to_stream($input, $this->body);
+        rewind($this->body);
+        if ($length == 0) {
+            $this->body = null;
+        }
+
 
         $this->query = urldecode($_SERVER['QUERY_STRING']);
 
         $this->getQueryType();
 
-        switch(\laabs::getHttpMethod()) {
+        switch (\laabs::getHttpMethod()) {
             case 'POST':
                 $this->method = 'CREATE';
                 //$this->arguments = array_merge($_POST, $this->arguments);
@@ -85,7 +92,7 @@ class HttpRequest
                 break;
         }
 
-        $this->script = \laabs\basename($_SERVER['SCRIPT_FILENAME']); 
+        $this->script = \laabs\basename($_SERVER['SCRIPT_FILENAME']);
 
         $this->parseUrl();
     }

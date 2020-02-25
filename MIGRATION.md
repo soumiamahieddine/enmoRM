@@ -1,3 +1,56 @@
+# Migration 2.5 vers 2.6
+
+## Configuration des instances publiées (hôte(s) virtuel(s) http et scripts en ligne de commande)
+
+### Externalisation du bundle `digitalSafe`
+Le bundle `digitalSafe` qui présente les fonctions relatives à l'usage du produit 
+comme composant de coffre-fort numérique, ajouté en V2.5, a été déplacé dans une nouvelle 
+extension du même nom.
+
+Les instances ne doivent plus faire référence à ce bundle si l'extension `digitalSafe` n'est pas installée.
+
+Socle SAE seul :
+```
+SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades
+```
+
+Avec l'usage CCFN :
+```
+SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe
+SetEnv LAABS_EXTENSIONS digitalSafe
+```
+
+### Nouvelle dépendance technique CSV
+Les fonctions d'import et d'export de référentiel utilisent une nouvelle dépendance qui 
+gère les conversions en CSV. Ladépendance `csv` doit être ajoutée à l'instance :
+
+```
+SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf;timestamp;csv
+```
+
+## Configuration 
+### Protection CSRF
+Il faut ajouter des routes en liste blanche pour la protection contre les requêtes en Cross-Site Forgery:
+
+```
+csrfWhiteList = "['user/login', 'user/password', 'user/prompt', 'user/logout', 'user/generateResetToken']"
+```
+
+### Mise à jour des fichiers de signature DROID
+Mise à jour des fichiers signature et container permettant la détection du format des fichiers
+```
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V96.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20200121.xml"
+```
+
+## Schéma SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.5_V2.6.sql
+
+___
+
 # Migration 2.4 vers 2.5
 
 ## Présentation et fonctionnalités orientées "archives publiques"
@@ -244,6 +297,8 @@ Lors de la saisie d'une archive, un typeahead viendra aider l'opérateur dans la
 
 Ajout du plugin dateTimePicker, permettant la saisie simultanée d'une date et d'un horaire au sein d'un même champ (au format DD-MM-YYYY HH:mm:ss par défaut) via une interface.
 
+___
+
 # Migration 2.3 vers 2.4
 
 ## Evenement
@@ -292,6 +347,8 @@ containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/con
 Voir le fichier spécifique
 
     laabs/data/maarchRM/sql/pgsql/migrationV2.3_V2.4.sql
+
+___
 
 # Migration 2.2 vers 2.3
 

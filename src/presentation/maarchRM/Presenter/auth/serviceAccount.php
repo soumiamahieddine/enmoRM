@@ -63,6 +63,7 @@ class serviceAccount
     {
         $this->view->addContentFile("auth/serviceAccount/index.html");
         $this->view->setSource("serviceAccounts", $serviceAccounts);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
@@ -70,7 +71,7 @@ class serviceAccount
         $securityLevel = $account->securityLevel;
 
         $manageUserRights = true;
-        if ($securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+        if ($hasSecurityLevel && $securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
             $manageUserRights = false;
         }
 
@@ -139,20 +140,18 @@ class serviceAccount
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
-        if ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_FONCADMIN) {
-            $this->view->setSource('whatAmI', 'adminF');
-        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_GENADMIN) {
-            $this->view->setSource('whatAmI', 'adminG');
-        } elseif ($account->securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
-            $this->view->setSource('whatAmI', 'user');
+        if (!is_null($account->securityLevel) &&  $account->securityLevel != "") {
+            $whatAmI = $account->securityLevel;
         } else {
-            $this->view->setSource('whatAmI', 'oldUser');
+            $whatAmI = 'userWithoutSecurityLevel';
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");
         $this->view->setSource("organizations", $organizations);
         $this->view->merge($this->view->getElementById("serviceOrgId"));
         $this->view->setSource("serviceAccount", $serviceAccount);
+        $this->view->setSource('whatAmI', $whatAmI);
+
 
         $this->view->translate();
         $this->view->merge();

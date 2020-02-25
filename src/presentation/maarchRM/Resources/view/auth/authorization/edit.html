@@ -29,7 +29,7 @@
                     <form id="roleInformation">
                         <input type="hidden" id="roleId" name="roleId"/>
                         <div class="form-group">
-                            <label>Role name<span style="color : red">*</span></label>
+                            <label>Role name<span style="color : red">&nbsp;*</span></label>
                             <input type="text" class="form-control" name="roleName" />
                         </div>
                         <div class="form-group">
@@ -43,6 +43,28 @@
                             </label>
                         </div>
                     </form>
+                    <input type="hidden" id="hasSecurityLevel" name="hasSecurityLevel" value="[?merge user.isnull().then('false', 'true') ?]">
+                    <?merge user.isset() ?>
+                    <div class="form-group">
+                        <label class="control-label"><span>Security level<span style="color : red">&nbsp;*</span></span>&nbsp;</label>
+                        <div class="btn-group" data-toggle="buttons" id="securityLevel">
+                            <?merge role.securityLevel.bool().then('disabled') @disabled ?>
+                            <?merge genAdmin.bool() ?>
+                            <label class="btn btn-xs [?merge role.securityLevel.ifeq('gen_admin').then('btn-info active', 'btn-default') ?]" title="General administrator">
+                                <input type="radio" name="gen_admin" value='gen_admin'/> General administrator
+                            </label>
+                            <?merge role.securityLevel.bool().then('disabled') @disabled ?>
+                            <?merge funcAdmin.bool() ?>
+                            <label class="btn btn-xs [?merge role.securityLevel.ifeq('func_admin').then('btn-info active', 'btn-default') ?]" title="Functional administrator">
+                                <input type="radio" name="func_admin" value="func_admin"> Functional administrator
+                            </label>
+                            <?merge role.securityLevel.bool().then('disabled') @disabled ?>
+                            <?merge user.bool() ?>
+                            <label class="btn btn-xs [?merge role.securityLevel.ifeq('user').then('btn-info active', 'btn-default') ?]" title="User">
+                                <input type="radio" name="user" value="user"> User
+                            </label>
+                        </div>
+                    </div>
                     <div class="clearfix" id="buttonInformation">
                         <div class="pull-right ">
                             <button type="button" id="cancel" class="btn btn-warning" title="Cancel"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
@@ -63,7 +85,7 @@
                         <div class="tab-pane fade in [?merge hideUsers.then('','active') ?]" id="roleMembersTab" >
                             <h3>Role members</h3>
                             <div class="form-group">
-                                <div class="input-group">                                  
+                                <div class="input-group">
                                     <input type="text" class="form-control" placeholder="User" id="userTypeahead"/>
                                     <span class="input-group-btn">
                                         <button class="btn btn-success" type="button" id="addMember" title="Add"><i class="fa fa-plus fa-fw"></i>&nbsp;</button>
@@ -79,7 +101,7 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control" value="[?merge .displayName ?]" data-memberid="[?merge .accountId ?]" readOnly="true">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-danger removeMembre" type="button" data-userid="[?merge .accountId ?]" title="Remove">
+                                                <button class="btn btn-danger removeMember" type="button" data-userid="[?merge .accountId ?]" title="Remove">
                                                     <i class="fa fa-trash-o fa-fw"></i>&nbsp;
                                                 </button>
                                             </span>
@@ -100,8 +122,6 @@
                                             <input type="radio" name="superAdminNone" value="false"> None
                                         </label>
                                     </div>
-                                    <--?merge role.superadmin @checked ?>
-                                    <--input type="checkbox" name="superadmin" id="superadmin" data-toggle="toggle">
                                 </label>
                             </div>
                             <div class="panel-group" id="privileges" role="tablist" aria-multiselectable="true">
@@ -109,13 +129,6 @@
                                 <div class="panel panel-default" data-translate-catalog="auth/messages">
                                     <div class="panel-heading" role="tab">
                                         <h4 class="panel-title">
-                                            <!--div class="btn-group" data-toggle="buttons" >
-                                                <label class="userStoryGroup btn btn-toggle btn-danger [?merge .privilegeStatus.then('active', '') ?]" title="All">
-                                                    <?merge .privilegeStatus @checked ?>
-                                                    <input type="checkbox" class="userStoryGroupRadioBtn" value='[?merge .name ?]/*'><small style="color:white">All</small>
-                                                </label>
-                                                &nbsp;
-                                            </div-->
                                             <div class="btn-group" data-toggle="buttons">
                                                 <label class="btn btn-xs btn-default selectAll" title="All">
                                                     <input type="radio" name="selectAll" value='[?merge .name ?]/*'/> All
@@ -134,13 +147,13 @@
                                         <div class="panel-body">
                                             <ul class="list-group">
                                                 <?merge .userStory?>
-                                                <li class="list-group-item" data-translate-context="userStory">
+                                                <li class="list-group-item [?merge .securityLevel ?]" data-translate-context="userStory">
                                                     <div class="btn-group" data-toggle="buttons" >
                                                         <label class="userStory btn btn-xs btn-toggle [?merge .status.then('btn-success active', 'btn-danger') ?] [?merge .bundleChecked.then('disabled', '') ?]" title="On / Off">
                                                             <?merge .status @checked ?>
                                                             <input type="checkbox" class="userStoryRadioBtn" value='[?merge .value ?]'/><span class="label"><?merge .status.then("On" , "Off") ?></span>
                                                         </label>
-                                                    </div> 
+                                                    </div>
                                                     <span><?merge .name ?></span>
                                                 </li>
                                             </ul>
@@ -168,6 +181,8 @@
 
     window.localStorage.clear();
 
+    var hasSecurityLevel = $('#hasSecurityLevel').val() == 'true' ? true : false;
+
     $('#privileges').on('click', '.selectAll', function() {
         if ($(this).hasClass('active')) {
             return;
@@ -180,8 +195,53 @@
             return;
         }
         unselectAllPrivileges($(this), false);
-        
+
     });
+
+    if (hasSecurityLevel) {
+        filterPrivilege();
+
+        $('#securityLevel').on('click', '.btn', function() {
+            if ($(this).hasClass('active')) {
+                return;
+            }
+
+            $(this).addClass('btn-info active')
+                .removeClass('btn-default')
+                .siblings()
+                .removeClass('btn-info active')
+                .addClass('btn-default');
+
+            $('#members').empty();
+            $("#userTypeahead").typeahead('val', '');
+            filterPrivilege();
+        });
+
+        function filterPrivilege() {
+            securityLevel = $('#securityLevel').find('.active > input ').val();
+
+            userStoryDomains = $('#privileges').children();
+
+            userStoryDomains.each(function(){
+                $(this).show();
+
+                userStory = $(this).find('li');
+                length = userStory.length;
+                userStory.each(function() {
+                    if (typeof securityLevel === 'undefined' || $(this).hasClass(securityLevel)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                        length--;
+                    }
+                });
+
+                if (length === 0 ) {
+                    $(this).hide();
+                }
+            });
+        }
+    }
 
     $('#privilegesTab').on('click', '.superAdminAll', function() {
         if ($(this).hasClass('active')) {
@@ -202,7 +262,6 @@
         if ($(this).hasClass('.active')) {
             return;
         }
-
 
         $(this).addClass('btn-danger active')
             .removeClass('btn-default')
@@ -324,24 +383,85 @@
             selectPrivileges($(this))
         });
 
-        //$('.userStoryGroup.active').closest('.panel').find('.objectRadio').addClass('disabled').addClass('btn-success').removeClass('btn-danger').find('.label').html('On ');
-
         // Define data source for user typeahead
-        var users = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            prefetch: {url: '/user/todisplay', ttl: '0'},
-            limit: 100
-        });
-        users.initialize();
 
-        // initialize typeahead
-        $('#userTypeahead').typeahead(
+        if (hasSecurityLevel) {
+            var users = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    wildcard: '%QUERY',
+                    url: '/Useraccounts/%QUERY',
+                    replace: function (url, query) {
+                        securityLevel = $('#securityLevel').find('.active > input ').val();
+
+                        if (typeof securityLevel === "undefined") {
+                            return '/Useraccounts/' + query;
+                        }
+
+                        return '/Useraccounts/' + query + '?securityLevel=' + securityLevel;
+                    },
+                    transform: function(response) {
+                        return response;
+                    }
+                },
+                limit: 100
+            });
+
+            // initialize typeahead
+            $('#userTypeahead').typeahead(
+                {
+                    hint: true,
+                    highlight: true,
+                    minLength: 2
+                },
+                {
+                    name: 'users',
+                    displayKey: 'displayName',
+                    templates: {
+                        empty: function() {
+                            return "<span class='well well-sm'>"+$('#noUserFound').text()+"</span>";
+                        },
+                        suggestion: function(user) {
+                            var display =
+                                "<span>"
+                                + "<span class='fa fa-user' >&nbsp;</span>"
+                                + "<span style='font-family:Helvetica, sans-serif;'>"
+                                + user.displayName
+                                + "</span></span></span><br>";
+                            return display;
+                        }
+                    },
+                    source : users
+                    // source: function(query, cb) {
+                    //     users.search(query, function(suggestions) {
+                    //         var i = suggestions.length;
+                    //         while (i--) {
+                    //             if ($('#members').find('[data-memberid="'+ suggestions[i].accountId +'"]').length)
+                    //                 suggestions.splice(i, 1);
+                    //         }
+                    //         cb(suggestions);
+                    //     });
+                    // }
+                }
+            ).on('typeahead:selected', function($event, suggestion, source) {
+                $("#userTypeahead").prop('user', suggestion);
+            });
+        } else {
+            var users = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                prefetch: {url: '/user/todisplay', ttl: '0'},
+                limit: 100
+            });
+            users.initialize();
+
+            $('#userTypeahead').typeahead(
             {
                 hint: true,
                 highlight: true,
                 minLength: 2
-            }, 
+            },
             {
                 name: 'users',
                 displayKey: 'displayName',
@@ -371,15 +491,15 @@
                     });
                 },
                 skipCache: true
-            }
-        ).on('typeahead:selected', function($event, suggestion, source) {
-            $("#userTypeahead").prop('user', suggestion);
-        });
+            }).on('typeahead:selected', function($event, suggestion, source) {
+                $("#userTypeahead").prop('user', suggestion);
+            });
+        }
     })
 
     //cancel
     $("#cancel").on('click', function() {
-        load("/auth/roles"); 
+        load("/auth/roles");
     })
 
     //submit
@@ -391,16 +511,16 @@
             type = 'PUT';
             url += '/' + $('#roleId').val();
         }
-        
+
         var parameters = {
             role : serialize()
         };
-        
-        if(parameters.role.roleName == "") {
-             gritter.show($('#empty_text').text(),false);
-             return false;
+
+        if((parameters.role.roleName === "" || typeof parameters.role.securityLevel === "undefined") && hasSecurityLevel) {
+            gritter.show($('#empty_text').text(),false);
+            return false;
         }
-        
+
         ajax($(this), {
             url: url,
             type: type,
@@ -420,23 +540,23 @@
         $(this).removeProp('disabled');
     })
 
-    // ROLE MEMBERS 
+    // ROLE MEMBERS
     //add members
     $("#addMember").on('click', function() {
         if(suggestion = $("#userTypeahead").prop('user')) {
             addroleMember(suggestion.displayName, suggestion.accountId);
-            $("#userTypeahead").val('');
+            $("#userTypeahead").typeahead('val', '');
         }
     })
 
     //remove members
-    $("#members").on('click', '.removeMembre', function() {
+    $("#members").on('click', '.removeMember', function() {
         $(this).closest('.input-group').remove();
     })
 
     /* TREE MANAGEMENT */
     // on/off switches
-        
+
     $("#contain").on('click', '.userStory', function() {
         var btn = $(this);
 
@@ -445,7 +565,7 @@
                .removeClass('btn-success')
                .find('.label')
                .text('Off');
-                selectPrivileges(btn.closest('.panel'), "unselected"); 
+                selectPrivileges(btn.closest('.panel'), "unselected");
             if ($("#superadmin").is(':checked')) {
                 $('#superadmin').closest('.toggle').click();
             }
@@ -454,7 +574,7 @@
                .removeClass('btn-danger')
                .find('.label')
                .text("On");
-                selectPrivileges(btn.closest('.panel'), "selected"); 
+                selectPrivileges(btn.closest('.panel'), "selected");
         }
     })
 
@@ -470,6 +590,8 @@
             jsonObject[$(this).attr('name')] = $(this).val();
         });
 
+        jsonObject['securityLevel'] = $('#securityLevel').find('.active > input ').val();
+
         //Enabled
         properties = $('#enabled').prop('checked')
         jsonObject['enabled'] = properties;
@@ -480,21 +602,16 @@
             jsonObject.roleMembers.push($(this).data('memberid'));
         });
 
-        if ($("#privilegesTab").find('.superAdminAll.active').length !== 0) {
-            jsonObject.privileges.push('*');
-        }
-        else{
-            //privileges
-            $('#privileges').find('.selectAll').each(function(){
-                if($(this).hasClass('active')) {
-                    jsonObject.privileges.push($(this).find('input').val());
-                } else {
-                    $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
-                        jsonObject.privileges.push($(this).val());
-                    });
-                }
-            });
-        }
+        //privileges
+        $('#privileges').find('.selectAll').each(function(){
+            if($(this).hasClass('active')) {
+                jsonObject.privileges.push($(this).find('input').val());
+            } else {
+                $(this).closest('.panel').find('.userStoryRadioBtn:checked').each(function(){
+                    jsonObject.privileges.push($(this).val());
+                });
+            }
+        });
 
         return jsonObject;
     }
@@ -507,7 +624,7 @@
             .addClass('input-group')
             .data('memeberid', memberId)
             .appendTo($('#members'));
-        
+
         var input = $('<input/>')
             .addClass('form-control')
             .attr('type', 'text')
@@ -522,7 +639,7 @@
             .appendTo(inputGroup);
 
         var btn = $('<button/>')
-            .addClass('btn btn-danger removeMembre')
+            .addClass('btn btn-danger removeMember')
             .attr('type', 'button')
             .html("&nbsp;")
             .appendTo(inputGrpBtn);

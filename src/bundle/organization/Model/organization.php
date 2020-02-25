@@ -148,4 +148,11 @@ class organization
      */
     public $isOrgUnit;
 
+    /**
+     * Status of organization
+     *
+     * @var bool
+     */
+    public $enabled = true;
+
 }

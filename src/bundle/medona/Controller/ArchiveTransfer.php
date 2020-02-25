@@ -161,18 +161,21 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receiveStream($message, $messageFile, $attachments, $filename)
     {
-        // Valid URL file:// http:// data://
-        if (filter_var($messageFile, FILTER_VALIDATE_URL)) {
-            $data = stream_get_contents($messageFile);
-        } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $messageFile)) {
-            $data = base64_decode($messageFile);
-        } elseif (is_file($messageFile)) {
-            if (empty($filename)) {
-                $filename = basename($messageFile);
-            }
-            $data = file_get_contents($messageFile);
-        } else {
-            $data = $messageFile;
+        switch (true) {
+            case is_string($messageFile)
+                && (filter_var(substr($messageFile, 0, 10), FILTER_VALIDATE_URL) || is_file($messageFile)):
+                $data = file_get_contents($messageFile);
+                break;
+
+            case is_string($messageFile) &&
+                preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $messageFile):
+                $data = base64_decode($messageFile);
+                break;
+        
+            case is_resource($messageFile):
+                $handler = \core\Encoding\Base64::decode($messageFile);
+                $data = stream_get_contents($handler);
+                break;
         }
 
         $mediatype = $this->finfo->buffer($data);
@@ -200,7 +203,16 @@ class ArchiveTransfer extends abstractMessage
         }
 
         $zip = \laabs::newService('dependency/fileSystem/plugins/zip');
-        $zip->extract($zipfile, $tmpdir);
+
+        try {
+            $zip->extract($zipfile, $tmpdir);
+        } catch (\Exception $e) {
+            $this->sendError("400", "An error occurred during the opening of the zip");
+            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            $exception->errors = $this->errors;
+
+            throw $exception;
+        }
 
         $zipContents = scandir($tmpdir);
 
@@ -237,6 +249,7 @@ class ArchiveTransfer extends abstractMessage
             }
         }
 
+        unlink($zipfile);
         rmdir($zipFolder);
     }
 
@@ -262,21 +275,42 @@ class ArchiveTransfer extends abstractMessage
     protected function receiveAttachments($message, $data, $attachments, $filename=false)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
-        
+
         $message->attachments = [];
-        
+
         if (count($attachments)) {
             foreach ($attachments as $attachment) {
-                if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
-                    $data = stream_get_contents($attachment->data);
-                } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $attachment->data)) {
-                    $data = base64_decode($attachment->data);
-                } elseif (is_file($attachment->data)) {
-                    $data = file_get_contents($attachment->data);
+                if (is_string($attachment)) {
+                    if (is_file($attachment)) {
+                        copy($attachment, $messageDir.DIRECTORY_SEPARATOR.basename($attachment));
+                        $message->attachments[] = $attachment;
+                    } elseif (is_dir($attachment)) {
+                        $folderFileNames = glob($attachment.DIRECTORY_SEPARATOR."*");
+                        foreach ($folderFileNames as $folderFileName) {
+                            if (basename($folderFileName) === basename($attachment)) {
+                                continue;
+                            }
+                            copy($folderFileName, $messageDir.DIRECTORY_SEPARATOR.basename($folderFileName));
+
+                            $message->attachments[] = basename($folderFileName);
+                        }
+                    }
+                } elseif (is_object($attachment)) {
+                    if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
+                        $data = stream_get_contents($attachment->data);
+                    } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $attachment->data)) {
+                        $data = base64_decode($attachment->data);
+                    } elseif (is_file($attachment->data)) {
+                        $data = file_get_contents($attachment->data);
+                    }
+                    file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
+                    $message->attachments[] = $attachment->filename;
+                } elseif (is_resource($attachment)) {
+                    $handler = \core\Encoding\Base64::decode($attachment);
+                    $data = stream_get_contents($handler);
+                    file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
+                    $message->attachments[] = $attachment->filename;
                 }
-                
-                file_put_contents($messageDir.DIRECTORY_SEPARATOR.$attachment->filename, $data);
-                $message->attachments[] = $attachment->filename;
             }
         }
     }
@@ -368,10 +402,20 @@ class ArchiveTransfer extends abstractMessage
      */
     public function validateBatch()
     {
-        $results = array();
+        $results = [];
 
-        $messages = $this->sdoFactory->find("medona/message", "(status='received' OR status='modified') AND type='ArchiveTransfer' AND active=true");
-        foreach ($messages as $message) {
+        $messageIds = $this->sdoFactory->index("medona/message", ["messageId"], "(status='received' OR status='modified') AND type='ArchiveTransfer' AND active=true");
+
+        // Avoid paralleling processes
+        foreach ($messageIds as $messageId) {
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+
+            if (!in_array($message->status, ['received', 'modified'])) {
+                continue;
+            }
+
+            $this->changeStatus($message->messageId, "processing");
+
             $this->loadData($message);
 
             try {
@@ -445,12 +489,8 @@ class ArchiveTransfer extends abstractMessage
         } else {
             $message->status = "valid";
 
+            $eventInfo = get_object_vars($message);
             foreach ((array) $this->infos as $info) {
-                $eventInfo = array();
-                $eventInfo['type'] = "ArchiveTransfer";
-                $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-                $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-                $eventInfo['reference'] = $message->reference;
                 $eventInfo['code'] = "OK";
                 $eventInfo['info'] = $info;
 
@@ -540,15 +580,12 @@ class ArchiveTransfer extends abstractMessage
         } else {
             $message->status = "invalid";
         }
+
+        $eventInfo = get_object_vars($message);
         foreach ((array) $this->errors as $error) {
-            $eventInfo = array();
-            $eventInfo['type'] = "ArchiveTransfer";
-            $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-            $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-            $eventInfo['reference'] = $message->reference;
             $eventInfo['code'] = $error->getCode();
             $eventInfo['info'] = $error->getMessage();
-
+            
             $event = $this->lifeCycleJournalController->logEvent(
                 'medona/validation',
                 'medona/message',
@@ -729,11 +766,17 @@ class ArchiveTransfer extends abstractMessage
     {
         $results = array();
 
-        $messages = $this->sdoFactory->find("medona/message", "status='accepted' AND type='ArchiveTransfer' AND active=true");
-        foreach ($messages as $message) {
+        $messageIds = $this->sdoFactory->index("medona/message", ["messageId"], "status='accepted' AND type='ArchiveTransfer' AND active=true");
+
+        foreach ($messageIds as $messageId) {
+            // Avoid paralleling processing
+            $message = $this->sdoFactory->read('medona/message', (string) $messageId);
+
+            if ($message->status != 'accepted') {
+                continue;
+            }
+
             $this->changeStatus($message->messageId, "processing");
-        }
-        foreach ($messages as $message) {
             $this->loadData($message);
 
             try {

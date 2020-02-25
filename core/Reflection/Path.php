@@ -215,39 +215,43 @@ class Path
     /**
      * Get message
      * @param array $requestArgs The received arguments
-     * 
+     *
      * @return array The service arguments
      */
-    public function getMessage(array $requestArgs=array())
+    public function getMessage(array $requestArgs = array())
     {
         // Get message parts using route definition
         $parameters = $this->getParameters();
         $messageParts = array();
-        foreach ($parameters as $parameter) {
+        foreach ($parameters as $i => $parameter) {
             switch (true) {
                 // Value available from request arguments or body: cast into message part type
-                case isset($requestArgs[$parameter->name]) :
-                    $value = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
+                case isset($requestArgs[$parameter->name]):
+                    $messageParts[$parameter->name]  = \laabs::cast($requestArgs[$parameter->name], $parameter->getType(), true);
+                    break;
+
+                // Value available from request arguments or body: cast into message part type
+                case isset($requestArgs[$i]):
+                    $messageParts[$parameter->name] = \laabs::cast($requestArgs[$i], $parameter->getType(), true);
                     break;
 
                 // Default value
                 case $parameter->isDefaultValueAvailable():
-                    $value = $parameter->getDefaultValue();
+                    $messageParts[$parameter->name] = $parameter->getDefaultValue();
                     break;
 
                 // Optional : null
                 case $parameter->isOptional():
-                    $value = null;
+                    $messageParts[$parameter->name] = null;
                     break;
 
                 // No other case should raise an exception
                 default:
                     // Throw exception
-                    $value = null;
+                    $messageParts[$parameter->name] = null;
             }
-            $messageParts[$parameter->name] = $value;
         }
-       
+
         // Backward remove null values from array
         do {
             $arg = end($messageParts);

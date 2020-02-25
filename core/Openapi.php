@@ -594,8 +594,6 @@ class Openapi
                 $component->{'x-code-samples'}[] = $example;
             }
         }
-
-        $component->{'x-displayName'} = "coucou";
     }
 
     protected function getExamples($reflection)

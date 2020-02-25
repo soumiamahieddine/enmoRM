@@ -953,6 +953,9 @@ msgstr "Fichier conteneur"
 msgid "Originating date"
 msgstr "Date du document"
 
+msgid "Today's date"
+msgstr "Date du jour"
+
 msgid "Text indexation"
 msgstr "Indexation du texte"
 
@@ -1100,3 +1103,6 @@ msgstr "Cliquer pour modifier '%1$s'"
 
 msgid "* At least one field must be filled in."
 msgstr "* Au moins un champ doit être renseigné."
+
+msgid "Export to "
+msgstr "Exporter en "

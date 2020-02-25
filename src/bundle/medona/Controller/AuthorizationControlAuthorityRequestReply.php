@@ -55,7 +55,7 @@ class AuthorizationControlAuthorityRequestReply extends abstractMessage
             $message->comment[] = $comment;
         }
 
-        $message->reference = $requestMessage->reference.'_Reply';
+        $message->reference = $requestMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
         $message->requestReference = $requestMessage->reference;
         $requestMessage->replyReference = $requestMessage->reference;
 
@@ -67,7 +67,6 @@ class AuthorizationControlAuthorityRequestReply extends abstractMessage
             if ($message->schema != 'medona') {
                 $authorizationControlAuthorityRequestReplyController = \laabs::newController($message->schema.'/AuthorizationControlAuthorityRequestReply');
                 $authorizationControlAuthorityRequestReplyController->send($message);
-
             } else {
                 $authorizationControlAuthorityRequestReply = $this->sendMessage($message);
                 $message->object = $authorizationControlAuthorityRequestReply;
@@ -79,11 +78,13 @@ class AuthorizationControlAuthorityRequestReply extends abstractMessage
                 $this->generate($message);
                 $this->save($message);
             }
-            $operationResult = true;
-
         } catch (\Exception $e) {
             $message->status = "invalid";
-            $operationResult = false;
+            $this->create($message);
+
+            $this->logValidationErrors($message, $e);
+
+            throw $e;
         }
 
         $this->lifeCycleJournalController->logEvent(
@@ -91,7 +92,7 @@ class AuthorizationControlAuthorityRequestReply extends abstractMessage
             'medona/message',
             $message->messageId,
             $message,
-            $operationResult
+            true
         );
 
         $this->create($message);

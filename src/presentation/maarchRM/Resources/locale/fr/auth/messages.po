@@ -34,11 +34,11 @@ msgstr "Administration fonctionnelle"
 msgctxt "userStoryGroup"
 
 msgid "adminOrganization"
-msgstr "Gérer l'organisation fonctionnelle"
+msgstr "Gérer l'organigramme"
 msgctxt "userStory"
 
 msgid "AdminArchivalProfileAccess"
-msgstr "Gérer les profils d'archive des producteurs"
+msgstr "Rattacher des profils d'archive à des activités"
 msgctxt "userStory"
 
 msgid "adminAuthorization"
@@ -50,7 +50,7 @@ msgstr "Gérer les contacts de l'organisation"
 msgctxt "userStory"
 
 msgid "adminOrgUser"
-msgstr "Gérer les utilisateurs de l'organisation"
+msgstr "Rattacher les utilisateurs à l'organigramme"
 msgctxt "userStory"
 
 msgid "adminServiceaccount"
@@ -810,3 +810,80 @@ msgstr "Aucune organisation choisie"
 
 msgid "Admin Rights"
 msgstr "Droits Administrateur"
+
+msgid "Security level"
+msgstr "Niveau de sécurité"
+
+msgid "General administrator"
+msgstr "Administrateur général"
+
+msgid "Functional administrator"
+msgstr "Administrateur fonctionnel"
+
+msgid "adminEventFormat"
+msgstr "Gérer les formats d'événement du cycle de vie"
+msgctxt "userStory"
+
+msgid "export"
+msgstr "Exporter des référentiels"
+msgctxt "userStoryGroup"
+
+msgid "import"
+msgstr "Importer des référentiels"
+msgctxt "userStoryGroup"
+
+msgid "importOrganization"
+msgstr "Organisations"
+msgctxt "userStory"
+
+msgid "importRetentionRule"
+msgstr "Règles de conservation"
+msgctxt "userStory"
+
+msgid "importRole"
+msgstr "Rôles"
+msgctxt "userStory"
+
+msgid "importServiceAccount"
+msgstr "Comptes de service"
+msgctxt "userStory"
+
+msgid "importUserAccount"
+msgstr "Comptes utilisateurs"
+msgctxt "userStory"
+
+msgid "exportOrganization"
+msgstr "Organisations"
+msgctxt "userStory"
+
+msgid "exportRetentionRule"
+msgstr "Règles de conservation"
+msgctxt "userStory"
+
+msgid "exportRole"
+msgstr "Rôles"
+msgctxt "userStory"
+
+msgid "exportServiceAccount"
+msgstr "Comptes de service"
+msgctxt "userStory"
+
+msgid "exportUserAccount"
+msgstr "Comptes utilisateurs"
+msgctxt "userStory"
+
+msgid "exportArchivalProfile"
+msgstr "Profils d'archive"
+msgctxt "userStory"
+
+msgid "exportDescriptionField"
+msgstr "Champs de description"
+msgctxt "userStory"
+
+msgid "importArchivalProfile"
+msgstr "Profils d'archive"
+msgctxt "userStory"
+
+msgid "importDescriptionField"
+msgstr "Champs de description"
+msgctxt "userStory"

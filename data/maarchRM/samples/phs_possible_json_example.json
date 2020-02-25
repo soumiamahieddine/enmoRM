@@ -1,0 +1,45 @@
+{
+    "type": "object",
+    "properties": {
+        "reference_addresses" : {
+            "title" : "Adresses de référence",
+            "type" : "array",
+            "items" : {
+                "type" : "object",
+                "properties": {
+                    "address_type" : {
+                        "title" : "Intitulé de l'adresse",
+                        "type" : "string",
+                        "enum" : ["Personelle", "Professionelle" ,"Secondaire"]
+                    },
+                    "streetNumber" : {
+                        "title" : "Numéro de voie",
+                        "type" : "number"
+                    },
+                    "street" : {
+                        "title" : "Rue",
+                        "type" : "string"
+                    },
+                    "city" : {
+                        "title" : "Ville",
+                        "type" : "string"
+                    },
+                    "postCode" : {
+                        "title" : "Code postal",
+                        "type" : "number"
+                    },
+                    "country" : {
+                        "title" : "Pays",
+                        "type" : "string",
+                        "ref" : true
+                    }
+                }
+            }
+        },
+        "country" : {
+            "title" : "pays2",
+            "type" : "string",
+            "ref" : true
+        }
+    }
+}

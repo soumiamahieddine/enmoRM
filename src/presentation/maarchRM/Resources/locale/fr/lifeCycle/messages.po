@@ -47,6 +47,9 @@ msgid "From"
 msgstr "Depuis"
 msgctxt "date"
 
+msgid "Organization"
+msgstr "Organisation"
+
 msgid "to"
 msgstr "jusqu'au"
 msgctxt "date"
@@ -422,6 +425,13 @@ msgid "ownerOrgId"
 msgstr "Identifiant de l'organisation"
 msgctxt "eventInfo"
 
+msgid "originatorArchiveId"
+msgstr "Identifiant métier"
+msgctxt "eventInfo"
+
+msgid "No originator found"
+msgstr "Aucune organisation ou service correspondant"
+
 # ---------------------------------------------------------
 # Event types
 # ---------------------------------------------------------
@@ -528,8 +538,6 @@ msgstr "Réception d'une archive"
 msgid "recordsManagement/validation"
 msgstr "Validation d'une archive"
 
-msgid "recordsManagement/descriptionModification"
-msgstr "Modification de la description d'archive"
 
 msgid "recordsManagement/outgoingTransfer"
 msgstr "Transfert sortant"

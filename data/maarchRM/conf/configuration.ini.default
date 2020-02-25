@@ -310,6 +310,12 @@ menu = "[
 ]"
 
 [auth]
+; If useSecurityLevel = true, uncomment the next lign
+;@include securityLevel.ini
+
+; Add stronger verification on user possibilities based on security level
+useSecurityLevel = false
+
 ; Encryption algorithm (MD5, SHA256, SHA512...)
 passwordEncryption = SHA256
 
@@ -359,7 +365,9 @@ blacklistUserStories = "[
     'originatorAccess/*',
     'restitution/*',
     'adminFunc/contact',
-    'adminArchive/adminStorageRule'
+    'adminArchive/adminStorageRule',
+    'export/role',
+    'import/role'
 ]"
 
 ; Blacklist of user stories
@@ -376,7 +384,8 @@ blacklistUserStories = "[
 ; 'csrfConfig' Available rules
 ;   'cookieName' Name of the cookie whose value is the csrf token
 ;   'tokenLenght' Token size
-csrfWhiteList = "['user/login', 'user/password']"
+;   'lifeTime' Token validity in seconds (defaults 3600)
+csrfWhiteList = "['user/login', 'user/password', 'user/prompt', 'user/logout', 'user/generateResetToken']"
 csrfConfig = '{
     "cookieName" : "CSRF",
     "tokenLength" : 32
@@ -515,6 +524,13 @@ chainJournalByOrganization = false;
 chainWithTimestamp = false;
 
 [organization]
+
+; Displaying the organization as a tree
+; true = organization tree
+; false = organization list
+; WARNING : Above 40 services, we advise you not to activate this option.
+isOrgTree = true;
+
 ; Roles of organization unit
 ; if 'transaction' parameter disable, uncomment the block 'orgUnitRoles' below
 ; if 'transaction' parameter enable, comment the block 'orgUnitRoles' below
@@ -666,8 +682,8 @@ Password                        = %password%
 
 ; Path to the UK National Archives DROID signature file for file format detection
 ; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
-signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V94.xml"
-containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20180920.xml"
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V96.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20200121.xml"
 
 ; Path to libreOffice executable
 ;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"

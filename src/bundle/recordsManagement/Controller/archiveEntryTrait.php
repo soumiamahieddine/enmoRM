@@ -82,17 +82,13 @@ trait archiveEntryTrait
             $archive->archiveId = \laabs::newId();
         }
 
-        // Get originatorOrgRegNumber of parent if parentId exists
-        if (isset($archive->parentArchiveId)) {
-            $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
-            $archive->originatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
-        }
-
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();
 
         if ($zipContainer) {
             $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
         }
 
         // Load archival profile, service level if specified
@@ -123,6 +119,41 @@ trait archiveEntryTrait
     }
 
     /**
+     * Receives attachments
+     * @param object $archive
+     */
+    protected function receiveAttachments($archive)
+    {
+        if (is_array($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $receivedHandler = $digitalResource->getHandler();
+
+                switch (true) {
+                    case is_string($receivedHandler)
+                        && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
+                        $handler = fopen($receivedHandler, 'r');
+                        break;
+
+                    case is_string($receivedHandler) &&
+                        preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler):
+                        $handler = \laabs::createTempStream(base64_decode($receivedHandler));
+                        break;
+                
+                    case is_resource($receivedHandler):
+                        $handler = \core\Encoding\Base64::decode($receivedHandler);
+                }
+
+                $digitalResource->setHandler($handler);
+            }
+        }
+        if (is_array($archive->contents)) {
+            foreach ($archive->contents as $contentArchive) {
+                $this->receiveAttachments($contentArchive);
+            }
+        }
+    }
+
+    /**
      * Process a zipContainer
      *
      * @param recordsManagement/archive $archive The archive
@@ -137,32 +168,13 @@ trait archiveEntryTrait
 
         $archive->digitalResources = [];
         $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
-        $directory = $zipDirectory . DIRECTORY_SEPARATOR . reset($cleanZipDirectory);
+        $directory = $zipDirectory.DIRECTORY_SEPARATOR.reset($cleanZipDirectory);
 
         if (!is_dir($directory)) {
             throw new \core\Exception("The container file is non-compliant");
         }
 
-        $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
-
-        foreach ($scannedDirectory as $filename) {
-            if (is_link($directory . DIRECTORY_SEPARATOR . $filename)) {
-                throw new \core\Exception("The container file contains symbolic links");
-            }
-
-            if (\laabs::strStartsWith($filename, $archive->archivalProfileReference . " ")) {
-                $resource = $this->extractResource($directory, $filename);
-                $resource->setContents(base64_encode($resource->getContents()));
-                $archive->digitalResources[] = $resource;
-            } else {
-                $archiveUnit = $this->extractArchiveUnit($filename);
-                $archiveUnit->archiveId = \laabs::newId();
-                $resource = $this->extractResource($directory, $filename);
-                $resource->setContents(base64_encode($resource->getContents()));
-                $archiveUnit->digitalResources[] = $resource;
-                $archive->contents[] = $archiveUnit;
-            }
-        }
+        $this->extractDir($directory, $archive);
 
         return $archive;
     }
@@ -176,24 +188,65 @@ trait archiveEntryTrait
      */
     private function extractZip($zip)
     {
-        $packageDir = \laabs\tempdir() . DIRECTORY_SEPARATOR . "MaarchRM" . DIRECTORY_SEPARATOR;
+        $packageDir = \laabs\tempdir().DIRECTORY_SEPARATOR."MaarchRM".DIRECTORY_SEPARATOR;
 
         if (!is_dir($packageDir)) {
             mkdir($packageDir, 0777, true);
         }
 
         $name = \laabs::newId();
-        $zipfile = $packageDir . $name . ".zip";
+        $zipfile = $packageDir.$name.".zip";
 
-        if (!is_dir($packageDir . $name)) {
-            mkdir($packageDir . $name, 0777, true);
+        if (!is_dir($packageDir.$name)) {
+            mkdir($packageDir.$name, 0777, true);
         }
 
         file_put_contents($zipfile, base64_decode($zip->getContents()));
 
         $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
 
-        return $packageDir . $name;
+        unset($zipfile);
+
+        return $packageDir.$name;
+    }
+
+    /**
+     * Process a zip directory
+     * @var string                    $directory
+     * @var recordsManagement/archive $archive
+     */
+    protected function extractDir($directory, $archive)
+    {
+        $scannedDirectory = array_diff(scandir($directory), array('..', '.'));
+
+        foreach ($scannedDirectory as $filename) {
+            if (is_link($directory.DIRECTORY_SEPARATOR.$filename)) {
+                throw new \core\Exception("The container file contains symbolic links");
+            }
+
+            if (is_file($directory.DIRECTORY_SEPARATOR.$filename)) {
+                if (!empty($archive->archivalProfileReference) && \laabs::strStartsWith($filename, $archive->archivalProfileReference." ")) {
+                    $resource = $this->digitalResourceController->createFromFile($directory.DIRECTORY_SEPARATOR.$filename, $filename);
+                    $archive->digitalResources[] = $resource;
+                } else {
+                    $archiveUnit = $this->extractArchiveUnit($filename);
+                    $archiveUnit->archiveId = \laabs::newId();
+                    $archiveUnit->fileplanLevel = 'item';
+                    $archive->contents[] = $archiveUnit;
+
+                    $resource = $this->digitalResourceController->createFromFile($directory.DIRECTORY_SEPARATOR.$filename, $filename);
+                    $archiveUnit->digitalResources[] = $resource;
+                }
+            }
+
+            if (is_dir($directory.DIRECTORY_SEPARATOR.$filename)) {
+                $archiveUnit = $this->extractArchiveUnit($filename);
+                $archiveUnit->archiveId = \laabs::newId();
+                $archive->contents[] = $archiveUnit;
+
+                $this->extractDir($directory.DIRECTORY_SEPARATOR.$filename, $archiveUnit);
+            }
+        }
     }
 
     /**
@@ -209,15 +262,24 @@ trait archiveEntryTrait
             $filename = utf8_encode($filename);
         }
 
-        $archivalProfileReference = strtok($filename, " ");
-        $archiveName = substr($filename, strlen($archivalProfileReference)+1);
-        $archiveName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $archiveName);
-
         $archive = \laabs::newInstance("recordsManagement/archive");
         $archive->archiveId = \laabs::newId();
-        $archive->archivalProfileReference = $archivalProfileReference;
-        $this->useArchivalProfile($archivalProfileReference);
-        $archive->archiveName = $archiveName . " _ " . $this->currentArchivalProfile->name;
+
+        if (strpos($filename, " ") !== false) {
+            $archivalProfileReference = strtok($filename, " ");
+
+            try {
+                $this->useArchivalProfile($archivalProfileReference);
+                $archiveName = substr($filename, strlen($archivalProfileReference)+1);
+                $archiveName = preg_replace('/\\.[^.\\s]{3,4}$/', '', $archiveName);
+                $archive->archiveName = $archiveName." _ ".$this->currentArchivalProfile->name;
+                $archive->archivalProfileReference = $archivalProfileReference;
+            } catch (\Exception $e) {
+                $archive->archiveName = $filename;
+            }
+        } else {
+            $archive->archiveName = $filename;
+        }
 
         return $archive;
     }
@@ -232,7 +294,7 @@ trait archiveEntryTrait
      */
     private function extractResource($resourceDirectory, $filename)
     {
-        $resource = $this->digitalResourceController->createFromFile($resourceDirectory . DIRECTORY_SEPARATOR . $filename, false);
+        $resource = $this->digitalResourceController->createFromFile($resourceDirectory.DIRECTORY_SEPARATOR.$filename, false);
 
         $this->digitalResourceController->getHash($resource, \laabs::configuration('auth')['passwordEncryption']);
 
@@ -266,7 +328,7 @@ trait archiveEntryTrait
 
         foreach ($archives as $archive) {
             foreach ($archive->digitalResources as $digitalResource) {
-                $filePath = $batchDirectory . DIRECTORY_SEPARATOR . $digitalResource->fileName;
+                $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
 
                 $fileContent = file_get_contents($filePath);
                 $digitalResource->handler = base64_encode($fileContent);
@@ -288,7 +350,7 @@ trait archiveEntryTrait
     {
         // Set archive name when mono document
         if (empty($archive->archiveName)) {
-            if (count($archive->digitalResources)) {
+            if (is_array($archive->digitalResources) && count($archive->digitalResources)) {
                 foreach ($archive->digitalResources as $digitalResource) {
                     if (isset($digitalResource->fileName)) {
                         $archive->archiveName = pathinfo($digitalResource->fileName, \PATHINFO_FILENAME);
@@ -376,6 +438,12 @@ trait archiveEntryTrait
 
     public function completeOriginator($archive)
     {
+        // Get originatorOrgRegNumber of parent if parentId exists
+        if (isset($archive->parentArchiveId)) {
+            $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
+            $archive->originatorOrgRegNumber = $parentArchive->originatorOrgRegNumber;
+        }
+
         // Originator
         if (empty($archive->originatorOrgRegNumber)) {
             $currentOrg = \laabs::getToken("ORGANIZATION");

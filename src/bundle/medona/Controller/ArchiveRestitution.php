@@ -241,6 +241,8 @@ class ArchiveRestitution extends abstractMessage
 
             $this->create($message);
 
+            $this->logValidationErrors($message, $e);
+
             throw $e;
         }
 
@@ -298,7 +300,7 @@ class ArchiveRestitution extends abstractMessage
         $archiveRestitutionRequestController = \laabs::newController("medona/ArchiveRestitutionRequest");
 
         if (!$identifier) {
-            $identifier = "archiveRestitutionRequest_".date("Y-m-d-H-i-s");
+            $identifier = "archiveRestitutionRequest_".date("Y-m-d_H-i-s");
         }
 
         $reference = $identifier;
@@ -355,17 +357,11 @@ class ArchiveRestitution extends abstractMessage
         $this->changeStatus($messageId, "accepted");
 
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveRestitution";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
         $this->lifeCycleJournalController->logEvent(
             'medona/acceptance',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
@@ -389,18 +385,11 @@ class ArchiveRestitution extends abstractMessage
             $this->archiveController->setStatus($unitIdentifier->objectId, 'restituted');
         }
 
-
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveRestitution";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
         $this->lifeCycleJournalController->logEvent(
             'medona/acknowledgement',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
@@ -419,24 +408,19 @@ class ArchiveRestitution extends abstractMessage
         $message = $this->sdoFactory->read('medona/message', $messageId);
         $requestMessage = $this->sdoFactory->find(
             'medona/message',
-            "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND replyReference='".$message->relatedReference."'")[0];
+            "type='ArchiveRestitutionRequest' AND senderOrgRegNumber='".$message->recipientOrgRegNumber."' AND replyReference='".$message->relatedReference."'"
+        )[0];
         $requestMessage->unitIdentifier = $this->sdoFactory->readChildren('medona/unitIdentifier', $requestMessage);
 
         foreach ($requestMessage->unitIdentifier as $unitIdentifier) {
             $this->archiveController->setStatus((string) $unitIdentifier->objectId, "preserved");
         }
-//
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveRestitution";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
+        
         $this->lifeCycleJournalController->logEvent(
             'medona/rejection',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }
@@ -460,17 +444,11 @@ class ArchiveRestitution extends abstractMessage
             \laabs\rmdir($uri, true);
         }
 
-        $eventInfo = array();
-        $eventInfo['type'] = "ArchiveRestitution";
-        $eventInfo['senderOrgRegNumber'] = $message->senderOrgRegNumber;
-        $eventInfo['recipientOrgRegNumber'] = $message->recipientOrgRegNumber;
-        $eventInfo['reference'] = $message->reference;
-
         $this->lifeCycleJournalController->logEvent(
             'medona/processing',
             'medona/message',
             $message->messageId,
-            $eventInfo,
+            $message,
             true
         );
     }

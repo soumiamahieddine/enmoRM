@@ -428,7 +428,7 @@ abstract class abstractMessage
             } else {
                 $binaryDataObject->attachment->filename = $digitalResource->resId;
             }
-            // $binaryDataObject->attachment->content = base64_encode($digitalResource->getContents());
+            
             $binaryDataObject->size = $digitalResource->size;
         }
 
@@ -506,34 +506,29 @@ abstract class abstractMessage
             return false;
         }
 
-        $resource = \laabs::newInstance('digitalResource/digitalResource');
+        $resourceController = \laabs::newController('digitalResource/digitalResource');
 
         switch (true) {
             case isset($attachment->filename):
                 $messageDir = dirname($message->path);
                 $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
-                $contents = file_get_contents($filepath);
-
-                $resource->fileExtension = pathinfo($attachment->filename, \PATHINFO_EXTENSION);
-                $resource->filename = basename($attachment->filename);
+                $handler = fopen($filepath, 'r');
+                $resource = $resourceController->createFromStream($handler, $attachment->filename);
                 break;
 
             case isset($attachment->uri):
-                $contents = file_get_contents($attachment->uri);
+                $handler = fopen($filepath, 'r');
+                $resource = $resourceController->createFromStream($handler);
                 break;
 
             case isset($attachment->value):
                 $contents = base64_decode($attachment->value);
+                $resource = $resourceController->createFromContents($contents);
                 break;
 
             default:
                 return false;
         }
-
-        $finfo = new \finfo(\FILEINFO_MIME_TYPE);
-        $resource->mimetype = $finfo->buffer($contents);
-
-        $resource->setContents($contents);
 
         return $resource;
     }
@@ -567,7 +562,9 @@ abstract class abstractMessage
                     $filename .= ".".$digitalResource->fileExtension;
                 }
             }
-            file_put_contents($messageDir.DIRECTORY_SEPARATOR.$filename, $digitalResource->getContents());
+            $handler = fopen($messageDir.DIRECTORY_SEPARATOR.$filename, 'w');
+            stream_copy_to_stream($handler, $digitalResource->getHandler());
+            fclose($handler);
         }
         
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$message->messageId.'.json';

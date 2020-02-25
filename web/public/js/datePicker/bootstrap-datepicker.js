@@ -1018,7 +1018,7 @@
                 this.dates.clear();
             }
             else if (ix !== -1){
-                this.dates.remove(ix);
+                //this.dates.remove(ix);
             }
             else {
                 this.dates.push(date);
@@ -1606,7 +1606,7 @@
         contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',
         footTemplate: '<tfoot>'+
         '<tr>'+
-        '<th colspan="7" class="today"></th>'+
+        '<th colspan="7" class="today" style="cursor: pointer"></th>'+
         '</tr>'+
         '<tr>'+
         '<th colspan="7" class="clear"></th>'+

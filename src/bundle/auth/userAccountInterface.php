@@ -53,10 +53,11 @@ interface userAccountInterface
     /**
      * Search the user account for typehead
      * @param string $query The query string
+     * @param string $securityLevel The security level
      *
      * @action auth/userAccount/queryUserAccounts
      */
-    public function readQuery_query_($query = null);
+    public function readQuery_query_($query = null, $securityLevel = null);
 
     /**
      * Prepare an empty user Account object
@@ -65,6 +66,16 @@ interface userAccountInterface
      *
      */
     public function readNew();
+
+    /**
+     * Create a csv file
+     *
+     * @param  integer $limit Max number of results to display
+     *
+     * @action auth/userAccount/exportCsv
+     *
+     */
+    public function readExport($limit = null);
 
     /**
      * Add a new user & role members
@@ -232,4 +243,14 @@ interface userAccountInterface
      * @action auth/userAccount/requirePasswordChange
      */
     public function updatePasswordchangerequest_userAccountId_();
+
+    /**
+     * @param resource  $data     Data base64 encoded or not
+     * @param boolean $isReset  Reset tables or not
+     *
+     * @action auth/userAccount/import
+     *
+     * @return boolean        Import with reset of table data or not
+     */
+    public function createImport($data, $isReset);
 }

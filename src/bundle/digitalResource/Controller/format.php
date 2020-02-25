@@ -205,6 +205,8 @@ class format
 
         $valid = $this->validateFormat($filename);
 
+        unlink($filename);
+
         $fileInformation = \laabs::newMessage("digitalResource/fileInformation");
 
         $fileInformation->hashMD5 = hash("MD5", $contents);

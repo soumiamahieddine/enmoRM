@@ -488,13 +488,20 @@ trait laabsModelTrait
                 return (string) $sourceValue;
 
             case 'resource':
-                if (is_resource($sourceValue)) {
-                    return $sourceValue;
-                } else {
-                    return self::createMemoryStream((string) $sourceValue);
-                }
+                switch (true) {
+                    case is_resource($sourceValue):
+                        return $sourceValue;
 
-                return self::createMemoryStream('');
+                    case is_string($sourceValue) && filter_var(substr($sourceValue, 0, 128), FILTER_VALIDATE_URL):
+                        return fopen($sourceValue, 'r');
+
+                    case is_scalar($sourceValue):
+                        return self::createTempStream((string) $sourceValue);
+                    
+                    default:
+                        return self::createTempStream('');
+                }
+                break;
 
             case 'NULL':
                 return $sourceValue;

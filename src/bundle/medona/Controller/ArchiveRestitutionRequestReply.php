@@ -56,7 +56,7 @@ class ArchiveRestitutionRequestReply extends abstractMessage
             $message->comment[] = $comment;
         }
 
-        $message->reference = $requestMessage->reference.'_Reply';
+        $message->reference = $requestMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
         $message->requestReference = $requestMessage->reference;
 
         $requestMessage->replyReference = $message->reference;
@@ -91,12 +91,11 @@ class ArchiveRestitutionRequestReply extends abstractMessage
                 $this->save($message);
             }
             $operationResult = true;
-
         } catch (\Exception $e) {
             $message->status = "invalid";
-            $operationResult = false;
-
             $this->create($message);
+
+            $this->logValidationErrors($message, $e);
 
             throw $e;
         }
