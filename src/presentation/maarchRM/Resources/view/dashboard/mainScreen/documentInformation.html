@@ -94,7 +94,7 @@
                 DocumentInformation.form.find('[name="puid"]').text(resource.puid).attr('title', resource.puid);
             }
             // cache le bouton de conversion selon le format
-            if (resource.isConvertible) {
+            if (resource.isConvertible && "[?merge hasPrivilegeToConvert ?]" == "true") {
                 DocumentInformation.form.find("#convertResource").removeClass('hide');
             }
             if (resource.format) {
