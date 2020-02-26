@@ -392,10 +392,6 @@ trait archiveValidationTrait
      */
     public function validateDigitalResource($digitalResource)
     {
-        if ($digitalResource->size == 0) {
-            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
-        }
-
         // Create temp file
         $handler = $digitalResource->getHandler();
         $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format');
@@ -405,6 +401,10 @@ trait archiveValidationTrait
         fclose($temp);
 
         $digitalResource->size = filesize($filename);
+
+        if ($digitalResource->size == 0) {
+            throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
+        }
 
         if (!isset($digitalResource->mimetype)) {
             $finfo = new \finfo();
