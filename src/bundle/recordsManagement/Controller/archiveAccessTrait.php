@@ -554,10 +554,12 @@ trait archiveAccessTrait
         $binaryDataObject = \laabs::newInstance("recordsManagement/BinaryDataObject");
         $binaryDataObject->attachment = new \stdClass();
 
-        if (\laabs::hasPresentation()) {
-            $binaryDataObject->attachment->data = $digitalResource->getHandler();
-        } else {
+        if (\laabs::isServiceClient()) {
+            // Returns base64 encoded contents for web service clients
             $binaryDataObject->attachment->data = base64_encode($digitalResource->getContents());
+        } else {
+            // Let presenter stream the contents
+            $binaryDataObject->attachment->data = $digitalResource->getHandler();
         }
         
         $binaryDataObject->attachment->uri = "";
