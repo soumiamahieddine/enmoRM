@@ -234,7 +234,21 @@
                 console.log(err);
                 $('#archiveModificationForm').css('display', 'none');
             }
-                
+
+            if (type === 'requestCommunication') {
+                var isNotCommunicable = ids.some((id) => $('#' +id).data('iscommunicable') === 1);
+                if (isNotCommunicable) {
+                    $('#derogationTr').show();
+                    $('#derogationInputTr').show();
+                    $("#derogationTr .toggle").removeClass('btn-default off');
+                    $("#derogationTr .toggle").addClass('btn-info');
+                }
+                 else {
+                    $('#derogationTr').hide();
+                    $('#derogationInputTr').hide();
+                }
+            }
+
             $('#save').data("archiveids", ids);
             $('#modal_multipleSelection').css('display', '');
             $('#modal_selected').html(selected);
