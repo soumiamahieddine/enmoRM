@@ -674,7 +674,7 @@ trait archiveModificationTrait
                 break;
 
             case is_string($contents) &&
-                preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $contents):
+                preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $contents):
                 $handler = \laabs::createTempStream(base64_decode($contents));
                 break;
         
