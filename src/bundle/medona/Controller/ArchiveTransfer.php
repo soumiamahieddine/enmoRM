@@ -168,7 +168,7 @@ class ArchiveTransfer extends abstractMessage
                 break;
 
             case is_string($messageFile) &&
-                preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $messageFile):
+                preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $messageFile):
                 $data = base64_decode($messageFile);
                 break;
         
@@ -298,7 +298,7 @@ class ArchiveTransfer extends abstractMessage
                 } elseif (is_object($attachment)) {
                     if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
                         $data = stream_get_contents($attachment->data);
-                    } elseif (preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $attachment->data)) {
+                    } elseif (preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $attachment->data)) {
                         $data = base64_decode($attachment->data);
                     } elseif (is_file($attachment->data)) {
                         $data = file_get_contents($attachment->data);
