@@ -254,7 +254,7 @@ abstract class abstractMessage extends message
         }
 
         $event = $this->lifeCycleJournalController->logEvent(
-            'medona/validation',
+            'medona/sending',
             'medona/message',
             $message->messageId,
             $eventInfo,
