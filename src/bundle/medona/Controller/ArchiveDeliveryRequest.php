@@ -169,33 +169,66 @@ class ArchiveDeliveryRequest extends abstractMessage
         $reference = $identifier;
         foreach ($archivesByOriginator as $originatorOrgRegNumber => $archives) {
             $i = 1;
-            
+
             $unique = array(
                 'type' => 'ArchiveDeliveryRequest',
                 'senderOrgRegNumber' => $requesterOrgRegNumber,
                 'reference' => $reference,
             );
 
-            while ($this->sdoFactory->exists("medona/message", $unique)) {
-                $i++;
-                $unique['reference'] = $reference = $identifier.'_'.$i;
-            }
 
             $archiverOrgRegNumber = $archives[0]->archiverOrgRegNumber;
 
-            $message = $this->send(
-                $reference,
-                $archives,
-                $derogation,
-                $comment,
-                $requesterOrgRegNumber,
-                $archiverOrgRegNumber
-            );
+            $communicableArchives = [];
+            foreach ($archives as $archive) {
+                if ($this->isCommunicable($archive)) {
+                    $communicableArchives['communicable'] = $archive;
+                } else {
+                    $communicableArchives['notCommunicable'] = $archive;
+                }
+            }
 
-            $messages[] = $message;
+            foreach ($communicableArchives as $key => $archives) {
+                while ($this->sdoFactory->exists("medona/message", $unique)) {
+                    $i++;
+                    $unique['reference'] = $reference = $identifier.'_'.$i;
+                }
+                $derogation = true;
+                if ($key == 'communicable') {
+                    $derogation = false;
+                }
+                $message = $this->send(
+                    $reference,
+                    $archives,
+                    $derogation,
+                    $comment,
+                    $requesterOrgRegNumber,
+                    $archiverOrgRegNumber
+                );
+                $messages[] = $message;
+            }
         }
 
         return $messages;
+    }
+
+    /**
+     * Chexk wether an archive is communicable or not
+     *
+     * @param recordsManagement/archive $archive object archive
+     *
+     * @return boolean
+     */
+    protected function isCommunicable($archive)
+    {
+        if ($archive->accessRuleComDate) {
+            $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
+            if ($communicationDelay->invert != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
