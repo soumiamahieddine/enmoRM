@@ -135,7 +135,7 @@ trait archiveEntryTrait
                         break;
 
                     case is_string($receivedHandler) &&
-                        preg_match('%^[a-zA-Z0-9/+]*={0,2}$%', $receivedHandler):
+                        preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $receivedHandler):
                         $handler = \laabs::createTempStream(base64_decode($receivedHandler));
                         break;
                 
