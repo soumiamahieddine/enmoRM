@@ -213,9 +213,8 @@ class JsonTokenizer
         do {
             $chunk = fread($this->stream, $this->threshold);
             $length = strlen($chunk);
-            if (preg_match('#^[^"\\\\]*(?:\\\\.[^"\\\\]*)*"#', $chunk, $matches)) {
-                $tail = substr($matches[0], 0, -1);
-                
+            if (preg_match('/(?<!\\\\)(?:\\\\{2})*\\K"/', $chunk, $matches, PREG_OFFSET_CAPTURE)) {
+                $tail = substr($chunk, 0, $matches[0][1]);
                 $end = strlen($tail);
                 $size += $end;
                 fwrite($buffer, $tail);
