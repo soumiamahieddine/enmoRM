@@ -1250,13 +1250,15 @@ class archive
         } elseif (isset($archive->digitalResources)) {
             foreach ($archive->digitalResources as $key => $digitalResource) {
 
-                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
+                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource)
+                    && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/migration");
 
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
                 } else {
                     foreach ($digitalResource->relatedResource as $relatedResource) {
-                        $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
+                        $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource)
+                            && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/migration");
                         $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
                     }
                 }

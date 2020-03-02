@@ -160,10 +160,6 @@ class welcome
             $this->view->setSource("displayableFormat", json_encode(array()));
         }
 
-        $hasPrivilegeToConvert = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/migration") ? "true" : "false";
-
-        $this->view->setSource('hasPrivilegeToConvert', $hasPrivilegeToConvert);
-
         $this->view->merge();
 
         return $this->view->saveHtml();
