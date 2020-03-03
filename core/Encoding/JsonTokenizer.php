@@ -305,9 +305,9 @@ class JsonTokenizer
      */
     protected function unescape($string)
     {
-        $escapers = array("\\", "/", "\"", "\n", "\r", "\t", "\x08", "\x0c");
-        $replacements = array("\\\\", "\\/", "\\\"", "\\n", "\\r", "\\t", "\\f", "\\b");
-        $result = str_replace($replacements, $escapers, $string);
+        $escaped = array('\\\\', '\\/', '\\"');//, "\\n", "\\r", "\\t", "\\f", "\\b");
+        $unescaped = array('\\', '/', '"');//, "\n", "\r", "\t", "\x08", "\x0c");
+        $result = str_replace($escaped, $unescaped, $string);
 
         return $result;
     }
