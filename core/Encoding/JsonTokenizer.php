@@ -220,11 +220,13 @@ class JsonTokenizer
                 fwrite($buffer, $this->unescape($tail));
                 fseek($this->stream, (-$length+$end+1), SEEK_CUR);
                 rewind($buffer);
+
+                $out = $this->unescapeStream($buffer, $this->threshold);
                 if ($size < $this->threshold) {
-                    return $this->unescape(stream_get_contents($buffer));
+                    return stream_get_contents($out);
                 }
 
-                return $buffer;
+                return $out;
             }
 
             fwrite($buffer, $this->unescape($chunk));
@@ -233,6 +235,8 @@ class JsonTokenizer
 
         return $buffer;
     }
+
+
 
     /**
      * @param $char
@@ -301,12 +305,30 @@ class JsonTokenizer
     }
 
     /**
+     * Unsescape a stream contents
+     */
+    protected function unescapeStream($stream)
+    {
+        $out = fopen('php://temp', 'w+');
+        do {
+            // Add 1 to chunk length to prevent end of chunk escape chars
+            $chunk = fread($stream, $this->threshold+1);
+            fwrite($out, $this->unescape($chunk));
+        } while ($chunk);
+
+        rewind($out);
+        rewind($stream);
+
+        return $out;
+    }
+
+    /**
      * Unescape string or chunk
      */
     protected function unescape($string)
     {
-        $escaped = array('\\\\', '\\/', '\\"');//, "\\n", "\\r", "\\t", "\\f", "\\b");
-        $unescaped = array('\\', '/', '"');//, "\n", "\r", "\t", "\x08", "\x0c");
+        $escaped = array('\\\\', '\\/', '\\"', "\\n", "\\r", "\\t", "\\f", "\\b");
+        $unescaped = array('\\', '/', '"', "\n", "\r", "\t", "\x08", "\x0c");
         $result = str_replace($escaped, $unescaped, $string);
 
         return $result;
