@@ -217,54 +217,21 @@ class JsonTokenizer
                 $tail = substr($chunk, 0, $matches[0][1]);
                 $end = strlen($tail);
                 $size += $end;
-                fwrite($buffer, $tail);
+                fwrite($buffer, $this->unescape($tail));
                 fseek($this->stream, (-$length+$end+1), SEEK_CUR);
                 rewind($buffer);
                 if ($size < $this->threshold) {
-                    return stream_get_contents($buffer);
+                    return $this->unescape(stream_get_contents($buffer));
                 }
 
                 return $buffer;
             }
 
-            fwrite($buffer, $chunk);
+            fwrite($buffer, $this->unescape($chunk));
             $size += $this->threshold;
         } while ($chunk);
 
         return $buffer;
-
-        while (true) {
-            $char = fread($this->stream, 1);
-            // Unterminated string (waiting for quotes)
-            if ($char === false || $char === "") {
-                throw new Exception("String not terminated correctly " . ftell($this->stream));
-            }
-
-            // Terminated string
-            if ($quotes == $char && !$escaped) {
-                if (is_resource($buffer)) {
-                    return $buffer;
-                } else {
-                    return json_decode($quotes . $buffer . $quotes);
-                }
-            }
-
-            // Continued
-            if (is_string($buffer)) {
-                $buffer .= $char;
-                $size++;
-
-                if (strlen($buffer) == $this->threshold) {
-                    $tmp = fopen('php://temp', 'w+');
-                    fwrite($tmp, $buffer);
-                    $buffer = $tmp;
-                }
-            } else {
-                fwrite($buffer, $char);
-            }
-
-            $escaped = !$escaped && $quotes === "\"" && $char == "\\";
-        }
     }
 
     /**
@@ -331,5 +298,17 @@ class JsonTokenizer
     public function context()
     {
         return end($this->context);
+    }
+
+    /**
+     * Unescape string or chunk
+     */
+    protected function unescape($string)
+    {
+        $escapers = array("\\", "/", "\"", "\n", "\r", "\t", "\x08", "\x0c");
+        $replacements = array("\\\\", "\\/", "\\\"", "\\n", "\\r", "\\t", "\\f", "\\b");
+        $result = str_replace($replacements, $escapers, $string);
+
+        return $result;
     }
 }
