@@ -52,7 +52,7 @@
                                 <?merge ['label'] ?>
                             </a>
                             <?merge ['submenu'].count().bool() ?>
-                            <ul class="dropdown-menu subMenu" style="width: max-content">
+                            <ul class="dropdown-menu sideList" style="width: max-content">
                                 <?merge ['submenu'] ?>
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
@@ -473,9 +473,9 @@
         $('#aboutModal').modal();
     }
 
-    const dropDownSize = $('.subMenu').parents(".dropdown-menu").width();
+    const dropDownSize = $('.sideList').parents(".dropdown-menu").width();
 
-    $('.subMenu').each(function() {
+    $('.sideList').each(function() {
         var tmp = $(this).clone().appendTo( "body" ).css({'display':'block', 'visibility': 'hidden'});
         var width = tmp.width();
         tmp.remove();
