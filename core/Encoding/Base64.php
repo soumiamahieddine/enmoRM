@@ -41,7 +41,8 @@ class Base64
         if (is_resource($value)) {
             $stream = fopen('php://temp', 'w+');
             while (!feof($value)) {
-                $chunk = fread($value, 1024*1024*2);
+                // Chunk size 1024*1024*2 (2Mo binary)
+                $chunk = fread($value, 2097152);
                 fwrite($stream, base64_decode($chunk));
             }
 
@@ -64,7 +65,8 @@ class Base64
         if (is_resource($value)) {
             $stream = fopen('php://temp', 'w+');
             while (!feof($value)) {
-                $chunk = fread($value, 1024*1024*2);
+                // Chunk size 48*48*48/2 (2M of base64 6 bytes words)
+                $chunk = fread($value, 2654208);
                 fwrite($stream, base64_encode($chunk));
             }
 
