@@ -30,7 +30,7 @@ namespace core\Encoding;
 class Base64
 {
     /**
-     * Encode stream
+     * Decode stream
      */
     public static function decode($value)
     {
@@ -45,6 +45,30 @@ class Base64
                 fwrite($stream, base64_decode($chunk));
             }
 
+            rewind($value);
+            rewind($stream);
+
+            return $stream;
+        }
+    }
+
+    /**
+     * Encode stream
+     */
+    public static function encode($value)
+    {
+        if (is_scalar($value)) {
+            return base64_encode($value);
+        }
+
+        if (is_resource($value)) {
+            $stream = fopen('php://temp', 'w+');
+            while (!feof($value)) {
+                $chunk = fread($value, 1024*1024*2);
+                fwrite($stream, base64_encode($chunk));
+            }
+
+            rewind($value);
             rewind($stream);
 
             return $stream;

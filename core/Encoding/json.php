@@ -77,7 +77,11 @@ class json
      */
     public static function encode($data)
     {
-        $jsonString = \json_encode($data, \JSON_PRETTY_PRINT + \JSON_UNESCAPED_SLASHES + \JSON_UNESCAPED_UNICODE);
+        require_once __DIR__.'/JsonSerializer.php';
+        $serializer = new JsonSerializer();
+
+        //$jsonString = \json_encode($data, \JSON_PRETTY_PRINT + \JSON_UNESCAPED_SLASHES + \JSON_UNESCAPED_UNICODE);
+        $jsonString = $serializer($data, \JSON_PRETTY_PRINT + \JSON_UNESCAPED_SLASHES + \JSON_UNESCAPED_UNICODE);
 
         if ($jsonString === false) {
             return false;
