@@ -45,12 +45,11 @@ class JsonSerializer
         }
 
         if (is_object($data)) {
-            $return = clone($data);
             foreach ($data as $key => $value) {
-                $return->{$key} = $this->getRefs($value);
+                $data->{$key} = $this->getRefs($value);
             }
 
-            return $return;
+            return $data;
         }
 
         if (is_resource($data)) {
