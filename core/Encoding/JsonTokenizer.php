@@ -213,60 +213,30 @@ class JsonTokenizer
         do {
             $chunk = fread($this->stream, $this->threshold);
             $length = strlen($chunk);
-            if (preg_match('#^[^"\\\\]*(?:\\\\.[^"\\\\]*)*"#', $chunk, $matches)) {
-                $tail = substr($matches[0], 0, -1);
-                
+            if (preg_match('/(?<!\\\\)(?:\\\\{2})*\\K"/', $chunk, $matches, PREG_OFFSET_CAPTURE)) {
+                $tail = substr($chunk, 0, $matches[0][1]);
                 $end = strlen($tail);
                 $size += $end;
-                fwrite($buffer, $tail);
+                fwrite($buffer, $this->unescape($tail));
                 fseek($this->stream, (-$length+$end+1), SEEK_CUR);
                 rewind($buffer);
+
+                $out = $this->unescapeStream($buffer, $this->threshold);
                 if ($size < $this->threshold) {
-                    return stream_get_contents($buffer);
+                    return stream_get_contents($out);
                 }
 
-                return $buffer;
+                return $out;
             }
 
-            fwrite($buffer, $chunk);
+            fwrite($buffer, $this->unescape($chunk));
             $size += $this->threshold;
         } while ($chunk);
 
         return $buffer;
-
-        while (true) {
-            $char = fread($this->stream, 1);
-            // Unterminated string (waiting for quotes)
-            if ($char === false || $char === "") {
-                throw new Exception("String not terminated correctly " . ftell($this->stream));
-            }
-
-            // Terminated string
-            if ($quotes == $char && !$escaped) {
-                if (is_resource($buffer)) {
-                    return $buffer;
-                } else {
-                    return json_decode($quotes . $buffer . $quotes);
-                }
-            }
-
-            // Continued
-            if (is_string($buffer)) {
-                $buffer .= $char;
-                $size++;
-
-                if (strlen($buffer) == $this->threshold) {
-                    $tmp = fopen('php://temp', 'w+');
-                    fwrite($tmp, $buffer);
-                    $buffer = $tmp;
-                }
-            } else {
-                fwrite($buffer, $char);
-            }
-
-            $escaped = !$escaped && $quotes === "\"" && $char == "\\";
-        }
     }
+
+
 
     /**
      * @param $char
@@ -332,5 +302,35 @@ class JsonTokenizer
     public function context()
     {
         return end($this->context);
+    }
+
+    /**
+     * Unsescape a stream contents
+     */
+    protected function unescapeStream($stream)
+    {
+        $out = fopen('php://temp', 'w+');
+        do {
+            // Add 1 to chunk length to prevent end of chunk escape chars
+            $chunk = fread($stream, $this->threshold+1);
+            fwrite($out, $this->unescape($chunk));
+        } while ($chunk);
+
+        rewind($out);
+        rewind($stream);
+
+        return $out;
+    }
+
+    /**
+     * Unescape string or chunk
+     */
+    protected function unescape($string)
+    {
+        $escaped = array('\\\\', '\\/', '\\"', "\\n", "\\r", "\\t", "\\f", "\\b");
+        $unescaped = array('\\', '/', '"', "\n", "\r", "\t", "\x08", "\x0c");
+        $result = str_replace($escaped, $unescaped, $string);
+
+        return $result;
     }
 }

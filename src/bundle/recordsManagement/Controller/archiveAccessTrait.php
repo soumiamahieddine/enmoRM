@@ -556,12 +556,12 @@ trait archiveAccessTrait
 
         if (\laabs::isServiceClient()) {
             // Returns base64 encoded contents for web service clients
-            $binaryDataObject->attachment->data = base64_encode($digitalResource->getContents());
+            $binaryDataObject->attachment->data = \core\Encoding\Base64::encode($digitalResource->getHandler());
         } else {
             // Let presenter stream the contents
             $binaryDataObject->attachment->data = $digitalResource->getHandler();
         }
-        
+
         $binaryDataObject->attachment->uri = "";
         $binaryDataObject->attachment->filename = $digitalResource->fileName;
 
