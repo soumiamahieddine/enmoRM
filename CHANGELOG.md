@@ -1,4 +1,7 @@
 # CHANGELOG
+## Version 2.6.1
+
+- `Fixed` Suppression du fichier temporaire lors de la validation de la ressource
 
 ## Version 2.6
 
