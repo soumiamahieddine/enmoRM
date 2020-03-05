@@ -3,13 +3,13 @@
 ## Version 2.6
 
 ### Externalisation des fonctions Coffre-Fort Numérique
-- `Changed` Le bundle `digitalSafe` a été déplacé vers la nouvelle extension éponyme, disponible dans le projet GitLab ![lien](https://labs.maarch.org/maarch/digitalSafe)
+- `Changed` Le bundle `digitalSafe` a été déplacé vers la nouvelle extension éponyme, disponible dans le ![projet GitLab](https://labs.maarch.org/maarch/digitalSafe)
 
 ### Sécurité
 - `Fixed` Erreur courante `Attemp to access without a valid token` du module de protection CSRF, et traduction du message en français
-- `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur fonctionnel à une organisation (au lieu d'un service) 
+- `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur Fonctionnel à une organisation (au lieu d'un service) 
 - `Fixed` Faille XSS en faux positif sur la modale 404 "La page demandée n'existe pas"
-- `Added` Gestion renforcée de la sécurité (option de configuration) : Gestion de niveaux de sécurité sur les rôles et privilèges, en lien avec les niveaux d'utilisateur
+- `Added` Gestion renforcée de la sécurité (option de configuration) : gestion de niveaux de sécurité sur les rôles et privilèges, en lien avec les niveaux d'utilisateur
 - `Changed` Filtrage des comptes d'utilisateurs et comptes de service en fonction du niveau de sécurité, notamment pour le compte utilisé dans le planificateur de tâches (si activé)
 
 ### Import et export de référentiels
@@ -22,42 +22,42 @@
 - `Added` Possibilité de verser des archives compressées d'arborescence de dossiers sans nommage particulier (lien avec profil) pour le vrac numérique
 
 ### Traitement des binaires
-- `Changed` Réécriture complète des macanismes de traitement des contenus binaires reçus et transmis, afin de permettre la gestion de document numériques de grande taille (sup. à 1Go) sans dépassament de la mémoire
+- `Changed` Réécriture complète des mécanismes de traitement des contenus binaires reçus et transmis, afin de permettre la gestion de documents numériques de grande taille (sup. à 1Go) sans dépassament de la mémoire
 - `Changed` Dans l'adaptateur `FileSystem`, création des répertoires de stockage après résolution des parties variables et non plus récursivement pour améliorer les performances lors du stockage CEPH sur interface POSIX
-- `Changed` Suppression de fichiers temporaires utilisés lors de versement et ressorties, tous modes (à l'exlusion de la consultation)
+- `Changed` Suppression de fichiers temporaires utilisés lors de versements et ressorties, tous modes (à l'exlusion de la consultation)
 
 ### Description
 - `Added` Option pour activer la valeur par défaut à la date du jour pour les métadonnées de type date et date+heure
 
 ### Classement
 - `Fixed` Impossibilité de déplacer les services à la racine de l'organisation
-- `Fixed` Erreur lorsqu'un service/une activité n'avait pas de rôle
-- `Added` Fonction pour activer/désaciver des services/activités et ainsi empêcher les versements
+- `Fixed` Erreur lorsqu'un service/une activité n'a pas de rôle
+- `Added` Fonction pour activer/désactiver des services/activités et ainsi empêcher les versements
 
 ### Traçabilité
 - `Fixed` Recherche par terme impossible dans le journal de l'application
 - `Fixed` Absence des données de règle de conservation avant modification dans le détail de l'événement
 - `Fixed` Absence des noms d'organisation et services acteurs dans le détail des événements d'échange transactionnel
-- `Added` Ajout d'un champ organisation dans la recherche d'évènement de journal, il assistera l'utilisateur avec une autocompletion regroupant l'ensemble des services et des organisations auxquels l'utilisateur est rattaché.
-- `Added` Ajout de la possibilité de rechercher selon l'identifiant métier (renseigné par le client) en plus de l'identifiant technique dans la recherche d'évènement de journal.
-- `Added` Information de résultat d'opération dans le tableau des événement des objets (archive et messages d'échange)
-- `Changed` Téléchagrement des attestations depuis le détail des événements et non plus depuis la liste
+- `Added` Ajout d'un champ organisation dans la recherche d'événement de journal, il assistera l'utilisateur avec une auto-complétion regroupant l'ensemble des services et des organisations auxquels l'utilisateur est rattaché.
+- `Added` Ajout de la possibilité de rechercher selon l'identifiant métier (renseigné par le client) en plus de l'identifiant technique dans la recherche d'événement de journal.
+- `Added` Information de résultat d'opération dans le tableau des événements des objets (archive et messages d'échange)
+- `Changed` Téléchargement des attestations depuis le détail des événements et non plus depuis la liste
 
 ### IHM
-- `Fixed` Bouton de validation du formulaire de modification de règle de conservation qui se déplaçait au survol du curseur
-- `Fixed` Effacement de la date déjà renseignée dans la zone de saisie, lorsque la même date était sélectionnée dans le sélecteur de date
+- `Fixed` Bouton de validation du formulaire de modification de règle de conservation qui se déplace au survol du curseur
+- `Fixed` Effacement de la date déjà renseignée dans la zone de saisie, lorsque la même date est sélectionnée dans le sélecteur de date
 - `Fixed` Fichier sans extension ni nom lors du téléchargement de fichier de profil d'archivage (SEDA par exemple)
-- `Fixed` Affichage du point de menu "Echanges transactionnels" même lorsque l'utilisateur n'a accès à aucune transaction
-- `Fixed` Erreur lors du classement de plusieurs archives das un dossier virtuel, après versement ou modification des métadonnées de l'une des archives de la liste de résultat
+- `Fixed` Affichage du point de menu "Échanges transactionnels" même lorsque l'utilisateur n'a accès à aucune transaction
+- `Fixed` Erreur lors du classement de plusieurs archives dans un dossier virtuel, après versement ou modification des métadonnées de l'une des archives de la liste de résultat
 - `Fixed` Mauvaise gestion de l'activation/désactivation du bouton de validation de la modale de confirmation avant envoi d'un message transactionnel (modification, communication...)
-- `Added` Fonction pour déplier/replier toute un branche de l'organigramme des services
+- `Added` Fonction pour déplier/replier toute une branche de l'organigramme des services
 - `Added` Fonction de téléchargement des données de liste de résultat dans l'écran de gestion de l'Archive
 - `Added` Mode de vue en liste pour la gestion de l'organisation (option de configuration) pour gérer les grands tableaux de gestion (milliers d'entrées)
 
 
 ### Pérennisation
-- `Fixed` Erreur non interceptée lors de la détection de format lorsqu'un outil tiers appelé en ligne de commande (7z en l'occurence) se terminait en erreur
-- `Changed` Mise à jour des fichiers de signature DROID pour ladétection de format (V96 - 2020-01-21)
+- `Fixed` Erreur non interceptée lors de la détection de format lorsqu'un outil tiers appelé en ligne de commande (7z en l'occurence) se termine en erreur
+- `Changed` Mise à jour des fichiers de signature DROID pour la détection de format (V96 - 2020-01-21)
 
 ___
 
