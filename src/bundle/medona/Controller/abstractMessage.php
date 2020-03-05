@@ -247,9 +247,11 @@ abstract class abstractMessage extends message
         $eventInfo = get_object_vars($message);
         $eventInfo['code'] = $exception->getCode();
         $eventInfo['info'] = $exception->getMessage();
-        foreach ((array) $exception->errors as $error) {
-            if (is_string($error) || (is_object($error) && method_exists($error, '__toString'))) {
-                $eventInfo['info'] .= PHP_EOL. (string) $error;
+        if (isset($exception->errors)) {
+            foreach ((array) $exception->errors as $error) {
+                if (is_string($error) || (is_object($error) && method_exists($error, '__toString'))) {
+                    $eventInfo['info'] .= PHP_EOL. (string) $error;
+                }
             }
         }
 

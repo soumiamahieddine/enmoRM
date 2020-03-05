@@ -42,7 +42,9 @@ class ArchiveDestructionNotification extends ArchiveNotification
         $message->type = "ArchiveDestructionNotification";
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($archives[0]->descriptionClass === 'seda2') {
+            $schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
         $message->schema = $schema;
