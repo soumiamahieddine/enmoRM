@@ -403,6 +403,7 @@ trait archiveValidationTrait
         $digitalResource->size = filesize($filename);
 
         if ($digitalResource->size == 0) {
+            unlink($filename);
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
@@ -425,8 +426,10 @@ trait archiveValidationTrait
         if ($formatValidation) {
             $validation = $this->formatController->validateFormat($filename);
             if (!$validation !== true && is_array($validation)) {
+                unlink($filename);
                 throw new \core\Exception\BadRequestException("Invalid format attachments for %s", 404, null, [$digitalResource->fileName]);
             }
         }
+        unlink($filename);
     }
 }
