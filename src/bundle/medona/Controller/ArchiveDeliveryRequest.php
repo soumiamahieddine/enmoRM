@@ -227,7 +227,9 @@ class ArchiveDeliveryRequest extends abstractMessage
         $message->messageId = \laabs::newId();
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($archives[0]->descriptionClass === 'seda2') {
+            $schema = "seda2";
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
         $message->schema = $schema;
