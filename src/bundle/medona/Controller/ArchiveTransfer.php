@@ -67,6 +67,11 @@ class ArchiveTransfer extends abstractMessage
         }
 
         try {
+            if (empty($message->path)) {
+                $this->sendError("202", "Name of zip and his content files doesn't match");
+                throw \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            }
+
             $archiveTransferController = \laabs::newController($message->schema. '/ArchiveTransfer');
             $archiveTransferController->receive($message);
 

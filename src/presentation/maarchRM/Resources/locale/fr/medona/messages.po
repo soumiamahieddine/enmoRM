@@ -557,6 +557,9 @@ msgstr "Message envoyé en dérogation"
 msgid "Invalid message"
 msgstr "Message invalide"
 
+msgid "Name of zip and his content files doesn't match"
+msgstr "Le nom du zip et de ses fichiers ne correspondent pas"
+
 msgid "Malformed XML"
 msgstr "Fichier XML malformé"
 
