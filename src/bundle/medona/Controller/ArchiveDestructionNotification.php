@@ -61,6 +61,15 @@ class ArchiveDestructionNotification extends ArchiveNotification
 
         $message->archive = $archives;
 
+        foreach ($archives as $archive) {
+            $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
+            $unitIdentifier->messageId = $message->messageId;
+            $unitIdentifier->objectClass = "recordsManagement/archive";
+            $unitIdentifier->objectId = (string) $archive->archiveId;
+
+            $message->unitIdentifier[] = $unitIdentifier;
+        }
+
         $message->dataObjectCount = count($message->archive);
 
         try {
