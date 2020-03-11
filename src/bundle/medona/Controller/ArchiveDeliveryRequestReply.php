@@ -138,6 +138,15 @@ class ArchiveDeliveryRequestReply extends abstractMessage
             $message->dataObjectCount = count($archives);
         }
 
+        foreach ($archives as $archive) {
+            $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
+            $unitIdentifier->messageId = $message->messageId;
+            $unitIdentifier->objectClass = "recordsManagement/archive";
+            $unitIdentifier->objectId = (string) $archive->archiveId;
+
+            $message->unitIdentifier[] = $unitIdentifier;
+        }
+
         if ($comment) {
             $message->comment[] = $comment;
         }
