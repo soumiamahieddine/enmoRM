@@ -187,7 +187,7 @@ class ArchiveTransferSending extends abstractMessage
 
         $message->schema = "medona";
         if ($archives[0]->descriptionClass === 'seda2') {
-            $schema = 'seda2';
+            $message->schema = 'seda2';
         } elseif (\laabs::hasBundle('seda')) {
             $message->schema = "seda";
         }
