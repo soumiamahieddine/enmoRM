@@ -1,4 +1,8 @@
 # CHANGELOG
+## Version 2.6.2
+
+- `Added` Possibiliter de récupérer un lien de téléchargement à la place du contenu binaire dans les réponses à l'appel web service de consultation
+
 ## Version 2.6.1
 
 - `Fixed` Suppression du fichier temporaire lors de la validation de la ressource
