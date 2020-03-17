@@ -25,7 +25,6 @@ class BatchResponse
 
     public function send()
     {
-        echo $this->body;
         if (is_scalar($this->body)) {
             echo $this->body. PHP_EOL;
         } elseif (is_resource($this->body)) {
