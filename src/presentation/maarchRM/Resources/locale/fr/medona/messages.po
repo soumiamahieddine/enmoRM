@@ -770,3 +770,6 @@ msgstr "Demande de modification acceptée"
 
 msgid "Modification request rejected"
 msgstr "Demande de modification refusée"
+
+msgid "Your browser did not recognize the type of file transmitted. Please try with another browser."
+msgstr "Votre navigateur n'a pas reconnu le type du fichier transmis. Veuillez essayer avec un autre navigateur"
