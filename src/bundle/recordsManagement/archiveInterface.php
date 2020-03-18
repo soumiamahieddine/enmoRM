@@ -95,7 +95,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/consultation
      */
-    public function readConsultation_archiveId_Digitalresource_resId_($isCommunication = false);
+    public function readConsultation_archiveId_Digitalresource_resId_($isCommunication = false, $embedded = true);
 
     /**
      * Retrieve an archive by its id
