@@ -116,6 +116,9 @@ descriptionSchemes = "{
     }
 }"
 
+; The path of resource export folder
+exportPath = "%laabsDirectory%/web/tmp"
+
 [audit]
 ; Send notifications on audit event
 ;notifications = "{

@@ -511,10 +511,11 @@ trait archiveAccessTrait
      * @param string $archiveId   The archive identifier
      * @param string $resId       The resource identifier
      * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
+     * @param bool   $embedded    Generate a binary content or a link
      * 
      * @return digitalResource/digitalResource Archive resource contents
      */
-    public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false)
+    public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false, $embedded = true)
     {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
@@ -553,17 +554,20 @@ trait archiveAccessTrait
 
         $binaryDataObject = \laabs::newInstance("recordsManagement/BinaryDataObject");
         $binaryDataObject->attachment = new \stdClass();
+        $binaryDataObject->attachment->uri = "";
+        $binaryDataObject->attachment->filename = $digitalResource->fileName;
 
         if (\laabs::isServiceClient()) {
             // Returns base64 encoded contents for web service clients
-            $binaryDataObject->attachment->data = \core\Encoding\Base64::encode($digitalResource->getHandler());
+            if ($embedded === false || $embedded === 'false') {
+                $binaryDataObject->attachment->uri = $this->createPublicResource($digitalResource->getHandler());
+            } else {
+                $binaryDataObject->attachment->data = \core\Encoding\Base64::encode($digitalResource->getHandler());
+            }
         } else {
             // Let presenter stream the contents
             $binaryDataObject->attachment->data = $digitalResource->getHandler();
         }
-
-        $binaryDataObject->attachment->uri = "";
-        $binaryDataObject->attachment->filename = $digitalResource->fileName;
 
         if (!empty($digitalResource->fileExtension)) {
             $digitalResource->fileName = $digitalResource->fileName . $digitalResource->fileExtension;
@@ -1274,5 +1278,34 @@ trait archiveAccessTrait
         $this->logDelivery($archive);
 
         return $archive;
+    }
+
+    /**
+     * Create public resource
+     * @param           $content    The content of resource
+     *
+     * @return string   $uri        The uri of resource
+     */
+    private function createPublicResource($content) {
+        if (is_scalar($content)) {
+            $uid = hash('md5', $content);
+        } else {
+            $uid = \laabs\uniqid();
+        }
+
+        if (isset(\laabs::configuration("recordsManagement")["exportPath"])) {
+            $dir = \laabs::configuration("recordsManagement")["exportPath"];
+        } else {
+            $dir = "..".DIRECTORY_SEPARATOR.LAABS_WEB.DIRECTORY_SEPARATOR.LAABS_TMP;
+        }
+
+        $pathUri = str_replace(DIRECTORY_SEPARATOR, LAABS_URI_SEPARATOR, $dir);
+        $uri = $pathUri.LAABS_URI_SEPARATOR.$uid;
+
+        $fp = fopen($uri, 'w');
+        stream_copy_to_stream($content, $fp);
+        fclose($fp);
+
+        return $uri;
     }
 }

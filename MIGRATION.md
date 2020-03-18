@@ -1,4 +1,12 @@
 # Migration 2.5 vers 2.6
+## Configuration
+### Lien de téléchargement d'une ressource
+Cette configuration facultative permet au moment de la consultation, de recevoir une uri vers une ressource au lieu du contenu binaire. 
+
+À renseigner dans [recordsManagement] : 
+```
+exportPath = "%laabsDirectory%/web/tmp"
+```
 
 ## Configuration des instances publiées (hôte(s) virtuel(s) http et scripts en ligne de commande)
 
