@@ -1296,7 +1296,6 @@ trait archiveAccessTrait
         if (isset(\laabs::configuration("recordsManagement")["exportPath"])) {
             $dir = \laabs::configuration("recordsManagement")["exportPath"];
         } else {
-
             $dir = "..".DIRECTORY_SEPARATOR.LAABS_WEB.DIRECTORY_SEPARATOR.LAABS_TMP;
         }
 
