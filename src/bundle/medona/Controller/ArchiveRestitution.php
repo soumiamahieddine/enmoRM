@@ -264,10 +264,11 @@ class ArchiveRestitution extends abstractMessage
      * @param array  $archiveIds Array of archive identifier
      * @param string $identifier The medona message reference
      * @param string $comment    The message comment
+     * @param string $format     The message format
      *
      * @return array The result of the operation
      */
-    public function setForRestitution($archiveIds, $identifier = null, $comment = null)
+    public function setForRestitution($archiveIds, $identifier = null, $comment = null, $format = null)
     {
         $senderOrg = \laabs::getToken('ORGANIZATION');
         if (!$senderOrg) {
@@ -341,7 +342,8 @@ class ArchiveRestitution extends abstractMessage
                 $comment,
                 $senderOrgRegNumber,
                 $recipientOrgRegNumber,
-                $userName
+                $userName,
+                $format
             );
         }
 

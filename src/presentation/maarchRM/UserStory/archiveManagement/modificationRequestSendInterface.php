@@ -45,9 +45,10 @@ interface modificationRequestSendInterface
      * @param array  $archiveIds            List of archives
      * @param string $comment               A comment
      * @param string $identifier            An identifier
+     * @param string $format                The message format
      *
      * @uses medona/archiveModificationRequest/create
      * @return medona/archiveModification/modificationRequestSent
      */
-    public function createModificationrequest($archiveIds, $comment, $identifier = null);
+    public function createModificationrequest($archiveIds, $comment, $identifier = null, $format = null);
 }

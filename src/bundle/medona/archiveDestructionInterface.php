@@ -86,12 +86,12 @@ interface archiveDestructionInterface extends messageInterface
      * @param array  $archiveIds The archives ids
      * @param string $comment    The comment of modification
      * @param string $identifier Message identifier
-     *
+     * @param string $format     Message format
      * @return boolean
      *
      * @request UPDATE medona/dispose
      * @action medona/ArchiveDestruction/dispose
      *
      */
-    public function updateDisposearchives($archiveIds, $comment = null, $identifier = null);
+    public function updateDisposearchives($archiveIds, $comment = null, $identifier = null, $format = null);
 }
