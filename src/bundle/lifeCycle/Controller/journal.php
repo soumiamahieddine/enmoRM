@@ -979,10 +979,8 @@ class journal
 
         $resources = $archiveController->getDigitalResources($nextJournal->archiveId, $checkAccess = false);
         $nextJournalResource = $digitalResourceController->retrieve($resources[0]->resId);
-        $nextJournalContents = $nextJournalResource->getContents();
-
-        $chainEvent = str_getcsv(strtok($nextJournalContents, "\n"));
-
+        $nextJournalContents = $nextJournalResource->getHandler();
+        $chainEvent = fgetcsv($nextJournalContents);
         // For older version compatibility
         if (count($chainEvent) < 7) {
             if (empty($chainEvent[3]) || empty($chainEvent[4]) || empty($chainEvent[5])) {
@@ -1003,9 +1001,11 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[4];
             $chainedJournalHash = $chainEvent[5];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
+            $journalFilename = $this->copyJournalIntoCsv($journalResource);
+            $calcJournalHash = hash_file($chainedJournalHashAlgo, $journalFilename);
 
             if ($calcJournalHash != $chainedJournalHash) {
+                unlink($journalFilename);
                 throw \laabs::newException(
                     'recordsManagement/journalException',
                     "Invalid journal: Chaining event has a different hash."
@@ -1031,9 +1031,11 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[9];
             $chainedJournalHash = $chainEvent[10];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
+            $journalFilename = $this->copyJournalIntoCsv($journalResource);
+            $calcJournalHash = hash_file($chainedJournalHashAlgo, $journalFilename);
 
             if ($calcJournalHash != $chainedJournalHash) {
+                unlink($journalFilename);
                 throw \laabs::newException(
                     'recordsManagement/journalException',
                     "Invalid journal: Chaining event has a different hash."
@@ -1041,6 +1043,7 @@ class journal
             }
         }
 
+        unlink($journalFilename);
         return $chainEvent;
     }
 
