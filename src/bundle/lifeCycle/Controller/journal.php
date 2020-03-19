@@ -34,7 +34,7 @@ class journal
     protected $currentOffset;
 
     // Journal files reading
-    protected $currentJournalFile;
+    protected $currentJournalFilePath;
     protected $currentJournalId;
     protected $currentEvent;
     protected $journalCursor;
@@ -54,7 +54,7 @@ class journal
         $this->interval = $interval;
         $this->sdoFactory = $sdoFactory;
 
-        $this->currentJournalFile = null;
+        $this->currentJournalFilePath = null;
         $this->currentJournalId = null;
         $this->currentOffset = 0;
 
@@ -273,14 +273,22 @@ class journal
             $this->openJournal($journalReference->archiveId);
 
             // Get the eventId position on the journal file
-            $this->currentOffset = strpos($this->currentJournalFile, (string) $eventFromBase->eventId);
+
+            // $this->currentOffset = strpos($this->currentJournalFile, (string) $eventFromBase->eventId);
+            $handler = fopen($this->currentJournalFilePath, 'r');
+            $lineNumber = 1;
+            while ($row = fgetcsv($handler)) {
+                if ($row[0] == (string) $eventFromBase->eventId) {
+                    $this->currentOffset = ftell($handler);
+                    $eventLine = '"' . implode('","', $row);
+                    break;
+                }
+                $lineNumber++;
+            }
 
             // Place cursor to the begin of line
             if ($this->currentOffset) {
-                $endOffset = strpos($this->currentJournalFile, "\n", $this->currentOffset);
-                $eventLine = substr($this->currentJournalFile, $this->currentOffset, $endOffset - $this->currentOffset);
-                $this->currentOffset = $this->currentOffset + strlen($eventLine) + 1;
-
+                $this->currentOffset++;
                 // Get the event
                 $event = $this->getEventFromLine($eventLine);
 
@@ -288,7 +296,6 @@ class journal
                 $event->instanceName = $eventFromBase->instanceName;
                 $event->orgRegNumber = $eventFromBase->orgRegNumber;
                 $event->orgUnitRegNumber = $eventFromBase->orgUnitRegNumber;
-
             } else {
                 $event = $eventFromBase;
                 return $event;
@@ -541,15 +548,15 @@ class journal
 
             // $journalFile = $journalResource->getContents();
             // $journalFile = $journalFile->getHandler();
-            $journalFile = $this->copyJournalIntoCsv($journalResource);
+            $journalFilePath = $this->copyJournalIntoCsv($journalResource);
 
             $this->journalCursor = 0;
 
-            if ($journalFile == null) {
+            if ($journalFilePath == null) {
                 throw \laabs::newException("lifeCycle/journalException", "The journal file can't be opened");
             } else {
-                $this->checkIntegrity($journalReference);
-                $this->currentJournalFile = $journalFile;
+                // $this->checkIntegrity($journalReference);
+                $this->currentJournalFilePath = $journalFilePath;
                 $this->currentJournalId = $journalReference->archiveId;
             }
         }
@@ -620,13 +627,10 @@ class journal
                 if ($journal) {
                     $this->openJournal($journal->archiveId);
                     $this->getNextEvent($eventType, $chain);
-
                 } else {
                     $nextEvent = false;
                 }
-
             }
-
         } else {
             // Place the cursor to the first event if it not positioned yet
             if ($this->currentOffset == 0) {
