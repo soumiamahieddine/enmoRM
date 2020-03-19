@@ -194,7 +194,6 @@ class journal
             if (!file_put_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId, $journalContents)) {
                 throw \laabs::newException("lifeCycle/journalException", "Journal file cannot be written");
             }
-
         } else {
             $journalContents = file_get_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId);
         }
@@ -313,7 +312,7 @@ class journal
      * @param string    $objectId       The identifier of the object
      * @param timestamp $minDate        The minimum date of the event
      * @param timestamp $maxDate        The maximum date of the event
-     * @param string    $org            An org reg number on one of the event header or info 
+     * @param string    $org            An org reg number on one of the event header or info
      * @param string    $sortBy         The event sorting request
      * @param int       $numberOfResult The number of result
      *
@@ -540,7 +539,10 @@ class journal
             $resources = $archiveController->getDigitalResources($journalReference->archiveId, $checkAccess = false);
             $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
 
-            $journalFile = $journalResource->getContents();
+            // $journalFile = $journalResource->getContents();
+            // $journalFile = $journalFile->getHandler();
+            $journalFile = $this->copyJournalIntoCsv($journalResource);
+
             $this->journalCursor = 0;
 
             if ($journalFile == null) {
@@ -555,6 +557,23 @@ class journal
         $this->currentOffset = 0;
 
         return true;
+    }
+
+    public function copyJournalIntoCsv($journalFile)
+    {
+        $tmpdir = \laabs::getTmpDir();
+        $fileName = $tmpdir.DIRECTORY_SEPARATOR. 'Journal' . \laabs::newId() .".csv";
+        $file = fopen($fileName, "w");
+        $value = $journalFile->getHandler();
+        while (!feof($value)) {
+            $chunk = fread($value, 2654208);
+            fwrite($file, $chunk);
+        }
+        rewind($value);
+        rewind($file);
+        fclose($file);
+
+        return $fileName;
     }
 
     /**
