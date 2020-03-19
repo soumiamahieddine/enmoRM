@@ -555,7 +555,7 @@ class journal
             if ($journalFilePath == null) {
                 throw \laabs::newException("lifeCycle/journalException", "The journal file can't be opened");
             } else {
-                // $this->checkIntegrity($journalReference);
+                $this->checkIntegrity($journalReference);
                 $this->currentJournalFilePath = $journalFilePath;
                 $this->currentJournalId = $journalReference->archiveId;
             }
