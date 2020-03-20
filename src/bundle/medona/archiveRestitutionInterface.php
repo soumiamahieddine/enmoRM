@@ -166,9 +166,10 @@ interface archiveRestitutionInterface extends messageInterface
      * @param array  $archiveIds Array of archive identifier
      * @param string $identifier The reference for message
      * @param string $comment    A comment
+     * @param string $format     Message format
      *
      * @action medona/ArchiveRestitution/setForRestitution
      *
      */
-    public function updateSetforrestitution($archiveIds, $identifier = null, $comment = null);
+    public function updateSetforrestitution($archiveIds, $identifier = null, $comment = null, $format = null);
 }

@@ -188,6 +188,9 @@ msgstr "Date de fin"
 msgid "Message identifier"
 msgstr "Identifiant du bordereau"
 
+msgid "Message format"
+msgstr "Format du bordereau"
+
 msgid "Message"
 msgstr "Bordereau"
 

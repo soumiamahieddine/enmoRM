@@ -127,12 +127,13 @@ class ArchiveDeliveryRequest extends abstractMessage
      * @param string $identifier    The medona message reference
      * @param boolean $derogation   Ask for an authorization
      * @param string $comment       The message comment
+     * @param string $format        The message format
      *
      * @return array Array of message
      *
      * @throws \bundle\recordsManagement\Exception\notCommunicableException
      */
-    public function requestDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null)
+    public function requestDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null, $format = null)
     {
         $requesterOrg = \laabs::getToken('ORGANIZATION');
         if (!$requesterOrg) {
@@ -179,14 +180,16 @@ class ArchiveDeliveryRequest extends abstractMessage
 
             $archiverOrgRegNumber = $archives[0]->archiverOrgRegNumber;
 
-            $communicableArchives = [];
-            foreach ($archives as $archive) {
-                if ($this->isCommunicable($archive)) {
-                    $communicableArchives['communicable'] = $archive;
-                } else {
-                    $communicableArchives['notCommunicable'] = $archive;
-                }
-            }
+            $message = $this->send(
+                $reference,
+                $archives,
+                $derogation,
+                $comment,
+                $requesterOrgRegNumber,
+                $archiverOrgRegNumber,
+                null,
+                $format
+            );
 
             foreach ($communicableArchives as $key => $archives) {
                 while ($this->sdoFactory->exists("medona/message", $unique)) {
@@ -240,6 +243,7 @@ class ArchiveDeliveryRequest extends abstractMessage
      * @param object  $requesterOrgRegNumber The requesting org reg number
      * @param string  $archiverOrgRegNumber  The archiver org registration number
      * @param string  $userName              The requester user name
+     * @param string  $format                The message format
      *
      * @return The reply message generated
      */
@@ -250,7 +254,8 @@ class ArchiveDeliveryRequest extends abstractMessage
         $comment = false,
         $requesterOrgRegNumber = false,
         $archiverOrgRegNumber = false,
-        $userName = false
+        $userName = false,
+        $format = null
     ) {
         if (!is_array($archives)) {
             $archives = array($archives);
@@ -260,7 +265,9 @@ class ArchiveDeliveryRequest extends abstractMessage
         $message->messageId = \laabs::newId();
 
         $schema = "mades";
-        if ($archives[0]->descriptionClass === 'seda2') {
+        if ($format) {
+            $schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
             $schema = "seda2";
         } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";

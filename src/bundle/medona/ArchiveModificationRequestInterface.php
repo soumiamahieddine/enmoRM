@@ -39,10 +39,11 @@ interface archiveModificationRequestInterface extends messageInterface
      * @param mixed  $archiveIds The identifier of archive or a list of identifiers
      * @param string $identifier The medona message reference
      * @param string $comment    The message comment
+     * @param string $format     Message format
      *
      * @action medona/ArchiveModificationRequest/send
      */
-    public function create($archiveIds, $identifier = null, $comment = null);
+    public function create($archiveIds, $identifier = null, $comment = null, $format = null);
 
     /**
      * Reject archive modification request
