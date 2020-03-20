@@ -39,6 +39,7 @@ class journal
     protected $currentEvent;
     protected $journalCursor;
     protected $eventFormats;
+    protected $journalHandler;
 
     protected $journals;
 
@@ -102,7 +103,6 @@ class journal
 
         if ($accountToken = \laabs::getToken('AUTH')) {
             $event->accountId = $accountToken->accountId;
-
         } else {
             $event->accountId = '__system__';
         }
@@ -273,22 +273,15 @@ class journal
             $this->openJournal($journalReference->archiveId);
 
             // Get the eventId position on the journal file
-
-            // $this->currentOffset = strpos($this->currentJournalFile, (string) $eventFromBase->eventId);
-            $handler = fopen($this->currentJournalFilePath, 'r');
-            $lineNumber = 1;
-            while ($row = fgetcsv($handler)) {
+            while ($row = fgetcsv($this->journalHandler)) {
                 if ($row[0] == (string) $eventFromBase->eventId) {
-                    $this->currentOffset = ftell($handler);
                     $eventLine = '"' . implode('","', $row);
                     break;
                 }
-                $lineNumber++;
             }
 
             // Place cursor to the begin of line
-            if ($this->currentOffset) {
-                $this->currentOffset++;
+            if ($this->journalHandler) {
                 // Get the event
                 $event = $this->getEventFromLine($eventLine);
 
@@ -548,15 +541,16 @@ class journal
 
             // $journalFile = $journalResource->getContents();
             // $journalFile = $journalFile->getHandler();
-            $journalFilePath = $this->copyJournalIntoCsv($journalResource);
+            // $journalFilePath = $this->copyJournalIntoCsv($journalResource);
+            $journalHandler = $journalResource->getHandler();
 
             $this->journalCursor = 0;
 
-            if ($journalFilePath == null) {
+            if ($journalHandler == null) {
                 throw \laabs::newException("lifeCycle/journalException", "The journal file can't be opened");
             } else {
+                $this->journalHandler = $journalHandler;
                 $this->checkIntegrity($journalReference);
-                $this->currentJournalFilePath = $journalFilePath;
                 $this->currentJournalId = $journalReference->archiveId;
             }
         }
@@ -633,7 +627,7 @@ class journal
             }
         } else {
             // Place the cursor to the first event if it not positioned yet
-            if ($this->currentOffset == 0) {
+            if ($this->jouranlHandler == 0) {
                 $this->currentOffset = strpos($this->currentJournalFile, "\n") + 1;
             }
 
@@ -1193,7 +1187,6 @@ class journal
             try {
                 $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
                 $timestampFileName = $timestampService->getTimestamp($journalFilename);
-
             } catch (\Exception $e) {
                 throw $e;
             }
