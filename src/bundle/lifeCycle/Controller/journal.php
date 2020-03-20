@@ -21,6 +21,8 @@
 
 namespace bundle\lifeCycle\Controller;
 
+use function laabs\hash_stream;
+
 /**
  * Class of archives life cycle journal
  *
@@ -999,9 +1001,7 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[4];
             $chainedJournalHash = $chainEvent[5];
 
-            $journalFilename = $this->copyJournalIntoCsv($journalResource);
-            $calcJournalHash = hash_file($chainedJournalHashAlgo, $journalFilename);
-
+            $calcJournalHash = hash_stream($chainedJournalHashAlgo, $journalResource->getHandler());
             if ($calcJournalHash != $chainedJournalHash) {
                 unlink($journalFilename);
                 throw \laabs::newException(
@@ -1029,19 +1029,14 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[9];
             $chainedJournalHash = $chainEvent[10];
 
-            $journalFilename = $this->copyJournalIntoCsv($journalResource);
-            $calcJournalHash = hash_file($chainedJournalHashAlgo, $journalFilename);
-
+            $calcJournalHash = hash_stream($chainedJournalHashAlgo, $journalResource->getHandler());
             if ($calcJournalHash != $chainedJournalHash) {
-                unlink($journalFilename);
                 throw \laabs::newException(
                     'recordsManagement/journalException',
                     "Invalid journal: Chaining event has a different hash."
                 );
             }
         }
-
-        unlink($journalFilename);
         return $chainEvent;
     }
 
