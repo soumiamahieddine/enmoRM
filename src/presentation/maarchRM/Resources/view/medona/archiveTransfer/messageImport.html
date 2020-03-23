@@ -90,6 +90,9 @@
             <span class="hide" id="remove_text">Remove</span>
         </div>
     </div>
+    <div style="display:none" data-translate-catalog="medona/messages">
+        <span id="empty_file_type_text">Your browser did not recognize the type of file transmitted. Please try with another browser.</span>
+    </div>
 </div>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -198,6 +201,7 @@ var zipContent = "";
         $('#messageImport_filesBrowser').val('');
         $('#messageImport_attachementsBrowser').val('');
         $('#messageImport_attachments').empty("");
+        $('#messageImport_submit').attr('disabled',false);
     })
 
     // Submit
@@ -313,7 +317,13 @@ var zipContent = "";
 
             $('#messageImport_fileName').html(file.name);
             $('#messageImport_fileSize').html(file.size + ' ' + $('#byte_text').html());
-            $('#messageImport_fileType').html(file.type);
+
+            if (!file.type || file.type == "") {
+                gritter.show($('#empty_file_type_text').html(), false);
+                $('#messageImport_submit').attr('disabled',true);
+            } else {
+                $('#messageImport_fileType').html(file.type);
+            }
             $('#messageImport_XMLDropZone').addClass('hide');
             $('#messageImport_FileInfo').removeClass('hide');
         };
