@@ -759,15 +759,24 @@ class message
         $message = $message = $this->sdoFactory->read('medona/message', $messageId);
         $message->object = json_decode($message->data);
 
-        $fromStatus = ['error','processing','toBeModified'];
+        $fromStatus = ['error','processError', 'validationError', 'processing','toBeModified'];
         if (!in_array($message->status, $fromStatus)) {
             $this->sendError("101", "Le statut du message est incorrect.");
         }
 
-        if ($message->status == 'toBeModified') {
-            $this->changeStatus($messageId, 'Modified');
-        } else {
-            $this->changeStatus($messageId, 'accepted');
+        switch ($message->status) {
+            case 'toBeModified':
+                $this->changeStatus($messageId, 'Modified');
+                break;
+            case 'validationError':
+                $this->changeStatus($messageId, 'received');
+                break;
+            case 'processError':
+                $this->changeStatus($messageId, 'accepted');
+                break;
+            default:
+                $this->changeStatus($messageId, 'received');
+                break;
         }
 
         $this->lifeCycleJournalController->logEvent(
