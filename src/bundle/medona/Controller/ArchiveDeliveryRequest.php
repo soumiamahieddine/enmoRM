@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -155,7 +155,7 @@ class ArchiveDeliveryRequest extends abstractMessage
                 $checkAccess = true,
                 $isCommunication = true
             );
-            
+
             if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
                 $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
             }
@@ -180,16 +180,14 @@ class ArchiveDeliveryRequest extends abstractMessage
 
             $archiverOrgRegNumber = $archives[0]->archiverOrgRegNumber;
 
-            $message = $this->send(
-                $reference,
-                $archives,
-                $derogation,
-                $comment,
-                $requesterOrgRegNumber,
-                $archiverOrgRegNumber,
-                null,
-                $format
-            );
+            $communicableArchives = [];
+            foreach ($archives as $archive) {
+                if ($this->isCommunicable($archive)) {
+                    $communicableArchives['communicable'] = $archive;
+                } else {
+                    $communicableArchives['notCommunicable'] = $archive;
+                }
+            }
 
             foreach ($communicableArchives as $key => $archives) {
                 while ($this->sdoFactory->exists("medona/message", $unique)) {
@@ -206,7 +204,9 @@ class ArchiveDeliveryRequest extends abstractMessage
                     $derogation,
                     $comment,
                     $requesterOrgRegNumber,
-                    $archiverOrgRegNumber
+                    $archiverOrgRegNumber,
+                    null,
+                    $format
                 );
                 $messages[] = $message;
             }
@@ -316,7 +316,7 @@ class ArchiveDeliveryRequest extends abstractMessage
                 if ($userName) {
                     $archiveDeliveryRequest->requester->userName = $userName;
                 }
-                
+
                 $archiveDeliveryRequest->archivalAgency = $this->sendOrganization($message->recipientOrg);
 
                 $message->object->unitIdentifier = $message->unitIdentifier;
@@ -328,7 +328,7 @@ class ArchiveDeliveryRequest extends abstractMessage
             $message->status = "invalid";
             $this->create($message);
             $this->logValidationErrors($message, $e);
-            
+
             throw $e;
         }
 
