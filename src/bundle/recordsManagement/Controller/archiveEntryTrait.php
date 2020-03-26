@@ -20,6 +20,8 @@
 
 namespace bundle\recordsManagement\Controller;
 
+use function laabs\hash_stream;
+
 /**
  * Archive entry controller
  *
@@ -91,6 +93,9 @@ trait archiveEntryTrait
             $this->receiveAttachments($archive);
         }
 
+        // Verify if deposit archive has proper hash
+        $this->checkintegrity($archive);
+
         // Load archival profile, service level if specified
         // Instantiate description controller
         $this->useReferences($archive, 'deposit');
@@ -138,7 +143,7 @@ trait archiveEntryTrait
                         preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $receivedHandler):
                         $handler = \laabs::createTempStream(base64_decode($receivedHandler));
                         break;
-                
+
                     case is_resource($receivedHandler):
                         $handler = \core\Encoding\Base64::decode($receivedHandler);
                 }
@@ -339,6 +344,25 @@ trait archiveEntryTrait
         }
 
         return true;
+    }
+
+    protected function checkintegrity($archive)
+    {
+        foreach ($archive->digitalResources as $resource) {
+            if ((isset($resource->hash) && !is_null($resource->hash))
+                && (isset($resource->hashAlgorithm) && !is_null($resource->hashAlgorithm))
+            ) {
+                $hashCalculated = hash_stream($resource->hashAlgorithm, $resource->gethandler());
+
+                if ($hashCalculated !== strtolower($resource->hash)) {
+                    throw \laabs::newException("recordsManagement/invalidHashException", "Invalid hash.");
+                }
+            } elseif (!isset($resource->hash) && !isset($resource->hashAlgorithm)) {
+                continue;
+            } else {
+                throw \laabs::newException("recordsManagement/missingHashException", "Missing hash.");
+            }
+        }
     }
 
     /**
