@@ -905,7 +905,7 @@ class ArchiveTransfer extends abstractMessage
                 $this->sdoFactory->rollback();
             }
 
-            $message->status = "error";
+            $message->status = "processError";
             $operationResult = false;
             $this->update($message);
 
