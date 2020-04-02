@@ -473,9 +473,12 @@ class log implements archiveDescriptionInterface
         $archiveController = \laabs::newController('recordsManagement/archive');
 
         $res = $archiveController->consultation($archiveId, $resourceId);
-
-        $stream = (stream_get_contents($res->attachment->data));
-
+        $maxResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $stream = stream_get_line($res->attachment->data, 1 >> 15, "\n") . "\n";
+        for ($i = 0; $i < $maxResult; $i++) {
+            $stream .= stream_get_line($res->attachment->data, 1 >> 15, "\n") . "\n";
+        }
+        rewind($res->attachment->data);
         $journal = $type . PHP_EOL;
         $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
         $journal .= $stream;
