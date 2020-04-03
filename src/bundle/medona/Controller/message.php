@@ -241,6 +241,13 @@ class message
     ) {
         $queryParts = array();
         $currentService = \laabs::getToken("ORGANIZATION");
+        if (!isset($currentService) || is_null($currentService)) {
+            throw \laabs::newException(
+                "medona/noOrganizationException",
+                "User has no organization. Please contact your administrator",
+                409
+            );
+        }
         $currentService->orgRoleCodes = (array) $currentService->orgRoleCodes;
 
         $isOriginator = in_array('originator', $currentService->orgRoleCodes);

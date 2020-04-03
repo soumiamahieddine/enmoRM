@@ -773,3 +773,6 @@ msgstr "Demande de modification refusée"
 
 msgid "Your browser did not recognize the type of file transmitted. Please try with another browser."
 msgstr "Votre navigateur n'a pas reconnu le type du fichier transmis. Veuillez essayer avec un autre navigateur"
+
+msgid "User has no organization. Please contact your administrator"
+msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
