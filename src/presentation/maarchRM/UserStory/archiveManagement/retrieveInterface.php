@@ -87,7 +87,7 @@ interface retrieveInterface
     /**
      * Get metadata to edit
      *
-     * @return recordsManagement/archive/getEditMetadata The recordsManagement/archive object
+     * @return recordsManagement/archive/edit The recordsManagement/archive object
      * @uses  recordsManagement/archiveDescription/read_archiveId_
      */
     public function readRecordsmanagementArchivedescription_archiveId_Geteditmetadata();
