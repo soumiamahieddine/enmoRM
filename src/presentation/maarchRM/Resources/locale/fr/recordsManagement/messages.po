@@ -972,7 +972,7 @@ msgid "To be defined later"
 msgstr "À définir plus tard"
 
 msgid "Producer"
-msgstr "Producteur"
+msgstr "Service producteur"
 
 msgid "Organization"
 msgstr "Organisation"

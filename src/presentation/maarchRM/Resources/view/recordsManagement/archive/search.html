@@ -50,7 +50,6 @@
         <!-- Message usage -->
         <input type="hidden" id="useRestitutionMessages" value="[?merge useRestitutionMessages ?]">
         <input type="hidden" id="useDestructionMessages" value="[?merge useDestructionMessages ?]">
-        <span  class="hide" id="noOriginatorFound">No originator found</span>
 
         <div class="container-fluid" id="archive_searchResult"></div>
     </div>
@@ -138,8 +137,8 @@
 
         delete $("#archive_searchForm [name=depositStartDate]").data('datepicker').setDates();
         delete $("#archive_searchForm [name=depositEndDate]").data('datepicker').setDates();
-        delete $("#archive_searchForm [name=originatingStartDate]").data('datepicker').setDates();
-        delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
+        //delete $("#archive_searchForm [name=originatingStartDate]").data('datepicker').setDates();
+        //delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
 
         $('#archive_searchResult').empty();
     });
@@ -159,8 +158,8 @@
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        //parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
 
         return parameters;
     }
@@ -206,11 +205,12 @@
 
                     if(organization.ownerOrgName) {
                         display += organization.ownerOrgName
-                                + " > ";
+                                + "<br>> ";
                     }
                        display += organization.displayName
                         + "</span></span><br>";
 
+                    $("#originatorOwnerOrgName").val("");
                     return display;
                 }
             },
@@ -231,7 +231,7 @@
         if(suggestion.ownerOrgId) {
             $("#originatorOrgRegNumber").val(suggestion.registrationNumber);
             $("#originatorOrgInfo").show();
-            $("#originatorOwnerOrgName").html(suggestion.ownerOrgName);
+            $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
             $("#originatorOwnerOrgId").val('');
         } else {
             $("#originatorOwnerOrgId").val(suggestion.orgId);
