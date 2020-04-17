@@ -585,6 +585,50 @@ trait archiveAccessTrait
     }
 
     /**
+     * Retrieve stream of an archive resource contents
+     *
+     * @param string $archiveId   The archive identifier
+     * @param string $resId       The resource identifier
+     *
+     * @return stream Archive resource contents in a stream
+     */
+    public function getBinaryContents($archiveId, $resId)
+    {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        $this->checkRights($archive, false);
+
+        try {
+            $digitalResource = $this->digitalResourceController->retrieve($resId);
+
+            $resourceIntegrity = true;
+            foreach ($digitalResource->address as $address) {
+                if (!$address->integrityCheckResult) {
+                    $resourceIntegrity = false;
+                }
+            }
+
+            if (!$resourceIntegrity) {
+                $this->logIntegrityCheck($archive, "Invalid resource", $digitalResource, false);
+            }
+
+            if ((!$this->accessVerification($archive)) || $digitalResource->archiveId != $archiveId) {
+                throw \laabs::newException('recordsManagement/accessDeniedException', "Permission denied");
+            }
+
+            $this->logConsultation($archive, $digitalResource);
+        } catch (\Exception $e) {
+            $this->logConsultation($archive, $digitalResource, false);
+            throw $e;
+        }
+        
+        return $digitalResource->getHandler();
+    }
+
+    /**
      * Retrieve an archive by its id
      *
      * @param string $archiveId   The archive identifier
