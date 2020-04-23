@@ -624,6 +624,9 @@ trait archiveAccessTrait
             $this->logConsultation($archive, $digitalResource, false);
             throw $e;
         }
+
+        $response = \laabs::kernel()->response;
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.$digitalResource->fileName.'"');
         
         return $digitalResource->getHandler();
     }
