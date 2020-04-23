@@ -113,6 +113,12 @@ descriptionSchemes = "{
         'label' : 'extension',
         'type' : 'json',
         'uri' : '%laabsDirectory%/data/maarchRM/samples/sample.json'
+    },
+    'log' : {
+        'label' : 'log',
+        'type' : 'php',
+        'uri' : 'recordsManagement/log',
+        'search': 'recordsManagement/log'
     }
 }"
 

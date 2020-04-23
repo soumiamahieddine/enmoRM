@@ -141,20 +141,44 @@ class log implements archiveDescriptionInterface
     public function search($description = null, $text = null, array $args = [])
     {
         $archiveController = \laabs::newController('recordsManagement/archive');
-        $archives = [];
 
-        $sortBy = ">fromDate";
+        $sortBy = ">depositDate";
         $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $queryParams = $queryParts = [];
+        $queryRequiredParts = \laabs::newController('recordsManagement/archive')->getArchiveAssert($args, $queryParams);
+        
+        if ($text) {
+            $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
+            $tokens = \laabs\explode(' ', $text);
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $numberOfResult);
-        foreach ($logs as $log) {
-            try {
-                $archive = $archiveController->read($log->archiveId);
-                $archive->descriptionObject = $log;
-                $archives[] = $archive;
-            } catch (\Exception $e) {
+            $queryLogs = [];
+            foreach ($tokens as $i => $token) {
+                $queryTerm = [];
+                $queryTerm[] = "archiveName='*".$token."*'";
+                $queryTerm[] = "archiveId = '*$token*'";
+
+                try {
+                    $date = new \DateTime($token);
+                    $date = $date->format("Y-m-d");
+                } catch (\Exception $e) {
+                    $date = null;
+                }
+
+                if ($date) {
+                    $queryLogs[] = "(fromDate <= '$date 23:59:59' AND toDate >= '$date 00:00:00')";
+                }
+
+                $queryParts[] = \laabs\implode(' OR ', $queryTerm);
             }
         }
+
+        $queryString = $queryRequiredParts . " AND (" . \laabs\implode(' AND ', $queryParts);
+        if (isset($queryLogs) && !empty($queryLogs)) {
+            $queryString .= " OR (archiveId=[READ recordsManagement/log [archiveId] (".\laabs\implode(' OR ', $queryLogs).")])";
+        }
+        $queryString .= ")";
+
+        $archives = $this->sdoFactory->find("recordsManagement/archive", $queryString, $queryParams, $sortBy, 0, $numberOfResult);
 
         return $archives;
     }
