@@ -476,9 +476,6 @@ msgstr "Télécharger"
 msgid "To be modified"
 msgstr "À modifier"
 
-msgid "Modified"
-msgstr "Modifié"
-
 msgid "transferable"
 msgstr "En cours de transfert"
 
