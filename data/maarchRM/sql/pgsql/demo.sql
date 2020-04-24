@@ -198,6 +198,7 @@ INSERT INTO "digitalResource"."conversionRule" ("conversionRuleId","puid","conve
 ;
 
 INSERT INTO "lifeCycle"."eventFormat" ("type","format","message","notification") VALUES 
+('digitalResource/integrityCheck', 'repositoryReference addressesToCheck checkedAddresses failed', 'Contrôle d''intégrité des ressources présentes dans %6$s', false),
 ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false),
 ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false),
 ('medona/processing', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false),

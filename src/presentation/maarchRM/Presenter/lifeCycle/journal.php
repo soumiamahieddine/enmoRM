@@ -108,6 +108,10 @@ class journal
                     $objectType = 'organization/organization';
                     $domainLabel = 'Organization';
                     break;
+                case 'digitalResource':
+                    $objectType = 'digitalResource/repository';
+                    $domainLabel = 'Repository';
+                    break;
             }
 
             $domainLabel = $this->view->translator->getText($domainLabel);
