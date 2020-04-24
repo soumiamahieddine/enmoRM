@@ -30,141 +30,14 @@
                 </div>
                 <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
                     <form class="form-horizontal" id="archive_searchForm">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Archive identifier</label>
-                                <div class="col-sm-6">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="archive_archiveIdentifier" name="archiveIdentifier" placeholder="Archive identifier"/>
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-default" id="archive_searchByIdentifier" title="Search">Search</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Fulltext</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" name="text" placeholder="Fulltext"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Archival profile</label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" name="profileReference">
-                                            <option value="">All</option>
-                                            <?merge profiles ?>
-                                            <option value="[?merge .reference ?]"><?merge .name ?></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Status</label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" name="status">
-                                            <option value="">All</option>
-                                            <option value="preserved">Preserved</option>
-                                            <option value="frozen">Frozen</option>
-                                            <option value="disposable">Waiting for destruction</option>
-                                            <option value="error">Error</option>
-                                            <?merge deleteDescription.bool().not() ?>
-                                            <option value="disposed">Disposed</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Retention rule</label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" name="retentionRuleCode">
-                                            <option value="">All</option>
-                                            <?merge retentionRules ?>
-                                            <option value="[?merge .code ?]"><?merge .label ?></option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Final disposition</label>
-                                    <div class="col-sm-6">
-                                        <select class="form-control" name="finalDisposition">
-                                            <option value="">All</option>
-                                            <option value="preservation">Preservation</option>
-                                            <option value="destruction">Destruction</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Producer</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control orgHide" placeholder="Producer"  name="orgTypeahead" id="orgTypeahead"/>
-                                        <select class="form-control hide" name="originatorOwnerOrgId" id="originatorOwnerOrgId">
-                                            <option value="">All</option>
-                                            <?merge organizationsOriginator ?>
-                                            <option value="[?merge .orgId ?]"><?merge .displayName ?></option>
-                                        </select>
-                                        <select class="form-control hide" name="originatorOrgRegNumber" id="originatorOrgRegNumber">
-                                            <option value="">All</option>
-                                            <?merge organizationsOriginator ?>
-                                            <div>
-                                                <?merge .originators ?>
-                                                <option value="[?merge .registrationNumber ?]" orgId="[?merge .ownerOrgId ?]"><?merge .displayName ?></option>
-                                            </div>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="originatorOrgInfo">
-                                    <label class="col-sm-4 control-label">Organization</label>
-                                        <span class="col-sm-6 align-middle" id="originatorOwnerOrgName"></span>
-                                </div>
-                                <br/>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Deposit date</label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control datePicker" name="depositStartDate" placeholder="From date"/>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control datePicker" name="depositEndDate" placeholder="To date"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Originating date</label>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control datePicker" name="originatingStartDate" placeholder="From date"/>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <input type="text" class="form-control datePicker" name="originatingEndDate" placeholder="To date"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">DAU</label>
-                                    <div class="btn-group col-sm-6" data-toggle="buttons">
-                                        <label class="btn btn-info active archiveExpired" title="All">
-                                            <input type="radio" name="archiveExpired" value="" checked/> All
-                                        </label>
-                                        <label class="btn btn-default archiveExpired" title="Not expired">
-                                            <input type="radio" name="archiveExpired" value="false"/> Not expired
-                                        </label>
-                                        <label class="btn btn-default archiveExpired" title="Expired">
-                                            <input type="radio" name="archiveExpired" value="true"/> Expired
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-4 control-label">Partial retention rule</label>
-                                    <div class="col-sm-6">
-                                        <input type="checkbox"  name="partialRetentionRule" data-toggle="toggle"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br/>
+                        <?hinclude recordsManagement/archive/searchform.html ?>
+                        <br />
                         <div class="clearfix">
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-primary col-md-offset-4 col-md-3" id="archive_search" title="Search"><i class="fa fa-search">&nbsp;</i>Search</button>
-                                <button type="button" class="btn btn-warning col-md-offset-1" id="archive_resetForm" title="Reset"><i class="fa fa-refresh">&nbsp;</i>Reset</button>
+                                <button type="button" class="btn btn-primary col-md-offset-4 col-md-2" id="archive_search" title="Search"><i
+                                        class="fa fa-search">&nbsp;</i>Search</button>
+                                <button type="button" class="btn btn-warning col-md-offset-1 col-md-2" id="archive_resetForm" title="Reset"><i
+                                        class="fa fa-refresh">&nbsp;</i>Reset</button>
                             </div>
                         </div>
                     </form>
@@ -177,7 +50,6 @@
         <!-- Message usage -->
         <input type="hidden" id="useRestitutionMessages" value="[?merge useRestitutionMessages ?]">
         <input type="hidden" id="useDestructionMessages" value="[?merge useDestructionMessages ?]">
-        <span  class="hide" id="noOriginatorFound">No originator found</span>
 
         <div class="container-fluid" id="archive_searchResult"></div>
     </div>
@@ -265,8 +137,8 @@
 
         delete $("#archive_searchForm [name=depositStartDate]").data('datepicker').setDates();
         delete $("#archive_searchForm [name=depositEndDate]").data('datepicker').setDates();
-        delete $("#archive_searchForm [name=originatingStartDate]").data('datepicker').setDates();
-        delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
+        //delete $("#archive_searchForm [name=originatingStartDate]").data('datepicker').setDates();
+        //delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
 
         $('#archive_searchResult').empty();
     });
@@ -286,8 +158,8 @@
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        //parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
 
         return parameters;
     }
@@ -333,11 +205,12 @@
 
                     if(organization.ownerOrgName) {
                         display += organization.ownerOrgName
-                                + " > ";
+                                + "<br>> ";
                     }
                        display += organization.displayName
                         + "</span></span><br>";
 
+                    $("#originatorOwnerOrgName").val("");
                     return display;
                 }
             },
@@ -358,7 +231,7 @@
         if(suggestion.ownerOrgId) {
             $("#originatorOrgRegNumber").val(suggestion.registrationNumber);
             $("#originatorOrgInfo").show();
-            $("#originatorOwnerOrgName").html(suggestion.ownerOrgName);
+            $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
             $("#originatorOwnerOrgId").val('');
         } else {
             $("#originatorOwnerOrgId").val(suggestion.orgId);
