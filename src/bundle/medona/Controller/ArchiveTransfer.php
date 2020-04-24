@@ -301,7 +301,9 @@ class ArchiveTransfer extends abstractMessage
                         }
                     }
                 } elseif (is_object($attachment)) {
-                    if (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
+                    if (is_resource($attachment->data)) {
+                        $data = base64_decode(stream_get_contents($attachment->data));
+                    } elseif (filter_var($attachment->data, FILTER_VALIDATE_URL)) {
                         $data = stream_get_contents($attachment->data);
                     } elseif (preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $attachment->data)) {
                         $data = base64_decode($attachment->data);
