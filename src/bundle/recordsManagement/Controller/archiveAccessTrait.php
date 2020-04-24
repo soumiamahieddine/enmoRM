@@ -625,8 +625,13 @@ trait archiveAccessTrait
             throw $e;
         }
 
+        $filename = $digitalResource->fileName;
+        if (!$filename) {
+            $filename = $digitalResource->resId;
+        }
+
         $response = \laabs::kernel()->response;
-        $response->setHeader('Content-Disposition', 'attachment; filename="'.$digitalResource->fileName.'"');
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
         
         return $digitalResource->getHandler();
     }
