@@ -83,6 +83,14 @@ class message
      */
     public function index()
     {
+        $currentService = \laabs::getToken("ORGANIZATION");
+        if (!$currentService) {
+            $this->view->addContentFile("recordsManagement/welcome/noWorkingOrg.html");
+            $this->view->translate();
+
+
+            return $this->view->saveHtml();
+        }
         $this->view->addContentFile("medona/message/menu.html");
 
         $menu = $this->dashboardPresenter->filterMenuAuth($this->menu);
