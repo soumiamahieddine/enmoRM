@@ -448,7 +448,7 @@ class ArchiveTransfer extends abstractMessage
         $message = $this->sdoFactory->read('medona/message', $messageId);
         $this->loadData($message);
 
-        if ($message->status == "error") {
+        if (in_array($message->status, ["error", "validationError"])) {
             $this->sendError('104', "The message is in error status");
             $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
             $exception->errors = $this->errors;
@@ -484,7 +484,7 @@ class ArchiveTransfer extends abstractMessage
             if ($res = -1) {
                 $this->sendValidationError($message, false, 'toBeModified');
             } else {
-                $this->sendValidationError($message);
+                $this->sendValidationError($message, false, 'validationError');
             }
 
             $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
@@ -825,7 +825,7 @@ class ArchiveTransfer extends abstractMessage
 
             $operationResult = true;
         } catch (\Exception $e) {
-            $message->status = "error";
+            $message->status = "processError";
             $this->update($message);
 
             $this->lifeCycleJournalController->logEvent(
@@ -905,7 +905,7 @@ class ArchiveTransfer extends abstractMessage
                 $this->sdoFactory->rollback();
             }
 
-            $message->status = "error";
+            $message->status = "processError";
             $operationResult = false;
             $this->update($message);
 

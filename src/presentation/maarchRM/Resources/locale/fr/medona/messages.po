@@ -464,14 +464,17 @@ msgstr "À modifier"
 msgid "modified"
 msgstr "Modifié"
 
+msgid "processError"
+msgstr "Erreur de traitement"
+
+msgid "validationError"
+msgstr "Erreur de validation"
+
 msgid "Download"
 msgstr "Télécharger"
 
 msgid "To be modified"
 msgstr "À modifier"
-
-msgid "Modified"
-msgstr "Modifié"
 
 msgid "transferable"
 msgstr "En cours de transfert"

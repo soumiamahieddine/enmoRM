@@ -235,7 +235,7 @@ class message
                 $this->setMessageActions($message, $messages, $registrationNumber);
             }
 
-            if ($message->status === 'error') {
+            if (in_array($message->status, ['error', 'processError', 'validationError'])) {
                 $message->retryButton = "/medona/message/". $message->messageId . "/retry";
             }
 
