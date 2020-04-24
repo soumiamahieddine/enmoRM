@@ -766,7 +766,7 @@ class message
 
         switch ($message->status) {
             case 'toBeModified':
-                $this->changeStatus($messageId, 'Modified');
+                $this->changeStatus($messageId, 'modified');
                 break;
             case 'validationError':
                 $this->changeStatus($messageId, 'received');
