@@ -1,14 +1,14 @@
 <div data-translate-catalog="recordsManagement/messages">
-    <!-- FULL TEXT -->
     <div class="col-md-12">
-        <div class="form-group">
-            <label class="col-sm-2 control-label">Fulltext</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="text" placeholder="Fulltext" />
+        <!-- FULL TEXT -->
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="padding-left: 15px; width: 11.56% !important;">Fulltext</label>
+                <div class="col-sm-10" style="padding-left: 8px; width:88.3333% !important;">
+                    <input type="text" class="form-control" name="text" placeholder="Fulltext" />
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
         <!-- COTE -->
         <div class="col-md-4">
             <div class="form-group">
@@ -82,13 +82,24 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-4 control-label">Final disposition</label>
-                <div class="col-sm-8">
+                <div class="btn-group col-sm-8" data-toggle="buttons">
+                    <label class="btn btn-info active finalDisposition col-sm-4" title="All">
+                        <input type="radio" name="finalDisposition" value="" checked /> All
+                    </label>
+                    <label class="btn btn-default finalDisposition col-sm-4" title="Not expired">
+                        <input type="radio" name="finalDisposition" value="preservation" />Preservation
+                    </label>
+                    <label class="btn btn-default finalDisposition col-sm-4" title="Expired">
+                        <input type="radio" name="finalDisposition" value="destruction" /> Destruction
+                    </label>
+                </div>
+                <!-- <div class="col-sm-8">
                     <select class="form-control" name="finalDisposition">
                         <option value="">All</option>
                         <option value="preservation">Preservation</option>
                         <option value="destruction">Destruction</option>
                     </select>
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- PRODUCER ORGANIZATION -->

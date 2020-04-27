@@ -13,7 +13,7 @@ src/ext/*
 data/maarchRM/conf/configuration.ini
 data/maarchRM/conf/confvars.ini
 vendor/*
-
+data/maarchRM/medona/*
 node_modules
 
 
