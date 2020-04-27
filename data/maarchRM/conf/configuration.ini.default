@@ -439,6 +439,10 @@ servicePrivileges = "[
         'description' : 'Mise à jour de la durée d\'utilité administrative'
     },
     {
+        'serviceURI' : 'recordsManagement/archive/read_archiveId_Digitalresource_resId_Contents',
+        'description' : 'Récupérer directement le contenu d\'une ressource d\'archive'
+    },
+    {
         'serviceURI': '*',
         'description' : 'Tous les droits'
     }
