@@ -2,13 +2,12 @@
 
 ## Version 2.6.3
 
-- `Fixed` La reprise sur erreur reprend au statut précédent
 - `Fixed` Possiblité de verser en mode transactionnel via bordereau, avec des pièces de plus de 2Mo
 - `Added` Possibilité de récupérer un contenu binaire d'une pièce d'archive directement via un appel en Web Service (voir nouvelle route pour les comptes de service dans le fichier configuration.ini.default)
 
 ## Version 2.6.2
 
-- `Added` Possibiliter de récupérer un lien de téléchargement à la place du contenu binaire dans les réponses à l'appel web service de consultation
+- `Added` Possibilité de récupérer un lien de téléchargement à la place du contenu binaire dans les réponses à l'appel web service de consultation
 
 ## Version 2.6.1
 
