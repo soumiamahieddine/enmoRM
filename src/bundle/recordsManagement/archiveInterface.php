@@ -112,6 +112,13 @@ interface archiveInterface
     public function readContents_archiveId__resId_();
 
     /**
+     * Retrieve stream of an archive content document (CDO)
+     *
+     * @action recordsManagement/archive/getBinaryContents
+     */
+    public function read_archiveId_Digitalresource_resId_Contents();
+
+    /**
      * Check if archive exists
      *
      * @action recordsManagement/archive/exists
