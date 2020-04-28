@@ -37,11 +37,12 @@ interface destructionRequestInterface
      * @param array  $archiveIds The archives ids
      * @param string $comment    The comment of destruction request
      * @param string $identifier Message identifier
+     * @param string $format     Message format
      *
      * @uses recordsManagement/archives/updateDisposearchives
      * @return recordsManagement/archive/dispose
      */
-    public function updateRecordsmanagementDispose($archiveIds, $comment = null, $identifier = null);
+    public function updateRecordsmanagementDispose($archiveIds, $comment = null, $identifier = null, $format = null);
 
     /**
      * Resource destruction

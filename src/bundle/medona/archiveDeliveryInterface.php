@@ -125,8 +125,9 @@ interface archiveDeliveryInterface extends messageInterface
      * @param mixed  $archiveIds The identifier of archive or a list of identifiers
      * @param string $identifier The medona message reference
      * @param string $comment    The message comment
+     * @param string $format    The message format
      *
      * @action medona/ArchiveDeliveryRequest/requestDelivery
      */
-    public function createDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null);
+    public function createDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null, $format = null);
 }

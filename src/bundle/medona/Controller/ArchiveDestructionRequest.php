@@ -134,7 +134,8 @@ class ArchiveDestructionRequest extends abstractMessage
         $comment = null,
         $requesterOrgRegNumber = null,
         $archiverOrgRegNumber = null,
-        $originatorOrgRegNumber = null
+        $originatorOrgRegNumber = null,
+        $format = null
     ) {
         if (!is_array($archives)) {
             $archives = array($archives);
@@ -144,7 +145,11 @@ class ArchiveDestructionRequest extends abstractMessage
         $message->messageId = \laabs::newId();
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
         $message->schema = $schema;

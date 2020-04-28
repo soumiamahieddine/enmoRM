@@ -35,14 +35,18 @@ class ArchiveDestructionNotification extends ArchiveNotification
      *
      * @return The message generated
      */
-    public function send($destructionRequest, $archives)
+    public function send($destructionRequest, $archives, $format = null)
     {
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
         $message->type = "ArchiveDestructionNotification";
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
         $message->schema = $schema;
@@ -58,6 +62,15 @@ class ArchiveDestructionNotification extends ArchiveNotification
         $this->readOrgs($message); // read org names, addresses, communications, contacts
 
         $message->archive = $archives;
+
+        foreach ($archives as $archive) {
+            $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
+            $unitIdentifier->messageId = $message->messageId;
+            $unitIdentifier->objectClass = "recordsManagement/archive";
+            $unitIdentifier->objectId = (string) $archive->archiveId;
+
+            $message->unitIdentifier[] = $unitIdentifier;
+        }
 
         $message->dataObjectCount = count($message->archive);
 

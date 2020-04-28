@@ -138,14 +138,15 @@ interface archiveTransferInterface
 
     /**
      * Create outgoing transfer
-     * @param array $archiveIds            List of archives
+     * @param array $archiveIds             List of archives
      * @param string $archiverOrgRegNumber  An Archiver
      * @param string $comment               A comment
      * @param string $identifier            An identifier
+     * @param string $format                The message format
      *
      * @action medona/ArchiveTransferSending/setForTransfer
      */
-    public function updateOutgoingtransferSending($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null);
+    public function updateOutgoingtransferSending($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null, $format = null);
 
     /**
      * Get ingoing transfer messages
