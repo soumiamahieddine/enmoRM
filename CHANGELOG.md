@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 2.6.4
+
+- `Fixed` Correction faille de sécurité concernant le vol de compte via l'interface de login
+
 ## Version 2.6.3
 
 - `Fixed` Possiblité de verser en mode transactionnel via bordereau, avec des pièces de plus de 2Mo
