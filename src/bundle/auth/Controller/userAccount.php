@@ -129,7 +129,27 @@ class userAccount
                     break;
             }
         }
+
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
+
+        return $this->removeSensibleData($userAccounts);
+    }
+
+    /**
+     * Remove sensible data from an array of users
+     *
+     * @param  array $userAccounts Array of user Accounts
+     *
+     * @return array               Array of userAccounts removed of sensible data
+     */
+    protected function removeSensibleData($userAccounts)
+    {
+        foreach ($userAccounts as $key => $user) {
+            unset($userAccounts[$key]->password);
+            unset($userAccounts[$key]->replacingUserAccountId);
+            unset($userAccounts[$key]->salt);
+            unset($userAccounts[$key]->tokenDate);
+        }
 
         return $userAccounts;
     }
