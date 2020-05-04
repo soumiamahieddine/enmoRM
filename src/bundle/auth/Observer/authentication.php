@@ -100,7 +100,8 @@ class authentication
             $servicePosition = $servicePositionController->getPosition($account->accountId);
 
             if ($servicePosition != null) {
-                \laabs::setToken("ORGANIZATION", $servicePosition->organization);
+                $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
+                \laabs::setToken("ORGANIZATION", $servicePosition->organization, null, null, $secure);
             }
         } else {
             $organization = \laabs::getToken("ORGANIZATION");

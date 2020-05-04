@@ -153,7 +153,8 @@ class userAuthentication
 
         $accountToken = new \StdClass();
         $accountToken->accountId = $userAccount->accountId;
-        \laabs::setToken('AUTH', $accountToken, $tokenDuration);
+        $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
+        \laabs::setToken('AUTH', $accountToken, $tokenDuration, null, $secure);
 
         if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
             $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
@@ -163,7 +164,7 @@ class userAuthentication
         }
 
         if ($userAccount->passwordChangeRequired == true) {
-            \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration);
+            \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration, null, $secure);
             \laabs::unsetToken('AUTH');
             throw \laabs::newException('auth/userPasswordChangeRequestException');
         }

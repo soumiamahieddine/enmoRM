@@ -126,7 +126,8 @@ class authentication
 
         $accountToken = new \StdClass();
         $accountToken->accountId = $account->accountId;
-        \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
+        $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
+        \laabs::setToken('AUTH', $accountToken, $sessionTimeout, null, $secure);
 
         $organization = \laabs::getToken("ORGANIZATION");
 
@@ -158,7 +159,7 @@ class authentication
 
             if (!$isUserPosition) {
                 \laabs::newException("auth/authenticationException", "Missing authentication credential", 403);
-                \laabs::setToken("ORGANIZATION", $default->organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
+                \laabs::setToken("ORGANIZATION", $default->organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], null, $secure);
             }
         }
 
