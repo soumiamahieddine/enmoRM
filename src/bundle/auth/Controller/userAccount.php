@@ -149,6 +149,7 @@ class userAccount
             unset($userAccounts[$key]->replacingUserAccountId);
             unset($userAccounts[$key]->salt);
             unset($userAccounts[$key]->tokenDate);
+            unset($userAccounts[$key]->lastIp);
         }
 
         return $userAccounts;
