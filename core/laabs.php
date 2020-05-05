@@ -96,7 +96,9 @@ class laabs
         static::preload();
 
         // Start session
-        \core\Globals\Session::start();
+        if (isset($_SERVER['LAABS_SESSION']) && $_SERVER['LAABS_SESSION'] == 'On') {
+            \core\Globals\Session::start();
+        }
 
         // Start cache strategies
         if (($memcacheServer = \laabs::getMemCacheServer()) && !empty(static::$instance)) {
