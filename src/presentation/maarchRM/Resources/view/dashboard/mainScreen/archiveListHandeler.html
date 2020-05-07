@@ -210,7 +210,7 @@
                             .html('&nbsp;&nbsp;&nbsp;')
                             .siblings('span')
                             .attr('id', digitalResources[i].resId)
-                            .append($('<i class="fa fa-file-o">&nbsp;</i>'))
+                            .append($('<i>')).addClass('fa fa-file-o')
                             .append($('<span>').text(digitalResources[i].fileName));
                     template.find('small, br, .addChildrenArchive').remove();
 
@@ -224,9 +224,9 @@
             var smalls = template.find('small');
 
             if (archive.fileplanLevel == 'item') {
-                var icon = $('<i class="fa fa-file">&nbsp;</i>');
+                var icon = "fa fa-file";
             } else {
-                var icon = $('<i class="fa fa-archive">&nbsp;</i>');
+                var icon = "fa fa-archive";
             }
 
             var BCDate = new Date(archive.depositDate.replace(',', '.'));
@@ -244,7 +244,7 @@
                     .siblings('span')
                     .addClass('childrenArchive')
                     .attr('id', archive.archiveId)
-                    .append(icon)
+                    .append($('<i>')).addClass(icon)
                     .append($('<span>').text(archive.archiveName))
                     .append($('<a/>').attr('href','#').class);
 
@@ -260,12 +260,12 @@
                 $(smalls[2]).text(' ' + archive.originatingDate);
             }
 
-            BootstrapTree.addNode(parent, template, false);    
+            BootstrapTree.addNode(parent, template, false);
         },
 
         sortArchives: function(parent){
             var list = parent.find("ul").children('.child');
-            if (list.size() > 1){
+            if (list.length > 1){
                 list.sort(function(a, b){
                     return  $(a).data("depositdate") > $(b).data("depositdate");
                 }).each(function(){

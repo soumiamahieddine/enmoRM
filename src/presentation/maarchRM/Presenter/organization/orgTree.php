@@ -486,7 +486,7 @@ class orgTree
             $orgs[] = $org;
         }
 
-        return json_encode($orgs);
+        return json_encode($orgs, JSON_UNESCAPED_UNICODE);
     }
 
     public function changeStatus() {

@@ -245,9 +245,10 @@ class Document extends \dependency\xml\Document
         $this->addStyle("/public/css/bootstrap-datetimepicker/bootstrap-datetimepicker.css");
 
         // Add js scripts
-        $this->addScript("/public/js/jQuery_1.11.0/jQuery.js");
+        $this->addScript("/public/js/jQuery-3.4.1/jquery-3.4.1.min.js");
         $this->addScript("/public/js/jQueryUI_1.12.1/jquery-ui.min.js");
-        $this->addScript("/public/js/jQueryUI_touch-punch_0.2.3/jquery.ui.touch-punch.js");
+
+        $this->addScript("/public/js/jQueryUI_touch-punch_1.0.7/jquery.ui.touch-punch.js");
         //less compiler
         $this->addScript("/public/js/less_1.7.0/less.js");
         //bootstrap.affix

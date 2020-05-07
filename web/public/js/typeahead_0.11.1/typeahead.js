@@ -327,7 +327,10 @@
             return JSON.stringify(_.isUndefined(val) ? null : val);
         }
         function decode(val) {
-            return $.parseJSON(val);
+            if (val){
+                return $.parseJSON(val);
+            }
+            return val;
         }
         function gatherMatchingKeys(keyMatcher) {
             var i, key, keys = [], len = LOCAL_STORAGE.length;
