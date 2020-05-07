@@ -50,17 +50,14 @@
             <div class="form-group">
                 <label class="col-md-3 control-label text-primary"><small>Type d'objet</small></label>
                 <div class="btn-group col-md-4" style="padding-left: 0; padding-right: 0;" id="objectType" data-toggle="buttons">
-                    <label class="btn btn-default col-sm-3" title="Tout">
-                        <input class="form-control" type="radio" name="hasParent" value="-1" checked/> Tout
+                    <label class="btn btn-default col-sm-4" title="Tout">
+                        <input class="form-control" type="radio" name="hasParent" value="" checked/> Tout
                     </label>
-                    <label class="btn btn-info active col-sm-3" title="Archive">
+                    <label class="btn btn-info active col-sm-4" title="Archive">
                         <input class="form-control" type="radio" name="hasParent" value="0" checked/> Archive
                     </label>
-                    <label class="btn btn-default col-sm-3" title="Objet d'archive">
+                    <label class="btn btn-default col-sm-4" title="Objet d'archive">
                         <input class="form-control" type="radio" name="hasParent" value="1"/> Objet
-                    </label>
-                    <label class="btn btn-default col-sm-3" title="Document">
-                        <input class="form-control" type="radio" name="hasParent" value="2"/> Document
                     </label>
                 </div>
             </div>
@@ -192,7 +189,7 @@ FulltextSearchForm = {
 
     search : function() {
         var query = this.serialize();
-        if (query.text == '' && query.description == "" && query.originatingStartDate == "" && query.originatingEndDate == "" && query.profileReference == "") {
+        if (query.text == '' && query.description == "" && query.originatingStartDate == "" && query.originatingEndDate == "" && query.profileReference == "" && query.hasParent == "0") {
             if (query.filePlanPosition) {
                 trigger('loadFolder.filePlan', [query.filePlanPosition]);
 
@@ -276,9 +273,13 @@ FulltextSearchForm = {
             filePlanPosition     : this.form.data('folderid'),
             orgRegNumber         : this.form.data('orgregnumber'),
             originatingStartDate : advancedSearchPanel.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
-            originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
-            objectType           : $("#objectType > .active > input").val()
+            originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')
         };
+
+        $hasParent = $("#objectType > .active > input").val();
+        if ($hasParent != "") {
+            query.hasParent = $hasParent;
+        }
 
         var text = this.form.find('[name="searchForm_inputSearch"]').val().trim();
         if (text) {
