@@ -206,17 +206,19 @@
     <div class="col-md-12">
         <!-- OBJECT TYPE -->
         <div class="col-md-4">
-            <?merge isPublicArchive.bool() ?>
             <div class="form-group">
                 <label class="col-sm-4 control-label">Type d'objet</label>
                 <div class="btn-group col-sm-8" data-toggle="buttons">
-                    <label class="btn btn-info active col-sm-4" title="Archive">
+                    <label class="btn btn-default col-sm-3" title="Tout">
+                        <input type="radio" name="hasParent" value="-1" checked/> Tout
+                    </label>
+                    <label class="btn btn-info active col-sm-3" title="Archive">
                         <input type="radio" name="hasParent" value="0" checked/> Archive
                     </label>
-                    <label class="btn btn-default col-sm-4" title="Objet d'archive">
+                    <label class="btn btn-default col-sm-3" title="Objet d'archive">
                         <input type="radio" name="hasParent" value="1"/> Objet
                     </label>
-                    <label class="btn btn-default col-sm-4" title="Document">
+                    <label class="btn btn-default col-sm-3" title="Document">
                         <input type="radio" name="hasParent" value="2"/> Document
                     </label>
                 </div>
