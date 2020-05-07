@@ -96,7 +96,7 @@ class laabs
         static::preload();
 
         // Start session
-        if (isset($_SERVER['LAABS_SESSION']) && $_SERVER['LAABS_SESSION'] == 'On') {
+        if (isset($_SERVER['LAABS_SESSION_START']) && $_SERVER['LAABS_SESSION_START'] == 'On') {
             \core\Globals\Session::start();
         }
 
