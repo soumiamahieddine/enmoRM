@@ -61,7 +61,6 @@ abstract class abstractPosition
 
         $organizations = [];
         $setToken = false;
-        $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
 
         foreach ($positions as $position) {
             $organization = $this->sdoFactory->read('organization/organization', $position->orgId);
@@ -70,7 +69,7 @@ abstract class abstractPosition
             $position->organization->orgName = $organization->displayName;
 
             if ($position->default && !$currentOrg) {
-                \laabs::setToken("ORGANIZATION", $organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], true, $secure);
+                \laabs::setToken("ORGANIZATION", $organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
                 $setToken = true;
             }
 
@@ -78,7 +77,7 @@ abstract class abstractPosition
         }
 
         if (!$setToken && !$currentOrg && $organizations) {
-            \laabs::setToken("ORGANIZATION", $organizations[0], \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], true, $secure);
+            \laabs::setToken("ORGANIZATION", $organizations[0], \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
         }
 
         usort($positions, function ($pos1, $pos2) {
@@ -120,8 +119,7 @@ abstract class abstractPosition
     public function setCurrentPosition($orgId)
     {
         if ($organization = $this->sdoFactory->read('organization/organization', $orgId)) {
-            $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
-            \laabs::setToken("ORGANIZATION", $organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], true, $secure);
+            \laabs::setToken("ORGANIZATION", $organization, \laabs::configuration("auth")['securityPolicy']['sessionTimeout']);
 
             return true;
         }

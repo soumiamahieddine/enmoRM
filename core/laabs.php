@@ -956,7 +956,7 @@ class laabs
      *
      * @return boolean The result of the token creation
      */
-    public static function setToken($name, $data, $expiration = 0, $httpOnly = true, $secure = true)
+    public static function setToken($name, $data, $expiration = 0, $httpOnly = true)
     {
         $cookieName = 'LAABS-'.static::toName($name);
 
@@ -970,6 +970,8 @@ class laabs
         $jsonToken = \json_encode($token);
         $cryptedToken = static::encrypt($jsonToken, static::getCryptKey());
         $cookieToken = base64_encode($cryptedToken);
+
+        $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
 
         setcookie($cookieName, $cookieToken, $expirationTime, '/', null, $secure, $httpOnly);
 
