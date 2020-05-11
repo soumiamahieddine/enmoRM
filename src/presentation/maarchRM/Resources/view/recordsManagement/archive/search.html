@@ -188,10 +188,6 @@
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        $hasParent = $("#archive_searchForm [name=hasParent]:checked").val();
-        if ($hasParent != "") {
-            parameters.hasParent = $hasParent;
-        }
         //parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
 
