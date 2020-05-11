@@ -207,20 +207,17 @@
         <!-- OBJECT TYPE -->
         <div class="col-md-4">
             <div class="form-group">
-                <label class="col-sm-4 control-label">Type d'objet</label>
+                <label class="col-sm-4 control-label">Type d'objet <span style="color : red">*</span></label>
                 <div class="btn-group col-sm-8" data-toggle="buttons">
-                    <label class="btn btn-default col-sm-[?merge isPublicArchive.bool().then(3, 4) ?]" title="Tout">
-                        <input type="radio" name="hasParent" value=""/> Tout
+                    <label class="btn btn-info active col-sm-[?merge isPublicArchive.bool().then(4, 6) ?]" title="Archive">
+                        <input type="checkbox" class="hasParent" name="hasParent" value="0" checked/> Archive
                     </label>
-                    <label class="btn btn-info active col-sm-[?merge isPublicArchive.bool().then(3, 4) ?]" title="Archive">
-                        <input type="radio" name="hasParent" value="0" checked/> Archive
-                    </label>
-                    <label class="btn btn-default col-sm-[?merge isPublicArchive.bool().then(3, 4) ?]" title="Objet d'archive">
-                        <input type="radio" name="hasParent" value="1"/> Objet
+                    <label class="btn [?merge isPublicArchive.bool().then('btn-default', 'btn-info active') ?] col-sm-[?merge isPublicArchive.bool().then(4, 6) ?]" title="Objet d'archive">
+                        <input type="checkbox" class="hasParent" name="hasParent" value="1"/> Objet
                     </label>
                     <?merge isPublicArchive.bool() ?>
-                    <label class="btn btn-default col-sm-3" title="Document">
-                        <input type="radio" name="hasParent" value="2"/> Document
+                    <label class="btn btn-default col-sm-4" title="Document">
+                        <input type="checkbox" class="hasParent" name="hasParent" value="2"/> Document
                     </label>
                 </div>
             </div>
@@ -248,4 +245,5 @@
     <div class="col-md-12">
         <hr style="height:1px;border:none;color:gray;background-color:gray;">
     </div>
+    <span class="hide" id="required_fields">You must fill all required fields (*)</span>
 </div>

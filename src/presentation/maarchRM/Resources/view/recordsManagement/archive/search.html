@@ -81,12 +81,18 @@
             $("#archive_search").click();
         }
     });
-
     // radio button
     $("#archive_searchForm").on('click', 'label.btn', function () {
-        console.log($(this));
-        $(this).parent().find(".btn-info").removeClass('btn-info').addClass('btn-default');
-        $(this).addClass('btn-info');
+        if ($(this).find('.hasParent').length) {
+            if ($(this).hasClass("btn-info")) {
+                $(this).removeClass("btn-info").addClass("btn-default");
+            } else {
+                $(this).addClass("btn-info");
+            }
+            return;
+        }
+        $(this).parent().find(".btn-info").removeClass('btn-info').addClass('btn-default').removeClass("active");
+        $(this).removeClass("btn-default").addClass('btn-info');
     })
 
     $('#archive_searchByIdentifier').on('click', function () {
@@ -109,6 +115,9 @@
 
     $('#archive_search').on('click', function () {
 
+        var data = searchFormSerialize();
+        if (data == -1)
+            return;
         $('#archive_search').prop('disabled', true);
         $('#archive_searchForm').find('[name="archiveIdentifier"]').val('');
 
@@ -116,7 +125,7 @@
             type     : 'GET',
             url      : '/recordsManagement/archives',
             //data     : $("#archive_searchForm").serialize(),
-            data     : searchFormSerialize(),
+            data     : data,
             dataType : 'html',
             success  : function (response) {
                 $('#archive_searchResult').empty().html(response);
@@ -133,7 +142,9 @@
     $("#archive_resetForm").on("click", function () {
         $('#archive_searchForm').find('input[type="text"], select').val('');
         $('#archive_searchForm').find("input[name='archiveExpired'][value='']").parent().click();
-        $('#archive_searchForm').find('input[type="checkbox"]').bootstrapToggle('off');
+        $('#archive_searchForm').find('input[type="checkbox"][name!="hasParent"]').bootstrapToggle('off');
+        $("#archive_searchForm").find('input.hasParent').parent().removeClass('btn-info').addClass('btn-default').removeClass("active");
+        $("#archive_searchForm").find('input.hasParent[value!="2"]').click();
         $('#originatorOrgInfo').hide();
 
         delete $("#archive_searchForm [name=depositStartDate]").data('datepicker').setDates();
@@ -153,16 +164,29 @@
                 parameters[$(this).attr('name')] = $(this).val();
             }
         });
+
+        var hasParent = [];
+
         $('#archive_searchForm').find('input[type="checkbox"]').each(function(){
-            parameters[$(this).attr('name')] = $(this).prop("checked");
+            if ($(this).attr('name') != "hasParent") {
+                parameters[$(this).attr('name')] = $(this).prop("checked");
+                return;
+            }
+            if ($(this).parent().hasClass("btn-info"))
+                hasParent.push($(this).val());
         });
+
+        if (hasParent.length == 0) {
+            gritter.show($("#required_fields").text(), false);
+            return -1;
+        }
+
+        if (hasParent.length == 1)
+                parameters.hasParent = hasParent[0];
+
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        $hasParent = $("#archive_searchForm [name=hasParent]:checked").val();
-        if ($hasParent != "") {
-            parameters.hasParent = $hasParent;
-        }
         //parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
 
