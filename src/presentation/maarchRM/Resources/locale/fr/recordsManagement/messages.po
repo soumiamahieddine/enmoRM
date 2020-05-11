@@ -1104,6 +1104,9 @@ msgstr "Cliquer pour modifier '%1$s'"
 msgid "* At least one field must be filled in."
 msgstr "* Au moins un champ doit être renseigné."
 
+msgid "You must fill all required fields (*)"
+msgstr "Vous devez remplir tous les champs requis (*)"
+
 msgid "Export to "
 msgstr "Exporter en "
 
