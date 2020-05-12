@@ -2,7 +2,6 @@
 ## Version 2.6.2
 
 - `Added` Possibilité de récupérer un lien de téléchargement à la place du contenu binaire dans les réponses à l'appel web service de consultation
-- `Fixed` Gestion des retours CLI
 
 ## Version 2.6.1
 
