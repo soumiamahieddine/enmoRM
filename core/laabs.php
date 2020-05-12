@@ -971,7 +971,9 @@ class laabs
         $cryptedToken = static::encrypt($jsonToken, static::getCryptKey());
         $cookieToken = base64_encode($cryptedToken);
 
-        setcookie($cookieName, $cookieToken, $expirationTime, '/', null, false, $httpOnly);
+        $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
+
+        setcookie($cookieName, $cookieToken, $expirationTime, '/', null, $secure, $httpOnly);
 
         $GLOBALS["TOKEN"][$name] = json_decode($jsonToken);
 

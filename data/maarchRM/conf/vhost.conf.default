@@ -32,6 +32,7 @@
     SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf;timestamp;csv
     SetEnv LAABS_PRESENTATION maarchRM
     SetEnv SERVICE_CLIENT_TOKEN service
+    #SetEnv LAABS_SECURE_COOKIE On
 
     SetEnv LAABS_CONFIGURATION "../data/maarchRM/conf/configuration.ini"
     SetEnv LAABS_LOG "../data/maarchRM/log.txt"
