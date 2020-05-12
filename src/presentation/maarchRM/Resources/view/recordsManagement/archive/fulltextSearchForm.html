@@ -48,20 +48,6 @@
                     <input type="text" data-range='end' class="form-control input-sm datePicker col-md-6" name="originatingDateMax" />
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-md-3 control-label text-primary"><small>Type d'objet</small></label>
-                <div class="btn-group col-md-4" style="padding-left: 0; padding-right: 0;" id="objectType" data-toggle="buttons">
-                    <label class="btn btn-default col-sm-4" title="Tout">
-                        <input class="form-control" type="radio" name="hasParent" value="" checked/> Tout
-                    </label>
-                    <label class="btn btn-default btn-info active col-sm-4" title="Archive">
-                        <input class="form-control" type="radio" name="hasParent" value="0" checked/> Archive
-                    </label>
-                    <label class="btn btn-default col-sm-4" title="Objet d'archive">
-                        <input class="form-control" type="radio" name="hasParent" value="1"/> Objet
-                    </label>
-                </div>
-            </div>
             <?merge userArchivalProfiles ?>
             <div class="profileAdvanceSearch [?merge .reference ?] hide">
                 <?merge .searchFields ?>
@@ -190,7 +176,7 @@ FulltextSearchForm = {
 
     search : function() {
         var query = this.serialize();
-        if (query.text == '' && query.description == "" && query.originatingStartDate == "" && query.originatingEndDate == "" && query.profileReference == "" && query.hasParent == "0") {
+        if (query.text == '' && query.description == "" && query.originatingStartDate == "" && query.originatingEndDate == "" && query.profileReference == "") {
             if (query.filePlanPosition) {
                 trigger('loadFolder.filePlan', [query.filePlanPosition]);
 
@@ -277,11 +263,6 @@ FulltextSearchForm = {
             originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
             maxResults           : this.form.find('[name="maxResults"]').val()
         };
-
-        $hasParent = $("#objectType > .active > input").val();
-        if ($hasParent != "") {
-            query.hasParent = $hasParent;
-        }
 
         var text = this.form.find('[name="searchForm_inputSearch"]').val().trim();
         if (text) {
@@ -432,11 +413,5 @@ FulltextSearchForm = {
 
     $('#fullTextSearchForm').onEvent("setSearchBarClass.recordsManagement", function(e, newClass) {
         $('#fullTextSearchForm').addClass(newClass);
-    });
-
-    $('#objectType').on('click', 'label.btn', function() {
-        var select = $(this);
-        select.closest('.btn-group').find('.btn-info').removeClass('btn-info').removeClass('active').addClass('btn-default');
-        select.removeClass('btn-default').addClass('btn-info').addClass('active');
     });
 </script>
