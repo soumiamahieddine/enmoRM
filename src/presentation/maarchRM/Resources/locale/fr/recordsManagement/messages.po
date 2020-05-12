@@ -947,6 +947,9 @@ msgstr "Aucun résultat"
 msgid "Sub-archive of"
 msgstr "Sous-archive de"
 
+msgid "Sub-archive"
+msgstr "Sous-archive"
+
 msgid "Zip container"
 msgstr "Fichier conteneur"
 
@@ -1304,3 +1307,6 @@ msgstr "Date et heure de la validation"
 
 msgid "Masterdata"
 msgstr "Référentiel des personnes et organisations"
+
+msgid "Object"
+msgstr "Objet"
