@@ -31,11 +31,4 @@ interface accountInterface
      * @uses auth/serviceAccount/readIndex
      */
     public function readServiceTodisplay();
-
-    /**
-     * List all users to display
-     *
-     * @uses auth/userAccount/readUserlist
-     */
-    public function readUserTodisplay();
 }

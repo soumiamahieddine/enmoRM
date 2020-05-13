@@ -96,7 +96,9 @@ class laabs
         static::preload();
 
         // Start session
-        \core\Globals\Session::start();
+        if (isset($_SERVER['LAABS_SESSION_START']) && $_SERVER['LAABS_SESSION_START'] == 'On') {
+            \core\Globals\Session::start();
+        }
 
         // Start cache strategies
         if (($memcacheServer = \laabs::getMemCacheServer()) && !empty(static::$instance)) {
@@ -971,7 +973,9 @@ class laabs
         $cryptedToken = static::encrypt($jsonToken, static::getCryptKey());
         $cookieToken = base64_encode($cryptedToken);
 
-        setcookie($cookieName, $cookieToken, $expirationTime, '/', null, false, $httpOnly);
+        $secure = (isset($_SERVER['LAABS_SECURE_COOKIE']) && $_SERVER['LAABS_SECURE_COOKIE'] == "On");
+
+        setcookie($cookieName, $cookieToken, $expirationTime, '/', null, $secure, $httpOnly);
 
         $GLOBALS["TOKEN"][$name] = json_decode($jsonToken);
 
