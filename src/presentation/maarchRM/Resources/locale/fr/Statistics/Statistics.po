@@ -1,0 +1,6 @@
+# Statistics/Statistics
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Statistics"
+msgstr "Statistiques"
