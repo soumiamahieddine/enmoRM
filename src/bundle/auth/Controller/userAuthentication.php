@@ -182,7 +182,13 @@ class userAuthentication
      */
     public function definePassword($userName, $oldPassword, $newPassword, $requestPath)
     {
-        if ($userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName))) {
+        $tempToken = \laabs::getToken('TEMP-AUTH');
+
+        if ($this->sdoFactory->exists('auth/account', array('accountName' => $userName))
+            && $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName))
+            && !is_null($tempToken)
+            && $tempToken->accountId == $userAccount->accountId) {
+
             $this->checkPasswordPolicies($newPassword);
 
             $encryptedPassword = $newPassword;

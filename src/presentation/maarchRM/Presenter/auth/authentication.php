@@ -116,7 +116,12 @@ class authentication
     public function definePassword($requestPath)
     {
         $json = $this->json;
+        $json->status = true;
         $json->message = "Password changed.";
+        if ($requestPath === false) {
+            $json->status = false;
+            $json->message = "Password not changed.";
+        }
         $json->requestPath = $requestPath;
 
         return $json->save();
