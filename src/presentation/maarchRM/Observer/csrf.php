@@ -131,7 +131,7 @@ class csrf
         // Save auth information to user account
         $this->updateAccount();
             
-        \laabs::setToken($this->config["cookieName"], $responseToken, null, false);
+        \laabs::setToken($this->config["cookieName"], $responseToken, null, true);
     }
 
     /**
