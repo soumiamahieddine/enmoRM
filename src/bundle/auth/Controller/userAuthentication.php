@@ -184,8 +184,13 @@ class userAuthentication
     {
         $tempToken = \laabs::getToken('TEMP-AUTH');
 
+        if ($this->sdoFactory->exists('auth/account', array('accountName' => $userName))) {
+            $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
+        } else {
+            return false;
+        }
+
         if ($this->sdoFactory->exists('auth/account', array('accountName' => $userName))
-            && $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName))
             && !is_null($tempToken)
             && $tempToken->accountId == $userAccount->accountId) {
 
