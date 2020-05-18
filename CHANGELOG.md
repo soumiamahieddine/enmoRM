@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 2.6.5
+
+- `Fixed` Rétablissement du changement de mot de passe pour les nouveaux utilisateurs.
+- `Added` Ajout de la directive LAABS_SESSION_START dans le fichier vhost par défaut empêchant la création d'une session sur le serveur.
+- `Added` Ajout de la directive LAABS_SECURE_COOKIE dans le fichier vhost par défaut permettant d'ajouter l'attribut secure aux cookies dans le cas d'une instance en HTTPS.
+- `Fixed` Retrait de certaines données sensibles dans les données retournées par l'application.
+- `Added` Ajout de l'attribut "HttpOnly" sur le cookie CSRF.
+- `Fixed` Désactivation de l'autocomplete sur les formulaires contenant des mots de passe.
+
 ## Version 2.6.4
 
 - `Fixed` Correction faille de sécurité concernant le vol de compte via l'interface de login
