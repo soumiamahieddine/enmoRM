@@ -1,3 +1,11 @@
+# Migration 2.6.x vers 2.6.5
+## Configuration virtual host
+
+Ajout de 2 directives concernant la sécurité dans le fichier vhost.conf.default :  
+*LAABS_SESSION_START* --> "Off" par défaut. Permet de ne pas créer de fichier de session inutile sur le serveur.  
+*LAABS_SECURE_COOKIE* --> désactivé par défaut. Permet d'ajouter l'attribut "secure" sur les cookies dans le cas d'une instance publiée en HTTPS.
+
+
 # Migration 2.5 vers 2.6
 ## Configuration
 ### Lien de téléchargement d'une ressource
