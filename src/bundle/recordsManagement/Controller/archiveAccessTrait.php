@@ -121,7 +121,7 @@ trait archiveAccessTrait
             $descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
             foreach ($descriptionSchemeController->index() as $name => $descriptionScheme) {
-                if (isset($descriptionScheme->search)) {
+                if (isset($descriptionScheme->search) && !empty($descriptionScheme->search)) {
                     $searchClasses[$name] = $this->useDescriptionController($descriptionScheme->search);
                 }
             }
