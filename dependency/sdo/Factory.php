@@ -245,14 +245,10 @@ class Factory
             }
 
             if ($this->trace > 0) {
-                \laabs::log($sqlMessage);
+                \laabs::log($sqlMessage . "\n" . $stmt->dump());
             }
 
-            throw new \Exception(
-                "An error occured during the execution of the data access statement. " . $sqlMessage . "\n" . $stmt->dump(), 
-                null, 
-                $exception
-            );
+            throw new \Exception("An error occured during the execution of the data access statement.");
         }
 
         if ($transactionControl) {
