@@ -954,23 +954,27 @@ input:invalid {
             } else if ($.isPlainObject(data)) {
                 $.each(data, function(property, value) {
                     if (property == "description") {
-                        $.each(value, function(descProperty, descValue) {
-                            if(target.find("[name='"+descProperty+"']").first().length > 0) {
-                                if ($.isPlainObject(descValue)){
-                                    objectTarget = $("#archivalProfileFields").children("[name='" + descProperty + "']").first();
-                                    var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').children("[name=descriptionLabel]").text());
-                                    header = objectTarget.find(".panel-title").first().find("a");
-                                    header.text(objectHeader);
-                                }
-                                Metadata.checkAndFill(descValue, $("#archivalProfileFields").children("[name='" + descProperty + "']").first(), $("#importPanel"));
-                            } else {
-                                custom = {
-                                    "property" : descProperty,
-                                    "value": descValue
+                        if (value) {
+                            $.each(value, function(descProperty, descValue) {
+                                console.log(target.find("[name='"+descProperty+"']"));
+                                console.log(target.find("[name='"+descProperty+"']").first());
+                                if(target.find("[name='"+descProperty+"']").first().length > 0) {
+                                    if ($.isPlainObject(descValue)){
+                                        objectTarget = $("#archivalProfileFields").children("[name='" + descProperty + "']").first();
+                                        var objectHeader = $("#object_header_modify_text").text().replace(/%1\$s/g, objectTarget.children('label').children("[name=descriptionLabel]").text());
+                                        header = objectTarget.find(".panel-title").first().find("a");
+                                        header.text(objectHeader);
                                     }
-                                Metadata.addCustomField(custom);
-                            }
-                        });
+                                    Metadata.checkAndFill(descValue, $("#archivalProfileFields").children("[name='" + descProperty + "']").first(), $("#importPanel"));
+                                } else {
+                                    custom = {
+                                        "property" : descProperty,
+                                        "value": descValue
+                                        }
+                                    Metadata.addCustomField(custom);
+                                }
+                            });
+                        }
                     } else if (property == "descriptionObject") {
                         return true;
                     } else {

@@ -240,48 +240,29 @@ class Document extends \dependency\xml\Document
             }
         }
 
+
         // add css
         $this->addStyle("/public/css/bootstrap-toggle/bootstrap-toggle.css");
         $this->addStyle("/public/css/bootstrap-datetimepicker/bootstrap-datetimepicker.css");
 
         // Add js scripts
-        $this->addScript("/public/js/jQuery_1.11.0/jQuery.js");
+        $this->addScript("/public/js/jQuery-3.4.1/jquery-3.4.1.min.js");
         $this->addScript("/public/js/jQueryUI_1.12.1/jquery-ui.min.js");
-        $this->addScript("/public/js/jQueryUI_touch-punch_0.2.3/jquery.ui.touch-punch.js");
+
+        $this->addScript("/public/js/jQueryUI_touch-punch_1.0.7/jquery.ui.touch-punch.js");
         //less compiler
         $this->addScript("/public/js/less_1.7.0/less.js");
-        //bootstrap.affix
-        $this->addScript("/public/js/bootstrap_3.1.1/affix.js");
-        //bootstrap.alert
-        $this->addScript("/public/js/bootstrap_3.1.1/alert.js");
-        //bootstrap.button
-        $this->addScript("/public/js/bootstrap_3.1.1/button.js");
-        //bootstrap.carousel
-        $this->addScript("/public/js/bootstrap_3.1.1/carousel.js");
-        //bootstrap.collapse
-        $this->addScript("/public/js/bootstrap_3.1.1/collapse.js");
-        //bootstrap.dropdown
-        $this->addScript("/public/js/bootstrap_3.1.1/dropdown.js");
-        //bootstrap.modal
-        $this->addScript("/public/js/bootstrap_3.1.1/modal.js");
-        //bootstrap.tooltip
-        $this->addScript("/public/js/bootstrap_3.1.1/tooltip.js");
-        //bootstrap.popover
-        $this->addScript("/public/js/bootstrap_3.1.1/popover.js");
-        //bootstrap.scrollspy
-        $this->addScript("/public/js/bootstrap_3.1.1/scrollspy.js");
-        //bootstrap.tab
-        $this->addScript("/public/js/bootstrap_3.1.1/tab.js");
-        //bootstrap.transition
-        $this->addScript("/public/js/bootstrap_3.1.1/transition.js");
+
+        $this->addScript("/public/js/bootstrap_3.1.1/all.min.js");
+
         //metisMenu
         $this->addScript("/public/js/metisMenu_1.0.1/metisMenu.js");
         //dataForm
         $this->addScript("/public/js/dataForm_0.0.1/dataForm.js");
 
         //gritter
-        $this->addScript("/public/js/gritter_1.7.4/gritter.min.js");
-        $this->addScript("/public/js/gritter_1.7.4/gritter.js");
+        $this->addScript("/public/js/gritter/gritter.min.js");
+        $this->addScript("/public/js/gritter/gritter.js");
 
         //typeahead
         $this->addScript("/public/js/typeahead_0.11.1/typeahead.js");
@@ -297,6 +278,7 @@ class Document extends \dependency\xml\Document
         $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.js");
 
         $this->addScript("/public/js/csrf/csrfprotector.js");
+        $this->addScript("/public/js/bootstrap-toggle/bootstrap-toggle.js");
 
         //$this->addScript("/public/js/webodf.js-0.5.8/webodf.js");
 
