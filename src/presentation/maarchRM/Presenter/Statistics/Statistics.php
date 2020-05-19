@@ -56,14 +56,16 @@ class Statistics
         $this->translator->setCatalog('Statistics/Statistics');
     }
 
-    public function read()
+    /**
+     *
+     * @param  array $statistics associative array of statistcics and their values
+     * @return [type]             [description]
+     */
+    public function index($statistics)
     {
-        $archivalAgencies = \laabs::callService('organization/organization/readIndex', null, 'orgRoleCodes="archiver"');
-
-        $originatingAgencies = \laabs::callService('organization/organization/readOriginator');
-        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
         $this->view->addContentFile("Statistics/index.html");
-        $this->view->setSource('archivalProfiles', $archivalProfiles);
+        $statistics['evolution'] = $statistics['depositMemorySize'] - $statistics['deletedMemorySize'];
+        $this->view->setSource('statistics', $statistics);
         $this->view->merge();
         $this->view->translate();
 
