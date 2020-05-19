@@ -28,6 +28,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
 
 -- LIFECYCLE
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES
+('digitalResource/integrityCheck', 'repositoryReference addressesToCheck checkedAddresses failed', 'Contrôle d''intégrité des ressources présentes dans %6$s', false),
 ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de communicabilité de l''archive %6$s', false),
 ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation ajoutée avec l''archive %6$s', false),
 ('recordsManagement/archivalProfileModification', 'archivalProfileReference', 'Modification du profil %6$s.', false),
