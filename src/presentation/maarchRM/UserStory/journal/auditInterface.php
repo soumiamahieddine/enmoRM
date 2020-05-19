@@ -48,11 +48,19 @@ interface auditInterface
      */
     public function readEvents($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null, $wording = null);
 
-        /**
+    /**
      * Get event
      *
      * @uses audit/event/read_eventId_
      * @return audit/event/getEvent
      */
     public function readEvent_eventId_();
+
+    /**
+     * List all users to display
+     *
+     * @uses auth/userAccount/readUserlist
+     */
+    public function readUserTodisplay();
+
 }
