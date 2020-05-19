@@ -32,10 +32,4 @@ interface accountInterface
      */
     public function readServiceTodisplay();
 
-    /**
-     * List all users to display
-     *
-     * @uses auth/userAccount/readUserlist
-     */
-    public function readUserTodisplay();
 }
