@@ -7,8 +7,8 @@
             <form class="form-horizontal" id="statistics-form">
             	<div class="row">
             		<div class="col-md-4">
-            			<select class="form-control" name="operation" id="operation" placeholder="Operation">
-            				<option selected disabled value="">Select an operation *</option>
+            			<select class="form-control" name="operation" id="operation">
+                            <option selected disabled value="">Select an operation *</option>
 							<option value="deposit">Deposit</option>
 							<option value="delete">Delete</option>
 							<option value="conserved">Conserved</option>
@@ -16,22 +16,15 @@
             		</div>
             	</div>
             	<br>
-            	<div class="row">
-            		<div class="col-md-4">
-						<select class="form-control" name="archivalProfiles" id="archivalProfiles">
-							<option value="" selected disabled>Select an archival profile</option>
-							<?merge archivalProfiles ?>
-								<option value="[?merge .reference ?]"><?merge .name ?></option>
-						</select>
-            		</div>
-            	</div>
-            	<br>
-            	<div class="row">
-            		<div class="col-md-4">
-        				<input type="text" id="orgTypeahead" class="form-control" name="orgTypeahead" placeholder="Select an originating organization">
-            		</div>
-            		<input type="hidden" name="originatingOrg" id="originatingOrg">
-            	</div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <select name="filter" id="filter" class="form-control">
+            				<option selected disabled value="">Select a filter *</option>
+                            <option value="archivalProfile">By archival profile</option>
+                            <option value="originatingOrg">By originating agency</option>
+                        </select>
+                    </div>
+                </div>
             	<!-- TODO pour medona/ap -->
             	<!-- <br>
             	<div class="row">
@@ -61,6 +54,28 @@
         </div>
     </div>
 </div>
+<div id="statsResults">
+    <table class="table defaultStatistics">
+        <tbody>
+            <tr>
+                <td>depositMemorySize</td>
+                <td><?merge statistics['depositMemorySize'] ?></td>
+            </tr>
+            <tr>
+                <td>deletedMemorySize</td>
+                <td><?merge statistics['deletedMemorySize'] ?></td>
+            </tr>
+            <tr>
+                <td>currentMemorySize</td>
+                <td><?merge statistics['currentMemorySize'] ?></td>
+            </tr>
+            <tr>
+                <td>evolution</td>
+                <td><?merge statistics['evolution'] ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <div class="hide">
     <span id="error_required_field">The fields with a star are required.</span>
 </div>
@@ -85,18 +100,18 @@
             if (parameters == -1) {
                 return;
             }
-            // ajax($('#search'), {
-            //     url         : '/statistics/show',
-            //     type        : 'GET',
-            //     data        : parameters,
-            //     contentType : 'application/json',
-            //     success     : function(response) {
-            //     },
-            //     error       : function(response) {
-            //         var error = JSON.parse(response.responseText);
-            //         gritter.show(error.message, false);
-            //     }
-            // });
+            ajax($('#search'), {
+                url         : '/statistics/retrieve',
+                type        : 'GET',
+                data        : parameters,
+                contentType : 'application/json',
+                success     : function(response) {
+                },
+                error       : function(response) {
+                    var error = JSON.parse(response.responseText);
+                    gritter.show(error.message, false);
+                }
+            });
         },
 
         serialize: function() {

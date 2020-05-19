@@ -27,5 +27,16 @@ namespace bundle\Statistics;
  */
 interface StatisticsInterface
 {
-
+    /**
+     * Retrieve basics stats
+     *
+     * @param string $operation
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $originatingOrg
+     * @param string $archivalProfile
+     *
+     * @action Statistics/Statistics/retrieve
+     */
+    public function retrieve($operation = null, $startDate = null, $endDate = null, $originatingOrg = null, $archivalProfile = null);
 }
