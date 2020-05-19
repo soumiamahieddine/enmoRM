@@ -29,9 +29,23 @@ interface StatisticsInterface
     /**
      * Display statistics page
      *
-     *
-     * @return Statistics/Statistics/read
+     * @uses   Statistics/Statistics/retrieve
+     * @return Statistics/Statistics/index
      *
      */
     public function readStatistics();
+
+    /**
+     * Retrieve statistics
+     *
+     * @param string $operation
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $originatingOrg
+     * @param string $archivalProfile
+     *
+     * @uses Statistics/Statistics/retrieve
+     *
+     */
+    public function readStatisticsRetrieve($operation = null, $startDate = null, $endDate = null, $originatingOrg = null, $archivalProfile = null);
 }
