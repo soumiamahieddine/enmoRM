@@ -104,19 +104,24 @@ class Statistics
         }
 
         $statistics = [];
-        $statistics['depositMemorySize'] = $this->getMessageSize(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $operation, $jsonColumnNumber = 8, $startDate, $endDate, $originatingOrg, $archivalProfile);
-        $statistics['deletedMemorySize'] = $this->getMessageSize(['recordsManagement/destruction'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
-        $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
+        $groupBy = null;
+        if(!is_null($operation)) {
+            $groupBy = $operation;
+        }
+        $statistics['depositMemorySize'] = $this->getMessageSize(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate, $groupBy);
+        $statistics['deletedMemorySize'] = $this->getMessageSize(['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate, $groupBy);
+        $statistics['currentMemorySize'] = $this->getArchiveSize($endDate, $groupBy);
 
         if (\laabs::configuration('medona')['transaction']) {
-            $statistics['transferredMemoryize'] = $this->getMessageSize(['recordsManagement/outgoingTansfer'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
-            $statistics['restitutionMemorySize'] = $this->getMessageSize(['recordsManagement/restitution'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
+            $statistics['transferredMemoryize'] = $this->getMessageSize(['recordsManagement/outgoingTansfer'], $operation, $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['restitutionMemorySize'] = $this->getMessageSize(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
+
         }
 
         return $statistics;
     }
 
-    protected function getMessageSize($eventTypes, $operation, $jsonColumnNumber, $startDate = null, $endDate = null, $originatingOrg = null, $archivalProfile = null)
+    protected function getMessageSize($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null)
     {
         $sum = 0;
 
@@ -129,12 +134,21 @@ class Statistics
         $query = <<<EOT
 SELECT SUM (CAST(NULLIF("eventInfo"::json->>$jsonColumnNumber, '') AS INTEGER)) FROM "lifeCycle"."event" WHERE "eventType" IN ($in)
 EOT;
-        $sum += $this->executeQuery($query, $eventTypes, $inParams, $operation, $startDate, $endDate, $isIncludingChildren = null);
+
+        if (!is_null($groupBy)) {
+            if ($groupBy == 'originatingOrg') {
+               $query .= ' GROUP BY "eventInfo"::jsonb->>4';
+            } else if ($groupBy == 'archivalProfile') {
+                $query .= ' GROUP BY "eventInfo"::jsonb->>2';
+            }
+        }
+
+        $sum += $this->executeQuery($query, $eventTypes, $inParams, $startDate, $endDate);
 
         return $sum;
     }
 
-    protected function getArchiveSize($endDate = null)
+    protected function getArchiveSize($endDate = null, $groupBy = null)
     {
         $sum = 0;
         if (is_null($endDate)) {
@@ -181,7 +195,6 @@ EOT;
      * @param string   $query                           Query to send
      * @param string   $eventTypes                      Types of event
      * @param string   $secondary_parameters            Secondary parameters
-     * @param string   $brigade                         OrgName
      * @param DateTime $startDate                       Start Date
      * @param DateTime $endDate                         End date
      * @param Boolean  $isIncludingChildren             Include children services
@@ -190,14 +203,9 @@ EOT;
      *
      * @return Count
      */
-    public function executeQuery($query, $eventTypes, $secondary_parameters, $brigade = null, $startDate = null, $endDate = null, $isIncludingChildren = false, $isOrderingByProfile = false)
+    public function executeQuery($query, $eventTypes, $secondary_parameters, $startDate = null, $endDate = null, $groupBy = null)
     {
         $params = [];
-        // if ($brigade) {
-        //     $params = [
-        //         ':brigade'=> $brigade
-        //     ];
-        // }
 
 
         if (!is_null($startDate)) {
@@ -205,10 +213,6 @@ EOT;
             $params[':endDate'] = (string) $endDate->format('Y-m-d H:i:s');
             $query .= " AND timestamp BETWEEN :startDate::timestamp AND :endDate::timestamp";
         }
-
-        // if ($isOrderingByProfile) {
-        //     $query .= ' GROUP BY "eventInfo"::jsonb->>2';
-        // }
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(array_merge($params, $secondary_parameters));
