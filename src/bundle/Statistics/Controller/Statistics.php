@@ -103,20 +103,17 @@ class Statistics
             throw new \core\Exception\BadRequestException("Archival Profile does not exists");
         }
 
-        $depositMemorySize = $this->getMessageSize(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $operation, $jsonColumnNumber = 8, $startDate, $endDate, $originatingOrg, $archivalProfile);
-        $deletedMemorySize = $this->getMessageSize(['recordsManagement/destruction'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
-        $currentMemorySize = $this->getArchiveSize($endDate);
+        $statistics = [];
+        $statistics['depositMemorySize'] = $this->getMessageSize(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $operation, $jsonColumnNumber = 8, $startDate, $endDate, $originatingOrg, $archivalProfile);
+        $statistics['deletedMemorySize'] = $this->getMessageSize(['recordsManagement/destruction'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
+        $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
-            $transferredMemoryize = ;
-            $restitutionMemorySize = ;
+            $statistics['transferredMemoryize'] = $this->getMessageSize(['recordsManagement/outgoingTansfer'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
+            $statistics['restitutionMemorySize'] = $this->getMessageSize(['recordsManagement/restitution'], $operation, $jsonColumnNumber = 6, $startDate, $endDate, $originatingOrg, $archivalProfile);
         }
 
-        return [
-            'depositMemorySize' => $depositMemorySize,
-            'deletedMemorySize' => $deletedMemorySize,
-            'currentMemorySize' => $currentMemorySize
-        ];
+        return $statistics;
     }
 
     protected function getMessageSize($eventTypes, $operation, $jsonColumnNumber, $startDate = null, $endDate = null, $originatingOrg = null, $archivalProfile = null)

@@ -63,8 +63,11 @@ class Statistics
      */
     public function index($statistics)
     {
-        $this->view->addContentFile("Statistics/index.html");
         $statistics['evolution'] = $statistics['depositMemorySize'] - $statistics['deletedMemorySize'];
+        if (\laabs::configuration('medona')['transaction']) {
+            $statistics['evolution'] = $statistics['depositMemorySize'] - $statistics['deletedMemorySize'] - $statistics['transferredMemoryize'] - $statistics['restitutionMemorySize'];
+        }
+        $this->view->addContentFile("Statistics/index.html");
         $this->view->setSource('statistics', $statistics);
         $this->view->merge();
         $this->view->translate();
