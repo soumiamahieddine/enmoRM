@@ -41,11 +41,11 @@ interface StatisticsInterface
      * @param string $operation
      * @param string $startDate
      * @param string $endDate
-     * @param string $originatingOrg
-     * @param string $archivalProfile
+     * @param string $filter
      *
      * @uses Statistics/Statistics/retrieve
+     * @return Statistics/Statistics/retrieveStats
      *
      */
-    public function readStatisticsRetrieve($operation = null, $startDate = null, $endDate = null, $originatingOrg = null, $archivalProfile = null);
+    public function readStatisticsRetrieve($operation = null, $startDate = null, $endDate = null, $filter = null);
 }
