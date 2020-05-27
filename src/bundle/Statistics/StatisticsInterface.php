@@ -33,10 +33,9 @@ interface StatisticsInterface
      * @param string $operation
      * @param string $startDate
      * @param string $endDate
-     * @param string $originatingOrg
-     * @param string $archivalProfile
+     * @param string $filter
      *
      * @action Statistics/Statistics/retrieve
      */
-    public function retrieve($operation = null, $startDate = null, $endDate = null, $originatingOrg = null, $archivalProfile = null);
+    public function retrieve($operation = null, $startDate = null, $endDate = null, $filter = null);
 }
