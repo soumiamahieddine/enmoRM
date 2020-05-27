@@ -10,10 +10,10 @@
     </thead>
     <tbody>
         <tr>
-            <td><?merge statistics['depositMemorySize'] ?></td>
-            <td><?merge statistics['deletedMemorySize'] ?></td>
-            <td><?merge statistics['currentMemorySize'] ?></td>
-            <td><?merge statistics['evolution'] ?></td>
+            <td><?merge statistics['depositMemorySize'].div(1000) ?>Mo</td>
+            <td><?merge statistics['deletedMemorySize'].div(1000) ?>Mo</td>
+            <td><?merge statistics['currentMemorySize'].div(1000) ?>Mo</td>
+            <td><?merge statistics['evolution'].div(1000) ?>Mo</td>
             <td>Total</td>
         </tr>
         <?merge condensedStats ?>
