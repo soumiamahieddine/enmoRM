@@ -482,6 +482,7 @@ class Statistics
             }
             $isIncomingCondition .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
         }
+        $sum = $this->executeQuery($query, $eventTypes, $inParams);
 
         $query = 'SELECT  COUNT("unitIdentifier"."objectId")
             FROM "medona"."message" "message"
@@ -632,6 +633,8 @@ class Statistics
     {
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
+        } else {
+            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = 'SELECT COUNT(*)
@@ -673,6 +676,84 @@ EOT;
         $sum = (integer)$result / pow(1000, $this->sizeFilter);
 
         return $sum;
+    }
+
+    protected function getArchiveSizeOrdered($groupBy, $endDate = null)
+    {
+        switch ($groupBy) {
+            case 'archivalProfile':
+                $tableProperty = "archivalProfileReference";
+                break;
+            case 'originatingOrg':
+                $tableProperty = "originatorOrgRegNumber";
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        if (is_null($endDate)) {
+            $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
+        } else {
+            $endDate = (string) $endDate->format('Y-m-d H:i:s');
+        }
+
+        $query = <<<EOT
+SELECT "recordsManagement"."archive"."$tableProperty" AS $groupBy, SUM ("digitalResource"."digitalResource"."size")
+FROM "digitalResource"."digitalResource"
+JOIN "recordsManagement"."archive"
+ON "digitalResource"."digitalResource"."archiveId" = "recordsManagement"."archive"."archiveId"
+WHERE "created"<'$endDate'::timestamp
+GROUP BY "recordsManagement"."archive"."$tableProperty";
+EOT;
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        $results = [];
+        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $results[] = $result;
+        }
+
+        return $results;
+    }
+
+    protected function getArchiveCountOrdered($groupBy, $endDate = null)
+    {
+        switch ($groupBy) {
+            case 'archivalProfile':
+                $tableProperty = "archivalProfileReference";
+                break;
+            case 'originatingOrg':
+                $tableProperty = "originatorOrgRegNumber";
+                break;
+            default:
+                # code...
+                break;
+        }
+
+        if (is_null($endDate)) {
+            $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
+        } else {
+            $endDate = (string) $endDate->format('Y-m-d H:i:s');
+        }
+
+        $query = <<<EOT
+SELECT "recordsManagement"."archive"."$tableProperty" AS $groupBy, COUNT ("digitalResource"."digitalResource"."size")
+FROM "digitalResource"."digitalResource"
+JOIN "recordsManagement"."archive"
+ON "digitalResource"."digitalResource"."archiveId" = "recordsManagement"."archive"."archiveId"
+WHERE "created"<'$endDate'::timestamp
+GROUP BY "recordsManagement"."archive"."$tableProperty";
+EOT;
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute();
+        $results = [];
+        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $results[] = $result;
+        }
+
+        return $results;
     }
 
     /**
