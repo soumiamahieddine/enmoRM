@@ -5,7 +5,8 @@
     <div class="container-fluid page-header">
         <div class="well">
             <form class="form-horizontal" id="statistics-form">
-            	<div class="row">
+                <!-- TODO à activer pour AP -->
+            	<!-- <div class="row">
             		<div class="col-md-4">
             			<select class="form-control" name="operation" id="operation">
                             <option selected disabled value="">Select an operation *</option>
@@ -14,7 +15,7 @@
 							<option value="conserved">Conserved</option>
 						</select>
             		</div>
-            	</div>
+            	</div> -->
             	<br>
                 <div class="row">
                     <div class="col-md-4">
@@ -25,15 +26,6 @@
                         </select>
                     </div>
                 </div>
-            	<!-- TODO pour medona/ap -->
-            	<!-- <br>
-            	<div class="row">
-            		<div class="col-md-4">
-						<select class="form-control" name="archivalAgency" id="archivalAgency">
-							<option value="" selected disabled>Select an archival agency</option>
-						</select>
-            		</div>
-            	</div> -->
             	<br>
             	<div class="row">
             		<div class="col-md-2">
@@ -55,26 +47,47 @@
     </div>
 </div>
 <div id="statsResults">
-    <table class="table defaultStatistics">
+    <!-- <table class="table defaultStatistics">
         <tbody>
             <tr>
                 <td>depositMemorySize</td>
+                <td>Total</td>
                 <td><?merge statistics['depositMemorySize'] ?> octets</td>
             </tr>
+            <?merge statistics['groupedDepositMemorySize'] ?>
+            <span>
+                <tr>
+                    <td></td>
+                    <?merge .?>
+                    <td><?merge . ?></td>
+                </tr>
+            </span>
+
             <tr>
                 <td>deletedMemorySize</td>
+                <td>Total</td>
                 <td><?merge statistics['deletedMemorySize'] ?> octets</td>
             </tr>
             <tr>
                 <td>currentMemorySize</td>
+                <td>Total</td>
                 <td><?merge statistics['currentMemorySize'] ?> octets</td>
             </tr>
+
+            <?merge statistics['groupedArchiveSize'] ?>
+            <span>
+                <tr>
+                    <td></td>
+                    <?merge . ?>
+                    <td><?merge . ?></td>
+                </tr>
+            </span>
             <tr>
-                <td>evolution</td>
+                <td colspan="2" >Evolution</td>
                 <td><?merge statistics['evolution'] ?> octets</td>
             </tr>
         </tbody>
-    </table>
+    </table> -->
 </div>
 <div class="hide">
     <span id="error_required_field">The fields with a star are required.</span>
@@ -83,6 +96,7 @@
 <script>
 	StatisticsForm = {
         statisticForm : $('#statistics-form'),
+        resultList : $('#statsResults'),
 
         reset: function() {
             $('#orgTypeahead').data("value", "");
@@ -96,7 +110,6 @@
 
         search: function() {
             var parameters = this.serialize();
-            console.log(parameters);
             if (parameters == -1) {
                 return;
             }
@@ -106,6 +119,8 @@
                 data        : parameters,
                 contentType : 'application/json',
                 success     : function(response) {
+                    StatisticsForm.resultList.empty();
+                    StatisticsForm.resultList.html(response);
                 },
                 error       : function(response) {
                     var error = JSON.parse(response.responseText);
@@ -119,13 +134,13 @@
 
             let operation = this.statisticForm.find('[name="operation"]').val();
             let originatingOrg = $('#originatingOrg').val();
-            let archivalProfile = this.statisticForm.find('[name="archivalProfiles"]').val()
+            let filter = this.statisticForm.find('[name="filter"]').val();
             let startDate = this.statisticForm.find('[name="fromDate"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
             let endDate   = this.statisticForm.find('[name="toDate"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
 
             object.operation = operation;
             object.originatingOrg = originatingOrg;
-            object.archivalProfile = archivalProfile;
+            object.filter = filter;
             object.startDate = startDate;
             object.endDate = endDate;
 
@@ -137,10 +152,10 @@
 	CTA
 	************/
 	$('#search').on('click', function() {
-        if (!$('#operation').val()) {
-            gritter.show($("#error_required_field").text(), false);
-            return;
-        }
+        // if (!$('#operation').val()) {
+        //     gritter.show($("#error_required_field").text(), false);
+        //     return;
+        // }
 
         StatisticsForm.search();
     });
