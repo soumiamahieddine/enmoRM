@@ -1,0 +1,34 @@
+<table class="table defaultStatistics dataTable">
+    <thead>
+        <tr>
+            <th>deposit</th>
+            <th>deleted</th>
+            <th>restituted</th>
+            <th>transfered</th>
+            <th>conserved</th>
+            <th>growth</th>
+            <th>archival profile or originating org</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><?merge statistics['depositMemorySize'].div(1000) ?> Mo</td>
+            <td><?merge statistics['deletedMemorySize'].div(1000) ?> Mo</td>
+            <td><?merge statistics['restitutionMemorySize'].div(1000) ?> Mo</td>
+            <td><?merge statistics['transferredMemorySize'].div(1000) ?> Mo</td>
+            <td><?merge statistics['currentMemorySize'].div(1000) ?> Mo</td>
+            <td><?merge statistics['evolution'].div(1000) ?> Mo</td>
+            <td>Total</td>
+        </tr>
+        <?merge condensedStats ?>
+        <tr>
+            <td><?merge .['deposit'].['sum'].div(1000) ?> Mo / <?merge .['deposit'].['count'] ?> files</td>
+            <td><?merge .['deleted'].['sum'].div(1000) ?> Mo / <?merge .['deleted'].['count'] ?> files</td>
+            <td><?merge .['deleted'].['sum'].div(1000) ?> Mo / <?merge .['deleted'].['count'] ?> files</td>
+            <td><?merge .['deleted'].['sum'].div(1000) ?> Mo / <?merge .['deleted'].['count'] ?> files</td>
+            <td><?merge .['archived'].['sum'].div(1000) ?> Mo / <?merge .['archived'].['count'] ?> files</td>
+            <td></td>
+            <td><?merge condensedStats.key() ?></td>
+        </tr>
+    </tbody>
+</table>
