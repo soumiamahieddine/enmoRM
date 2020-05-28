@@ -191,7 +191,7 @@ var zipContent = "";
 
 
     $('#messageImport_filesBrowser').on('change', function() {
-        uploadMessage($(this).context.files[0]);
+        uploadMessage($(this).get(0).files[0]);
     })
 
     // Cancel
@@ -279,7 +279,7 @@ var zipContent = "";
 
     $('#messageImport_attachementsBrowser').on('change', function() {
 
-        for (var i = 0; i < $(this).context.files.length; i++)
+        for (var i = 0; i < $(this).get(0).files.length; i++)
         {
             var fileName = this.files[i].name;
 

@@ -225,7 +225,7 @@ file that was distributed with this source code.
     })
 
     $('#inputFormatFile').on('change', function() {
-        uploadMessage($(this).context.files[0]);
+        uploadMessage($(this).get(0).files[0]);
     })
 
     // Cancel

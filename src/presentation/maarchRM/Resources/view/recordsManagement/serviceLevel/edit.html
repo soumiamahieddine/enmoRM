@@ -56,30 +56,37 @@ file that was distributed with this source code.
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Detect format</span></label>
-                        <input type="checkbox" name="formatDetection" id="detectFormat" data-toggle="toggle">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Validate format</span></label>
-                        <input type="checkbox" name="formatValidation" id="formatValidation" data-toggle="toggle">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Check for virus</span></label>
-                        <input type="checkbox" name="virusCheck" id="virusCheck" data-toggle="toggle">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Convert on deposit</span></label>
-                        <input type="checkbox" name="convertOnDeposit" id="convertOnDeposit" data-toggle="toggle">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Log the consultations</span></label>
-                        <input type="checkbox" name="logConsultation" id="logConsultation" data-toggle="toggle">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-xs-5 control-label"><span class="col-md-10">Full text indexation</span></label>
-                        <input type="checkbox" name="fullTextIndexation" id="fullTextIndexation" data-toggle="toggle">
+                        <label class="col-xs-5 control-label">Detect format</label>
+                        <div class="checkbox col-xs-7" id="formatDetection">
+                            <input type="checkbox" name="formatDetection" data-toggle="toggle">
+                        </div>
+
+                        <label class="col-xs-5 control-label">Validate format</label>
+                        <div class="checkbox col-xs-7" id="formatValidation">
+                            <input type="checkbox" name="formatValidation" data-toggle="toggle">
+                        </div>
+
+                        <label class="col-xs-5 control-label">Check for virus</label>
+                        <div class="checkbox col-xs-7" id="virusCheck">
+                            <input type="checkbox" name="virusCheck" data-toggle="toggle">
+                        </div>
+
+                        <label class="col-xs-5 control-label">Convert on deposit</label>
+                        <div class="checkbox col-xs-7" id="convertOnDeposit">
+                            <input type="checkbox" name="convertOnDeposit" data-toggle="toggle">
+                        </div>
+
+                        <label class="col-xs-5 control-label">Log the consultations</label>
+                        <div class="checkbox col-xs-7" id="logConsultation">
+                            <input type="checkbox" name="logConsultation" data-toggle="toggle">
+                        </div>
+
+                        <label class="col-xs-5 control-label">Full text indexation</label>
+                        <div class="checkbox col-xs-7" id="fullTextIndexation">
+                            <input type="checkbox" name="fullTextIndexation" data-toggle="toggle">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -101,13 +108,14 @@ file that was distributed with this source code.
         </form>
     </div>
 </div>
-<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
+
 </div>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
     $("#cancelServiceLevelBtn").on('click', function(){
         load('/serviceLevels');
     });
-    
+
 //save
 $("#save").on('click', function(){
 
@@ -133,7 +141,7 @@ $("#save").on('click', function(){
         type= 'POST';
         url='/serviceLevel';
     }
-        
+
     var parameters = {
       serviceLevel :  serialize()
     };

@@ -111,7 +111,7 @@
 
 
     $('#descriptionRef_filesBrowser').on('change', function() {
-        uploadFile($(this).context.files[0]);
+        uploadFile($(this).get(0).files[0]);
     })
 
     // Cancel

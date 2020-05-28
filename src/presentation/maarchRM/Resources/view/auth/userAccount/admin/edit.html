@@ -235,8 +235,7 @@
         //parametre.roleMembers.push(null);
         if (!roleConfig){
             var roles = $("#listRoles").find('.active');
-
-            if (roles.size() > 0) {
+            if (roles.length > 0) {
                 userAccount.roles = [];
                 $.each(roles, function () {
                     userAccount.roles.push($(this).data('id'));
