@@ -1115,7 +1115,7 @@ trait laabsAppTrait
             }
         } 
 
-        return "CAST5-CBC";
+        return "cast5-cbc";
     }
 
     /* Array retrieval
