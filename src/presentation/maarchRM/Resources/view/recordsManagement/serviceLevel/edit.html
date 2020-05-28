@@ -110,6 +110,7 @@ file that was distributed with this source code.
 </div>
 
 </div>
+<script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
     $("#cancelServiceLevelBtn").on('click', function(){
         load('/serviceLevels');
@@ -140,7 +141,7 @@ $("#save").on('click', function(){
         type= 'POST';
         url='/serviceLevel';
     }
-        
+
     var parameters = {
       serviceLevel :  serialize()
     };
