@@ -113,7 +113,7 @@
 
 
     $('#archivalProfile_filesBrowser').on('change', function() {
-        uploadProfile($(this).context.files[0]);
+        uploadProfile($(this).get(0).files[0]);
     })
 
     // Cancel
