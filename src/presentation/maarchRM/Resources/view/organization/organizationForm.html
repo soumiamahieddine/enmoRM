@@ -113,7 +113,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">No</button>
+                    <button type="button" class="btn btn-default" id="organization_refuseClosing" data-dismiss="modal" title="Close">No</button>
                     <button type="button" class="btn btn-primary" id="organization_confirmClosing" title="Yes">Yes</button>
                 </div>
             </div>
@@ -175,6 +175,10 @@
        $('#oganization_selectOrgRole').find('[data-code="' + code + '"]').parent().css('display', '');
 
     })
+
+    $('#organization_refuseClosing').on('click', function() {
+        $('#organization_organizationInfo').css('display', 'none');
+    });
 
     $('#organization_confirmClosing').on('click', function() {
         $('#organization_closingConfimationForModification').modal('hide');
