@@ -59,6 +59,7 @@ class Statistics
     /**
      *
      * @param  array $statistics associative array of statistcics and their values
+     *
      * @return [type]             [description]
      */
     public function index($statistics)
@@ -112,7 +113,7 @@ class Statistics
         return $evolution;
     }
 
-    public function retrieveStats($statistics)
+    public function retrieveStats($statistics, $operation)
     {
         $statistics['evolution'] = $this->getEvolution($statistics);
 
@@ -140,15 +141,15 @@ class Statistics
             $groupedArchiveCount = $this->rearrangeArray($statistics['groupedArchiveCount'], 'count');
         }
 
-        $condensedStats  =[];
-        foreach (array_merge($groupedDepositMemorySize, $groupedDepositMemoryCount, $deletedGroupedMemorySize, $deletedGroupedMemoryCount, $groupedArchiveSize, $groupedArchiveCount) as $type => $value) {
-                $condensedStats[$type]['deposit']['sum'] = isset($groupedDepositMemorySize[$type]) ? $groupedDepositMemorySize[$type] : null;
-                $condensedStats[$type]['deposit']['count'] = isset($groupedDepositMemoryCount[$type]) ? $groupedDepositMemoryCount[$type] : null;
-                $condensedStats[$type]['deleted']['sum'] = isset($deletedGroupedMemorySize[$type]) ? $deletedGroupedMemorySize[$type] : null;
-                $condensedStats[$type]['deleted']['count'] = isset($deletedGroupedMemoryCount[$type]) ? $deletedGroupedMemoryCount[$type] : null;
-                $condensedStats[$type]['archived']['sum'] = isset($groupedArchiveSize[$type]) ? $groupedArchiveSize[$type] : null;
-                $condensedStats[$type]['archived']['count'] = isset($groupedArchiveCount[$type]) ? $groupedArchiveCount[$type] : null;
-        }
+        // $condensedStats  =[];
+        // foreach (array_merge($groupedDepositMemorySize, $groupedDepositMemoryCount, $deletedGroupedMemorySize, $deletedGroupedMemoryCount, $groupedArchiveSize, $groupedArchiveCount) as $type => $value) {
+        //         $condensedStats[$type]['deposit']['sum'] = isset($groupedDepositMemorySize[$type]) ? $groupedDepositMemorySize[$type] : null;
+        //         $condensedStats[$type]['deposit']['count'] = isset($groupedDepositMemoryCount[$type]) ? $groupedDepositMemoryCount[$type] : null;
+        //         $condensedStats[$type]['deleted']['sum'] = isset($deletedGroupedMemorySize[$type]) ? $deletedGroupedMemorySize[$type] : null;
+        //         $condensedStats[$type]['deleted']['count'] = isset($deletedGroupedMemoryCount[$type]) ? $deletedGroupedMemoryCount[$type] : null;
+        //         $condensedStats[$type]['archived']['sum'] = isset($groupedArchiveSize[$type]) ? $groupedArchiveSize[$type] : null;
+        //         $condensedStats[$type]['archived']['count'] = isset($groupedArchiveCount[$type]) ? $groupedArchiveCount[$type] : null;
+        // }
 
         if (\laabs::configuration('medona')['transaction']) {
             $this->view->addContentFile("Statistics/transactionnalResults.html");
@@ -161,7 +162,7 @@ class Statistics
         $dataTable->setSorting(array(array(4, 'desc')));
 
         $this->view->setSource('statistics', $statistics);
-        $this->view->setSource('condensedStats', $condensedStats);
+        // $this->view->setSource('condensedStats', $condensedStats);
         $this->view->merge();
         $this->view->translate();
 
