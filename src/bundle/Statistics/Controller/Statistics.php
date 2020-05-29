@@ -31,34 +31,27 @@ class Statistics
     public $sdoFactory;
     protected $minDate;
     protected $maxDate;
-    protected $correspondingTables;
 
     /**
      * Constructor of access control class
      *
      * @param \dependency\sdo\Factory $sdoFactory The factory
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory, $correspondingTables)
+    public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
         $this->pdo = $sdoFactory->das->pdo;
-        $this->correspondingTables = $correspondingTables;
-        $this->correspondingTables = [
-            'deposit' => 'medona/message',
-            'delete' => 'medona/message',
-            'conserved' => 'recordsManagement/archive'
-        ];
     }
 
     /**
      * Get Counts
      *
-     * @param string  $operation           Type of operation to count
-     * @param string  $startDate           Start date
-     * @param string  $endDate             End date
-     * @param boolean $filter     Archival Profile
+     * @param  string $operation Type of operation to count or sum
+     * @param  string $startDate Start date
+     * @param  string $endDate   End date
+     * @param  string $filter    Filtering parameter to group query by
      *
-     * @return array Array of counts
+     * @return array             Associative array of properties
      */
     public function retrieve($operation = null, $startDate = null, $endDate = null, $filter = null)
     {
@@ -87,15 +80,15 @@ class Statistics
         }
 
         $statistics = [];
-        if (is_null($operation)) {
+        if (is_null($operation) || empty($operation)) {
             $statistics = $this->defaultStats($startDate, $endDate);
-        } elseif (!is_null($operation) && !in_array($operation, ['deposit', 'delete', 'conserved'])) {
+        } elseif (!empty($operation) && !in_array($operation, ['deposit', 'delete', 'conserved'])) {
             throw new \core\Exception\BadRequestException("Operation type not supported");
-        } elseif (!is_null($operation) && is_null($filter)) {
+        } elseif (!empty($operation) && is_null($filter)) {
             throw new \core\Exception\BadRequestException("Filter cannot be null if operation is not");
         }
 
-        if (!is_null($operation)) {
+        if (!empty($operation)) {
             switch ($operation) {
                 case 'deposit':
                     $statistics = $this->depositStats($startDate, $endDate, $filter);
@@ -109,6 +102,24 @@ class Statistics
             }
         }
 
+        return $statistics;
+    }
+
+    /**
+     * Basics stats to return for homepage
+     *
+     * @param  datetime $startDate Starting Date
+     * @param  datetime $endDate   End date
+     *
+     * @return array              Associative array of statistics
+     */
+    protected function defaultStats($startDate, $endDate)
+    {
+        $statistics = [];
+        $statistics['depositMemorySize'] = $this->getSizeByEventType(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
+        $statistics['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate);
+        $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
+
         if (\laabs::configuration('medona')['transaction']) {
             $statistics['transferredMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
@@ -117,21 +128,15 @@ class Statistics
         return $statistics;
     }
 
-    protected function defaultStats($startDate, $endDate)
-    {
-        $defaultStats = [];
-        $defaultStats['depositMemorySize'] = $this->getSizeByEventType(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
-        $defaultStats['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate);
-        $defaultStats['currentMemorySize'] = $this->getArchiveSize($endDate);
-
-        if (\laabs::configuration('medona')['transaction']) {
-            $defaultStats['transferredMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $defaultStats['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
-        }
-
-        return $defaultStats;
-    }
-
+    /**
+     * Statistics aggregator for deposit event
+     *
+     * @param  datetime $startDate starting date
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
     protected function depositStats($startDate, $endDate, $filter)
     {
         switch ($filter) {
@@ -148,8 +153,19 @@ class Statistics
         $statistics = [];
         $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
         $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+
+        return $statistics;
     }
 
+    /**
+     * Statistics aggregator for deleted event
+     *
+     * @param  datetime $startDate starting date
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
     protected function deletedStats($startDate, $endDate, $filter)
     {
         switch ($filter) {
@@ -170,6 +186,14 @@ class Statistics
         return $statistics;
     }
 
+    /**
+     * Statistics aggregator for conserved archive
+     *
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
     protected function conservedStats($endDate, $filter)
     {
         $statistics = [];
@@ -179,6 +203,16 @@ class Statistics
         return $statistics;
     }
 
+    /**
+     * Sum all event info for a particular event
+     *
+     * @param  array    $eventTypes       Array of event types
+     * @param  integer  $jsonColumnNumber json Column number for size parameter in lifeCycle event table
+     * @param  datetime $startDate        Starting Date
+     * @param  datetime $endDate          End date
+     *
+     * @return integer                    Sum of size for events
+     */
     protected function getSizeByEventType($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null)
     {
         $sum = 0;
@@ -196,6 +230,18 @@ EOT;
         return $sum;
     }
 
+    /**
+     * Count all event info for particular event(s) ordered by another event
+     *
+     * @param  array    $eventTypes            Array of event types
+     * @param  integer  $jsonColumnNumber      json Column number for size parameter in lifeCycle event table
+     * @param  datetime $startDate             Starting Date
+     * @param  datetime $endDate               End date
+     * @param  string   $groupBy               Name of Group By
+     * @param  integer  $jsonColumnNumberOrder Json column number to group event by
+     *
+     * @return integer                        Count of size for events
+     */
     protected function getCountByEventTypeOrdered($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
     {
         $sum = 0;
@@ -228,6 +274,18 @@ EOT;
         return $sum;
     }
 
+    /**
+     * Sum all events info for particular event(s) ordered by another event
+     *
+     * @param  array    $eventTypes            Array of event types
+     * @param  integer  $jsonColumnNumber      json Column number for size parameter in lifeCycle event table
+     * @param  datetime $startDate             Starting Date
+     * @param  datetime $endDate               End date
+     * @param  string   $groupBy               Name of Group By
+     * @param  integer  $jsonColumnNumberOrder Json column number to group event by
+     *
+     * @return integer                        Sum of size for events
+     */
     protected function getSizeByEventTypeOrdered($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
     {
         $sum = 0;
@@ -260,6 +318,13 @@ EOT;
         return $sum;
     }
 
+    /**
+     * Retrieve size of digital resources unto a specific date
+     *
+     * @param  datetime $endDate End date
+     *
+     * @return integer           Size of archive
+     */
     protected function getArchiveSize($endDate = null)
     {
         $sum = 0;
@@ -279,6 +344,14 @@ EOT;
         return (integer) $sum;
     }
 
+    /**
+     * Retrieve size of digital resources unto a specific date group by a parameter
+     *
+     * @param  string   $groupBy Ordering parameter
+     * @param  datetime $endDate End date
+     *
+     * @return array             Size of archive ordered by parameter
+     */
     protected function getArchiveSizeOrdered($groupBy, $endDate = null)
     {
         switch ($groupBy) {
@@ -318,6 +391,14 @@ EOT;
         return $results;
     }
 
+    /**
+     * Retrieve count of digital resources unto a specific date group by a parameter
+     *
+     * @param  string   $groupBy Ordering parameter
+     * @param  datetime $endDate End date
+     *
+     * @return array             Count of archive ordered by parameter
+     */
     protected function getArchiveCountOrdered($groupBy, $endDate = null)
     {
         switch ($groupBy) {
@@ -388,16 +469,13 @@ EOT;
      * @param string   $secondary_parameters            Secondary parameters
      * @param DateTime $startDate                       Start Date
      * @param DateTime $endDate                         End date
-     * @param Boolean  $isIncludingChildren             Include children services
-     * @param Boolean  $isOrderingByProfile             Ordering by profile
-     * @param Boolean  $isGroupByArchiveNumber          Ordering by archiveNumber
+     * @param string   $groupBy                         Ordering parameter
      *
-     * @return Count
+     * @return array                                    Results of query
      */
     public function executeQuery($query, $eventTypes, $secondary_parameters, $startDate = null, $endDate = null, $groupBy = null)
     {
         $params = [];
-
 
         if (!is_null($startDate)) {
             $params[':startDate'] = (string) $startDate->format('Y-m-d H:i:s');
@@ -414,7 +492,6 @@ EOT;
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             $results[] = $result;
         }
-
 
         return $results;
     }
