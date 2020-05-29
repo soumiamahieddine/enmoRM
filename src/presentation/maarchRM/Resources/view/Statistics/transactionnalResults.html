@@ -7,7 +7,6 @@
             <th>transfered</th>
             <th>conserved</th>
             <th>growth</th>
-            <th>archival profile or originating org</th>
         </tr>
     </thead>
     <tbody>
@@ -18,17 +17,6 @@
             <td><?merge statistics['transferredMemorySize'].div(1000) ?> Mo</td>
             <td><?merge statistics['currentMemorySize'].div(1000) ?> Mo</td>
             <td><?merge statistics['evolution'].div(1000) ?> Mo</td>
-            <td>Total</td>
-        </tr>
-        <?merge condensedStats ?>
-        <tr>
-            <td><?merge .['deposit'].['sum'].div(1000) ?> Mo / <?merge .['deposit'].['count'] ?> files</td>
-            <td><?merge .['deleted'].['sum'].div(1000) ?> Mo / <?merge .['deleted'].['count'] ?> files</td>
-            <td><?merge .['deleted'].['sum'].div(1000) ?> Mo / <?merge .['deleted'].['count'] ?> files</td>
-            <td><?merge .['deleted'].['sum'].div(1000) ?> Mo / <?merge .['deleted'].['count'] ?> files</td>
-            <td><?merge .['archived'].['sum'].div(1000) ?> Mo / <?merge .['archived'].['count'] ?> files</td>
-            <td></td>
-            <td><?merge condensedStats.key() ?></td>
         </tr>
     </tbody>
 </table>
