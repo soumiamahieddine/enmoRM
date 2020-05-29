@@ -5,8 +5,7 @@
     <div class="container-fluid page-header">
         <div class="well">
             <form class="form-horizontal" id="statistics-form">
-                <!-- TODO à activer pour AP -->
-            	<!-- <div class="row">
+            	<div class="row">
             		<div class="col-md-4">
             			<select class="form-control" name="operation" id="operation">
                             <option selected disabled value="">Select an operation *</option>
@@ -15,7 +14,7 @@
 							<option value="conserved">Conserved</option>
 						</select>
             		</div>
-            	</div> -->
+            	</div>
             	<br>
                 <div class="row">
                     <div class="col-md-4">
@@ -152,10 +151,12 @@
 	CTA
 	************/
 	$('#search').on('click', function() {
-        // if (!$('#operation').val()) {
-        //     gritter.show($("#error_required_field").text(), false);
-        //     return;
-        // }
+        if ((!$('#operation').val() && $('#filter').val())
+            || ($('#operation').val() && !$('#filter').val())
+            ) {
+            gritter.show($("#error_required_field").text(), false);
+            return;
+        }
 
         StatisticsForm.search();
     });
@@ -165,7 +166,7 @@
     });
 
 	/***********************
-	 organization typeahead
+	organization typeahead
 	************************/
 	var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),

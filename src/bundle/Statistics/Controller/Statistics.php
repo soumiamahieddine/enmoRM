@@ -86,41 +86,95 @@ class Statistics
             throw new \core\Exception\BadRequestException("Start Date cannot be past end date");
         }
 
-        // if (!is_null($operation) && !in_array($operation, ['deposit', 'delete', 'conserved'])) {
-        //     throw new \core\Exception\BadRequestException("Operation type not supported");
-        // }
-
         $statistics = [];
-        $statistics['depositMemorySize'] = $this->getSizeByEventType(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
-        $statistics['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate);
-        $statistics['currentMemorySize'] = $this->getArchiveSize($endDate, $filter);
+        if (is_null($operation)) {
+            $statistics = $this->defaultStats($startDate, $endDate);
+        } elseif (!is_null($operation) && !in_array($operation, ['deposit', 'delete', 'conserved'])) {
+            throw new \core\Exception\BadRequestException("Operation type not supported");
+        } elseif (!is_null($operation) && is_null($filter)) {
+            throw new \core\Exception\BadRequestException("Filter cannot be null if operation is not");
+        }
 
-        if (!is_null($filter)) {
-            switch ($filter) {
-                case 'archivalProfile':
-                    $jsonSizeColumnNumberForDeposit = 8;
-                    $jsonColumnNumberOrderForDeposit = 10;
-                    $jsonColumnNumberOrderForDestruction = 8;
-                    $jsonSizeColumnNumberForDestruction = 6;
+        if (!is_null($operation)) {
+            switch ($operation) {
+                case 'deposit':
+                    $statistics = $this->depositStats($startDate, $endDate, $filter);
                     break;
-                case 'originatingOrg':
-                    $jsonSizeColumnNumberForDeposit = 8;
-                    $jsonColumnNumberOrderForDeposit = 4;
-                    $jsonColumnNumberOrderForDestruction = 4;
-                    $jsonSizeColumnNumberForDestruction = 6;
+                case 'delete':
+                    $statistics = $this->deletedStats($startDate, $endDate, $filter);
+                    break;
+                case 'conserved':
+                    $statistics = $this->conservedStats($endDate, $filter);
                     break;
             }
-            $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumberForDeposit, $startDate, $endDate, $filter, $jsonColumnNumberOrderForDeposit);
-            $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumberForDeposit, $startDate, $endDate, $filter, $jsonColumnNumberOrderForDeposit);
-            $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/destruction'], $jsonSizeColumnNumberForDestruction, $startDate, $endDate, $filter, $jsonColumnNumberOrderForDestruction);
-            $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/destruction'], $jsonSizeColumnNumberForDestruction, $startDate, $endDate, $filter, $jsonColumnNumberOrderForDestruction);
-            $statistics['groupedArchiveSize'] = $this->getArchiveSizeOrdered($filter, $endDate);
-            $statistics['groupedArchiveCount'] = $this->getArchiveCountOrdered($filter, $endDate);
         }
+
         if (\laabs::configuration('medona')['transaction']) {
             $statistics['transferredMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
         }
+
+        return $statistics;
+    }
+
+    protected function defaultStats($startDate, $endDate)
+    {
+        $defaultStats = [];
+        $defaultStats['depositMemorySize'] = $this->getSizeByEventType(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
+        $defaultStats['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate);
+        $defaultStats['currentMemorySize'] = $this->getArchiveSize($endDate);
+
+        if (\laabs::configuration('medona')['transaction']) {
+            $defaultStats['transferredMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $defaultStats['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
+        }
+
+        return $defaultStats;
+    }
+
+    protected function depositStats($startDate, $endDate, $filter)
+    {
+        switch ($filter) {
+            case 'archivalProfile':
+                $jsonSizeColumnNumber = 8;
+                $jsonOrderingColumnNumber = 10;
+                break;
+            case 'originatingOrg':
+                $jsonSizeColumnNumber = 8;
+                $jsonOrderingColumnNumber = 4;
+                break;
+        }
+
+        $statistics = [];
+        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+    }
+
+    protected function deletedStats($startDate, $endDate, $filter)
+    {
+        switch ($filter) {
+            case 'archivalProfile':
+                $jsonSizeColumnNumber = 8;
+                $jsonOrderingColumnNumber = 6;
+                break;
+            case 'originatingOrg':
+                $jsonSizeColumnNumber = 4;
+                $jsonOrderingColumnNumber = 6;
+                break;
+        }
+
+        $statistics = [];
+        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/destruction'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/destruction'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+
+        return $statistics;
+    }
+
+    protected function conservedStats($endDate, $filter)
+    {
+        $statistics = [];
+        $statistics['groupedArchiveSize'] = $this->getArchiveSizeOrdered($filter, $endDate);
+        $statistics['groupedArchiveCount'] = $this->getArchiveCountOrdered($filter, $endDate);
 
         return $statistics;
     }
@@ -206,7 +260,7 @@ EOT;
         return $sum;
     }
 
-    protected function getArchiveSize($endDate = null, $groupBy = null)
+    protected function getArchiveSize($endDate = null)
     {
         $sum = 0;
         if (is_null($endDate)) {
