@@ -1,0 +1,27 @@
+<table class="table defaultStatistics dataTable">
+    <thead>
+        <tr>
+            <th><?merge filter ?></th>
+            <th>size (Mo)</th>
+            <th>Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?merge condensedStats ?>
+        <tr>
+            <td><?merge condensedStats.key().ifeq('').then('none', condensedStats.key()) ?></td>
+            <?merge .['deposit'].['sum'].isnotnull() ?>
+                <td><?merge .['deposit'].['sum'].div(1000) ?> Mo</td>
+            <?merge .['deposit'].['count'].isnotnull() ?>
+                <td><?merge .['deposit'].['count'] ?> files</td>
+            <?merge .['deleted'].['sum'].isnotnull() ?>
+                <td><?merge .['deleted'].['sum'].div(1000) ?> Mo</td>
+            <?merge .['deleted'].['count'].isnotnull() ?>
+                <td><?merge .['deleted'].['count'] ?></td>
+            <?merge .['archived'].['sum'].isnotnull() ?>
+                <td><?merge .['archived'].['sum'].div(1000) ?> Mo</td>
+            <?merge .['archived'].['count'].isnotnull() ?>
+                <td><?merge .['archived'].['count'] ?></td>
+        </tr>
+    </tbody>
+</table>
