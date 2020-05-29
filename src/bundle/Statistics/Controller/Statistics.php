@@ -609,6 +609,14 @@ EOT;
         return $sum;
     }
 
+    /**
+     * Retrieve size of digital resources unto a specific date group by a parameter
+     *
+     * @param  string   $groupBy Ordering parameter
+     * @param  datetime $endDate End date
+     *
+     * @return array             Size of archive ordered by parameter
+     */
     protected function getArchiveSizeOrdered($groupBy, $endDate = null)
     {
         switch ($groupBy) {
@@ -648,6 +656,14 @@ EOT;
         return $results;
     }
 
+    /**
+     * Retrieve count of digital resources unto a specific date group by a parameter
+     *
+     * @param  string   $groupBy Ordering parameter
+     * @param  datetime $endDate End date
+     *
+     * @return array             Count of archive ordered by parameter
+     */
     protected function getArchiveCountOrdered($groupBy, $endDate = null)
     {
         switch ($groupBy) {
