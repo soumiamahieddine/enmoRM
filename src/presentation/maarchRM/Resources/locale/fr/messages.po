@@ -158,6 +158,10 @@ msgid "Storage management"
 msgstr "Gestion du stockage"
 msgctxt "layout"
 
+msgid "Statistics"
+msgstr "Statistiques"
+msgctxt "layout"
+
 msgid "Repositories"
 msgstr "Supports de stockage"
 msgctxt "layout"
