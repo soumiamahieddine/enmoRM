@@ -145,7 +145,7 @@ class Statistics
     {
         $statistics = [];
         $statistics['depositMemorySize'] = $this->getSizeByEventType(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
-        $statistics['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate);
+        $statistics['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonColumnNumber = 6, $startDate, $endDate);
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
@@ -157,6 +157,7 @@ class Statistics
         if ($statistics['evolution'] != (integer)$statistics['evolution']) {
             $statistics['evolution'] = number_format($statistics['evolution'], 3, ",", " ");
         }
+        $statistics['evolution'] .= ' ' . $this->sizeFilters[$this->sizeFilter];
 
         return $statistics;
     }
@@ -212,8 +213,8 @@ class Statistics
         }
 
         $statistics = [];
-        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/destruction'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/destruction'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/destruction', 'recordsManagement/elimination'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
 
         return $statistics;
     }
