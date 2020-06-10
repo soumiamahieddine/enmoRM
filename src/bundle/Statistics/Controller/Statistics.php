@@ -673,9 +673,6 @@ EOT;
             case 'originatingOrg':
                 $tableProperty = "originatorOrgRegNumber";
                 break;
-            default:
-                # code...
-                break;
         }
 
         if (is_null($endDate)) {
