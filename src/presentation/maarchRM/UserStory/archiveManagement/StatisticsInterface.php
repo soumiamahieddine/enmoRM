@@ -29,7 +29,9 @@ interface StatisticsInterface
     /**
      * Display statistics page
      *
-     * @uses   Statistics/Statistics/retrieve
+     * @param float  $sizeFilter
+     *
+     * @uses   Statistics/Statistics/index
      * @return Statistics/Statistics/index
      *
      */
@@ -42,10 +44,11 @@ interface StatisticsInterface
      * @param string $startDate
      * @param string $endDate
      * @param string $filter
+     * @param float  $sizeFilter
      *
      * @uses Statistics/Statistics/retrieve
      * @return Statistics/Statistics/retrieveStats
      *
      */
-    public function readStatisticsRetrieve($operation = null, $startDate = null, $endDate = null, $filter = null);
+    public function readStatisticsRetrieve($operation = null, $startDate = null, $endDate = null, $filter = null, $sizeFilter = 3);
 }
