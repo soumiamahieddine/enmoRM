@@ -1,22 +1,22 @@
-<table class="table defaultStatistics dataTable">
+<table class="table defaultStatistics dataTable" data-translate-catalog="Statistics/Statistics">
     <thead>
         <tr>
-            <th>deposit</th>
-            <th>deleted</th>
-            <th>restituted</th>
-            <th>transfered</th>
-            <th>conserved</th>
-            <th>growth</th>
+            <th>Deposit</th>
+            <th>Deletion</th>
+            <th>Restitution</th>
+            <th>Transfer</th>
+            <th>Conservation</th>
+            <th>Growth</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td><?merge statistics['depositMemorySize'].div(1000) ?> Mo</td>
-            <td><?merge statistics['deletedMemorySize'].div(1000) ?> Mo</td>
-            <td><?merge statistics['restitutionMemorySize'].div(1000) ?> Mo</td>
-            <td><?merge statistics['transferredMemorySize'].div(1000) ?> Mo</td>
-            <td><?merge statistics['currentMemorySize'].div(1000) ?> Mo</td>
-            <td><?merge statistics['evolution'].div(1000) ?> Mo</td>
+            <td><?merge statistics['depositMemorySize'] ?></td>
+            <td><?merge statistics['deletedMemorySize'] ?></td>
+            <td><?merge statistics['restitutionMemorySize'] ?></td>
+            <td><?merge statistics['transferedMemorySize'] ?></td>
+            <td><?merge statistics['currentMemorySize'] ?></td>
+            <td><?merge statistics['evolution'] ?></td>
         </tr>
     </tbody>
 </table>
