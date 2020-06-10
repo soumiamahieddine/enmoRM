@@ -57,20 +57,56 @@ class Statistics
     }
 
     /**
+     * Set default options to datatable
+     * @param  datatable $dataTable       the view dataTable
+     * @param  array     $columnsToExport List of columns to export
      *
-     * @param  array $statistics associative array of statistcics and their values
+     * @return datatable                  the view dataTable
+     */
+    protected function setDatatableOptions($dataTable, $columnsToExport)
+    {
+        $dataTable->setPaginationType("full_numbers");
+        $dataTable->setColumnsToExport($columnsToExport);
+        $titleExport = $this->view->translator->getText(
+            "Export to ",
+            false,
+            "recordsManagement/messages"
+        );
+
+        $dataTable->setExport(
+            [
+                [
+                    "exportType" => "csv",
+                    "text" => "<i class='fa fa-download'></i> CSV",
+                    "titleAttr" => $titleExport . "CSV"
+                ],
+                [
+                    "exportType" => "pdf",
+                    "text" => "<i class='fa fa-download'></i> PDF",
+                    "titleAttr" => $titleExport . "PDF"
+                ]
+            ],
+            false
+        );
+        return $dataTable;
+    }
+
+    /**
+     * Get default statistics view
+     * @param  array $statistics associative array of statistics and their values
      *
-     * @return [type]             [description]
+     * @return view              The view
      */
     public function index($statistics)
     {
-        $statistics['evolution'] = $this->getEvolution($statistics);
+        $isTransactionnal = false;
 
         $this->view->addContentFile("Statistics/index.html");
 
         $descriptionFragment = $this->view->createDocumentFragment();
         $description = $this->view->getElementById("statsResults");
         if (\laabs::configuration('medona')['transaction']) {
+            $isTransactionnal = true;
             $descriptionFragment->appendHtmlFile("Statistics/transactionnalResults.html");
         } else {
             $descriptionFragment->appendHtmlFile("Statistics/defaultResults.html");
@@ -79,9 +115,9 @@ class Statistics
         $description->appendChild($descriptionFragment);
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setSorting(array(array(4, 'desc')));
+        $dataTable = $this->setDatatableOptions($dataTable, $isTransactionnal ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3]);
 
+        $this->view->setSource('isTransactionnal', $isTransactionnal);
         $this->view->setSource('statistics', $statistics);
         $this->view->merge();
         $this->view->translate();
@@ -89,6 +125,13 @@ class Statistics
         return $this->view->saveHtml();
     }
 
+    /**
+     * Rearrange the array
+     * @param  array  $array    array to rearrange
+     * @param  string $statType Filter
+     *
+     * @return array            rearranged array
+     */
     protected function rearrangeArray($array, $statType)
     {
         $results = [];
@@ -103,88 +146,61 @@ class Statistics
         return $results;
     }
 
-    protected function getEvolution($statistics)
-    {
-        $evolution = $statistics['depositMemorySize'] - $statistics['deletedMemorySize'];
-        if (\laabs::configuration('medona')['transaction']) {
-            $evolution = $statistics['depositMemorySize'] - $statistics['deletedMemorySize'] - $statistics['transferredMemorySize'] - $statistics['restitutionMemorySize'];
-        }
-
-        return $evolution;
-    }
-
+    /**
+     * Retrieve statistics
+     * @param  array  $statistics array of statistics
+     * @param  string $operation
+     * @param  string $filter
+     *
+     * @return array              rearranged array
+     */
     public function retrieveStats($statistics, $operation, $filter)
     {
-        // $statistics['evolution'] = $this->getEvolution($statistics);
+        if (!$operation && !$filter) {
+            $isTransactionnal = false;
+            if (\laabs::configuration('medona')['transaction']) {
+                $isTransactionnal = true;
+                $this->view->addContentFile("Statistics/transactionnalResults.html");
+            } else {
+                $this->view->addContentFile("Statistics/defaultResults.html");
+            }
+            $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
+            $dataTable = $this->setDatatableOptions($dataTable, $isTransactionnal ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3]);
+            $dataTable->setSorting(array(array(0, 'asc')));
+
+            $this->view->setSource('isTransactionnal', $isTransactionnal);
+            $this->view->setSource('statistics', $statistics);
+            $this->view->merge();
+            $this->view->translate();
+
+            return $this->view->saveHtml();
+        }
         $loopArray = [];
-        if (isset($statistics['groupedDepositMemorySize'])) {
-            $groupedDepositMemorySize = $this->rearrangeArray($statistics['groupedDepositMemorySize'], 'sum');
-            $loopArray['groupedDepositMemorySize'] = $groupedDepositMemorySize;
+
+        $statisticsNames = [
+            'deposit' => 'groupedDepositMemory',
+            'deleted' => 'deletedGroupedMemory',
+            'conserved' => 'groupedArchive',
+            'restituted' => 'restitutedGroupedMemory',
+            'transfered' => 'transferedGroupedMemory'
+        ];
+
+        $sizes = $this->rearrangeArray($statistics[$statisticsNames[$operation] . 'Size'], 'sum');
+        $counts = $this->rearrangeArray($statistics[$statisticsNames[$operation] . 'Count'], 'count');
+
+        $condensedStats = [];
+
+        foreach ($sizes as $type => $value) {
+            $condensedStats[$type]['sum'] = isset($value) ? $value : null;
+            $condensedStats[$type]['count'] = isset($counts[$type]) ? $counts[$type]: null;
         }
 
-        if (isset($statistics['groupedDepositMemoryCount'])) {
-            $groupedDepositMemoryCount = $this->rearrangeArray($statistics['groupedDepositMemoryCount'], 'count');
-            $loopArray['groupedDepositMemoryCount'] = $groupedDepositMemoryCount;
-        }
-
-        if (isset($statistics['deletedGroupedMemorySize'])) {
-            $deletedGroupedMemorySize = $this->rearrangeArray($statistics['deletedGroupedMemorySize'], 'sum');
-            $loopArray['deletedGroupedMemorySize'] = $deletedGroupedMemorySize;
-        }
-
-        if (isset($statistics['deletedGroupedMemoryCount'])) {
-            $deletedGroupedMemoryCount = $this->rearrangeArray($statistics['deletedGroupedMemoryCount'], 'count');
-            $loopArray['deletedGroupedMemoryCount'] = $deletedGroupedMemoryCount;
-        }
-
-        if (isset($statistics['groupedArchiveSize'])) {
-            $groupedArchiveSize = $this->rearrangeArray($statistics['groupedArchiveSize'], 'sum');
-            $loopArray['groupedArchiveSize'] = $groupedArchiveSize;
-        }
-
-        if (isset($statistics['groupedArchiveCount'])) {
-            $groupedArchiveCount = $this->rearrangeArray($statistics['groupedArchiveCount'], 'count');
-            $loopArray['groupedArchiveCount'] = $groupedArchiveCount;
-        }
-
-        $condensedStats  =[];
-
-        foreach ($loopArray as $operationType => $value) {
-            foreach ($value as $type => $value) {
-                $condensedStats[$type]['deposit']['sum'] = isset($groupedDepositMemorySize[$type]) ? $groupedDepositMemorySize[$type] : null;
-                $condensedStats[$type]['deposit']['count'] = isset($groupedDepositMemoryCount[$type]) ? $groupedDepositMemoryCount[$type] : null;
-                $condensedStats[$type]['deleted']['sum'] = isset($deletedGroupedMemorySize[$type]) ? $deletedGroupedMemorySize[$type] : null;
-                $condensedStats[$type]['deleted']['count'] = isset($deletedGroupedMemoryCount[$type]) ? $deletedGroupedMemoryCount[$type] : null;
-                $condensedStats[$type]['archived']['sum'] = isset($groupedArchiveSize[$type]) ? $groupedArchiveSize[$type] : null;
-                $condensedStats[$type]['archived']['count'] = isset($groupedArchiveCount[$type]) ? $groupedArchiveCount[$type] : null;
-            }
-        }
-
-        if (\laabs::configuration('medona')['transaction']) {
-            $this->view->addContentFile("Statistics/transactionnalResults.html");
-        } else {
-            switch ($operation) {
-                case 'deposit':
-                    $this->view->addContentFile("Statistics/orderedResults.html");
-                    break;
-                case 'delete':
-                    $this->view->addContentFile("Statistics/orderedResults.html");
-                    break;
-                case 'conserved':
-                    $this->view->addContentFile("Statistics/orderedResults.html");
-                    // $this->view->addContentFile("Statistics/conservedResults.html");
-                    break;
-                default:
-                    $this->view->addContentFile("Statistics/defaultResults.html");
-                    break;
-            }
-        }
+        $this->view->addContentFile("Statistics/orderedResults.html");
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-        $dataTable->setPaginationType("full_numbers");
-        $dataTable->setSorting(array(array(4, 'desc')));
+        $dataTable = $this->setDatatableOptions($dataTable, [0, 1, 2]);
+        $dataTable->setSorting(array(array(0, 'asc')));
 
-        $this->view->setSource('statistics', $statistics);
         $this->view->setSource('filter', $filter);
         $this->view->setSource('condensedStats', $condensedStats);
         $this->view->merge();

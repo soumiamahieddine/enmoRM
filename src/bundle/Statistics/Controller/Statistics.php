@@ -31,29 +31,49 @@ class Statistics
     public $sdoFactory;
     protected $minDate;
     protected $maxDate;
+    protected $sizeFilter;
+    protected $evolution;
+    protected $sizeFilters;
+    protected $translator;
 
     /**
      * Constructor of access control class
      *
      * @param \dependency\sdo\Factory $sdoFactory The factory
      */
-    public function __construct(\dependency\sdo\Factory $sdoFactory)
+    public function __construct(\dependency\sdo\Factory $sdoFactory, \dependency\localisation\TranslatorInterface $translator)
     {
         $this->sdoFactory = $sdoFactory;
         $this->pdo = $sdoFactory->das->pdo;
+        $this->sizeFilter = 0;
+        $this->evolution = 0;
+        $this->sizeFilters = ["Octet(s)", "Ko", "Mo", "Go"];
+        $this->translator = $translator;
+        $this->translator->setCatalog("Statistics/Statistics");
+    }
+
+    /**
+     * Retrieve default stats for screen
+     *
+     * @return array $statistics
+     */
+    public function index()
+    {
+        return $this->retrieve(null, null, null, null, 3);
     }
 
     /**
      * Get Counts
      *
-     * @param  string $operation Type of operation to count or sum
-     * @param  string $startDate Start date
-     * @param  string $endDate   End date
-     * @param  string $filter    Filtering parameter to group query by
+     * @param  string $operation  Type of operation to count or sum
+     * @param  string $startDate  Start date
+     * @param  string $endDate    End date
+     * @param  string $filter     Filtering parameter to group query by
+     * @param  float  $sizeFilter power of 10 to divide by
      *
-     * @return array             Associative array of properties
+     * @return array              Associative array of properties
      */
-    public function retrieve($operation = null, $startDate = null, $endDate = null, $filter = null)
+    public function retrieve($operation = null, $startDate = null, $endDate = null, $filter = null, $sizeFilter = 0)
     {
         if (!empty($startDate)) {
             $startDate = \laabs::newDateTime($startDate);
@@ -68,24 +88,26 @@ class Statistics
         }
 
         if (!is_null($startDate) && is_null($endDate)) {
-            throw new \core\Exception\BadRequestException("End Date is mandatory if start date is filled");
+            throw new \core\Exception\BadRequestException($this->translator->getText("End Date is mandatory if start date is filled"));
         } elseif (is_null($startDate) && !is_null($endDate)) {
-            throw new \core\Exception\BadRequestException("Start Date is mandatory if end date is filled");
+            throw new \core\Exception\BadRequestException($this->translator->getText("Start Date is mandatory if end date is filled"));
         }
 
         if ($startDate == $endDate && !is_null($startDate)) {
             $endDate->setTime(23, 59, 59);
         } elseif ($startDate > $endDate) {
-            throw new \core\Exception\BadRequestException("Start Date cannot be past end date");
+            throw new \core\Exception\BadRequestException($this->translator->getText("Start Date cannot be past end date"));
         }
+
+        $this->sizeFilter = $sizeFilter;
 
         $statistics = [];
         if (is_null($operation) || empty($operation)) {
             $statistics = $this->defaultStats($startDate, $endDate);
-        } elseif (!empty($operation) && !in_array($operation, ['deposit', 'delete', 'conserved'])) {
-            throw new \core\Exception\BadRequestException("Operation type not supported");
+        } elseif (!empty($operation) && !in_array($operation, ['deposit', 'deleted', 'conserved', 'restituted', 'transfered'])) {
+            throw new \core\Exception\BadRequestException($this->translator->getText("Operation type not supported"));
         } elseif (!empty($operation) && is_null($filter)) {
-            throw new \core\Exception\BadRequestException("Filter cannot be null if operation is not");
+            throw new \core\Exception\BadRequestException($this->translator->getText("Filter cannot be null if operation is not"));
         }
 
         if (!empty($operation)) {
@@ -93,11 +115,17 @@ class Statistics
                 case 'deposit':
                     $statistics = $this->depositStats($startDate, $endDate, $filter);
                     break;
-                case 'delete':
+                case 'deleted':
                     $statistics = $this->deletedStats($startDate, $endDate, $filter);
                     break;
                 case 'conserved':
                     $statistics = $this->conservedStats($endDate, $filter);
+                    break;
+                case 'restituted':
+                    $statistics = $this->restitutedStats($startDate, $endDate, $filter);
+                    break;
+                case 'transfered':
+                    $statistics = $this->transferedStats($startDate, $endDate, $filter);
                     break;
             }
         }
@@ -121,8 +149,13 @@ class Statistics
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
-            $statistics['transferredMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['transferedMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
+        }
+
+        $statistics['evolution'] = $this->evolution;
+        if ($statistics['evolution'] != (integer)$statistics['evolution']) {
+            $statistics['evolution'] = number_format($statistics['evolution'], 3, ",", " ");
         }
 
         return $statistics;
@@ -151,9 +184,8 @@ class Statistics
         }
 
         $statistics = [];
-        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-
+        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
         return $statistics;
     }
 
@@ -170,18 +202,18 @@ class Statistics
     {
         switch ($filter) {
             case 'archivalProfile':
-                $jsonSizeColumnNumber = 8;
-                $jsonOrderingColumnNumber = 6;
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 8;
                 break;
             case 'originatingOrg':
-                $jsonSizeColumnNumber = 4;
-                $jsonOrderingColumnNumber = 6;
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 4;
                 break;
         }
 
         $statistics = [];
-        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered(['recordsManagement/destruction'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered(['recordsManagement/destruction'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/destruction'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/destruction'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
 
         return $statistics;
     }
@@ -204,6 +236,64 @@ class Statistics
     }
 
     /**
+     * Statistics aggregator for restituted event
+     *
+     * @param  datetime $startDate starting date
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
+    protected function restitutedStats($startDate, $endDate, $filter)
+    {
+        switch ($filter) {
+            case 'archivalProfile':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 8;
+                break;
+            case 'originatingOrg':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 4;
+                break;
+        }
+
+        $statistics = [];
+        $statistics['restitutedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/restitution'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['restitutedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/restitution'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+
+        return $statistics;
+    }
+
+    /**
+     * Statistics aggregator for transfered event
+     *
+     * @param  datetime $startDate starting date
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
+    protected function transferedStats($startDate, $endDate, $filter)
+    {
+        switch ($filter) {
+            case 'archivalProfile':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 8;
+                break;
+            case 'originatingOrg':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 4;
+                break;
+        }
+
+        $statistics = [];
+        $statistics['transferedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/outgoingTransfer'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['transferedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/outgoingTransfer'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+
+        return $statistics;
+    }
+
+    /**
      * Sum all event info for a particular event
      *
      * @param  array    $eventTypes       Array of event types
@@ -215,8 +305,6 @@ class Statistics
      */
     protected function getSizeByEventType($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null)
     {
-        $sum = 0;
-
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
@@ -225,9 +313,33 @@ class Statistics
 SELECT SUM (CAST(NULLIF("eventInfo"::json->>$jsonColumnNumber, '') AS INTEGER)) FROM "lifeCycle"."event" WHERE "eventType" IN ($in)
 EOT;
 
-        $sum = $this->executeQuery($query, $eventTypes, $inParams, $startDate, $endDate)[0]['sum'];
+        $sum = $this->executeQuery($query, $inParams, $eventTypes[0] == 'recordsManagement/deposit', $startDate, $endDate)[0]['sum'];
 
         return $sum;
+    }
+
+    /**
+     * Get the query to get archives recursively
+     *
+     * @param  string   $in         Serialized array of variables in the query
+     * @param  string   $startDate  Starting Date
+     * @param  string   $endDate    End date
+     *
+     * @return string               The query
+     */
+    protected function getQueryArchiveRecursive($in = "", $startDate = null, $endDate = null)
+    {
+        $query = 'WITH RECURSIVE include_parent_archives(archive_id, parent_id) as (
+            SELECT "archive"."archiveId", "archive"."parentArchiveId"
+            FROM "recordsManagement"."archive" "archive"
+            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId"
+            WHERE "event"."eventType" IN ('.$in.') '.(!empty($startDate) ? "AND timestamp BETWEEN '$startDate'::timestamp AND '$endDate'::timestamp" : "").
+            ' UNION ALL
+            SELECT "archive"."archiveId", "archive"."parentArchiveId"
+            FROM "recordsManagement"."archive" "archive", include_parent_archives "archive_recursive"
+            WHERE "archive"."archiveId" = "archive_recursive"."parent_id"
+            )';
+        return $query;
     }
 
     /**
@@ -242,35 +354,31 @@ EOT;
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventTypeOrdered($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
+    protected function getCountByEventTypeOrdered($filter, $eventTypes, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
     {
         $sum = 0;
 
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
+        $isArchivalProfile = $filter == "archivalProfile";
 
-        if (is_null($startDate)) {
-            $query = <<<EOT
-SELECT ("eventInfo"::jsonb->>$jsonColumnNumberOrder) AS $groupBy, COUNT ("eventInfo"::json->>$jsonColumnNumber)
-FROM "lifeCycle"."event"
-WHERE "eventType" IN ($in)
-GROUP BY "eventInfo"::jsonb->>$jsonColumnNumberOrder
-EOT;
-        } else {
-            $startDate = (string) $startDate->format('Y-m-d H:i:s');
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
-
-            $query = <<<EOT
-SELECT ("eventInfo"::jsonb->>$jsonColumnNumberOrder) AS $groupBy, COUNT ("eventInfo"::json->>$jsonColumnNumber)
-FROM "lifeCycle"."event"
-WHERE "eventType" IN ($in)
-AND timestamp BETWEEN '$startDate'::timestamp AND '$endDate'::timestamp
-GROUP BY "eventInfo"::jsonb->>$jsonColumnNumberOrder
-EOT;
+        if (!empty($startDate)) {
+            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
+            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
         }
-        $sum = $this->executeQuery($query, $eventTypes, $inParams);
 
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query .= 'SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"').' AS '.$groupBy.', COUNT(DISTINCT "archive_recursive"."archive_id")
+            FROM include_parent_archives "archive_recursive"
+            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
+            (!$isArchivalProfile
+                ? ' INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
+                : ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder).
+            ' WHERE "archive_recursive"."parent_id" IS NULL
+            GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"');
+
+        $sum = $this->executeQuery($query, $inParams);
         return $sum;
     }
 
@@ -286,34 +394,41 @@ EOT;
      *
      * @return integer                        Sum of size for events
      */
-    protected function getSizeByEventTypeOrdered($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
+    protected function getSizeByEventTypeOrdered($filter, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
     {
-        $sum = 0;
-
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
+        $isArchivalProfile = $filter == "archivalProfile";
 
-        if (is_null($startDate)) {
-            $query = <<<EOT
-SELECT COALESCE("eventInfo"::jsonb->>$jsonColumnNumberOrder) AS $groupBy, SUM (CAST(NULLIF("eventInfo"::json->>$jsonColumnNumber, '') AS INTEGER))
-FROM "lifeCycle"."event"
-WHERE "eventType" IN ($in)
-GROUP BY "eventInfo"::jsonb->>$jsonColumnNumberOrder
-EOT;
-        } else {
-            $startDate = (string) $startDate->format('Y-m-d H:i:s');
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
-
-            $query = <<<EOT
-SELECT COALESCE("eventInfo"::jsonb->>$jsonColumnNumberOrder) AS $groupBy, SUM (CAST(NULLIF("eventInfo"::json->>$jsonColumnNumber, '') AS INTEGER))
-FROM "lifeCycle"."event"
-WHERE "eventType" IN ($in)
-AND timestamp BETWEEN '$startDate'::timestamp AND '$endDate'::timestamp
-GROUP BY "eventInfo"::jsonb->>$jsonColumnNumberOrder
-EOT;
+        if (!empty($startDate)) {
+            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
+            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
         }
-        $sum = $this->executeQuery($query, $eventTypes, $inParams);
+
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query .= ', get_children_size(archive_id, volume'.($isArchivalProfile ? ', archival_profile' : '').') AS (
+            SELECT DISTINCT "archive_recursive"."archive_id", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "event"."eventInfo"::json->>'.$jsonColumnNumberOrder : '').
+            ' FROM include_parent_archives "archive_recursive"
+            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')
+            WHERE "archive_recursive"."parent_id" IS NULL
+          UNION ALL
+              SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "archive_size"."archival_profile"' : '').
+              ' FROM "recordsManagement"."archive" "archive"
+              JOIN get_children_size "archive_size" ON 1=1
+              INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
+              WHERE "archive"."parentArchiveId" = "archive_size"."archive_id"
+        )
+        SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"') . ' as '.$groupBy.', SUM(CAST("archive_size"."volume" AS INTEGER))
+        FROM get_children_size "archive_size"'.
+        (!$isArchivalProfile
+            ? ' INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_size"."archive_id" AND "event"."eventType" IN ('.$in.')
+            INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
+            : ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_size"."archival_profile"').
+        ' WHERE "archive_size"."volume" != \'\'
+        GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"');
+
+        $sum = $this->executeQuery($query, $inParams);
 
         return $sum;
     }
@@ -339,9 +454,14 @@ SELECT SUM ("size") FROM "digitalResource"."digitalResource" WHERE "created"<'$e
 EOT;
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
-        $sum = $stmt->fetch()['sum'];
+        $result = $stmt->fetch()['sum'];
+        $sum = (integer)$result / pow(1000, $this->sizeFilter);
 
-        return (integer) $sum;
+        if ($sum != (integer)$sum) {
+            $sum = number_format($sum, 3, ",", " ");
+        }
+
+        return "$sum " . $this->sizeFilters[$this->sizeFilter];
     }
 
     /**
@@ -408,9 +528,6 @@ EOT;
             case 'originatingOrg':
                 $tableProperty = "originatorOrgRegNumber";
                 break;
-            default:
-                # code...
-                break;
         }
 
         if (is_null($endDate)) {
@@ -465,21 +582,19 @@ EOT;
      * Execute query
      *
      * @param string   $query                           Query to send
-     * @param string   $eventTypes                      Types of event
      * @param string   $secondary_parameters            Secondary parameters
      * @param DateTime $startDate                       Start Date
      * @param DateTime $endDate                         End date
-     * @param string   $groupBy                         Ordering parameter
      *
      * @return array                                    Results of query
      */
-    public function executeQuery($query, $eventTypes, $secondary_parameters, $startDate = null, $endDate = null, $groupBy = null)
+    public function executeQuery($query, $secondary_parameters, $addToEvolution = false, $startDate = null, $endDate = null)
     {
         $params = [];
 
         if (!is_null($startDate)) {
-            $params[':startDate'] = (string) $startDate->format('Y-m-d H:i:s');
-            $params[':endDate'] = (string) $endDate->format('Y-m-d H:i:s');
+            $params[':startDate'] = (string) $startDate->format('Y-m-d 00:00:00');
+            $params[':endDate'] = (string) $endDate->format('Y-m-d 23:59:59');
             $query .= " AND timestamp BETWEEN :startDate::timestamp AND :endDate::timestamp";
         }
 
@@ -487,9 +602,13 @@ EOT;
         $stmt->execute(array_merge($params, $secondary_parameters));
         $results = [];
 
-
-        // var_dump($stmt->fetch(\PDO::FETCH_ASSOC));
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $result['sum'] /= pow(1000, $this->sizeFilter);
+            $this->evolution += ($addToEvolution ? 1 : -1) * $result['sum'];
+            if ($result['sum'] != (integer)$result['sum']) {
+                $result['sum'] = number_format($result['sum'], 3, ",", " ");
+            }
+            $result['sum'] .= " " . $this->sizeFilters[$this->sizeFilter];
             $results[] = $result;
         }
 

@@ -6,49 +6,78 @@
         <div class="well">
             <form class="form-horizontal" id="statistics-form">
             	<div class="row">
-            		<div class="col-md-4">
-            			<select class="form-control" name="operation" id="operation">
-                            <option selected disabled value="">Select an operation *</option>
-							<option value="deposit">Deposit</option>
-							<option value="delete">Delete</option>
-							<option value="conserved">Conserved</option>
-						</select>
-            		</div>
+            		<div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Operation</label>
+                            <div class="col-md-8">
+                                <select class="form-control" name="operation" id="operation">
+                                    <option selected value="">Global</option>
+                                    <option value="deposit">Deposit</option>
+                                    <option value="deleted">Deletion</option>
+                                    <option value="conserved">Conservation</option>
+                                    <?merge isTransactionnal ?>
+                                    <div>
+                                        <option value="restituted">Restitution</option>
+                                        <option value="transfered">Transfer</option>
+                                    </div>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Size</label>
+                            <div class="col-md-8">
+                                <select class="form-control" name="size" id="size">
+                                    <option value="0">Byte</option>
+                                    <option value="1">Kilo <span>Byte</span></option>
+                                    <option value="2">Mega <span>Byte</span></option>
+                                    <option selected value="3">Giga <span>Byte</span></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
             	</div>
-            	<br>
                 <div class="row">
-                    <div class="col-md-4">
-                        <select name="filter" id="filter" class="form-control">
-            				<option selected disabled value="">Select a filter *</option>
-                            <option value="archivalProfile">By archival profile</option>
-                            <option value="originatingOrg">By originating agency</option>
-                        </select>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Filter by</label>
+                            <div class="col-md-8">
+                                <select name="filter" id="filter" class="form-control" disabled>
+                                    <option selected value="">Select a filter</option>
+                                    <option value="archivalProfile">Archival profile</option>
+                                    <option value="originatingOrg">Originating agency</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Dates</label>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control datePicker" name="fromDate" placeholder="From">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control datePicker" name="toDate" placeholder="To">
+                            </div>
+                        </div>
                     </div>
                 </div>
             	<br>
             	<div class="row">
-            		<div class="col-md-2">
-                        <input type="text" class="form-control datePicker" name="fromDate" placeholder="From">
-                    </div>
-            		<div class="col-md-2">
-                        <input type="text" class="form-control datePicker" name="toDate" placeholder="To">
-            		</div>
-            	</div>
-            	<br>
-            	<div class="row">
-                    <div class="col-md-4">
-                        <button type="button" class="btn btn-warning col-md-3 col-md-offset-5" id="resetForm" title="Reset"><i class="fa fa-refresh">&nbsp;</i>Reset</button>
-                        <button type="button" class="btn btn-primary col-md-3 col-md-offset-1" id="search" title="Search"><i class="fa fa-search">&nbsp;</i>Search</button>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-warning col-md-3 col-md-offset-2" id="resetForm" title="Reset"><i class="fa fa-refresh">&nbsp;</i>Reset</button>
+                        <button type="button" class="btn btn-primary col-md-3 col-md-offset-1" id="search" title="Generate"><i class="fa fa-search">&nbsp;</i>Generate</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+    <div class="hide">
+        <span id="error_required_field">If you choose an operation, you have to choose a filter and reciprocally</span>
+    </div>
 </div>
 <div id="statsResults"></div>
-<div class="hide">
-    <span id="error_required_field">The fields with a star are required.</span>
-</div>
 
 <script>
 	StatisticsForm = {
@@ -57,12 +86,11 @@
 
         reset: function() {
             $('#orgTypeahead').data("value", "");
-            this.clearResult();
             this.statisticForm.find('input[type="text"], input[type="number"], input[type="hidden"], textarea, select').val('');
-        },
-
-        clearResult: function(){
-            // TODO clear when results will be included
+            this.statisticForm.find('[name="fromDate"]').data('datepicker').setDate(null);
+            this.statisticForm.find('[name="toDate"]').data('datepicker').setDate(null);
+            this.statisticForm.find('#size').val('3');
+            this.statisticForm.find('#filter').prop("disabled", true);
         },
 
         search: function() {
@@ -90,20 +118,30 @@
             var object = {};
 
             let operation = this.statisticForm.find('[name="operation"]').val();
-            let originatingOrg = $('#originatingOrg').val();
             let filter = this.statisticForm.find('[name="filter"]').val();
             let startDate = this.statisticForm.find('[name="fromDate"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
             let endDate   = this.statisticForm.find('[name="toDate"]').data('datepicker').getFormattedDate('yyyy-mm-dd');
+            let sizeFilter = this.statisticForm.find('[name="size"]').val();
 
             object.operation = operation;
-            object.originatingOrg = originatingOrg;
             object.filter = filter;
-            object.startDate = startDate;
-            object.endDate = endDate;
+            object.startDate = startDate == "" ? null : startDate;
+            object.endDate = endDate == "" ? null : endDate;
+            object.sizeFilter = sizeFilter;
 
             return object;
         }
     }
+
+    $("#operation").on("change", () => {
+        let select = $('#operation');
+        if (select.val() == "") {
+            $("#filter").val("");
+            $("#filter").prop("disabled", true);
+        } else {
+            $("#filter").prop("disabled", false);
+        }
+    });
 
 	/************
 	CTA
