@@ -28,14 +28,22 @@ namespace bundle\Statistics;
 interface StatisticsInterface
 {
     /**
+     * Retrieve default stats for screen
+     *
+     * @action Statistics/Statistics/index
+     */
+    public function index();
+
+    /**
      * Retrieve basics stats
      *
      * @param string $operation
      * @param string $startDate
      * @param string $endDate
      * @param string $filter
+     * @param float  $sizeFilter
      *
      * @action Statistics/Statistics/retrieve
      */
-    public function retrieve($operation = null, $startDate = null, $endDate = null, $filter = null);
+    public function retrieve($operation = null, $startDate = null, $endDate = null, $filter = null, $sizeFilter = 0);
 }
