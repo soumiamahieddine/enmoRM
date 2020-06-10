@@ -183,6 +183,7 @@ class Statistics
                 $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ".", " ");
             }
         }
+        $statistics['evolution'] .= ' ' . $this->sizeFilters[$this->sizeFilter];
 
         if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
             $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ".", " ");
