@@ -32,7 +32,7 @@ interface searchLogArchiveInterface
 
     /**
      * @return recordsManagement/log/find
-     * @uses recordsManagement/log/find
+     * @uses recordsManagement/log/readFind
      */
     public function readLogs();
 

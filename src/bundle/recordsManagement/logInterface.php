@@ -36,7 +36,7 @@ interface logInterface
 
      * @action recordsManagement/log/find
      */
-    public function find(
+    public function readFind(
         $archiveId = null,
         $type = null,
         $fromDate = null,
