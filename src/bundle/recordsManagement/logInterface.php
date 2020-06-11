@@ -22,7 +22,7 @@ namespace bundle\recordsManagement;
  * Standard interface for log archive description class
  */
 interface logInterface
-{   
+{
     /**
      * Get a  search result
      * @param string $archiveId      The archive identifier
@@ -36,7 +36,7 @@ interface logInterface
 
      * @action recordsManagement/log/find
      */
-    public function find(
+    public function readFind(
         $archiveId = null,
         $type = null,
         $fromDate = null,
@@ -46,7 +46,7 @@ interface logInterface
         $sortBy = ">fromDate",
         $numberOfResult = null
     );
-    
+
     /**
      * Deposit a log file
      * @param string    $journalFileName   The name of the journal to deposit
