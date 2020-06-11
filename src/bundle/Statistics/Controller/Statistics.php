@@ -688,9 +688,11 @@ EOT;
      */
     protected function getArchiveSizeOrdered($groupBy, $endDate = null)
     {
+        $isArchivalProfile = false;
         switch ($groupBy) {
             case 'archivalProfile':
                 $tableProperty = "archivalProfileReference";
+                $isArchivalProfile = true;
                 break;
             case 'originatingOrg':
                 $tableProperty = "originatorOrgRegNumber";
@@ -703,19 +705,35 @@ EOT;
             $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
-        $query = <<<EOT
-SELECT "recordsManagement"."archive"."$tableProperty" AS $groupBy, SUM ("digitalResource"."digitalResource"."size")
-FROM "digitalResource"."digitalResource"
-JOIN "recordsManagement"."archive"
-ON "digitalResource"."digitalResource"."archiveId" = "recordsManagement"."archive"."archiveId"
-WHERE "created"<'$endDate'::timestamp
-GROUP BY "recordsManagement"."archive"."$tableProperty";
-EOT;
-
+        $query = 'WITH RECURSIVE get_children_size(archive_id, volume, group_by) AS (
+            SELECT "archive"."archiveId", "digitalResource"."size", "archive"."'.$tableProperty.'"
+            FROM "recordsManagement"."archive" "archive"
+            LEFT JOIN "digitalResource"."digitalResource" "digitalResource" ON "digitalResource"."archiveId" = "archive"."archiveId"
+            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp
+          UNION ALL
+            SELECT "archive"."archiveId", "digitalResource"."size", "archive_size"."group_by"
+            FROM "recordsManagement"."archive" "archive"
+            JOIN get_children_size "archive_size" ON 1=1
+            LEFT JOIN "digitalResource"."digitalResource" "digitalResource" ON "digitalResource"."archiveId" = "archive"."archiveId"
+            WHERE "archive"."parentArchiveId" = "archive_size"."archive_id"
+        )
+        SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"').' AS '.$groupBy.', SUM(CAST("archive_size"."volume" AS INTEGER))
+        FROM get_children_size "archive_size"'.(
+            $isArchivalProfile
+            ? ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_size"."group_by"'
+            : ' INNER JOIN "organization"."organization" "organization" ON "organization"."registrationNumber" = "archive_size"."group_by"'
+        ).
+        ' GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
+        
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
         $results = [];
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $result['sum'] /= pow(1000, $this->sizeFilter);
+            if ($result['sum'] != (integer)$result['sum']) {
+                $result['sum'] = number_format($result['sum'], 3, ",", " ");
+            }
+            $result['sum'] .= " " . $this->sizeFilters[$this->sizeFilter];
             $results[] = $result;
         }
 
@@ -732,8 +750,10 @@ EOT;
      */
     protected function getArchiveCountOrdered($groupBy, $endDate = null)
     {
+        $isArchivalProfile = false;
         switch ($groupBy) {
             case 'archivalProfile':
+                $isArchivalProfile = true;
                 $tableProperty = "archivalProfileReference";
                 break;
             case 'originatingOrg':
@@ -750,14 +770,15 @@ EOT;
             $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
-        $query = <<<EOT
-SELECT "recordsManagement"."archive"."$tableProperty" AS $groupBy, COUNT ("digitalResource"."digitalResource"."size")
-FROM "digitalResource"."digitalResource"
-JOIN "recordsManagement"."archive"
-ON "digitalResource"."digitalResource"."archiveId" = "recordsManagement"."archive"."archiveId"
-WHERE "created"<'$endDate'::timestamp
-GROUP BY "recordsManagement"."archive"."$tableProperty";
-EOT;
+        $query = 'SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"').' AS '.$groupBy.', COUNT ("archive".*)
+                FROM "recordsManagement"."archive" "archive"'.
+                (
+                    $isArchivalProfile
+                    ? ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive"."'.$tableProperty.'"'
+                    : ' INNER JOIN "organization"."organization" "organization" ON "organization"."registrationNumber" = "archive"."'.$tableProperty.'"'
+                ).
+                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "archive"."parentArchiveId" IS NULL
+                GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
