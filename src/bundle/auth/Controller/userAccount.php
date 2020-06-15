@@ -217,17 +217,17 @@ class userAccount
     {
         $this->isAuthorized(['gen_admin', 'func_admin']);
 
-        $organizations = $userAccount->organizations;
-        $userAccount = \laabs::cast($userAccount, "auth/account");
-        $userAccount->accountId = \laabs::newId();
-        $userAccount->accountType = 'user';
-
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
         if ($this->hasSecurityLevel) {
             $this->checkPrivilegesAccess($account, $userAccount);
         }
+
+        $organizations = $userAccount->organizations;
+        $userAccount = \laabs::cast($userAccount, "auth/account");
+        $userAccount->accountId = \laabs::newId();
+        $userAccount->accountType = 'user';
 
         $organizationController = \laabs::newController('organization/organization');
         if (!is_null($organizations)) {
