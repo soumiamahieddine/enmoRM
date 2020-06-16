@@ -191,7 +191,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 contentType : 'application/json',
                 async       : true,
                 success     : function(response) {
-                    var response = JSON.parse(response);
+                    if (typeof(response) ==='string') {
+                        response = JSON.parse(response);
+                    }
                     if (response.status) {
 
                         addRelationship(relationship);
@@ -240,7 +242,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             contentType : 'application/json',
             async       : true,
             success     : function(response) {
-                var response : JSON.parse(response);
+                if (typeof(response) ==='string') {
+                    response = JSON.parse(response);
+                }
                 if (response.status) {
                     toDelete.closest("tr").remove();
                     $.gritter.add({
