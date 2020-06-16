@@ -91,7 +91,10 @@
                     }
                 },
                 error       : function (response) {
-                    error = JSON.parse(response.responseText);
+                    error = response.responseText;
+                    if (typeof(error) ==='string') {
+                        error = JSON.parse(error);
+                    }
                     gritter.show(error.message, false);
                 }
             })

@@ -191,7 +191,10 @@
                     gritter.show($("#file_success").text(), 'true');
                 },
                 error: function(response) {
-                    response = JSON.parse(response.responseText);
+                    response = response.responseText;
+                    if (typeof(response) ==='string') {
+                        response = JSON.parse(response);
+                    }
                     gritter.show(response.message, false);
                 },
                 complete: function(response) {
