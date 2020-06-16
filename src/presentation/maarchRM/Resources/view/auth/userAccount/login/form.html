@@ -204,7 +204,10 @@
                 }
             },
             error    : function(response) {
-                var response = JSON.parse(response.responseText);
+                var response = response.responseText;
+                if (typeof(response) ==='string') {
+                    response = JSON.parse(response);
+                }
                 if (response.passwordChangeRequired) {
                     $('#signInModal').modal('hide');
                     $('#changePasswordModal').modal({
@@ -257,7 +260,10 @@
                 }
             },
             error : function (response) {
-                response = JSON.parse(response.responseText);
+                response = response.responseText;
+                if (typeof(response) ==='string') {
+                    response = JSON.parse(response);
+                }
                 $('#newPassword').val('');
                 $('#confirmPassword').val('');
                 $('#changePasswordMessage').text(response.message);
