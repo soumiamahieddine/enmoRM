@@ -765,7 +765,7 @@ class serviceAccount
                 throw new \core\Exception\UnauthorizedException("Only a General administrator can do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
-            if (!$targetServiceAccount->isAdmin) {
+            if ($targetServiceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
             }
         }
