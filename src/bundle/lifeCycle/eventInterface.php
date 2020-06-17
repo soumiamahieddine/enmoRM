@@ -40,12 +40,14 @@ interface eventInterface
      * @action lifeCycle/journal/searchEvent
      */
     public function readSearch(
-        $eventType = false,
-        $objectClass = false,
-        $objectId = false,
-        $minDate = false,
-        $maxDate = false,
-        $org = false
+        $eventType = null,
+        $objectClass = null,
+        $objectId = null,
+        $minDate = null,
+        $maxDate = null,
+        $org = null,
+        $sortBy = ">timestamp",
+        $numberOfResult = null
     );
 
     /**
