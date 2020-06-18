@@ -934,7 +934,8 @@ class journal
         if (isset(\laabs::configuration('lifeCycle')['chainWithTimestamp']) && \laabs::configuration('lifeCycle')['chainWithTimestamp']==true) {
             try {
                 $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
-                $timestampFileName = $timestampService->getTimestamp($journalFilename);
+                $timestampServiceUri = \laabs::configuration('lifeCycle')['timestampService'];
+                $timestampService = \laabs::newService($timestampServiceUri);
             } catch (\Exception $e) {
                 throw $e;
             }
