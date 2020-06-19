@@ -80,7 +80,7 @@ MovingConfirmationModal = {
                     }
                 },
                 error       : function (response) {
-                    error = response.responseText;
+                    error = JSON.parse(response.responseText);
                     gritter.show(error.message, false);
                 }
             })
