@@ -191,7 +191,7 @@
                     gritter.show($("#file_success").text(), 'true');
                 },
                 error: function(response) {
-                    response = response.responseText;
+                    response = JSON.parse(response.responseText);
                     gritter.show(response.message, false);
                 },
                 complete: function(response) {

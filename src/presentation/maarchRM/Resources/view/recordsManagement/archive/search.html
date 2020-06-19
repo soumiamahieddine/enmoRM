@@ -250,7 +250,7 @@
                 $('#archive_search').prop('disabled', false);
             },
             error    : function(response) {
-                response = response.responseText;
+                response = JSON.parse(response.responseText);
                 gritter.show(response.message);
                 $('#archive_search').prop('disabled', false);
             }

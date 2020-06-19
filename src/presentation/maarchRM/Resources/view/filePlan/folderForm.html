@@ -91,7 +91,7 @@
                     }
                 },
                 error       : function (response) {
-                    var error = response.responseText;
+                    var error = JSON.parse(response.responseText);
                     gritter.show(error.message, false);
                 }
             })
