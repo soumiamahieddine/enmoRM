@@ -116,7 +116,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a onclick="load('/user/logout')" translate="yes" title="Ctrl + Alt + Q">
+                            <a onclick="localStorage.clear();load('/user/logout')" translate="yes" title="Ctrl + Alt + Q">
                                 <i class="fa fa-sign-out fa-fw"></i> Logout
                             </a>
                         </li>
@@ -465,6 +465,7 @@
         keys[e.keyCode] = e.type === 'keydown';
 
         if (keys[17] && keys[18] && keys[81]) {
+            localStorage.clear();
             load('/user/logout');
         }
     });
