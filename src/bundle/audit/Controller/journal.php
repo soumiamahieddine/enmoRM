@@ -137,9 +137,9 @@ class journal
         $timestampFileName = null;
         if (isset(\laabs::configuration('audit')['chainWithTimestamp']) && \laabs::configuration('audit')['chainWithTimestamp']==true) {
             try {
-                $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
+                $timestampServiceUri = \laabs::configuration('audit')['timestampService'];
+                $timestampService = \laabs::newService($timestampServiceUri);
                 $timestampFileName = $timestampService->getTimestamp($journalFilename);
-
             } catch (\Exception $e) {
                 throw $e;
             }
