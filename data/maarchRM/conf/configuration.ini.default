@@ -138,6 +138,7 @@ exportPath = "%laabsDirectory%/web/tmp"
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
+; timestampService = dependency/timestamp/plugins/TsaClient
 
 ; Any path on this list will no be logged in the application journal
 ;ignorePaths = "['organization/organization/readTodisplay']"
@@ -535,6 +536,8 @@ chainJournalByOrganization = false;
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
+; timestampService = dependency/timestamp/plugins/TsaClient
+
 
 [organization]
 
@@ -842,3 +845,14 @@ datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
 ; 2 = trace queries
 ; 3 = dump queries
 trace = 1
+
+[dependency.timestamp]
+
+; The URL of the TSA provider
+; Somme open and free TSA test services :
+; tsaUrl=http://zeitstempel.dfn.de
+; tsaUrl=http://timestamp.entrust.net/TSS/RFC3161sha2TS
+; tsaUrl=http://time.certum.pl
+
+; The path to openssl, if not in PHP path
+; pathToOpenSSL="C:\Program Files\OpenSSL-Win64\bin\openssl"
