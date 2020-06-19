@@ -163,10 +163,7 @@
 
                 },
                 error   : function (response) {
-                    response = response.responseText;
-                    if (typeof(response) ==='string') {
-                        response = JSON.parse(response);
-                    }
+                    response = JSON.parse(response.responseText);
                     gritter.show(response.message);
                 }
             });
