@@ -185,7 +185,9 @@
             contentType : 'application/json',
             async: false,
             success: function (response) {
-                var response = JSON.parse(response);
+                if (typeof(response) ==='string') {
+                    response = JSON.parse(response);
+                }
                 if (response.status == true) {
                     $(location).attr('href', "/");
                 } else if (response.passwordChangeRequired) {
@@ -243,7 +245,9 @@
             data: JSON.stringify(parameters),
             async: false,
             success: function (response) {
-                var response = JSON.parse(response);
+                if (typeof(response) ==='string') {
+                    response = JSON.parse(response);
+                }
                 if (response.status == true) {
                     location.reload();
                 } else {
