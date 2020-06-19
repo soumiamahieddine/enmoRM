@@ -149,7 +149,7 @@ class Statistics
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
-            $statistics['transferedMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTansfer'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['transferedMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTransfer'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
         }
 
@@ -370,14 +370,14 @@ EOT;
         }
 
         $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
-        $query .= 'SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"').' AS '.$groupBy.', COUNT(DISTINCT "archive_recursive"."archive_id")
+        $query .= 'SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"').' AS '.$groupBy.', COUNT(DISTINCT "archive_recursive"."archive_id")
             FROM include_parent_archives "archive_recursive"
             INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
             (!$isArchivalProfile
                 ? ' INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
-                : ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder).
-            ' WHERE "archive_recursive"."parent_id" IS NULL
-            GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"');
+                : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder).
+            ($eventTypes[0] == 'recordsManagement/deposit' ? ' WHERE "archive_recursive"."parent_id" IS NULL' : '').
+            ' GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
 
         $sum = $this->executeQuery($query, $inParams);
         return $sum;
@@ -411,23 +411,23 @@ EOT;
         $query .= ', get_children_size(archive_id, volume'.($isArchivalProfile ? ', archival_profile' : '').') AS (
             SELECT DISTINCT "archive_recursive"."archive_id", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "event"."eventInfo"::json->>'.$jsonColumnNumberOrder : '').
             ' FROM include_parent_archives "archive_recursive"
-            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')
+            LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')
             WHERE "archive_recursive"."parent_id" IS NULL
           UNION ALL
               SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "archive_size"."archival_profile"' : '').
               ' FROM "recordsManagement"."archive" "archive"
               JOIN get_children_size "archive_size" ON 1=1
-              INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
+              LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
               WHERE "archive"."parentArchiveId" = "archive_size"."archive_id"
         )
-        SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"') . ' as '.$groupBy.', SUM(CAST("archive_size"."volume" AS INTEGER))
+        SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"') . ' as '.$groupBy.', SUM(CAST("archive_size"."volume" AS INTEGER))
         FROM get_children_size "archive_size"'.
         (!$isArchivalProfile
             ? ' INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_size"."archive_id" AND "event"."eventType" IN ('.$in.')
             INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
-            : ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_size"."archival_profile"').
+            : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_size"."archival_profile"').
         ' WHERE "archive_size"."volume" != \'\'
-        GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"org"."displayName"');
+        GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
 
         $sum = $this->executeQuery($query, $inParams);
 

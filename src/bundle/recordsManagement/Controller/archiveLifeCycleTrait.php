@@ -218,7 +218,7 @@ trait archiveLifeCycleTrait
      */
     public function logElimination($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/elimination', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/elimination', $archive, $operationResult, false, false, true);
     }
 
     /**
@@ -257,7 +257,10 @@ trait archiveLifeCycleTrait
         return $this->logLifeCycleEvent(
             $type = 'recordsManagement/destruction',
             $archive,
-            $operationResult
+            $operationResult,
+            false,
+            false,
+            true
         );
     }
 
@@ -333,7 +336,7 @@ trait archiveLifeCycleTrait
      */
     public function logOutgoingTransfer($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/outgoingTransfer', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/outgoingTransfer', $archive, $operationResult, false, false, true);
     }
 
     /**
