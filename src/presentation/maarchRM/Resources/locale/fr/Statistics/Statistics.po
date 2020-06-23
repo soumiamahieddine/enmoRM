@@ -17,7 +17,7 @@ msgstr "Versement"
 msgid "Deletion"
 msgstr "Élimination"
 
-msgid "Transfer"
+msgid "Outgoing transfer"
 msgstr "Transfert sortant"
 
 msgid "Growth"
@@ -40,6 +40,9 @@ msgstr "Service producteur"
 
 msgid "archivalProfile"
 msgstr "Profil d'archive"
+
+msgid "Unit"
+msgstr "Unité"
 
 msgid "Size"
 msgstr "Taille"
@@ -72,7 +75,7 @@ msgid "Operation"
 msgstr "Type de rapport"
 
 msgid "Filter by"
-msgstr "Ventilation par"
+msgstr "Ventiler par"
 
 msgid "If you choose an operation, you have to choose a filter and reciprocally"
 msgstr "Si vous choisissez une opération, vous devez choisir un critère et réciproquement"

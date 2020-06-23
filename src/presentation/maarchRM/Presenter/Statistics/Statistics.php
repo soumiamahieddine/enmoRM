@@ -107,10 +107,10 @@ class Statistics
         $description = $this->view->getElementById("statsResults");
         if (\laabs::configuration('medona')['transaction']) {
             $isTransactionnal = true;
-            $descriptionFragment->appendHtmlFile("Statistics/transactionnalResults.html");
-        } else {
-            $descriptionFragment->appendHtmlFile("Statistics/defaultResults.html");
         }
+        
+        $descriptionFragment->appendHtmlFile("Statistics/defaultResults.html");
+
         $description = $this->view->getElementById("statsResults");
         $description->appendChild($descriptionFragment);
 
@@ -160,13 +160,12 @@ class Statistics
             $isTransactionnal = false;
             if (\laabs::configuration('medona')['transaction']) {
                 $isTransactionnal = true;
-                $this->view->addContentFile("Statistics/transactionnalResults.html");
-            } else {
-                $this->view->addContentFile("Statistics/defaultResults.html");
             }
+
+            $this->view->addContentFile("Statistics/defaultResults.html");
+
             $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
             $dataTable = $this->setDatatableOptions($dataTable, $isTransactionnal ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3]);
-            $dataTable->setSorting(array(array(0, 'asc')));
 
             $this->view->setSource('isTransactionnal', $isTransactionnal);
             $this->view->setSource('statistics', $statistics);
@@ -201,6 +200,7 @@ class Statistics
         $dataTable = $this->setDatatableOptions($dataTable, [0, 1, 2]);
         $dataTable->setSorting(array(array(0, 'asc')));
 
+        $this->view->setSource('unit', $statistics['unit']);
         $this->view->setSource('filter', $filter);
         $this->view->setSource('condensedStats', $condensedStats);
         $this->view->merge();
