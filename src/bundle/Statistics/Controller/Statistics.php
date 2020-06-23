@@ -733,7 +733,6 @@ EOT;
             if ($result['sum'] != (integer)$result['sum']) {
                 $result['sum'] = number_format($result['sum'], 3, ",", " ");
             }
-            $result['sum'] .= " " . $this->sizeFilters[$this->sizeFilter];
             $results[] = $result;
         }
 
