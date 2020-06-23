@@ -183,7 +183,7 @@ class Statistics
                 $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ".", " ");
             }
         }
-        $statistics['evolution'] .= ' ' . $this->sizeFilters[$this->sizeFilter];
+        $statistics['currentMemoryCount'] = $this->getArchiveCount($endDate);
 
         if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
             $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ".", " ");
@@ -440,6 +440,40 @@ class Statistics
     }
 
     /**
+     * Count all event info for particular event(s)
+     *
+     * @param  array    $eventTypes            Array of event types
+     * @param  integer  $jsonColumnNumber      json Column number for size parameter in lifeCycle event table
+     * @param  datetime $startDate             Starting Date
+     * @param  datetime $endDate               End date
+     *
+     * @return integer                        Count of size for events
+     */
+    protected function getCountByEventType($filter, $eventTypes, $startDate = null, $endDate = null)
+    {
+        $sum = 0;
+
+        $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
+        $in = $explodingEventTypes['in'];
+        $inParams = $explodingEventTypes['inParams'];
+        $isArchivalProfile = $filter == "archivalProfile";
+
+        if (!empty($startDate)) {
+            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
+            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
+        }
+
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query .= 'SELECT COUNT(DISTINCT "archive_recursive"."archive_id")
+            FROM include_parent_archives "archive_recursive"
+            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
+            ($eventTypes[0] == 'recordsManagement/deposit' ? ' WHERE "archive_recursive"."parent_id" IS NULL' : '');
+
+        $count = $this->executeQuery($query, $inParams)[0]['count'];
+        return $count;
+    }
+
+    /**
      * Count all event info for particular event(s) ordered by another event
      *
      * @param  array    $messageType           The type of the message
@@ -665,7 +699,6 @@ EOT;
             if ($result['sum'] != (integer)$result['sum']) {
                 $result['sum'] = number_format($result['sum'], 3, ",", " ");
             }
-            $result['sum'] .= " " . $this->sizeFilters[$this->sizeFilter];
             $results[] = $result;
         }
 
