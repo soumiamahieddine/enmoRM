@@ -189,6 +189,13 @@ class Statistics
             $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ".", " ");
         }
 
+        if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
+            $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ",", " ");
+        }
+        if ($statistics['evolutionSize'] != (integer)$statistics['evolutionSize']) {
+            $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ",", " ");
+        }
+
         return $statistics;
     }
 
