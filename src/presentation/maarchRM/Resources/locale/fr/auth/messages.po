@@ -130,7 +130,7 @@ msgstr "Traiter les demandes de modification"
 msgctxt "userStory"
 
 msgid "Statistics"
-msgstr "Statistiques"
+msgstr "Accéder aux statistiques"
 msgctxt "userStory"
 
 # ---------------------------------------------------------
