@@ -129,6 +129,9 @@ msgid "modificationRequestProcess"
 msgstr "Traiter les demandes de modification"
 msgctxt "userStory"
 
+msgid "Statistics"
+msgstr "Accéder aux statistiques"
+msgctxt "userStory"
 
 # ---------------------------------------------------------
 # Journal
