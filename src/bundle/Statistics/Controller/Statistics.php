@@ -689,6 +689,8 @@ EOT;
                 if ($result['sum'] != (integer)$result['sum']) {
                     $result['sum'] = number_format($result['sum'], 3, ",", " ");
                 }
+            } else {
+                $result['sum'] = '0,000';
             }
             $results[] = $result;
         }
