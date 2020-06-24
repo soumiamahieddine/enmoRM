@@ -155,13 +155,17 @@ class Statistics
         }
 
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
-        if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
-            $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ",", " ");
-        }
         $statistics['currentMemoryCount'] = $this->getArchiveCount($endDate);
 
         $statistics['evolutionSize'] = $statistics['currentMemorySize'] - ($startDate ? $this->getArchiveSize($startDate) : 0);
         $statistics['evolutionCount'] = $statistics['currentMemoryCount'] - ($startDate ? $this->getArchiveCount($startDate) : 0);
+
+        if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
+            $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ",", " ");
+        }
+        if ($statistics['evolutionSize'] != (integer)$statistics['evolutionSize']) {
+            $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ",", " ");
+        }
 
         return $statistics;
     }
@@ -503,7 +507,6 @@ EOT;
      */
     protected function getArchiveSize($endDate = null)
     {
-        $sum = 0;
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
         } else {
@@ -521,10 +524,6 @@ EOT;
         $stmt->execute();
         $result = $stmt->fetch()['sum'];
         $sum = (integer)$result / pow(1000, $this->sizeFilter);
-
-        if ($sum != (integer)$sum) {
-            $sum = number_format($sum, 3, ",", " ");
-        }
 
         return $sum;
     }
@@ -685,9 +684,11 @@ EOT;
         $results = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] /= pow(1000, $this->sizeFilter);
-            if ($result['sum'] != (integer)$result['sum']) {
-                $result['sum'] = number_format($result['sum'], 3, ",", " ");
+            if (isset($result['sum'])) {
+                $result['sum'] /= pow(1000, $this->sizeFilter);
+                if ($result['sum'] != (integer)$result['sum']) {
+                    $result['sum'] = number_format($result['sum'], 3, ",", " ");
+                }
             }
             $results[] = $result;
         }
