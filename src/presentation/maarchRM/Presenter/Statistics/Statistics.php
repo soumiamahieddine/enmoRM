@@ -115,7 +115,7 @@ class Statistics
         $description->appendChild($descriptionFragment);
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-        $dataTable = $this->setDatatableOptions($dataTable, $isTransactionnal ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3]);
+        $dataTable = $this->setDatatableOptions($dataTable, [0, 1, 2]);
 
         $this->view->setSource('isTransactionnal', $isTransactionnal);
         $this->view->setSource('statistics', $statistics);
@@ -165,7 +165,7 @@ class Statistics
             $this->view->addContentFile("Statistics/defaultResults.html");
 
             $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
-            $dataTable = $this->setDatatableOptions($dataTable, $isTransactionnal ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3]);
+            $dataTable = $this->setDatatableOptions($dataTable, [0, 1, 2]);
 
             $this->view->setSource('isTransactionnal', $isTransactionnal);
             $this->view->setSource('statistics', $statistics);
