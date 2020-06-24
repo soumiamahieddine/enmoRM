@@ -21,7 +21,7 @@ msgid "Outgoing transfer"
 msgstr "Transfert sortant"
 
 msgid "Growth"
-msgstr "Evolution"
+msgstr "Accroissement net"
 
 msgid "Archival profile"
 msgstr "Profil d'archive"
