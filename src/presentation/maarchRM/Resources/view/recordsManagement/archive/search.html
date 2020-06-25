@@ -184,6 +184,7 @@
         if (hasParent.length == 1)
                 parameters.hasParent = hasParent[0];
 
+        parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
