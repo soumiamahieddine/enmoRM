@@ -96,7 +96,6 @@ class log implements archiveDescriptionInterface
         } elseif ($fromDate) {
             $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T00:00:00';
             $queryParts['date'] = "fromDate >= :fromDate";
-
         } elseif ($toDate) {
             $queryParams['toDate'] = $toDate->format('Y-m-d').'T23:59:59';
             $queryParts['date'] = "toDate <= :toDate";
@@ -140,13 +139,8 @@ class log implements archiveDescriptionInterface
      */
     public function search($description = null, $text = null, array $args = [])
     {
-        $archiveController = \laabs::newController('recordsManagement/archive');
-
-        $sortBy = ">depositDate";
-        $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
         $queryParams = $queryParts = [];
-        $queryRequiredParts = \laabs::newController('recordsManagement/archive')->getArchiveAssert($args, $queryParams);
-        
+        $queryString = "";
         if ($text) {
             $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
             $tokens = \laabs\explode(' ', $text);
@@ -154,8 +148,10 @@ class log implements archiveDescriptionInterface
             $queryLogs = [];
             foreach ($tokens as $i => $token) {
                 $queryTerm = [];
-                $queryTerm[] = "archiveName='*".$token."*'";
                 $queryTerm[] = "archiveId = '*$token*'";
+                $queryTerm[] = "processName = '*$token*'";
+                $queryTerm[] = "type = '*$token*'";
+                $queryTerm[] = "ownerOrgRegNumber = '*$token*'";
 
                 try {
                     $date = new \DateTime($token);
@@ -165,20 +161,28 @@ class log implements archiveDescriptionInterface
                 }
 
                 if ($date) {
-                    $queryLogs[] = "(fromDate <= '$date 23:59:59' AND toDate >= '$date 00:00:00')";
+                    $queryLogs[] = "(fromDate <= $date T00:00:00 AND toDate >= $date T23:59:59)";
                 }
 
-                $queryParts[] = \laabs\implode(' OR ', $queryTerm);
+                $queryString = \laabs\implode(' OR ', $queryTerm);
             }
         }
 
-        $queryString = $queryRequiredParts . " AND (" . \laabs\implode(' AND ', $queryParts);
-        if (isset($queryLogs) && !empty($queryLogs)) {
-            $queryString .= " OR (archiveId=[READ recordsManagement/log [archiveId] (".\laabs\implode(' OR ', $queryLogs).")])";
-        }
-        $queryString .= ")";
+        $archiveController = \laabs::newController('recordsManagement/archive');
+        $archives = [];
 
-        $archives = $this->sdoFactory->find("recordsManagement/archive", $queryString, $queryParams, $sortBy, 0, $numberOfResult);
+        $sortBy = ">fromDate";
+        $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, [], $sortBy, 0, $numberOfResult);
+
+        foreach ($logs as $log) {
+            try {
+                $archive = $archiveController->read($log->archiveId);
+                $archive->descriptionObject = $log;
+                $archives[] = $archive;
+            } catch (\Exception $e) {
+            }
+        }
 
         return $archives;
     }
