@@ -709,7 +709,7 @@ EOT;
             SELECT "archive"."archiveId", "digitalResource"."size", "archive"."'.$tableProperty.'"
             FROM "recordsManagement"."archive" "archive"
             LEFT JOIN "digitalResource"."digitalResource" "digitalResource" ON "digitalResource"."archiveId" = "archive"."archiveId"
-            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp
+            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\'
           UNION ALL
             SELECT "archive"."archiveId", "digitalResource"."size", "archive_size"."group_by"
             FROM "recordsManagement"."archive" "archive"
@@ -776,7 +776,7 @@ EOT;
                     ? ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive"."'.$tableProperty.'"'
                     : ' INNER JOIN "organization"."organization" "organization" ON "organization"."registrationNumber" = "archive"."'.$tableProperty.'"'
                 ).
-                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "archive"."parentArchiveId" IS NULL
+                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\' AND "archive"."parentArchiveId" IS NULL
                 GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
         $stmt = $this->pdo->prepare($query);
