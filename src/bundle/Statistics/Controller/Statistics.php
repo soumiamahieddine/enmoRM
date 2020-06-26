@@ -358,8 +358,6 @@ EOT;
      */
     protected function getCountByEventType($filter, $eventTypes, $startDate = null, $endDate = null)
     {
-        $sum = 0;
-
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
@@ -374,7 +372,7 @@ EOT;
         $query .= 'SELECT COUNT(DISTINCT "archive_recursive"."archive_id")
             FROM include_parent_archives "archive_recursive"
             INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
-            ($eventTypes[0] == 'recordsManagement/deposit' ? ' WHERE "archive_recursive"."parent_id" IS NULL' : '');
+            ' WHERE "archive_recursive"."parent_id" IS NULL';
 
         $count = $this->executeQuery($query, $inParams)[0]['count'];
         return $count;
@@ -413,8 +411,8 @@ EOT;
             (!$isArchivalProfile
                 ? ' INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
                 : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder).
-            ($eventTypes[0] == 'recordsManagement/deposit' ? ' WHERE "archive_recursive"."parent_id" IS NULL' : '').
-            ' GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
+            ' WHERE "archive_recursive"."parent_id" IS NULL
+            GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
 
         $sum = $this->executeQuery($query, $inParams);
         return $sum;
@@ -559,7 +557,7 @@ EOT;
             SELECT "archive"."archiveId", "digitalResource"."size", "archive"."'.$tableProperty.'"
             FROM "recordsManagement"."archive" "archive"
             LEFT JOIN "digitalResource"."digitalResource" "digitalResource" ON "digitalResource"."archiveId" = "archive"."archiveId"
-            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp
+            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\'
           UNION ALL
             SELECT "archive"."archiveId", "digitalResource"."size", "archive_size"."group_by"
             FROM "recordsManagement"."archive" "archive"
@@ -623,7 +621,7 @@ EOT;
                     ? ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive"."'.$tableProperty.'"'
                     : ' INNER JOIN "organization"."organization" "organization" ON "organization"."registrationNumber" = "archive"."'.$tableProperty.'"'
                 ).
-                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "archive"."parentArchiveId" IS NULL
+                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\' AND "archive"."parentArchiveId" IS NULL
                 GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
         $stmt = $this->pdo->prepare($query);
