@@ -90,30 +90,24 @@
 <script type="application/javascript">
 
 $("#contain").ready(function() {
-    /*$('#activatedUsers').bootstrapToggle({
-        size: 'mini',
-        on: 'Yes',
-        off: 'All'
-    });*/
-
-    //var url = new URL(document.URL);
-    //var deactivatedUsers = url.searchParams.get("query");
-
     var regex = new RegExp("[\\?&]query=([^&#]*)");
     var results = regex.exec(window.location.search);
     var query = (results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")));
 
-    if (query === 'enabled=true') {
+    if (query === 'enabled=true') { 
         $("#activatedUsers").bootstrapToggle('on');
     }
 });
 
-$("#contain").on('click', '#activatedUsers', function() {
+$("#activatedUsers").change(function() {
     let value = $(this).prop('checked');
-
     if (value) {
         let param = encodeURIComponent("enabled=true");
-        window.location.replace("/userAccounts?query="+param);
+       // trouver une condition qui empeche la boucle infinie
+        //    console.log(window.location.pathname);
+        if (window.location.pathname === '/userAccounts') {
+            window.location.replace("/userAccounts?query="+param);
+        }
     } else {
         window.location.replace("/userAccounts");
     }
