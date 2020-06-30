@@ -28,19 +28,11 @@ namespace presentation\maarchRM\Observer;
 class authentication
 {
     protected $sdoFactory;
-    protected $config;
-    protected $whiteList;
-
     protected $accountId;
-    protected $account;
     protected $accountAuth;
-    protected $accountToken;
-
+    protected $account;
     protected $requestToken;
     protected $requestTokenTime;
-
-    protected $responseToken;
-    protected $responseTokenTime;
 
     /**
      * Construct the observer
@@ -140,11 +132,12 @@ class authentication
         }
 
         $accountToken = new \StdClass();
-        $accountToken->accountId = $account->accountId;
-        // \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
-        $this->accountToken = $accountToken;
-        $this->persistenceCookie($this->accountToken, $account);
+        $accountToken->accountId = $this->accountId = $account->accountId;
 
+        $this->checkPersistenceToken();
+
+        \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
+        $this->updateAccount();
         $organization = \laabs::getToken("ORGANIZATION");
 
         $userPositionController = \laabs::newController("organization/userPosition");
@@ -182,84 +175,19 @@ class authentication
         return $account;
     }
 
-    protected function redirectToLogin()
+    protected function checkPersistenceToken()
     {
-        \laabs::unsetToken("AUTH");
-        \laabs::unsetToken("ORGANIZATION");
+        $this->getAccount();
 
-        \laabs::kernel()->response->code = 307;
-        \laabs::kernel()->response->setHeader('Location', '/user/prompt');
-        \laabs::kernel()->sendResponse();
-        \laabs::kernel()->end();
-
-        exit;
-    }
-
-    /******************** Persistence cookie part ********************/
-
-    protected function persistenceCookie()
-    {
-        // Do not process base uri or whitelisted URIs
-        if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
-            return;
-        }
-
-        // Do not process if no user account to retrieve or store csrf tokens
-        if (!$this->account) {
-            return;
-        }
-
-        // Get auth object from json, init data structures if necessary
-        $this->getAccountAuth();
+        $this->createSaveToken();
 
         // Remove expired csrf tokens from security object
         $this->discardExpiredTokens();
 
         $this->checkRequestToken();
-        // Save auth information to user account
-        $this->updateAccount();
-
-        return true;
     }
 
-    /**
-     * Observer for the CSRF protection
-     * @param \core\Response\HttpResponse
-     *
-     * @subject LAABS_RESPONSE
-     */
-    public function setResponseToken(&$response)
-    {
-        // // Do not process base uri or whitelisted URIs
-        // if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
-        //     return;
-        // }
-
-        // Do not process if no account was loaded
-        if (empty($this->account)) {
-            return;
-        }
-
-        // Get auth object from json, init data structures if necessary
-        $this->getAccountAuth();
-
-        // If a token was received, discard it and all the previous tokens
-        if (isset($this->requestTokenTime)) {
-            $this->discardUsedTokens();
-        }
-
-
-        $this->responseToken = \laabs::setToken('AUTH', $this->accountToken, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], false);
-
-        // Save auth information to user account
-        $this->updateAccount();
-    }
-
-    /**
-     * Retrieves the current account auth object
-     * containing the auth tokens
-     */
-    private function getAccountAuth()
+    protected function createSaveToken()
     {
         // Decode authentication object from JSON
         $this->accountAuth = json_decode($this->account->authentication);
@@ -272,7 +200,13 @@ class authentication
             return;
         }
 
-        // Create CSRF token list if not set
+        if (isset($this->accountAuth) && !isset($this->accountAuth->auth)) {
+            $this->accountAuth->auth = [];
+
+            return;
+        }
+
+        // Create auth token list if not set
         if (!is_object($this->accountAuth->auth)) {
             $this->accountAuth->auth = [];
 
@@ -317,8 +251,7 @@ class authentication
      */
     private function checkRequestToken()
     {
-        $this->requestToken = $_COOKIE['LAABS-AUTH'];
-
+        $this->requestToken = \laabs::getToken("auth", LAABS_IN_HEADER);
         if (empty($this->requestToken)) {
             throw new \core\Exception('Attempt to access without a valid token', 412);
         }
@@ -328,6 +261,27 @@ class authentication
         if (empty($this->requestTokenTime)) {
             throw new \core\Exception('Attempt to access without a valid token', 412);
         }
+    }
+
+    protected function redirectToLogin()
+    {
+        \laabs::unsetToken("AUTH");
+        \laabs::unsetToken("ORGANIZATION");
+
+        \laabs::kernel()->response->code = 307;
+        \laabs::kernel()->response->setHeader('Location', '/user/prompt');
+        \laabs::kernel()->sendResponse();
+        \laabs::kernel()->end();
+
+        exit;
+    }
+
+     /**
+     * Retrieves the current user accout
+     */
+    private function getAccount()
+    {
+        $this->account = $this->sdoFactory->read('auth/account', $this->accountId, $lock = true);
     }
 
     /**
@@ -348,9 +302,6 @@ class authentication
      */
     private function updateAccount()
     {
-        $time = (string) \laabs::newTimestamp();
-        $this->accountAuth->auth = [];
-        $this->accountAuth->auth[$time] = $this->responseToken;
         $this->account->authentication = json_encode($this->accountAuth);
 
         $this->sdoFactory->update($this->account, "auth/account");
