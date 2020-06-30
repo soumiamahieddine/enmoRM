@@ -124,6 +124,9 @@ class Statistics
                 case 'transfered':
                     $statistics = $this->transferedStats($startDate, $endDate, $filter, $statistics);
                     break;
+                case 'communicated':
+                    $statistics = $this->communicatedStats($startDate, $endDate, $filter, $statistics);
+                    break;
             }
         }
 
@@ -152,6 +155,8 @@ class Statistics
             $statistics['transferedMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/outgoingTransfer'], $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/restitution'], $startDate, $endDate);
+            //$statistics['communicatedMemorySize'] = $this->getSizeByEventType([], $jsonColumnNumber = 6, $startDate, $endDate);
+            //$statistics['communicatedMemoryCount'] = $this->getCountByEventType($filter, [], $startDate, $endDate);
         }
 
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
@@ -298,6 +303,34 @@ class Statistics
     }
 
     /**
+     * Statistics aggregator for communicated event
+     *
+     * @param  datetime $startDate starting date
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
+    protected function communicatedStats($startDate, $endDate, $filter, $statistics = [])
+    {
+        switch ($filter) {
+            case 'archivalProfile':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 8;
+                break;
+            case 'originatingOrg':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 4;
+                break;
+        }
+
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, [], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, [], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+
+        return $statistics;
+    }
+
+    /**
      * Sum all event info for a particular event
      *
      * @param  array    $eventTypes       Array of event types
@@ -316,8 +349,11 @@ class Statistics
         $query = <<<EOT
 SELECT SUM (CAST(NULLIF("eventInfo"::json->>$jsonColumnNumber, '') AS INTEGER)) FROM "lifeCycle"."event" WHERE "eventType" IN ($in)
 EOT;
-
-        $sum = $this->executeQuery($query, $inParams, $eventTypes[0] == 'recordsManagement/deposit', $startDate, $endDate)[0]['sum'];
+        $result = $this->executeQuery($query, $inParams, $eventTypes[0] == 'recordsManagement/deposit', $startDate, $endDate);
+        $sum = 0;
+        if (isset($result[0]['sum'])) {
+            $sum = $result[0]['sum'];
+        }
 
         return $sum;
     }
@@ -644,6 +680,7 @@ EOT;
     protected function stringifyEventTypes($eventTypes)
     {
         $in = "";
+        $inParams = [];
         foreach ($eventTypes as $key => $eventType) {
             $k = ":eventType" . $key;
             $in .= "$k,";
