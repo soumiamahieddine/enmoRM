@@ -28,11 +28,6 @@ namespace presentation\maarchRM\Observer;
 class authentication
 {
     protected $sdoFactory;
-    protected $accountId;
-    protected $accountAuth;
-    protected $account;
-    protected $requestToken;
-    protected $requestTokenTime;
 
     /**
      * Construct the observer
@@ -132,12 +127,9 @@ class authentication
         }
 
         $accountToken = new \StdClass();
-        $accountToken->accountId = $this->accountId = $account->accountId;
-
-        $this->checkPersistenceToken();
-
+        $accountToken->accountId = $account->accountId;
         \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
-        $this->updateAccount();
+
         $organization = \laabs::getToken("ORGANIZATION");
 
         $userPositionController = \laabs::newController("organization/userPosition");
@@ -175,94 +167,6 @@ class authentication
         return $account;
     }
 
-    protected function checkPersistenceToken()
-    {
-        $this->getAccount();
-
-        $this->createSaveToken();
-
-        // Remove expired csrf tokens from security object
-        $this->discardExpiredTokens();
-
-        $this->checkRequestToken();
-    }
-
-    protected function createSaveToken()
-    {
-        // Decode authentication object from JSON
-        $this->accountAuth = json_decode($this->account->authentication);
-
-        // Create authentication object if not set
-        if (empty($this->accountAuth)) {
-            $this->accountAuth = new \stdClass();
-            $this->accountAuth->auth = [];
-
-            return;
-        }
-
-        if (isset($this->accountAuth) && !isset($this->accountAuth->auth)) {
-            $this->accountAuth->auth = [];
-
-            return;
-        }
-
-        // Create auth token list if not set
-        if (!is_object($this->accountAuth->auth)) {
-            $this->accountAuth->auth = [];
-
-            return;
-        }
-
-        // Convert object to array of timestamp => token
-        $this->accountAuth->auth = get_object_vars($this->accountAuth->auth);
-    }
-
-    /**
-     * Remove tokens which date is expired
-     */
-    private function discardExpiredTokens()
-    {
-        // Get lifetime from config, defaults 1h
-        $lifetime = '3600';
-        if (isset($this->config['lifetime'])) {
-            $lifetime = $this->config['lifetime'];
-        }
-        $duration = \laabs::newDuration('PT'.$lifetime.'S');
-
-        // Current timestamp
-        $now = \laabs::newTimestamp();
-
-        // Loop and discard expired tokens
-        foreach ($this->accountAuth->auth as $time => $token) {
-            $timestamp = \laabs::newTimestamp($time);
-            $expiration = $timestamp->add($duration);
-
-            if ($now->diff($expiration)->invert == 1) {
-                unset($this->accountAuth->auth[$time]);
-            }
-        }
-    }
-
-    /**
-     * Checks wthat a token has been sent with request
-     * and that it can be found on account auth object
-     *
-     * @throws Exception If no token or not found
-     */
-    private function checkRequestToken()
-    {
-        $this->requestToken = \laabs::getToken("auth", LAABS_IN_HEADER);
-        if (empty($this->requestToken)) {
-            throw new \core\Exception('Attempt to access without a valid token', 412);
-        }
-
-        $this->requestTokenTime = array_search($this->requestToken, $this->accountAuth->auth);
-
-        if (empty($this->requestTokenTime)) {
-            throw new \core\Exception('Attempt to access without a valid token', 412);
-        }
-    }
-
     protected function redirectToLogin()
     {
         \laabs::unsetToken("AUTH");
@@ -274,36 +178,5 @@ class authentication
         \laabs::kernel()->end();
 
         exit;
-    }
-
-     /**
-     * Retrieves the current user accout
-     */
-    private function getAccount()
-    {
-        $this->account = $this->sdoFactory->read('auth/account', $this->accountId, $lock = true);
-    }
-
-    /**
-     * Removes the used token AND the older tokens
-     * from auth object
-     */
-    private function discardUsedTokens()
-    {
-        foreach ($this->accountAuth->auth as $time => $token) {
-            if ($time <= $this->requestTokenTime) {
-                unset($this->accountAuth->auth[$time]);
-            }
-        }
-    }
-
-    /**
-     * Persists modifications on account auth object
-     */
-    private function updateAccount()
-    {
-        $this->account->authentication = json_encode($this->accountAuth);
-
-        $this->sdoFactory->update($this->account, "auth/account");
     }
 }
