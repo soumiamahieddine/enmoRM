@@ -60,7 +60,7 @@
                                             </button>
                                             <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
                                             <a href="#" class="lockUser btn btn-warning" style="display: [?merge .locked.then('none', '') ?]" data-accountid="[?merge .accountId ?]" title="Lock">
-                                                <span class="fa fa-fw fa-lock"></span>
+                                                <span class="fa fa-fw fa-lock"></span> 
                                             </a>
                                             <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
                                             <a href="#" class="unlockUser btn btn-warning" style="display: [?merge .locked.then('', 'none') ?]" data-accountid="[?merge .accountId ?]" title="Unlock">
@@ -118,7 +118,7 @@ $("#contain").on('click', '#activatedUsers', function() {
         window.location.replace("/userAccounts");
     }
 });
-
+    
 //add
 $("#user_newUser").on('click',  function() {
     load("/userAccount");
