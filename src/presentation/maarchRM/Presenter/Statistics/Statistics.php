@@ -181,7 +181,8 @@ class Statistics
             'deleted' => 'deletedGroupedMemory',
             'conserved' => 'groupedArchive',
             'restituted' => 'restitutedGroupedMemory',
-            'transfered' => 'transferedGroupedMemory'
+            'transfered' => 'transferedGroupedMemory',
+            'communicated' => 'communicatedGroupedMemory'
         ];
 
         $sizes = $this->rearrangeArray($statistics[$statisticsNames[$operation] . 'Size'], 'sum');
