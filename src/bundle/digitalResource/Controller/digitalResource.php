@@ -100,7 +100,7 @@ class digitalResource
         $resource->fileName = $pathinfo['filename'];
 
         if ($withDateTime) {
-            $resource->fileName .= "_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H:i:s");
+            $resource->fileName .= "_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H-i-s");
         }
 
         if (isset($pathinfo['extension'])) {
