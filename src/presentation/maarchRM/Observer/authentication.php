@@ -28,11 +28,7 @@ namespace presentation\maarchRM\Observer;
 class authentication
 {
     protected $sdoFactory;
-    protected $config;
-    protected $whiteList;
-
     protected $accountId;
-    protected $account;
     protected $accountAuth;
 
     /**
