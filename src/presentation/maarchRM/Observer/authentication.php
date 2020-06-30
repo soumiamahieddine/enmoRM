@@ -35,7 +35,6 @@ class authentication
     protected $accountAuth;
 
     protected $accountId;
-    protected $account;
     protected $accountAuth;
 
     /**
