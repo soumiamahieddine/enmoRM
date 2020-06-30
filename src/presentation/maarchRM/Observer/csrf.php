@@ -34,7 +34,7 @@ class csrf
     protected $accountId;
     protected $account;
     protected $accountAuth;
-
+    
     protected $requestToken;
     protected $requestTokenTime;
 
@@ -70,16 +70,16 @@ class csrf
         if (!$this->getAccountId()) {
             return;
         }
-
+        
         // Get account
         $this->getAccount();
 
         // Get auth object from json, init data structures if necessary
         $this->getAccountAuth();
-
+        
         // Remove expired csrf tokens from security object
         $this->discardExpiredTokens();
-
+        
         if (in_array($userCommand->method, ["create", "update", "delete"])) {
             $this->checkRequestToken();
         }
@@ -119,6 +119,7 @@ class csrf
             $this->discardUsedTokens();
         }
 
+        
         if (empty($this->accountAuth->csrf)) {
             // Generate a new one for next write operations
             $responseToken = $this->addToken();
@@ -129,7 +130,7 @@ class csrf
 
         // Save auth information to user account
         $this->updateAccount();
-
+            
         \laabs::setToken($this->config["cookieName"], $responseToken, null, false);
     }
 
@@ -181,7 +182,7 @@ class csrf
         // Create CSRF token list if not set
         if (!is_object($this->accountAuth->csrf)) {
             $this->accountAuth->csrf = [];
-
+            
             return;
         }
 
@@ -200,7 +201,7 @@ class csrf
             $lifetime = $this->config['lifetime'];
         }
         $duration = \laabs::newDuration('PT'.$lifetime.'S');
-
+        
         // Current timestamp
         $now = \laabs::newTimestamp();
 
