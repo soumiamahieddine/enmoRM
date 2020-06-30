@@ -371,7 +371,7 @@ class Statistics
         switch ($filter) {
             case 'archivalProfile':
                 $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 8;
+                $jsonOrderingColumnNumber = 7;
                 break;
             case 'originatingOrg':
                 $jsonSizeColumnNumber = 6;
@@ -379,8 +379,8 @@ class Statistics
                 break;
         }
 
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, [], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, [], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/delivery'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
 
         return $statistics;
     }
