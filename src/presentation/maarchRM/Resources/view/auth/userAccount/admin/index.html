@@ -109,8 +109,6 @@ $("#activatedUsers").change(function() {
     let value = $(this).prop('checked');
     if (value) {
         let param = encodeURIComponent("enabled=true");
-       // trouver une condition qui empeche la boucle infinie
-        //    console.log(window.location.pathname);
         if (window.location.pathname === '/userAccounts') {
             window.location.replace("/userAccounts?query="+param);
         }
