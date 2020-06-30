@@ -89,6 +89,8 @@
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script type="application/javascript">
 
+var isReady = false;
+
 $("#contain").ready(function() {
     var regex = new RegExp("[\\?&]query=([^&#]*)");
     var results = regex.exec(window.location.search);
@@ -97,9 +99,13 @@ $("#contain").ready(function() {
     if (query === 'enabled=true') { 
         $("#activatedUsers").bootstrapToggle('on');
     }
+    isReady = true;
 });
 
 $("#activatedUsers").change(function() {
+    if (!isReady) {
+        return false;
+    }
     let value = $(this).prop('checked');
     if (value) {
         let param = encodeURIComponent("enabled=true");
