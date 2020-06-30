@@ -155,8 +155,8 @@ class Statistics
             $statistics['transferedMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/outgoingTransfer'], $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/restitution'], $startDate, $endDate);
-            //$statistics['communicatedMemorySize'] = $this->getSizeByEventType([], $jsonColumnNumber = 6, $startDate, $endDate);
-            //$statistics['communicatedMemoryCount'] = $this->getCountByEventType($filter, [], $startDate, $endDate);
+            $statistics['communicatedMemorySize'] = $this->getSizeByEventType(['recordsManagement/delivery'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['communicatedMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/delivery'], $startDate, $endDate);
         }
 
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
@@ -316,7 +316,7 @@ class Statistics
         switch ($filter) {
             case 'archivalProfile':
                 $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 8;
+                $jsonOrderingColumnNumber = 7;
                 break;
             case 'originatingOrg':
                 $jsonSizeColumnNumber = 6;
@@ -324,8 +324,8 @@ class Statistics
                 break;
         }
 
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, [], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, [], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/delivery'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
 
         return $statistics;
     }
