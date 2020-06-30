@@ -96,7 +96,7 @@ $("#contain").ready(function() {
     var results = regex.exec(window.location.search);
     var query = (results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " ")));
 
-    if (query === 'enabled=true') { 
+    if (query === 'enabled=true') {
         $("#activatedUsers").bootstrapToggle('on');
     }
     isReady = true;
