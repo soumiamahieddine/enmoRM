@@ -358,6 +358,34 @@ class Statistics
     }
 
     /**
+     * Statistics aggregator for communicated event
+     *
+     * @param  datetime $startDate starting date
+     * @param  datetime $endDate   End date
+     * @param  string   $filter    Group by argument
+     *
+     * @return array               Associative of statistics
+     */
+    protected function communicatedStats($startDate, $endDate, $filter, $statistics = [])
+    {
+        switch ($filter) {
+            case 'archivalProfile':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 8;
+                break;
+            case 'originatingOrg':
+                $jsonSizeColumnNumber = 6;
+                $jsonOrderingColumnNumber = 4;
+                break;
+        }
+
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, [], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, [], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+
+        return $statistics;
+    }
+
+    /**
      * Sum all event info for a particular event
      *
      * @param  array    $messageType      The type of the message
