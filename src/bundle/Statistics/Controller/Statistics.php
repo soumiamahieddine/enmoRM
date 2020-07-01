@@ -359,7 +359,7 @@ class Statistics
                 break;
             case 'originatingOrg':
                 $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 4;
+                $jsonOrderingColumnNumber = 5;
                 break;
         }
 
@@ -496,11 +496,10 @@ class Statistics
             $endDate = (string) $endDate->format('Y-m-d 23:59:59');
         }
 
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
         $query .= 'SELECT COUNT(DISTINCT "archive_recursive"."archive_id")
             FROM include_parent_archives "archive_recursive"
-            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
-            ' WHERE "archive_recursive"."parent_id" IS NULL';
+            WHERE "archive_recursive"."parent_id" IS NULL';
 
         $count = $this->executeQuery($query, $inParams)[0]['count'];
         return $count;
