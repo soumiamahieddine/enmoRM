@@ -101,7 +101,7 @@ class Statistics
         $statistics = ["unit" => $this->sizeFilters[$sizeFilter]];
         if (is_null($operation) || empty($operation)) {
             $statistics = $this->defaultStats($startDate, $endDate, $filter, $statistics);
-        } elseif (!empty($operation) && !in_array($operation, ['deposit', 'deleted', 'conserved', 'restituted', 'transfered'])) {
+        } elseif (!empty($operation) && !in_array($operation, ['deposit', 'deleted', 'conserved', 'restituted', 'transfered', 'communicated'])) {
             throw new \core\Exception\BadRequestException($this->translator->getText("Operation type not supported"));
         } elseif (!empty($operation) && is_null($filter)) {
             throw new \core\Exception\BadRequestException($this->translator->getText("Filter cannot be null if operation is not"));
@@ -320,7 +320,7 @@ class Statistics
                 break;
             case 'originatingOrg':
                 $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 4;
+                $jsonOrderingColumnNumber = 5;
                 break;
         }
 
@@ -367,15 +367,24 @@ EOT;
      *
      * @return string               The query
      */
-    protected function getQueryArchiveRecursive($in = "", $startDate = null, $endDate = null)
+    protected function getQueryArchiveRecursive($in = "", $startDate = null, $endDate = null, $isArchivalProfile = null)
     {
-        $query = 'WITH RECURSIVE include_parent_archives(archive_id, parent_id) as (
-            SELECT "archive"."archiveId", "archive"."parentArchiveId"
+        $param = "";
+        $column = "";
+        if ($isArchivalProfile === true) {
+            $param = ", archival_profile";
+            $column = ', "archive"."archivalProfileReference"';
+        } else if ($isArchivalProfile === false) {
+            $param = ", org_id";
+            $column = ', "archive"."archiverOrgRegNumber"';
+        }
+        $query = 'WITH RECURSIVE include_parent_archives(archive_id, parent_id'.$param.') as (
+            SELECT "archive"."archiveId", "archive"."parentArchiveId"'.$column.'
             FROM "recordsManagement"."archive" "archive"
             INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId"
             WHERE "event"."eventType" IN ('.$in.') '.(!empty($startDate) ? "AND timestamp BETWEEN '$startDate'::timestamp AND '$endDate'::timestamp" : "").
             ' UNION ALL
-            SELECT "archive"."archiveId", "archive"."parentArchiveId"
+            SELECT "archive"."archiveId", "archive"."parentArchiveId"'.$column.'
             FROM "recordsManagement"."archive" "archive", include_parent_archives "archive_recursive"
             WHERE "archive"."archiveId" = "archive_recursive"."parent_id"
             )';
@@ -404,11 +413,10 @@ EOT;
             $endDate = (string) $endDate->format('Y-m-d 23:59:59');
         }
 
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
         $query .= 'SELECT COUNT(DISTINCT "archive_recursive"."archive_id")
             FROM include_parent_archives "archive_recursive"
-            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
-            ' WHERE "archive_recursive"."parent_id" IS NULL';
+            WHERE "archive_recursive"."parent_id" IS NULL';
 
         $count = $this->executeQuery($query, $inParams)[0]['count'];
         return $count;
@@ -440,13 +448,12 @@ EOT;
             $endDate = (string) $endDate->format('Y-m-d 23:59:59');
         }
 
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
         $query .= 'SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"').' AS '.$groupBy.', COUNT(DISTINCT "archive_recursive"."archive_id")
-            FROM include_parent_archives "archive_recursive"
-            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')'.
+            FROM include_parent_archives "archive_recursive"'.
             (!$isArchivalProfile
-                ? ' INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
-                : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder).
+                ? ' INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "archive_recursive"."org_id"'
+                : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_recursive"."archival_profile"').
             ' WHERE "archive_recursive"."parent_id" IS NULL
             GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
 
@@ -478,9 +485,9 @@ EOT;
             $endDate = (string) $endDate->format('Y-m-d 23:59:59');
         }
 
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate);
+        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
         $query .= ', get_children_size(archive_id, volume'.($isArchivalProfile ? ', archival_profile' : '').') AS (
-            SELECT DISTINCT "archive_recursive"."archive_id", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "event"."eventInfo"::json->>'.$jsonColumnNumberOrder : '').
+            SELECT DISTINCT "archive_recursive"."archive_id", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "archive_recursive"."archival_profile"' : '').
             ' FROM include_parent_archives "archive_recursive"
             LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')
             WHERE "archive_recursive"."parent_id" IS NULL
