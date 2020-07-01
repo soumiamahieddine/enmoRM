@@ -375,7 +375,7 @@ class Statistics
                 break;
             case 'originatingOrg':
                 $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 4;
+                $jsonOrderingColumnNumber = 5;
                 break;
         }
 
