@@ -65,7 +65,7 @@ class user
      *
      * @return string The html view string
      */
-    public function indexHtml($users, $offset = 0, $length = 10)
+    public function indexHtml($offset = 0, $length = 10)
     {
         $view = $this->view;
 
@@ -81,6 +81,37 @@ class user
         }
 
         $view->addContentFile("auth/userAccount/admin/index.html");
+        $view->translate();
+
+        $view->setSource('manageUserRights', $manageUserRights);
+
+        $view->merge();
+
+        return $view->saveHtml();
+    }
+
+    /**
+     * View for the users datatable
+     * @param boolean $showDisabled show disabled user accounts
+     *
+     * @return string The html view string
+     */
+    public function indexDatatable($users)
+    {
+        $view = $this->view;
+
+        $accountId = \laabs::getToken("AUTH")->accountId;
+        $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
+        $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
+
+        $securityLevel = $account->securityLevel;
+
+        $manageUserRights = true;
+        if ($hasSecurityLevel && $securityLevel == \bundle\auth\Model\account::SECLEVEL_USER) {
+            $manageUserRights = false;
+        }
+
+        $view->addContentFile("auth/userAccount/admin/datatable.html");
         $view->translate();
 
         $table = $view->getElementById("user_userList");
