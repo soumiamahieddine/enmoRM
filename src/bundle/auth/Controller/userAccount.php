@@ -253,10 +253,7 @@ class userAccount
             throw \laabs::newException("auth/invalidUserInformationException", $validationErrors);
         }
 
-        $encryptedPassword = $userAccount->password;
-        if ($this->passwordEncryption != null) {
-            $encryptedPassword = hash($this->passwordEncryption, $userAccount->password);
-        }
+        $encryptedPassword = password_hash($userAccount->password, PASSWORD_DEFAULT);
 
         $userAccount->password = $encryptedPassword;
         $userAccount->passwordChangeRequired = true;
@@ -467,12 +464,11 @@ class userAccount
      *
      * @return boolean The result of the request
      */
-    public function setPassword($userAccountId, $newPassword,$oldPassword)
+    public function setPassword($userAccountId, $newPassword, $oldPassword)
     {
         $userAccount = $this->sdoFactory->read("auth/account", $userAccountId);
-        $oldPasswordHash = hash($this->passwordEncryption, $oldPassword);
 
-        if ($userAccount->password != $oldPasswordHash) {
+        if (!password_verify($oldPassword, $userAccount->password) && hash($this->passwordEncryption, $oldPassword) != $userAccount->password) {
             throw new \core\Exception\UnauthorizedException("User password error.");
         }
 
@@ -488,10 +484,7 @@ class userAccount
         $userAuthenticationController = \laabs::newController("auth/userAuthentication");
         $userAuthenticationController->checkPasswordPolicies($newPassword);
 
-        $encryptedPassword = $newPassword;
-        if ($this->passwordEncryption != null) {
-            $encryptedPassword = hash($this->passwordEncryption, $newPassword);
-        }
+        $encryptedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
         $userAccount->password = $encryptedPassword;
         $userAccount->passwordLastChange = \laabs::newTimestamp();
