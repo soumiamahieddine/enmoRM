@@ -29,15 +29,16 @@
             <td><?merge statistics['transferedMemorySize'] ?></td>
             <td><?merge statistics['transferedMemoryCount'] ?></td>
         </tr>
-        <tr>
-            <td>Conservation</td>
-            <td><?merge statistics['currentMemorySize'] ?></td>
-            <td><?merge statistics['currentMemoryCount'] ?></td>
-        </tr>
+        <?merge isTransactionnal.bool() ?>
         <tr>
             <td>Communication</td>
             <td><?merge statistics['communicatedMemorySize'] ?></td>
             <td><?merge statistics['communicatedMemoryCount'] ?></td>
+        </tr>
+        <tr>
+            <td>Conservation</td>
+            <td><?merge statistics['currentMemorySize'] ?></td>
+            <td><?merge statistics['currentMemoryCount'] ?></td>
         </tr>
         <tr>
             <td>Evolution</td>
