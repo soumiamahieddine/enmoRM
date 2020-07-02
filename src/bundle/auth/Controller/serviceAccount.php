@@ -385,6 +385,17 @@ class serviceAccount
 
         $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
 
+        $accountToken = \laabs::getToken('AUTH');
+        $ownAccount = $this->read($accountToken->accountId);
+
+        if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+            throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+        }
+
+        if ($accountToken->accountId != $serviceAccountId) {
+            $this->checkPrivilegesAccess($ownAccount, $serviceAccount);
+        }
+
         $serviceAccount->salt = md5(microtime());
         $serviceAccount->tokenDate = $currentDate;
 
@@ -767,6 +778,10 @@ class serviceAccount
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
             if ($targetServiceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
+            }
+        } elseif ($securityLevel == $ownAccount::SECLEVEL_USER) {
+            if ($ownAccount != $targetServiceAccount) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
     }
