@@ -219,6 +219,7 @@ class userAccount
 
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+        // récupérer la liste des sous-orgs du compte actif
 
         if ($this->hasSecurityLevel) {
             $this->checkPrivilegesAccess($account, $userAccount);
@@ -251,6 +252,18 @@ class userAccount
             $validationErrors = \laabs::getValidationErrors();
             throw \laabs::newException("auth/invalidUserInformationException", $validationErrors);
         }
+
+        // TODO : Si niveau de sécurité activé et user à créer de type user (donc par admin f)
+        // boucler sur les orgIds (OU) de l'utilisateur à créer et vérifier
+        // qu'ils sont tous de l'org de l'admin f ou de ses sous-orgs
+        /*
+            if ($this->hasSecurityLevel && !$account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN) {
+                foreach ($organizations as $orgId) {
+                    $orgUnit = ... lire l'orgUnit
+                    if ($orgUnit->ownerOrgId != $) ... contrôle que l'orgUnit est bien de l'une des orgs del'admin f
+                }
+            }
+        */
 
         $encryptedPassword = $userAccount->password;
         if ($this->passwordEncryption != null) {
@@ -296,6 +309,12 @@ class userAccount
     public function edit($userAccountId)
     {
         $userAccountModel = $this->sdoFactory->read('auth/account', $userAccountId);
+
+        // Si niveau de sécurité
+        // isAuthorized()
+        // checkPrivilegeAccess()
+
+
         $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccountId'");
         $userAccount = \laabs::castMessage($userAccountModel, 'auth/userAccount');
 
@@ -413,6 +432,18 @@ class userAccount
             $userAccount->title = $user->title;
             $userAccount->emailAddress = $user->emailAddress;
         }
+
+        // TODO : Si niveau de sécurité activé et user à créer de type user (donc par admin f)
+        // boucler sur les orgIds (OU) de l'utilisateur à modifier et vérifier
+        // qu'ils sont tous de l'org de l'utilisateur existant
+        /*
+            foreach ($organizations as $orgId) {
+                $orgUnit = ... lire l'orgUnit
+                if (!empty($userAccount->ownerOrgId) && $orgUnit->ownerOrgId != $userAccount->ownerOrgId) {
+                    Exception
+                }
+            }
+        */
 
         if (!$userAccount->isAdmin) {
             if (isset($userAccount->modificationRight)) {
@@ -1104,6 +1135,9 @@ class userAccount
             if (!$targetUserAccount->organizations || $targetUserAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
+
+            // TODO : Vérifier que l'org du user à manipuler est bien l'org de l'admin func
+            // ou une de ses sous-orgs
         }
     }
 }

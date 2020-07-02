@@ -331,6 +331,10 @@ class organization
     {
         if ($organization->isOrgUnit) {
             $this->accountController->isAuthorized(['func_admin', 'user']);
+
+            // TO DO: si niveau de sécurité renformé
+            // vérifier que l'orgUnit à créer est bien dans l'une des orgs de l'admin F
+
         } else {
             $this->accountController->isAuthorized('gen_admin');
         }
