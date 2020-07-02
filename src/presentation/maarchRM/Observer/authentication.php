@@ -34,6 +34,17 @@ class authentication
     protected $accountId;
     protected $accountAuth;
 
+    protected $accountId;
+    protected $account;
+    protected $accountAuth;
+    protected $accountToken;
+
+    protected $requestToken;
+    protected $requestTokenTime;
+
+    protected $responseToken;
+    protected $responseTokenTime;
+
     /**
      * Construct the observer
      * @param object $sdoFactory The user model
