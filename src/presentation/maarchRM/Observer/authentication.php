@@ -249,15 +249,8 @@ class authentication
         }
 
 
-        // if (empty($this->accountAuth->auth)) {
-            // Generate a new one for next write operations
-            // $responseToken = $this->addToken();
-        // } else {
-            // Select the latest unused token
-            // $responseToken = $this->getLastToken();
-        // }
+        $this->responseToken = \laabs::setToken('AUTH', $this->accountToken, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], false);
 
-        \laabs::setToken('AUTH', $this->accountToken, null, false);
         // Save auth information to user account
         $this->updateAccount();
     }
@@ -317,43 +310,6 @@ class authentication
     }
 
     /**
-     * Adds a token to the current array of tokens
-     * @return string The generated token
-     */
-    private function addToken()
-    {
-        $tokenLength = 32;
-
-        if (!empty($this->config["cookieName"])) {
-            $tokenLength = $this->config["tokenLength"];
-        }
-
-        if (function_exists("openssl_random_pseudo_bytes")) {
-            $token = bin2hex(openssl_random_pseudo_bytes($this->accountToken));
-        } elseif (function_exists("random_bytes")) {
-            $token = bin2hex(random_bytes($this->accountToken));
-        } else {
-            $token = \laabs::newId();
-        }
-
-        $time = (string) \laabs::newTimestamp();
-        $this->accountAuth->auth = [];
-
-        return $this->accountAuth->auth[$time] = $token;
-    }
-
-    /**
-     * Returns the latest token on the auth crsf list
-     * @return string
-     */
-    private function getLastToken()
-    {
-        ksort($this->accountAuth->auth);
-
-        return end($this->accountAuth->auth);
-    }
-
-    /**
      * Checks wthat a token has been sent with request
      * and that it can be found on account auth object
      *
@@ -394,7 +350,7 @@ class authentication
     {
         $time = (string) \laabs::newTimestamp();
         $this->accountAuth->auth = [];
-        $this->accountAuth->auth[$time] = $_COOKIE['LAABS-AUTH'];
+        $this->accountAuth->auth[$time] = $this->responseToken;
         $this->account->authentication = json_encode($this->accountAuth);
 
         $this->sdoFactory->update($this->account, "auth/account");
