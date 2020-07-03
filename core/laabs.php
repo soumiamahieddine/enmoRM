@@ -979,7 +979,7 @@ class laabs
 
         $GLOBALS["TOKEN"][$name] = json_decode($jsonToken);
 
-        return true;
+        return $cookieToken;
     }
 
     /**
