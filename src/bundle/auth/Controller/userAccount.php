@@ -167,8 +167,7 @@ class userAccount
         } else {
             $query .= "accountType='user'";
         }
-        // var_dump($query);
-        // exit;
+
         $userAccounts = $this->sdoFactory->find('auth/account', $query);
 
         return $userAccounts;
@@ -269,12 +268,6 @@ class userAccount
             }
             if ($userAccount->ownerOrgId) {
             }
-
-    
-            var_dump($account);
-            exit();
-            /* $account-> */
-            /* if($userAccount->ownerOrgId) */
         }
 
         $encryptedPassword = $userAccount->password;
