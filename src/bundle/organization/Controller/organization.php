@@ -334,27 +334,17 @@ class organization
         if ($organization->isOrgUnit) {
             $this->accountController->isAuthorized(['func_admin', 'user']);
 
-            // TO DO: si niveau de sécurité renformé
-            // vérifier que l'orgUnit à créer est bien dans l'une des orgs de l'admin F
-            /* 
-            get user
-            get user orgs
-            compare
-             */
-
             $securityLevel = null;
             if ($this->hasSecurityLevel) {
                 $securityLevel = $user->getSecurityLevel();
             }
 
             if ($securityLevel == $user::SECLEVEL_FUNCADMIN) {
-
-                $userOrgUnitList = $this->readDescendantServices($user->ownerOrgId);
-                $userOrgUnitIds = array();
-                foreach($userOrgUnitList as $orgUnit){
-                    $userOrgUnitIds[] = (string) $orgUnit->orgId;
+                $userOrgIds = [$user->ownerOrgId];
+                foreach($this->readDescendantOrg($user->ownerOrgId) as $org){
+                    $userOrgIds[] = (string) $org->orgId;
                 }
-                if(!in_array($orgUnit->orgId, $userOrgUnitIds)){
+                if (!in_array($organization->ownerOrgId, $userOrgIds)){
                     throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
                 }
             }
@@ -371,6 +361,12 @@ class organization
                 }
             } else {
                 throw new \core\Exception("You're not allowed to create an organization");
+            }
+        } else {
+            try {
+                $this->read($organization->parentOrgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception("Organization identified by " . $organization->parentOrgId . " was not find");
             }
         }
 
