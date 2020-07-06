@@ -92,7 +92,18 @@ class serviceAccount
                     break;
 
                 case $account::SECLEVEL_FUNCADMIN:
-                    $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                    $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                    $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+                    $organizations[] = $organization;
+                    $organizationsIds = [];
+                    foreach ($organizations as $key => $organization) {
+                        $organizationsIds[] = (string) $organization->orgId;
+                    }
+
+                    $queryAssert[] = "((ownerOrgId= ['" .
+                        implode("', '", $organizationsIds) .
+                        "']) OR (isAdmin!=TRUE AND ownerOrgId=null))
+                        ";
                     break;
 
                 case $account::SECLEVEL_USER:
@@ -167,6 +178,9 @@ class serviceAccount
         $account = $this->read($accountToken->accountId);
 
         if ($this->hasSecurityLevel) {
+            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
@@ -191,12 +205,20 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
+        $organization = $organizationController->read($orgId);
+
+        if(!empty($serviceAccount->ownerOrgId) && $serviceAccount->ownerOrgId != $organization->ownerOrgId) {
+            throw new \core\Exception\UnauthorizedException("Organization unit identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
+        }
+
         if ($this->hasSecurityLevel) {
+            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to add user in this organization");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
-        if (!$orgId && !empty($orgId)) {
-            $organization = $organizationController->read($orgId);
+        if (!$serviceAccount->ownerOrgId && !empty($orgId)) {
             $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
 
@@ -384,6 +406,16 @@ class serviceAccount
         }
 
         $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
+
+        $accountToken = \laabs::getToken('AUTH');
+        $ownAccount = $this->read($accountToken->accountId);
+
+        if ($accountToken->accountId != $serviceAccountId && $this->hasSecurityLevel) {
+            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+            }
+            $this->checkPrivilegesAccess($ownAccount, $serviceAccount);
+        }
 
         $serviceAccount->salt = md5(microtime());
         $serviceAccount->tokenDate = $currentDate;
@@ -767,6 +799,10 @@ class serviceAccount
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
             if ($targetServiceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
+            }
+        } elseif ($securityLevel == $ownAccount::SECLEVEL_USER) {
+            if ($ownAccount != $targetServiceAccount) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
         }
     }
