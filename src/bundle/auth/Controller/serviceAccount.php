@@ -225,20 +225,6 @@ class serviceAccount
         try {
             $this->sdoFactory->create($serviceAccount, 'auth/account');
             $this->createServicePrivilege($servicesURI, $serviceAccount->accountId);
-
-            // TODO : Si niveau de sécurité activé et user à créer de type user (donc par admin f)
-            // prendre l'orgId (OU) de l'utilisateur à créer et vérifier
-            // qu'ils est de l'org de l'admin f ou de ses sous-orgs
-            /*
-                Récupérer le user en cours cf plus haut avec sa liste d'orgs (la sienne et enfants)
-                
-                if ($this->hasSecurityLevel && !$account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN) {
-                    $orgUnit = ... lire l'orgUnit
-                    if ($orgUnit->ownerOrgId != $) ... contrôle que l'orgUnit est bien de l'une des orgs del'admin f
-                }
-            */
-
-
             if (!$serviceAccount->isAdmin) {
                 $this->organizationController->addServicePosition($orgId, $serviceAccount->accountId);
             }
@@ -353,15 +339,6 @@ class serviceAccount
                 if ($orgId) {
                     $servicePosition = $this->servicePositionController->getPosition($serviceAccount->accountId);
 
-                    // TODO : Si niveau de sécurité activé et user à créer de type user (donc par admin f)
-                    // vérifier l'org du compte VS l'org du service de rattachement
-                    /*
-                        $orgUnit = ... lire l'orgUnit
-                        if (!empty($serviceAccount->ownerOrgId) && $orgUnit->ownerOrgId != $serviceAccount->ownerOrgId) {
-                            Exception
-                        }
-                    */
-
                     if (isset($servicePosition->organization)) {
                         $this->organizationController->deleteServicePosition($servicePosition->orgId, $serviceAccount->accountId);
                     }
@@ -412,12 +389,6 @@ class serviceAccount
         }
 
         $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
-
-        // TODO : récupérer le user en cours
-        // Cf enable et disable
-        // si securityLevel
-        // isAuthorized
-        // CheckAccess
 
         $serviceAccount->salt = md5(microtime());
         $serviceAccount->tokenDate = $currentDate;
@@ -802,9 +773,6 @@ class serviceAccount
             if ($targetServiceAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
             }
-
-            // TODO : Vérifier que l'org du user à manipuler est bien l'org de l'admin func
-            // ou une de ses sous-orgs
         }
     }
 }

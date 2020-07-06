@@ -219,11 +219,6 @@ class userAccount
 
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
-        // récupérer la liste des sous-orgs du compte actif
-
-        if ($this->hasSecurityLevel) {
-            $this->checkPrivilegesAccess($account, $userAccount);
-        }
 
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
@@ -253,17 +248,34 @@ class userAccount
             throw \laabs::newException("auth/invalidUserInformationException", $validationErrors);
         }
 
-        // TODO : Si niveau de sécurité activé et user à créer de type user (donc par admin f)
-        // boucler sur les orgIds (OU) de l'utilisateur à créer et vérifier
-        // qu'ils sont tous de l'org de l'admin f ou de ses sous-orgs
-        /*
-            if ($this->hasSecurityLevel && !$account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN) {
-                foreach ($organizations as $orgId) {
-                    $orgUnit = ... lire l'orgUnit
-                    if ($orgUnit->ownerOrgId != $) ... contrôle que l'orgUnit est bien de l'une des orgs del'admin f
-                }
+        $securityLevel = $account->getSecurityLevel();
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-        */
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            
+            if (!$organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+
+            if($account->ownerOrgId)
+            $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+            $organizations = $organizationController->readDescendantOrg($organization->orgId);
+            $organizations[] = $organization;
+            $organizationsIds = [];
+            foreach ($organizations as $key => $organization) {
+                $organizationsIds[] = (string) $organization->orgId;
+            }
+            if ($userAccount->ownerOrgId) {
+            }
+
+    
+            var_dump($account);
+            exit();
+            /* $account-> */
+            /* if($userAccount->ownerOrgId) */
+        }
 
         $encryptedPassword = $userAccount->password;
         if ($this->passwordEncryption != null) {
@@ -419,6 +431,9 @@ class userAccount
             throw \laabs::newException("auth/unknownUserException");
         }
 
+        $accountToken = \laabs::getToken('AUTH');
+        $currentUserAccount = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
         $allowUserModification = true;
         if (isset(\laabs::configuration('auth')['allowUserModification'])) {
             $allowUserModification = (bool) \laabs::configuration('auth')['allowUserModification'];
@@ -433,18 +448,11 @@ class userAccount
             $userAccount->emailAddress = $user->emailAddress;
         }
 
-        // TODO : Si niveau de sécurité activé et user à créer de type user (donc par admin f)
-        // boucler sur les orgIds (OU) de l'utilisateur à modifier et vérifier
-        // qu'ils sont tous de l'org de l'utilisateur existant
-        /*
-            foreach ($organizations as $orgId) {
-                $orgUnit = ... lire l'orgUnit
-                if (!empty($userAccount->ownerOrgId) && $orgUnit->ownerOrgId != $userAccount->ownerOrgId) {
-                    Exception
-                }
-            }
-        */
-
+        
+        if ($this->hasSecurityLevel && $currentUserAccount->getSecurityLevel() == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
+            $this->checkPrivilegesAccess($currentUserAccount, $userAccount);
+        }
+        
         if (!$userAccount->isAdmin) {
             if (isset($userAccount->modificationRight)) {
                 if ($userAccount->organizations == null) {
@@ -1135,9 +1143,15 @@ class userAccount
             if (!$targetUserAccount->organizations || $targetUserAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
             }
-
-            // TODO : Vérifier que l'org du user à manipuler est bien l'org de l'admin func
-            // ou une de ses sous-orgs
+            
+            if (array_search($targetUserAccount->accountName, array_column($this->userList(), 'accountName')) === false) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this user account");
+            }
+            if ($securityLevel == $ownAccount::SECLEVEL_USER) {
+                if ($ownAccount != $targetServiceAccount) {
+                    throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                }
+            }
         }
     }
 }
