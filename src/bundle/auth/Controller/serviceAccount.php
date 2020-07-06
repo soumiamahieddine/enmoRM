@@ -92,8 +92,6 @@ class serviceAccount
                     break;
 
                 case $account::SECLEVEL_FUNCADMIN:
-                    // TODO : requête sur les sous-orgs du user en cours, cf userAccount::search()
-                    $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
                     break;
 
                 case $account::SECLEVEL_USER:
