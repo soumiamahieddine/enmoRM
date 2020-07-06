@@ -205,20 +205,21 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
-        $organization = $organizationController->read($orgId);
-
-        if(!empty($serviceAccount->ownerOrgId) && $serviceAccount->ownerOrgId != $organization->ownerOrgId) {
-            throw new \core\Exception\UnauthorizedException("Organization unit identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
+        if (isset($orgId) && !empty($orgId)) {
+            $organization = $organizationController->read($orgId);
         }
 
         if ($this->hasSecurityLevel) {
-            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
+            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization->orgName, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
                 throw new \core\Exception\UnauthorizedException("You are not allowed to add user in this organization");
             }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
         if (!$serviceAccount->ownerOrgId && !empty($orgId)) {
+            if(!empty($serviceAccount->ownerOrgId) && $serviceAccount->ownerOrgId != $organization->ownerOrgId) {
+                throw new \core\Exception\UnauthorizedException("Organization unit identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
+            }
             $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
 
@@ -272,9 +273,6 @@ class serviceAccount
      */
     public function edit($serviceAccountId)
     {
-        // Si niveau de sécurité
-        // isAuthorized()
-        // checkPrivilegeAccess()
 
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
         $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
@@ -329,7 +327,11 @@ class serviceAccount
         $organizationController = \laabs::newController("organization/organization");
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
-        if ($this->hasSecurityLevel) {
+
+        if ($account->accountId != $serviceAccount->accountId && $this->hasSecurityLevel) {
+            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
