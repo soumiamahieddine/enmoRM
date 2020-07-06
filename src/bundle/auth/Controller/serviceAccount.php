@@ -205,12 +205,20 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
+        $organization = $organizationController->read($orgId);
+
+        if(!empty($serviceAccount->ownerOrgId) && $serviceAccount->ownerOrgId != $organization->ownerOrgId) {
+            throw new \core\Exception\UnauthorizedException("Organization unit identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
+        }
+
         if ($this->hasSecurityLevel) {
+            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to add user in this organization");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
-        if (!$orgId && !empty($orgId)) {
-            $organization = $organizationController->read($orgId);
+        if (!$serviceAccount->ownerOrgId && !empty($orgId)) {
             $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
 
