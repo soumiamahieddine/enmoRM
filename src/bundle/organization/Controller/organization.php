@@ -329,17 +329,40 @@ class organization
      */
     public function create($organization)
     {
+        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
+
         if ($organization->isOrgUnit) {
             $this->accountController->isAuthorized(['func_admin', 'user']);
 
             // TO DO: si niveau de sécurité renformé
             // vérifier que l'orgUnit à créer est bien dans l'une des orgs de l'admin F
+            /* 
+            get user
+            get user orgs
+            compare
+             */
+
+            $securityLevel = null;
+            if ($this->hasSecurityLevel) {
+                $securityLevel = $user->getSecurityLevel();
+            }
+
+            if ($securityLevel == $user::SECLEVEL_FUNCADMIN) {
+
+                $userOrgUnitList = $this->readDescendantServices($user->ownerOrgId);
+                $userOrgUnitIds = array();
+                foreach($userOrgUnitList as $orgUnit){
+                    $userOrgUnitIds[] = (string) $orgUnit->orgId;
+                }
+                if(!in_array($orgUnit->orgId, $userOrgUnitIds)){
+                    throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                }
+            }
 
         } else {
             $this->accountController->isAuthorized('gen_admin');
         }
 
-        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
 
         if (!$organization->parentOrgId && !in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             if (\laabs::getToken("ORGANIZATION")) {

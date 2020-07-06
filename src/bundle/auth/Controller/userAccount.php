@@ -167,7 +167,8 @@ class userAccount
         } else {
             $query .= "accountType='user'";
         }
-
+        // var_dump($query);
+        // exit;
         $userAccounts = $this->sdoFactory->find('auth/account', $query);
 
         return $userAccounts;
@@ -256,17 +257,6 @@ class userAccount
             
             if (!$organizations || $userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
-            }
-
-            if($account->ownerOrgId)
-            $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
-            $organizations = $organizationController->readDescendantOrg($organization->orgId);
-            $organizations[] = $organization;
-            $organizationsIds = [];
-            foreach ($organizations as $key => $organization) {
-                $organizationsIds[] = (string) $organization->orgId;
-            }
-            if ($userAccount->ownerOrgId) {
             }
         }
 
