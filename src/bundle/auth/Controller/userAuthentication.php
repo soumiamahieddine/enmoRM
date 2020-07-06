@@ -234,6 +234,13 @@ class userAuthentication
      */
     public function logout()
     {
+        $userAccount = $this->sdoFactory->read('auth/account', \laabs::getToken('AUTH'));
+        $authentication = json_decode($userAccount->authentication);
+        $authentication->auth = [];
+        $userAccount->authentication = json_encode($authentication);
+
+        $this->sdoFactory->update($userAccount, "auth/account");
+
         \laabs::unsetToken("AUTH");
         \laabs::unsetToken("ORGANIZATION");
     }
