@@ -272,6 +272,10 @@ class serviceAccount
      */
     public function edit($serviceAccountId)
     {
+        // Si niveau de sécurité
+        // isAuthorized()
+        // checkPrivilegeAccess()
+
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
         $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
