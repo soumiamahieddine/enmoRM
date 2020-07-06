@@ -167,8 +167,6 @@ class userAccount
         } else {
             $query .= "accountType='user'";
         }
-        // var_dump($query);
-        // exit;
         $userAccounts = $this->sdoFactory->find('auth/account', $query);
 
         return $userAccounts;
@@ -248,7 +246,10 @@ class userAccount
             throw \laabs::newException("auth/invalidUserInformationException", $validationErrors);
         }
 
-        $securityLevel = $account->getSecurityLevel();
+        $securityLevel = NULL;
+        if ($this->hasSecurityLevel) {
+            $securityLevel = $account->getSecurityLevel();
+        }
         if ($securityLevel == $account::SECLEVEL_GENADMIN) {
             if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
@@ -304,11 +305,6 @@ class userAccount
     public function edit($userAccountId)
     {
         $userAccountModel = $this->sdoFactory->read('auth/account', $userAccountId);
-
-        // Si niveau de sécurité
-        // isAuthorized()
-        // checkPrivilegeAccess()
-
 
         $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccountId'");
         $userAccount = \laabs::castMessage($userAccountModel, 'auth/userAccount');
