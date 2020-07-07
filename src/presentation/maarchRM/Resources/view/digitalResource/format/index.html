@@ -246,7 +246,7 @@ file that was distributed with this source code.
                     contents  : file.contents,
                     extension : file.extension
             },*/
-            data : JSON.stringify({contents  : file.contents, extension : file.extension}),
+            data : JSON.stringify({'contents'  : file.contents, 'extension' : file.extension}),
             contentType : 'application/json',
             dataType    : 'json',
             success     : function (response) {
