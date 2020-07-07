@@ -28,6 +28,19 @@ namespace presentation\maarchRM\Observer;
 class authentication
 {
     protected $sdoFactory;
+    protected $config;
+    protected $whiteList;
+
+    protected $accountId;
+    protected $account;
+    protected $accountAuth;
+    protected $accountToken;
+
+    protected $requestToken;
+    protected $requestTokenTime;
+
+    protected $responseToken;
+    protected $responseTokenTime;
 
     /**
      * Construct the observer
@@ -36,6 +49,8 @@ class authentication
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->config = \laabs::configuration("auth")["csrfConfig"];
+        $this->whiteList = ['user/prompt'];
     }
 
     /**
@@ -114,7 +129,7 @@ class authentication
         }
 
         // Read user account information
-        $account = $this->sdoFactory->read('auth/account', $accountToken);
+        $account = $this->account = $this->sdoFactory->read('auth/account', $accountToken);
 
         // Reset auth token to update expiration
         $authConfig = \laabs::configuration("auth");
@@ -126,7 +141,9 @@ class authentication
 
         $accountToken = new \StdClass();
         $accountToken->accountId = $account->accountId;
-        \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
+        // \laabs::setToken('AUTH', $accountToken, $sessionTimeout);
+        $this->accountToken = $accountToken;
+        $this->persistenceCookie($this->accountToken, $account);
 
         $organization = \laabs::getToken("ORGANIZATION");
 
@@ -176,5 +193,158 @@ class authentication
         \laabs::kernel()->end();
 
         exit;
+    }
+
+    /******************** Persistence cookie part ********************/
+
+    protected function persistenceCookie()
+    {
+        // Do not process base uri or whitelisted URIs
+        if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
+            return;
+        }
+
+        // Do not process if no user account to retrieve or store csrf tokens
+        if (!$this->account) {
+            return;
+        }
+
+        // Get auth object from json, init data structures if necessary
+        $this->getAccountAuth();
+
+        // Remove expired csrf tokens from security object
+        $this->discardExpiredTokens();
+
+        $this->checkRequestToken();
+        // Save auth information to user account
+        $this->updateAccount();
+
+        return true;
+    }
+
+    /**
+     * Observer for the CSRF protection
+     * @param \core\Response\HttpResponse
+     *
+     * @subject LAABS_RESPONSE
+     */
+    public function setResponseToken(&$response)
+    {
+        // Do not process if no account was loaded
+        if (empty($this->account)) {
+            return;
+        }
+
+        // Get auth object from json, init data structures if necessary
+        $this->getAccountAuth();
+
+        // If a token was received, discard it and all the previous tokens
+        if (isset($this->requestTokenTime)) {
+            $this->discardUsedTokens();
+        }
+
+        $this->responseToken = \laabs::setToken('AUTH', $this->accountToken, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], false);
+
+        // Save auth information to user account
+        $this->updateAccount();
+    }
+
+    /**
+     * Retrieves the current account auth object
+     * containing the auth tokens
+     */
+    private function getAccountAuth()
+    {
+        // Decode authentication object from JSON
+        $this->accountAuth = json_decode($this->account->authentication);
+
+        // Create authentication object if not set
+        if (empty($this->accountAuth)) {
+            $this->accountAuth = new \stdClass();
+            $this->accountAuth->auth = [];
+            return;
+        }
+
+        // Create CSRF token list if not set
+        if (!is_object($this->accountAuth->auth)) {
+            $this->accountAuth->auth = [];
+            return;
+        }
+
+        // Convert object to array of timestamp => token
+        $this->accountAuth->auth = get_object_vars($this->accountAuth->auth);
+    }
+
+    /**
+     * Remove tokens which date is expired
+     */
+    private function discardExpiredTokens()
+    {
+        // Get lifetime from config, defaults 1h
+        $lifetime = '3600';
+        if (isset($this->config['lifetime'])) {
+            $lifetime = $this->config['lifetime'];
+        }
+        $duration = \laabs::newDuration('PT'.$lifetime.'S');
+
+        // Current timestamp
+        $now = \laabs::newTimestamp();
+
+        // Loop and discard expired tokens
+        foreach ($this->accountAuth->auth as $time => $token) {
+            $timestamp = \laabs::newTimestamp($time);
+            $expiration = $timestamp->add($duration);
+
+            if ($now->diff($expiration)->invert == 1) {
+                unset($this->accountAuth->auth[$time]);
+            }
+        }
+    }
+
+    /**
+     * Checks wthat a token has been sent with request
+     * and that it can be found on account auth object
+     *
+     * @throws Exception If no token or not found
+     */
+    private function checkRequestToken()
+    {
+        $this->requestToken = $_COOKIE['LAABS-AUTH'];
+
+        if (empty($this->requestToken)) {
+            throw new \core\Exception('Attempt to access without a valid token', 412);
+        }
+
+        $this->requestTokenTime = array_search($this->requestToken, $this->accountAuth->auth);
+
+        if (empty($this->requestTokenTime)) {
+            throw new \core\Exception('Attempt to access without a valid token', 412);
+        }
+    }
+
+    /**
+     * Removes the used token AND the older tokens
+     * from auth object
+     */
+    private function discardUsedTokens()
+    {
+        foreach ($this->accountAuth->auth as $time => $token) {
+            if ($time <= $this->requestTokenTime) {
+                unset($this->accountAuth->auth[$time]);
+            }
+        }
+    }
+
+    /**
+     * Persists modifications on account auth object
+     */
+    private function updateAccount()
+    {
+        $time = (string) \laabs::newTimestamp();
+        $this->accountAuth->auth = [];
+        $this->accountAuth->auth[$time] = $this->responseToken;
+        $this->account->authentication = json_encode($this->accountAuth);
+
+        $this->sdoFactory->update($this->account, "auth/account");
     }
 }
