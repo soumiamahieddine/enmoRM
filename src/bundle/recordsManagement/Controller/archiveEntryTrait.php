@@ -88,37 +88,50 @@ trait archiveEntryTrait
         $archive->depositDate = \laabs::newTimestamp();
 
         if ($zipContainer) {
+            $zipResource = $archive->digitalResources[0];
             $archive = $this->processZipContainer($archive);
         } else {
             $this->receiveAttachments($archive);
         }
 
-        // Verify if deposit archive has proper hash
-        $this->checkintegrity($archive);
+        try {
+            // Verify if deposit archive has proper hash
+            $this->checkintegrity($archive);
 
-        // Load archival profile, service level if specified
-        // Instantiate description controller
-        $this->useReferences($archive, 'deposit');
+            // Load archival profile, service level if specified
+            // Instantiate description controller
+            $this->useReferences($archive, 'deposit');
 
-        // Complete management metadata from profile and service level
-        $this->completeMetadata($archive);
+            // Complete management metadata from profile and service level
+            $this->completeMetadata($archive);
 
-        $this->useReferences($archive, 'deposit');
+            $this->useReferences($archive, 'deposit');
 
-        // Validate archive metadata and resources
-        $this->validateCompliance($archive);
+            // Validate archive metadata and resources
+            $this->validateCompliance($archive);
 
-        // Check format conversion
-        $this->convertArchive($archive);
+            // Check format conversion
+            $this->convertArchive($archive);
 
-        // Generate PDI + package
-        $this->generateAIP($archive);
+            // Generate PDI + package
+            $this->generateAIP($archive);
 
-        // Deposit
-        $this->deposit($archive);
+            // Deposit
+            $this->deposit($archive);
 
-        // Send certificate
-        $this->sendResponse($archive);
+            // Send certificate
+            $this->sendResponse($archive);
+        } catch (\Exception $exception) {
+            if ($zipContainer) {
+                $this->deleteZipContainer($archive, $zipResource);
+            }
+
+            throw $exception;
+        }
+
+        if ($zipContainer) {
+            $this->deleteZipContainer($archive, $zipResource);
+        }
 
         return $archive->archiveId;
     }
@@ -167,21 +180,39 @@ trait archiveEntryTrait
      */
     public function processZipContainer($archive)
     {
-        $zip = $archive->digitalResources[0];
+        $zipResource = $archive->digitalResources[0];
 
-        $zipDirectory = $this->extractZip($zip);
+        $zipDirectory = $this->extractZip($zipResource);
+        $zipResource->tmpdir = $zipDirectory;
 
         $archive->digitalResources = [];
-        $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
-        $directory = $zipDirectory.DIRECTORY_SEPARATOR.reset($cleanZipDirectory);
+        $cleanZipDirectory = array_diff(scandir($zipDirectory.DIRECTORY_SEPARATOR.'contents'), array('..', '.'));
+        // Root must be a directory
+        $archiveDirectory = realpath($zipDirectory.DIRECTORY_SEPARATOR.'contents'.DIRECTORY_SEPARATOR.reset($cleanZipDirectory));
+        if (!is_dir($archiveDirectory)) {
+            $this->deleteZipContainer($archive, $zipResource);
 
-        if (!is_dir($directory)) {
             throw new \core\Exception("The container file is non-compliant");
         }
 
-        $this->extractDir($directory, $archive);
+        try {
+            $this->extractDir($archiveDirectory, $archive);
+        } catch (\Exception $exception) {
+            $this->deleteZipContainer($archive, $zipResource);
+            
+            throw $exception;
+        }
 
         return $archive;
+    }
+
+    protected function deleteZipContainer($archive, $zipResource)
+    {
+        unset($archive->contents);
+        unset($archive->digitalResources);
+
+        gc_collect_cycles();
+        \laabs\rmdir($zipResource->tmpdir, true);
     }
 
     /**
@@ -193,26 +224,23 @@ trait archiveEntryTrait
      */
     private function extractZip($zip)
     {
-        $packageDir = \laabs\tempdir().DIRECTORY_SEPARATOR."MaarchRM".DIRECTORY_SEPARATOR;
+        $packageDir = \laabs\tempdir();
 
         if (!is_dir($packageDir)) {
             mkdir($packageDir, 0777, true);
         }
 
-        $name = \laabs::newId();
-        $zipfile = $packageDir.$name.".zip";
-
-        if (!is_dir($packageDir.$name)) {
-            mkdir($packageDir.$name, 0777, true);
+        $zipfile = $packageDir.DIRECTORY_SEPARATOR."container.zip";
+        $zipdir = $packageDir.DIRECTORY_SEPARATOR."contents";
+        if (!is_dir($zipdir)) {
+            mkdir($zipdir, 0777, true);
         }
 
         file_put_contents($zipfile, base64_decode($zip->getContents()));
 
-        $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
+        $this->zip->extract($zipfile, $zipdir, false, null, "x");
 
-        unset($zipfile);
-
-        return $packageDir.$name;
+        return $packageDir;
     }
 
     /**
