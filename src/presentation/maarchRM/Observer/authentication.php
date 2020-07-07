@@ -230,11 +230,6 @@ class authentication
      */
     public function setResponseToken(&$response)
     {
-        // // Do not process base uri or whitelisted URIs
-        // if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
-        //     return;
-        // }
-
         // Do not process if no account was loaded
         if (empty($this->account)) {
             return;
@@ -247,7 +242,6 @@ class authentication
         if (isset($this->requestTokenTime)) {
             $this->discardUsedTokens();
         }
-
 
         $this->responseToken = \laabs::setToken('AUTH', $this->accountToken, \laabs::configuration("auth")['securityPolicy']['sessionTimeout'], false);
 
@@ -268,14 +262,12 @@ class authentication
         if (empty($this->accountAuth)) {
             $this->accountAuth = new \stdClass();
             $this->accountAuth->auth = [];
-
             return;
         }
 
         // Create CSRF token list if not set
         if (!is_object($this->accountAuth->auth)) {
             $this->accountAuth->auth = [];
-
             return;
         }
 
