@@ -48,8 +48,6 @@ interface formatInterface
 
     /**
      * Get the list of type
-     * @param string $contents
-     * @param string $extension
      * @action digitalResource/format/getFileInformation
      */
     public function createFileformatinformation($contents, $extension);
