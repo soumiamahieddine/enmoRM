@@ -363,10 +363,12 @@ class organization
                 throw new \core\Exception("You're not allowed to create an organization");
             }
         } else {
-            try {
-                $this->read($organization->parentOrgId);
-            } catch (\Exception $e) {
-                throw new \core\Exception("Organization identified by " . $organization->parentOrgId . " was not find");
+            if ($organization->parentOrgId) {
+                try {
+                    $this->read($organization->parentOrgId);
+                } catch (\Exception $e) {
+                    throw new \core\Exception("Organization identified by " . $organization->parentOrgId . " was not find");
+                }
             }
         }
 
