@@ -183,13 +183,20 @@ class format
 
     /**
      * Get all information about the content file (puid, md5/sha256/sha512 hash)
-     * @param string $contents The content file
      *
      * @return digitalResource/fileInformation The file information object
      */
     public function getFileInformation($contents)
     {
-        $contents = base64_decode($contents);
+        if (is_resource($contents)) {
+            $contents = base64_decode(stream_get_contents($contents));
+        } elseif (filter_var($contents, FILTER_VALIDATE_URL)) {
+            $contents = stream_get_contents($contents);
+        } elseif (preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $contents)) {
+            $contents = base64_decode($contents);
+        } elseif (is_file($contents)) {
+            $contents = file_get_contents($contents);
+        }
 
         $filename = tempnam(sys_get_temp_dir(), 'digitalResource.format.');
         file_put_contents($filename, $contents);
