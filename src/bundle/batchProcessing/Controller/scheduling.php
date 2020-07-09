@@ -238,7 +238,7 @@ class scheduling
         foreach ($schedulings as $scheduling) {
             $executedTask = null;
 
-            if ($scheduling->status != "scheduled") {
+            if ($scheduling->status == "paused") {
                 continue;
             }
 
