@@ -203,7 +203,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
         $queryString = \laabs\implode(' and ', $queryParts);
 
-        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams);
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams, false, false, \laabs::configuration('presentation.maarchRM')['maxResults']);
 
         foreach ($archiveUnits as $archiveUnit) {
             if (!empty($archiveUnit->description)) {
