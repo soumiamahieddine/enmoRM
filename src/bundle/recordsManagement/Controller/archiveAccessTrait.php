@@ -29,30 +29,31 @@ trait archiveAccessTrait
 {
     /**
      * Search archives by profile / dates / agreement
-     * @param string $archiveId
-     * @param string $profileReference
-     * @param string $status
-     * @param string $archiveName
-     * @param string $agreementReference
-     * @param string $archiveExpired
-     * @param string $finalDisposition
-     * @param string $originatorOrgRegNumber
-     * @param string $originatorOwnerOrgId
-     * @param string $originatorArchiveId
-     * @param array  $originatingDate
-     * @param string $filePlanPosition
-     * @param bool   $hasParent
-     * @param string $description
-     * @param string $text
-     * @param bool   $partialRetentionRule
-     * @param string $retentionRuleCode
-     * @param string $depositStartDate
-     * @param string $depositEndDate
-     * @param string $originatingStartDate
-     * @param string $originatingEndDate
-     * @param string $archiverArchiveId
-     * @param string $processingStatus
-     * @param bool   $checkAccess
+     * @param string  $archiveId
+     * @param string  $profileReference
+     * @param string  $status
+     * @param string  $archiveName
+     * @param string  $agreementReference
+     * @param string  $archiveExpired
+     * @param string  $finalDisposition
+     * @param string  $originatorOrgRegNumber
+     * @param string  $originatorOwnerOrgId
+     * @param string  $originatorArchiveId
+     * @param array   $originatingDate
+     * @param string  $filePlanPosition
+     * @param bool    $hasParent
+     * @param string  $description
+     * @param string  $text
+     * @param bool    $partialRetentionRule
+     * @param string  $retentionRuleCode
+     * @param string  $depositStartDate
+     * @param string  $depositEndDate
+     * @param string  $originatingStartDate
+     * @param string  $originatingEndDate
+     * @param string  $archiverArchiveId
+     * @param string  $processingStatus
+     * @param bool    $checkAccess
+     * @param integer $maxResults
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -80,7 +81,8 @@ trait archiveAccessTrait
         $originatingEndDate = null,
         $archiverArchiveId = null,
         $processingStatus = null,
-        $checkAccess = true
+        $checkAccess = true,
+        $maxResults = null
     ) {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
@@ -134,7 +136,7 @@ trait archiveAccessTrait
             }
         }
         foreach ($searchClasses as $descriptionClass => $descriptionController) {
-            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs, $checkAccess));
+            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs, $checkAccess, $maxResults));
         }
 
         return $archives;

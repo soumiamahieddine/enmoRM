@@ -1106,3 +1106,9 @@ msgstr "* Au moins un champ doit être renseigné."
 
 msgid "Export to "
 msgstr "Exporter en "
+
+msgid "Your query returns too much results, only first"
+msgstr "Votre recherche a retourné trop de résultats, seulement les"
+
+msgid "results are displayed"
+msgstr "premiers sont affichés"

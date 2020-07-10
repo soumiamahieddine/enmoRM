@@ -120,20 +120,21 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
             return json_decode($descriptionObject->description);
         } catch (\Exception $e) {
-            
+
         }
     }
 
     /**
      * Search the description objects
-     * @param string $description The search args on description object
-     * @param string $text        The search args on text
-     * @param array  $archiveArgs The search args on archive std properties
-     * @param bool   $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param string  $description The search args on description object
+     * @param string  $text        The search args on text
+     * @param array   $archiveArgs The search args on archive std properties
+     * @param bool    $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param integer $maxResults  Max results to display
      *
      * @return array The result of the research
      */
-    public function search($description = null, $text = null, array $archiveArgs = [], $checkAccess = true)
+    public function search($description = null, $text = null, array $archiveArgs = [], $checkAccess = true, $maxResults = null)
     {
         $queryParams = [];
         $queryParts = ['(description!=null and text!=null)'];
@@ -203,7 +204,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
         $queryString = \laabs\implode(' and ', $queryParts);
 
-        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams, false, false, \laabs::configuration('presentation.maarchRM')['maxResults']);
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams, false, false, $maxResults);
 
         foreach ($archiveUnits as $archiveUnit) {
             if (!empty($archiveUnit->description)) {

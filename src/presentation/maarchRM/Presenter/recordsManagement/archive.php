@@ -94,6 +94,9 @@ class archive
             $deleteDescription = (bool) \laabs::configuration("recordsManagement")['deleteDescription'];
         }
 
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+
+        $this->view->setSource("maxResults", $maxResults);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
@@ -198,6 +201,12 @@ class archive
             }
         }
 
+        $hasReachMaxResults = false;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && count($archives) >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+            $hasReachMaxResults = true;
+        }
+
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
@@ -233,6 +242,8 @@ class archive
 
         $this->readPrivilegesOnArchives();
 
+        $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
+        $this->view->setSource('maxResults', \laabs::configuration('presentation.maarchRM')['maxResults']);
         $this->view->setSource("accessRules", $accessRules);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);

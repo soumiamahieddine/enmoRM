@@ -138,15 +138,14 @@ class log implements archiveDescriptionInterface
      *
      * @return object Array of description objects
      */
-    public function search($description = null, $text = null, array $args = [])
+    public function search($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
     {
         $archiveController = \laabs::newController('recordsManagement/archive');
         $archives = [];
 
         $sortBy = ">fromDate";
-        $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $numberOfResult);
+        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $maxResults);
         foreach ($logs as $log) {
             try {
                 $archive = $archiveController->read($log->archiveId);
