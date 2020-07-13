@@ -1213,16 +1213,16 @@ class organization
      */
     public function createArchivalprofileaccess($archivalProfileAccess)
     {
-        if (null ==! $this->getArchivalProfileAccess(
+        if (null != $this->getArchivalProfileAccess(
             $archivalProfileAccess->orgId,
             $archivalProfileAccess->archivalProfileReference
         )) {
-            throw new \core\Exception("Organization Archival Profile Access already exists.");
+            throw new \core\Exception\ConflictException("Organization Archival Profile Access already exists.");
         }
         $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
         try {
             if (!$org->isOrgUnit) {
-                throw new \core\Exception("Organization Archival Profile Access can't be update ");
+                throw new \core\Exception\ForbiddenException("Organization Archival Profile Access can't be update ");
             }
         } catch (\Exception $e) {
             throw $e;
@@ -1230,7 +1230,7 @@ class organization
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         if ($archivalProfileAccess->archivalProfileReference === '*' && !$archivalProfileAccess->originatorAccess) {
-            throw new \core\Exception(
+            throw new \core\Exception\ForbiddenException(
                 "Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access"
             );
         }
@@ -1238,7 +1238,7 @@ class organization
         if ($archivalProfileAccess->archivalProfileReference !== '*'
             && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)
         ) {
-            throw new \core\Exception(
+            throw new \core\Exception\NotFoundException(
                 "Organization Archival Profile Access cannot be created, archival profile does not exists"
             );
         }
