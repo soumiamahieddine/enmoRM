@@ -206,19 +206,23 @@ class serviceAccount
         $account = $this->read($accountToken->accountId);
 
         if (isset($orgId) && !empty($orgId)) {
-            $organization = $organizationController->read($orgId);
+            try {
+                $organization = $organizationController->read($orgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\NotFoundException("Organization unit identified by " . $orgId . " does not exist.");
+            }
         }
 
         if ($this->hasSecurityLevel) {
             if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization->orgName, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
-                throw new \core\Exception\UnauthorizedException("You are not allowed to add user in this organization");
+                throw new \core\Exception\ForbiddenException("You are not allowed to add user in this organization");
             }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
         if (!$serviceAccount->ownerOrgId && !empty($orgId)) {
             if(!empty($serviceAccount->ownerOrgId) && $serviceAccount->ownerOrgId != $organization->ownerOrgId) {
-                throw new \core\Exception\UnauthorizedException("Organization unit identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
+                throw new \core\Exception\NotFoundException("Organization identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
             }
             $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
@@ -227,7 +231,7 @@ class serviceAccount
             try {
                 $organizationController->read($serviceAccount->ownerOrgId);
             } catch (\Exception $e) {
-                throw new \core\Exception\UnauthorizedException($serviceAccount->ownerOrgId . " does not exist.");
+                throw new \core\Exception\NotFoundException("Organization identified by " . $serviceAccount->ownerOrgId . " does not exist.");
             }
         }
 
@@ -800,15 +804,15 @@ class serviceAccount
         $securityLevel = $ownAccount->getSecurityLevel();
         if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
             if (!isset($targetServiceAccount->ownerOrgId) || !$targetServiceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("Only a General administrator can do this action");
+                throw new \core\Exception\ForbiddenException("Only a Functional administrator can do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
             if ($targetServiceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
+                throw new \core\Exception\ForbiddenException("Only a General administrator can do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_USER) {
             if ($ownAccount != $targetServiceAccount) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                throw new \core\Exception\ForbiddenException("You are not allowed to do this action");
             }
         }
     }
