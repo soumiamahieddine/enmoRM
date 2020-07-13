@@ -345,7 +345,7 @@ class organization
                     $userOrgIds[] = (string) $org->orgId;
                 }
                 if (!in_array($organization->ownerOrgId, $userOrgIds)){
-                    throw new \core\Exception\Forbidden("You are not allowed to do this action");
+                    throw new \core\Exception\ForbiddenException("You are not allowed to do this action");
                 }
             }
 
@@ -357,10 +357,10 @@ class organization
         if (!$organization->parentOrgId && !in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             if (\laabs::getToken("ORGANIZATION")) {
                 if (!in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes)) {
-                    throw new \core\Exception\Forbidden("You're not allowed to create an organization");
+                    throw new \core\Exception\ForbiddenException("You're not allowed to create an organization");
                 }
             } else {
-                throw new \core\Exception\Forbidden("You're not allowed to create an organization");
+                throw new \core\Exception\ForbiddenException("You're not allowed to create an organization");
             }
         } else {
             if ($organization->parentOrgId) {
@@ -612,14 +612,19 @@ class organization
         if ($this->hasSecurityLevel) {
             $securityLevel = $account->getSecurityLevel();
         }
+
         if ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if ($organization->ownerOrgId != $account->ownerOrgId) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            $userOrgIds = [$account->ownerOrgId];
+            foreach($this->readDescendantOrg($account->ownerOrgId) as $org){
+                $userOrgIds[] = (string) $org->orgId;
+            }
+            if (!in_array($organization->ownerOrgId, $userOrgIds)){
+                throw new \core\Exception\ForbiddenException("You are not allowed to do this action");
             }
         }
 
         if (!$organization->isOrgUnit) {
-            throw new \core\Exception("An organization can't be disabled.");
+            throw new \core\Exception\ForbiddenException("An organization can't be disabled.");
         }
 
         if ($status == "true") {
