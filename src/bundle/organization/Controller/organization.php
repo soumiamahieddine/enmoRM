@@ -345,7 +345,7 @@ class organization
                     $userOrgIds[] = (string) $org->orgId;
                 }
                 if (!in_array($organization->ownerOrgId, $userOrgIds)){
-                    throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                    throw new \core\Exception\Forbidden("You are not allowed to do this action");
                 }
             }
 
@@ -357,17 +357,17 @@ class organization
         if (!$organization->parentOrgId && !in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             if (\laabs::getToken("ORGANIZATION")) {
                 if (!in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes)) {
-                    throw new \core\Exception("You're not allowed to create an organization");
+                    throw new \core\Exception\Forbidden("You're not allowed to create an organization");
                 }
             } else {
-                throw new \core\Exception("You're not allowed to create an organization");
+                throw new \core\Exception\Forbidden("You're not allowed to create an organization");
             }
         } else {
             if ($organization->parentOrgId) {
                 try {
                     $this->read($organization->parentOrgId);
                 } catch (\Exception $e) {
-                    throw new \core\Exception("Organization identified by " . $organization->parentOrgId . " was not find");
+                    throw new \core\Exception\NotFoundException("Organization identified by " . $organization->parentOrgId . " was not find");
                 }
             }
         }
@@ -380,7 +380,7 @@ class organization
             $organization->orgId = \laabs::newId();
             $this->sdoFactory->create($organization, 'organization/organization');
         } catch (\Exception $e) {
-            throw new \core\Exception("Key already exists");
+            throw new \core\Exception\ConflictException("Key already exists");
         }
 
         return $organization->orgId;
