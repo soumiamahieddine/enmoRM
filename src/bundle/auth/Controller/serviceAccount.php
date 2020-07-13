@@ -402,27 +402,18 @@ class serviceAccount
         // Check userAccount exists
         $currentDate = \laabs::newTimestamp();
 
-        if (!$this->sdoFactory->exists(
-            'auth/account',
-            array('accountId' => $serviceAccountId, "accountType" => "service")
-        )) {
-            \laabs::newController('audit/entry')->add(
-                "auth/serviceTokenGenerationFailure",
-                "auth/account",
-                "",
-                "Connection failure, unknow service ".$serviceAccountId
-            );
-            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid service name.');
+        try {
+            $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
+        } catch (\Exception $e) {
+            throw new \core\Exception\NotFoundException("Account identified by " . $serviceAccountId . " does not exist.");
         }
-
-        $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
 
         $accountToken = \laabs::getToken('AUTH');
         $ownAccount = $this->read($accountToken->accountId);
 
         if ($accountToken->accountId != $serviceAccountId && $this->hasSecurityLevel) {
             if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
-                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+                throw new \core\Exception\ForbiddenException("You are not allowed to modify this service account");
             }
             $this->checkPrivilegesAccess($ownAccount, $serviceAccount);
         }
