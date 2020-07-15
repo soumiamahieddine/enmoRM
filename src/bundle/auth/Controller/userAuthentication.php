@@ -236,7 +236,7 @@ class userAuthentication
     {
         $userAccount = $this->sdoFactory->read('auth/account', \laabs::getToken('AUTH'));
         $authentication = json_decode($userAccount->authentication);
-        $authentication->auth = [];
+        $authentication->token = [];
         $userAccount->authentication = json_encode($authentication);
 
         $this->sdoFactory->update($userAccount, "auth/account");

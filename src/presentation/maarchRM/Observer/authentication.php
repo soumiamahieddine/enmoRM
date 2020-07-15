@@ -261,18 +261,18 @@ class authentication
         // Create authentication object if not set
         if (empty($this->accountAuth)) {
             $this->accountAuth = new \stdClass();
-            $this->accountAuth->auth = [];
+            $this->accountAuth->token = [];
             return;
         }
 
         // Create CSRF token list if not set
-        if (!is_object($this->accountAuth->auth)) {
-            $this->accountAuth->auth = [];
+        if (!isset($this->accountAuth->token)) {
+            $this->accountAuth->token = [];
             return;
         }
 
         // Convert object to array of timestamp => token
-        $this->accountAuth->auth = get_object_vars($this->accountAuth->auth);
+        $this->accountAuth->token = get_object_vars($this->accountAuth->token);
     }
 
     /**
@@ -291,12 +291,12 @@ class authentication
         $now = \laabs::newTimestamp();
 
         // Loop and discard expired tokens
-        foreach ($this->accountAuth->auth as $time => $token) {
+        foreach ($this->accountAuth->token as $time => $token) {
             $timestamp = \laabs::newTimestamp($time);
             $expiration = $timestamp->add($duration);
 
             if ($now->diff($expiration)->invert == 1) {
-                unset($this->accountAuth->auth[$time]);
+                unset($this->accountAuth->token[$time]);
             }
         }
     }
@@ -315,7 +315,7 @@ class authentication
             throw new \core\Exception('Attempt to access without a valid token', 412);
         }
 
-        $this->requestTokenTime = array_search($this->requestToken, $this->accountAuth->auth);
+        $this->requestTokenTime = array_search($this->requestToken, $this->accountAuth->token);
 
         if (empty($this->requestTokenTime)) {
             throw new \core\Exception('Attempt to access without a valid token', 412);
@@ -328,9 +328,9 @@ class authentication
      */
     private function discardUsedTokens()
     {
-        foreach ($this->accountAuth->auth as $time => $token) {
+        foreach ($this->accountAuth->token as $time => $token) {
             if ($time <= $this->requestTokenTime) {
-                unset($this->accountAuth->auth[$time]);
+                unset($this->accountAuth->token[$time]);
             }
         }
     }
@@ -341,8 +341,8 @@ class authentication
     private function updateAccount()
     {
         $time = (string) \laabs::newTimestamp();
-        $this->accountAuth->auth = [];
-        $this->accountAuth->auth[$time] = $this->responseToken;
+        $this->accountAuth->token = [];
+        $this->accountAuth->token[$time] = $this->responseToken;
         $this->account->authentication = json_encode($this->accountAuth);
 
         $this->sdoFactory->update($this->account, "auth/account");
