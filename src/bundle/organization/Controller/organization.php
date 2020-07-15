@@ -1218,12 +1218,12 @@ class organization
      */
     public function createArchivalprofileaccess($archivalProfileAccess)
     {
-        if (null != $this->getArchivalProfileAccess(
-            $archivalProfileAccess->orgId,
-            $archivalProfileAccess->archivalProfileReference
-        )) {
+        $archivalProfiles = $this->getArchivalProfileAccess($archivalProfileAccess->orgId);
+        
+        if (is_array($archivalProfiles) && array_search($archivalProfileAccess->archivalProfileReference, array_column($archivalProfiles, 'archivalProfileReference')) !== false){
             throw new \core\Exception\ConflictException("Organization Archival Profile Access already exists.");
         }
+
         $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
         try {
             if (!$org->isOrgUnit) {
