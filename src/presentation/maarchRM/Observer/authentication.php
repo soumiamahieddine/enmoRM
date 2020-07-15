@@ -265,14 +265,14 @@ class authentication
             return;
         }
 
-        // Create CSRF token list if not set
+        // Create token list if not set
         if (!isset($this->accountAuth->token)) {
             $this->accountAuth->token = [];
             return;
         }
 
         // Convert object to array of timestamp => token
-        $this->accountAuth->token = get_object_vars($this->accountAuth->token);
+        $this->accountAuth->token = (array) $this->accountAuth->token;
     }
 
     /**
