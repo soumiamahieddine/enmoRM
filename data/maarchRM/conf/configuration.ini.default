@@ -50,6 +50,10 @@ displayableFormat = "['application/pdf', 'image/jpeg', 'image/png', 'text/plain'
 profilesDirectory = "%laabsDirectory%/data/maarchRM/profiles"
 refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 
+; The hash algorithm used to generate the fingerprint of binary objects during the deposit.
+; If you want to use another hash algorithm, you can find every possibles values to https://www.php.net/manual/fr/function.hash-algos.php
+; hashAlgorithm=SHA1
+
 ; Type of archival profile
 ; 1 = file only
 ; 2 = descriptionClass/properties + management rules
