@@ -151,7 +151,7 @@ class userAuthentication
 
         $accountToken = new \StdClass();
         $accountToken->accountId = $userAccount->accountId;
-        \laabs::setToken('AUTH', $accountToken, $tokenDuration);
+        $userToken = \laabs::setToken('AUTH', $accountToken, $tokenDuration);
 
         if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
             $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
@@ -211,7 +211,8 @@ class userAuthentication
      * Validate the new password
      * @param string $newPassword The user's new password
      */
-    public function checkPasswordPolicies($newPassword) {
+    public function checkPasswordPolicies($newPassword)
+    {
         if ($this->securityPolicy['passwordMinLength'] && strlen($newPassword) < $this->securityPolicy['passwordMinLength']) {
             throw new \core\Exception\ForbiddenException("The password is too short.", 403);
         }
@@ -236,7 +237,7 @@ class userAuthentication
     {
         $userAccount = $this->sdoFactory->read('auth/account', \laabs::getToken('AUTH'));
         $authentication = json_decode($userAccount->authentication);
-        $authentication->token = [];
+        $authentication->token = null;
         $userAccount->authentication = json_encode($authentication);
 
         $this->sdoFactory->update($userAccount, "auth/account");
