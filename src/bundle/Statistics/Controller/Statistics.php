@@ -96,6 +96,11 @@ class Statistics
             throw new \core\Exception\BadRequestException($this->translator->getText("Start Date cannot be past end date"));
         }
 
+        if (!empty($startDate)) {
+            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
+            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
+        }
+
         $this->sizeFilter = $sizeFilter;
 
         $statistics = ["unit" => $this->sizeFilters[$sizeFilter]];
@@ -145,31 +150,33 @@ class Statistics
      */
     protected function defaultStats($startDate, $endDate, $filter, $statistics = [])
     {
-        $statistics['depositMemorySize'] = $this->getSizeByEventType(['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
-        $statistics['depositMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $startDate, $endDate);
-        $statistics['deletedMemorySize'] = $this->getSizeByEventType(['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonColumnNumber = 6, $startDate, $endDate);
-        $statistics['deletedMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/destruction', 'recordsManagement/elimination'], $startDate, $endDate);
+        $statistics['depositMemorySize'] = $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
+        $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $filter, $startDate, $endDate);
+        $statistics['deletedMemorySize'] = $this->getSizeByEventType('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonColumnNumber = 6, $startDate, $endDate);
+        $statistics['deletedMemoryCount'] = $this->getCountByEventType('ArchiveDestructionRequest', $filter, $startDate, $endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
-            $statistics['transferedMemorySize'] = $this->getSizeByEventType(['recordsManagement/outgoingTransfer'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['transferedMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/outgoingTransfer'], $startDate, $endDate);
-            $statistics['restitutionMemorySize'] = $this->getSizeByEventType(['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['restitutionMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/restitution'], $startDate, $endDate);
-            $statistics['communicatedMemorySize'] = $this->getSizeByEventType(['recordsManagement/delivery'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['communicatedMemoryCount'] = $this->getCountByEventType($filter, ['recordsManagement/delivery'], $startDate, $endDate);
+            $statistics['transferedMemorySize'] = $this->getSizeByEventType('Deletion', ['recordsManagement/outgoingTransfer'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['transferedMemoryCount'] = $this->getCountByEventType('Deletion', $filter, $startDate, $endDate);
+            $statistics['restitutionMemorySize'] = $this->getSizeByEventType('ArchiveRestitutionRequest', ['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['restitutionMemoryCount'] = $this->getCountByEventType('ArchiveRestitutionRequest', $filter, $startDate, $endDate);
+            $statistics['communicatedMemorySize'] = $this->getSizeByEventType('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['communicatedMemoryCount'] = $this->getCountByEventType('ArchiveDeliveryRequest', $filter, $startDate, $endDate);
         }
 
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
         $statistics['currentMemoryCount'] = $this->getArchiveCount($endDate);
 
-        $statistics['evolutionSize'] = $statistics['currentMemorySize'] - ($startDate ? $this->getArchiveSize($startDate) : 0);
-        $statistics['evolutionCount'] = $statistics['currentMemoryCount'] - ($startDate ? $this->getArchiveCount($startDate) : 0);
+        if ($startDate) {
+            $statistics['evolutionSize'] = $statistics['currentMemorySize'] - $this->getArchiveSize($startDate);
+            $statistics['evolutionCount'] = $statistics['currentMemoryCount'] - $this->getArchiveCount($startDate);
+            if ($statistics['evolutionSize'] != (integer)$statistics['evolutionSize']) {
+                $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ",", " ");
+            }
+        }
 
         if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
             $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ",", " ");
-        }
-        if ($statistics['evolutionSize'] != (integer)$statistics['evolutionSize']) {
-            $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ",", " ");
         }
 
         return $statistics;
@@ -197,8 +204,8 @@ class Statistics
                 break;
         }
 
-        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveTransfer', $startDate, $endDate, $filter);
         return $statistics;
     }
 
@@ -224,8 +231,8 @@ class Statistics
                 break;
         }
 
-        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/destruction', 'recordsManagement/elimination'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDestructionRequest', $startDate, $endDate, $filter);
 
         return $statistics;
     }
@@ -268,8 +275,8 @@ class Statistics
                 break;
         }
 
-        $statistics['restitutedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/restitution'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['restitutedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/restitution'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['restitutedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveRestitutionRequest', ['recordsManagement/restitution'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['restitutedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveRestitutionRequest', $startDate, $endDate, $filter);
 
         return $statistics;
     }
@@ -296,8 +303,8 @@ class Statistics
                 break;
         }
 
-        $statistics['transferedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/outgoingTransfer'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['transferedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/outgoingTransfer'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['transferedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('Deletion', ['recordsManagement/outgoingTransfer'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['transferedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('Deletion', $startDate, $endDate, $filter);
 
         return $statistics;
     }
@@ -324,8 +331,8 @@ class Statistics
                 break;
         }
 
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/delivery'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDeliveryRequest', $startDate, $endDate, $filter);
 
         return $statistics;
     }
@@ -340,55 +347,45 @@ class Statistics
      *
      * @return integer                    Sum of size for events
      */
-    protected function getSizeByEventType($eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null)
+    protected function getSizeByEventType($messageType, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null)
     {
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
 
-        $query = <<<EOT
-SELECT SUM (CAST(NULLIF("eventInfo"::json->>$jsonColumnNumber, '') AS INTEGER)) FROM "lifeCycle"."event" WHERE "eventType" IN ($in)
-EOT;
-        $result = $this->executeQuery($query, $inParams, $eventTypes[0] == 'recordsManagement/deposit', $startDate, $endDate);
+        $query = 'WITH RECURSIVE get_children_size(archive_id, volume) AS (
+            SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.'
+            FROM "medona"."unitIdentifier" "unitIdentifier"
+            INNER JOIN "medona"."message" "message"
+            ON "message"."messageId" = "unitIdentifier"."messageId" AND "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+            ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
+            INNER JOIN "recordsManagement"."archive" "archive"
+            ON "archive"."archiveId" = "unitIdentifier"."objectId" AND ("archive"."parentArchiveId" is null or "archive"."parentArchiveId" not in (
+                SELECT "unitIdentifier"."objectId"
+                FROM "medona"."unitIdentifier" "unitIdentifier"
+                INNER JOIN "medona"."message" "message"
+                ON "message"."messageId" = "unitIdentifier"."messageId" AND "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+                ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
+            ))
+            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
+                UNION ALL
+            SELECT "archive"."archiveId", "event"."eventInfo"::json->>8
+            FROM "recordsManagement"."archive" "archive"
+            JOIN get_children_size "archive_size" ON 1=1
+            LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')'.
+            ($startDate ? ' AND "event"."timestamp">\''.$startDate.'\'::timestamp AND "event"."timestamp"<\''.$endDate.'\'::timestamp' : '').'
+            WHERE "archive"."parentArchiveId" = "archive_size"."archive_id"
+        )
+        SELECT SUM(CAST(NULLIF("archive_size"."volume", \'\') AS INTEGER))
+        FROM get_children_size "archive_size"';
+
+        $result = $this->executeQuery($query, $inParams, $eventTypes[0] == 'recordsManagement/deposit');
         $sum = 0;
         if (isset($result[0]['sum'])) {
             $sum = $result[0]['sum'];
         }
 
         return $sum;
-    }
-
-    /**
-     * Get the query to get archives recursively
-     *
-     * @param  string   $in         Serialized array of variables in the query
-     * @param  string   $startDate  Starting Date
-     * @param  string   $endDate    End date
-     *
-     * @return string               The query
-     */
-    protected function getQueryArchiveRecursive($in = "", $startDate = null, $endDate = null, $isArchivalProfile = null)
-    {
-        $param = "";
-        $column = "";
-        if ($isArchivalProfile === true) {
-            $param = ", archival_profile";
-            $column = ', "archive"."archivalProfileReference"';
-        } else if ($isArchivalProfile === false) {
-            $param = ", org_id";
-            $column = ', "archive"."archiverOrgRegNumber"';
-        }
-        $query = 'WITH RECURSIVE include_parent_archives(archive_id, parent_id'.$param.') as (
-            SELECT "archive"."archiveId", "archive"."parentArchiveId"'.$column.'
-            FROM "recordsManagement"."archive" "archive"
-            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId"
-            WHERE "event"."eventType" IN ('.$in.') '.(!empty($startDate) ? "AND timestamp BETWEEN '$startDate'::timestamp AND '$endDate'::timestamp" : "").
-            ' UNION ALL
-            SELECT "archive"."archiveId", "archive"."parentArchiveId"'.$column.'
-            FROM "recordsManagement"."archive" "archive", include_parent_archives "archive_recursive"
-            WHERE "archive"."archiveId" = "archive_recursive"."parent_id"
-            )';
-        return $query;
     }
 
     /**
@@ -401,24 +398,29 @@ EOT;
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventType($filter, $eventTypes, $startDate = null, $endDate = null)
+    protected function getCountByEventType($messageType, $filter, $startDate = null, $endDate = null)
     {
-        $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
-        $in = $explodingEventTypes['in'];
-        $inParams = $explodingEventTypes['inParams'];
         $isArchivalProfile = $filter == "archivalProfile";
 
-        if (!empty($startDate)) {
-            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
-            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
-        }
+        $query = 'SELECT  COUNT("unitIdentifier"."objectId")
+            FROM "medona"."message" "message"
+            INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
+            ON "unitIdentifier"."messageId" = "message"."messageId"
+            INNER JOIN "recordsManagement"."archive" "archive"
+            ON "archive"."archiveId" = "unitIdentifier"."objectId"
+            AND ("archive"."parentArchiveId" IS NULL OR NOT "archive"."parentArchiveId" IN (
+                SELECT "unitIdentifier"."objectId"
+                FROM "medona"."message" "message"
+                INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
+                ON "unitIdentifier"."messageId" = "message"."messageId"
+                WHERE "message"."type" = \''.$messageType.'\'
+                AND "message"."status" = \'processed\'
+            ))
+            WHERE "message"."type" = \''.$messageType.'\' 
+            AND "message"."status" = \'processed\''.
+            ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '');
 
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
-        $query .= 'SELECT COUNT(DISTINCT "archive_recursive"."archive_id")
-            FROM include_parent_archives "archive_recursive"
-            WHERE "archive_recursive"."parent_id" IS NULL';
-
-        $count = $this->executeQuery($query, $inParams)[0]['count'];
+        $count = $this->executeQuery($query)[0]['count'];
         return $count;
     }
 
@@ -434,30 +436,35 @@ EOT;
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventTypeOrdered($filter, $eventTypes, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
+    protected function getCountByEventTypeOrdered($messageType, $startDate = null, $endDate = null, $groupBy = null)
     {
-        $sum = 0;
+        $isArchivalProfile = $groupBy == "archivalProfile";
 
-        $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
-        $in = $explodingEventTypes['in'];
-        $inParams = $explodingEventTypes['inParams'];
-        $isArchivalProfile = $filter == "archivalProfile";
+        $query = 'SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"').' as '.$groupBy.', COUNT("unitIdentifier"."objectId")
+        FROM "medona"."message" "message"
+        INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
+        ON "unitIdentifier"."messageId" = "message"."messageId"
+        INNER JOIN "recordsManagement"."archive" "archive"
+        ON "archive"."archiveId" = "unitIdentifier"."objectId" AND ("archive"."parentArchiveId" IS NULL OR NOT "archive"."parentArchiveId" IN (
+            SELECT "unitIdentifier"."objectId"
+            FROM "medona"."message" "message"
+            INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
+            ON "unitIdentifier"."messageId" = "message"."messageId"
+            WHERE "message"."type" = \''.$messageType.'\'
+            AND "message"."status" = \'processed\''.
+            ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
+        ))'.
+        ($isArchivalProfile
+            ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
+                ON "archivalProfile"."reference" = "archive"."archivalProfileReference"'
+            : ' INNER JOIN "organization"."organization" "organization"
+                ON "organization"."registrationNumber" = "archive"."archiverOrgRegNumber"').
+        ' WHERE "message"."type" = \''.$messageType.'\'
+        AND "message"."status" = \'processed\''.
+        ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
+        GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
-        if (!empty($startDate)) {
-            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
-            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
-        }
-
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
-        $query .= 'SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"').' AS '.$groupBy.', COUNT(DISTINCT "archive_recursive"."archive_id")
-            FROM include_parent_archives "archive_recursive"'.
-            (!$isArchivalProfile
-                ? ' INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "archive_recursive"."org_id"'
-                : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_recursive"."archival_profile"').
-            ' WHERE "archive_recursive"."parent_id" IS NULL
-            GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
-
-        $sum = $this->executeQuery($query, $inParams);
+        $sum = $this->executeQuery($query);
         return $sum;
     }
 
@@ -473,39 +480,43 @@ EOT;
      *
      * @return integer                        Sum of size for events
      */
-    protected function getSizeByEventTypeOrdered($filter, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $jsonColumnNumberOrder = 0)
+    protected function getSizeByEventTypeOrdered($messageType, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null)
     {
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
-        $isArchivalProfile = $filter == "archivalProfile";
+        $isArchivalProfile = $groupBy == "archivalProfile";
 
-        if (!empty($startDate)) {
-            $startDate = (string) $startDate->format('Y-m-d 00:00:00');
-            $endDate = (string) $endDate->format('Y-m-d 23:59:59');
-        }
-
-        $query = $this->getQueryArchiveRecursive($in, $startDate, $endDate, $isArchivalProfile);
-        $query .= ', get_children_size(archive_id, volume'.($isArchivalProfile ? ', archival_profile' : '').') AS (
-            SELECT DISTINCT "archive_recursive"."archive_id", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "archive_recursive"."archival_profile"' : '').
-            ' FROM include_parent_archives "archive_recursive"
-            LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_recursive"."archive_id" AND "event"."eventType" IN ('.$in.')
-            WHERE "archive_recursive"."parent_id" IS NULL
-          UNION ALL
-              SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.($isArchivalProfile ? ', "archive_size"."archival_profile"' : '').
-              ' FROM "recordsManagement"."archive" "archive"
-              JOIN get_children_size "archive_size" ON 1=1
-              LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
-              WHERE "archive"."parentArchiveId" = "archive_size"."archive_id"
+        $query = 'WITH RECURSIVE get_children_size(archive_id, volume, '.($isArchivalProfile ? "profile" : "org_reg").') AS (
+            SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.', '.($isArchivalProfile ? 'COALESCE("archive"."archivalProfileReference", \'\')' : '"archive"."archiverOrgRegNumber"').'
+            FROM "medona"."unitIdentifier" "unitIdentifier"
+            INNER JOIN "medona"."message" "message"
+            ON "message"."messageId" = "unitIdentifier"."messageId" and "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+            ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
+            INNER JOIN "recordsManagement"."archive" "archive"
+            ON "archive"."archiveId" = "unitIdentifier"."objectId" and ("archive"."parentArchiveId" is null or "archive"."parentArchiveId" not in (
+                SELECT "unitIdentifier"."objectId"
+                FROM "medona"."unitIdentifier" "unitIdentifier"
+                INNER JOIN "medona"."message" "message"
+                ON "message"."messageId" = "unitIdentifier"."messageId" and "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+                ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
+            ))
+            INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
+                UNION ALL
+            SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.', '.($isArchivalProfile ? 'coalesce("archive"."archivalProfileReference", "archive_size"."profile", \'\')' : '"archive"."archiverOrgRegNumber"').'
+            FROM "recordsManagement"."archive" "archive"
+            JOIN get_children_size "archive_size" ON 1=1
+            LEFT JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')'.
+            ($startDate ? ' AND "event"."timestamp">\''.$startDate.'\'::timestamp AND "event"."timestamp"<\''.$endDate.'\'::timestamp' : '').'
+            WHERE "archive"."parentArchiveId" = "archive_size"."archive_id"
         )
-        SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"') . ' as '.$groupBy.', SUM(CAST("archive_size"."volume" AS INTEGER))
+        SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"').' as '.$groupBy.', SUM(CAST(NULLIF("archive_size"."volume", \'\') AS INTEGER))
         FROM get_children_size "archive_size"'.
-        (!$isArchivalProfile
-            ? ' INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive_size"."archive_id" AND "event"."eventType" IN ('.$in.')
-            INNER JOIN "organization"."organization" "org" ON "org"."registrationNumber" = "event"."eventInfo"::jsonb->>'.$jsonColumnNumberOrder
-            : ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive_size"."archival_profile"').
-        ' WHERE "archive_size"."volume" != \'\'
-        GROUP BY '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"org"."displayName"');
+        ($isArchivalProfile
+            ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile" on "archivalProfile"."reference" = "archive_size"."profile"'
+            : ' INNER JOIN "organization"."organization" "organization" on "organization"."registrationNumber" = "archive_size"."org_reg"'
+        ).'
+        GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
         $sum = $this->executeQuery($query, $inParams);
 
@@ -521,16 +532,15 @@ EOT;
      */
     protected function getArchiveCount($endDate = null)
     {
-        $sum = 0;
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
-        $query = <<<EOT
-SELECT COUNT(*) FROM "recordsManagement"."archive" WHERE "depositDate"<'$endDate'::timestamp AND "status" = 'preserved' AND "parentArchiveId" IS NULL;
-EOT;
+        $query = 'SELECT COUNT(*)
+                FROM "recordsManagement"."archive"
+                WHERE "depositDate"<\''.$endDate.'\'::timestamp
+                AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp))
+                AND "parentArchiveId" IS NULL';
 
         $stmt = $this->pdo->prepare($query);
         $stmt->execute();
@@ -550,15 +560,13 @@ EOT;
     {
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = <<<EOT
 SELECT SUM("digitalResource"."size")
 FROM "digitalResource"."digitalResource"
 INNER JOIN "recordsManagement"."archive" ON "archive"."archiveId" = "digitalResource"."archiveId"
-WHERE "archive"."depositDate"<'$endDate'::timestamp AND "archive"."status" = 'preserved';
+WHERE "archive"."depositDate"<'$endDate'::timestamp AND ("archive"."status" = 'preserved' OR ("archive"."lastModificationDate" IS NOT NULL AND "archive"."lastModificationDate">'$endDate'::timestamp));
 EOT;
 
         $stmt = $this->pdo->prepare($query);
@@ -592,15 +600,13 @@ EOT;
 
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = 'WITH RECURSIVE get_children_size(archive_id, volume, group_by) AS (
             SELECT "archive"."archiveId", "digitalResource"."size", "archive"."'.$tableProperty.'"
             FROM "recordsManagement"."archive" "archive"
             LEFT JOIN "digitalResource"."digitalResource" "digitalResource" ON "digitalResource"."archiveId" = "archive"."archiveId"
-            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\'
+            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp))
           UNION ALL
             SELECT "archive"."archiveId", "digitalResource"."size", "archive_size"."group_by"
             FROM "recordsManagement"."archive" "archive"
@@ -653,8 +659,6 @@ EOT;
 
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = 'SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"').' AS '.$groupBy.', COUNT ("archive".*)
@@ -664,7 +668,7 @@ EOT;
                     ? ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive"."'.$tableProperty.'"'
                     : ' INNER JOIN "organization"."organization" "organization" ON "organization"."registrationNumber" = "archive"."'.$tableProperty.'"'
                 ).
-                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\' AND "archive"."parentArchiveId" IS NULL
+                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp)) AND "archive"."parentArchiveId" IS NULL
                 GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
         $stmt = $this->pdo->prepare($query);
@@ -711,18 +715,10 @@ EOT;
      *
      * @return array                                    Results of query
      */
-    public function executeQuery($query, $secondary_parameters, $addToEvolution = false, $startDate = null, $endDate = null)
+    public function executeQuery($query, $secondary_parameters = [], $addToEvolution = false)
     {
-        $params = [];
-
-        if (!is_null($startDate)) {
-            $params[':startDate'] = (string) $startDate->format('Y-m-d 00:00:00');
-            $params[':endDate'] = (string) $endDate->format('Y-m-d 23:59:59');
-            $query .= " AND timestamp BETWEEN :startDate::timestamp AND :endDate::timestamp";
-        }
-
         $stmt = $this->pdo->prepare($query);
-        $stmt->execute(array_merge($params, $secondary_parameters));
+        $stmt->execute($secondary_parameters);
         $results = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
