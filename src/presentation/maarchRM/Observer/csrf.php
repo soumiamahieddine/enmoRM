@@ -180,7 +180,7 @@ class csrf
         }
 
         // Create CSRF token list if not set
-        if (!is_object($this->accountAuth->csrf)) {
+        if (!isset($this->accountAuth->csrf)) {
             $this->accountAuth->csrf = [];
             
             return;
