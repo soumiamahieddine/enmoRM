@@ -379,8 +379,8 @@ class Statistics
                 break;
         }
 
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered($filter, ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered($filter, ['recordsManagement/delivery'], $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDeliveryRequest', $startDate, $endDate, $filter);
 
         return $statistics;
     }
@@ -661,8 +661,6 @@ class Statistics
     {
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = 'SELECT COUNT(*)
@@ -729,15 +727,13 @@ EOT;
 
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = 'WITH RECURSIVE get_children_size(archive_id, volume, group_by) AS (
             SELECT "archive"."archiveId", "digitalResource"."size", "archive"."'.$tableProperty.'"
             FROM "recordsManagement"."archive" "archive"
             LEFT JOIN "digitalResource"."digitalResource" "digitalResource" ON "digitalResource"."archiveId" = "archive"."archiveId"
-            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\'
+            WHERE "archive"."parentArchiveId" IS NULL AND "archive"."depositDate" < \''.$endDate.'\'::timestamp AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp))
           UNION ALL
             SELECT "archive"."archiveId", "digitalResource"."size", "archive_size"."group_by"
             FROM "recordsManagement"."archive" "archive"
@@ -793,8 +789,6 @@ EOT;
 
         if (is_null($endDate)) {
             $endDate = (string) \laabs::newDateTime()->format('Y-m-d H:i:s');
-        } else {
-            $endDate = (string) $endDate->format('Y-m-d H:i:s');
         }
 
         $query = 'SELECT '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"').' AS '.$groupBy.', COUNT ("archive".*)
@@ -804,7 +798,7 @@ EOT;
                     ? ' INNER JOIN "recordsManagement"."archivalProfile" "archivalProfile" ON "archivalProfile"."reference" = "archive"."'.$tableProperty.'"'
                     : ' INNER JOIN "organization"."organization" "organization" ON "organization"."registrationNumber" = "archive"."'.$tableProperty.'"'
                 ).
-                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND "status" = \'preserved\' AND "archive"."parentArchiveId" IS NULL
+                ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp)) AND "archive"."parentArchiveId" IS NULL
                 GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
         $stmt = $this->pdo->prepare($query);
