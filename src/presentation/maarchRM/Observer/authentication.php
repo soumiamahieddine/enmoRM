@@ -37,13 +37,6 @@ class authentication
     protected $accountId;
     protected $account;
     protected $accountAuth;
-    protected $accountToken;
-
-    protected $requestToken;
-    protected $requestTokenTime;
-
-    protected $responseToken;
-    protected $responseTokenTime;
 
     /**
      * Construct the observer
