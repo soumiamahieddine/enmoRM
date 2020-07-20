@@ -42,7 +42,7 @@ class authentication
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
-        $this->whiteList = ['user/prompt'];
+        $this->whiteList = ['user/prompt', 'user/changePassword'];
     }
 
     /**
