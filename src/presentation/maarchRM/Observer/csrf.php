@@ -146,7 +146,7 @@ class csrf
         if (is_null($authToken)) {
             $authToken = \laabs::getToken('TEMP-AUTH');
 
-            if (!is_null($authToken)) {
+            if (is_null($authToken)) {
                 return false;
             }
         }
