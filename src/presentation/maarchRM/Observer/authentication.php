@@ -187,11 +187,23 @@ class authentication
         $this->getAccountAuth();
 
         // Check request token equals persisted session token
-        if (!isset($_COOKIE['LAABS-AUTH']) || $_COOKIE['LAABS-AUTH'] !== $this->accountAuth->token) {
+        $encryptedToken = $this->getEncryptedToken();
+        if (empty($encryptedToken) || $encryptedToken !== $this->accountAuth->token) {
             $this->redirectToLogin();
         }
 
         return true;
+    }
+
+    protected function getEncryptedToken()
+    {
+        if (isset($_COOKIE['LAABS-AUTH'])) {
+            return $_COOKIE['LAABS-AUTH'];
+        }
+
+        if (isset($_COOKIE['LAABS-TEMP-AUTH'])) {
+            return $_COOKIE['LAABS-TEMP-AUTH'];
+        }
     }
 
     protected function redirectToLogin()
