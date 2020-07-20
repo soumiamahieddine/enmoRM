@@ -187,7 +187,7 @@ class csrf
         }
 
         // Convert object to array of timestamp => token
-        $this->accountAuth->csrf = get_object_vars($this->accountAuth->csrf);
+        $this->accountAuth->csrf = (array) $this->accountAuth->csrf;
     }
 
     /**
