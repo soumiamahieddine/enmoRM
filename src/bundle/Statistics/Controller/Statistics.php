@@ -368,18 +368,8 @@ class Statistics
      */
     protected function communicatedStats($startDate, $endDate, $filter, $statistics = [])
     {
-        switch ($filter) {
-            case 'archivalProfile':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 7;
-                break;
-            case 'originatingOrg':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 5;
-                break;
-        }
-
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $jsonSizeColumnNumber = 6;
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
         $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDeliveryRequest', $startDate, $endDate, $filter);
 
         return $statistics;
@@ -511,6 +501,14 @@ class Statistics
             $isIncomingCondition .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
         }
         $sum = $this->executeQuery($query, $eventTypes, $inParams);
+
+        if ($messageType == "ArchiveTransfer") {
+            $isIncomingTest = '';
+            if (!$isIncoming) {
+                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+            }
+            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+        }
 
         $query = 'SELECT  COUNT("unitIdentifier"."objectId")
             FROM "medona"."message" "message"
