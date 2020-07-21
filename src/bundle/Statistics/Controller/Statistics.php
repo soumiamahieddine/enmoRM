@@ -150,14 +150,14 @@ class Statistics
      */
     protected function defaultStats($startDate, $endDate, $filter, $statistics = [])
     {
-        $statistics['depositMemorySize'] = $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate);
-        $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $filter, $startDate, $endDate);
+        $statistics['depositMemorySize'] = $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate, true);
+        $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $filter, $startDate, $endDate, true);
         $statistics['deletedMemorySize'] = $this->getSizeByEventType('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonColumnNumber = 6, $startDate, $endDate);
         $statistics['deletedMemoryCount'] = $this->getCountByEventType('ArchiveDestructionRequest', $filter, $startDate, $endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
-            $statistics['transferedMemorySize'] = $this->getSizeByEventType('Deletion', ['recordsManagement/outgoingTransfer'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['transferedMemoryCount'] = $this->getCountByEventType('Deletion', $filter, $startDate, $endDate);
+            $statistics['transferedMemorySize'] = $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/outgoingTransfer'], $jsonColumnNumber = 6, $startDate, $endDate);
+            $statistics['transferedMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $filter, $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType('ArchiveRestitutionRequest', ['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
             $statistics['restitutionMemoryCount'] = $this->getCountByEventType('ArchiveRestitutionRequest', $filter, $startDate, $endDate);
             $statistics['communicatedMemorySize'] = $this->getSizeByEventType('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonColumnNumber = 6, $startDate, $endDate);
@@ -193,19 +193,9 @@ class Statistics
      */
     protected function depositStats($startDate, $endDate, $filter, $statistics = [])
     {
-        switch ($filter) {
-            case 'archivalProfile':
-                $jsonSizeColumnNumber = 8;
-                $jsonOrderingColumnNumber = 10;
-                break;
-            case 'originatingOrg':
-                $jsonSizeColumnNumber = 8;
-                $jsonOrderingColumnNumber = 4;
-                break;
-        }
-
-        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
-        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveTransfer', $startDate, $endDate, $filter);
+        $jsonSizeColumnNumber = 8;
+        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, true);
+        $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveTransfer', $startDate, $endDate, $filter, true);
         return $statistics;
     }
 
@@ -220,18 +210,8 @@ class Statistics
      */
     protected function deletedStats($startDate, $endDate, $filter, $statistics = [])
     {
-        switch ($filter) {
-            case 'archivalProfile':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 8;
-                break;
-            case 'originatingOrg':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 4;
-                break;
-        }
-
-        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $jsonSizeColumnNumber = 6;
+        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
         $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDestructionRequest', $startDate, $endDate, $filter);
 
         return $statistics;
@@ -264,18 +244,8 @@ class Statistics
      */
     protected function restitutedStats($startDate, $endDate, $filter, $statistics = [])
     {
-        switch ($filter) {
-            case 'archivalProfile':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 8;
-                break;
-            case 'originatingOrg':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 4;
-                break;
-        }
-
-        $statistics['restitutedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveRestitutionRequest', ['recordsManagement/restitution'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $jsonSizeColumnNumber = 6;
+        $statistics['restitutedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveRestitutionRequest', ['recordsManagement/restitution'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
         $statistics['restitutedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveRestitutionRequest', $startDate, $endDate, $filter);
 
         return $statistics;
@@ -292,18 +262,8 @@ class Statistics
      */
     protected function transferedStats($startDate, $endDate, $filter, $statistics = [])
     {
-        switch ($filter) {
-            case 'archivalProfile':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 8;
-                break;
-            case 'originatingOrg':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 4;
-                break;
-        }
-
-        $statistics['transferedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('Deletion', ['recordsManagement/outgoingTransfer'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $jsonSizeColumnNumber = 6;
+        $statistics['transferedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('Deletion', ['recordsManagement/outgoingTransfer'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
         $statistics['transferedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('Deletion', $startDate, $endDate, $filter);
 
         return $statistics;
@@ -320,18 +280,8 @@ class Statistics
      */
     protected function communicatedStats($startDate, $endDate, $filter, $statistics = [])
     {
-        switch ($filter) {
-            case 'archivalProfile':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 7;
-                break;
-            case 'originatingOrg':
-                $jsonSizeColumnNumber = 6;
-                $jsonOrderingColumnNumber = 5;
-                break;
-        }
-
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, $jsonOrderingColumnNumber);
+        $jsonSizeColumnNumber = 6;
+        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
         $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDeliveryRequest', $startDate, $endDate, $filter);
 
         return $statistics;
@@ -347,24 +297,32 @@ class Statistics
      *
      * @return integer                    Sum of size for events
      */
-    protected function getSizeByEventType($messageType, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null)
+    protected function getSizeByEventType($messageType, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $isIncoming = false)
     {
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
 
+        if ($messageType == "ArchiveTransfer") {
+            $isIncomingTest = '';
+            if (!$isIncoming) {
+                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+            }
+            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+        }
+
         $query = 'WITH RECURSIVE get_children_size(archive_id, volume) AS (
             SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.'
             FROM "medona"."unitIdentifier" "unitIdentifier"
             INNER JOIN "medona"."message" "message"
-            ON "message"."messageId" = "unitIdentifier"."messageId" AND "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+            ON "message"."messageId" = "unitIdentifier"."messageId" AND "message"."type" = \''.$messageType.'\' AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
             ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
             INNER JOIN "recordsManagement"."archive" "archive"
             ON "archive"."archiveId" = "unitIdentifier"."objectId" AND ("archive"."parentArchiveId" is null or "archive"."parentArchiveId" not in (
                 SELECT "unitIdentifier"."objectId"
                 FROM "medona"."unitIdentifier" "unitIdentifier"
                 INNER JOIN "medona"."message" "message"
-                ON "message"."messageId" = "unitIdentifier"."messageId" AND "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+                ON "message"."messageId" = "unitIdentifier"."messageId" AND "message"."type" = \''.$messageType.'\' AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
                 ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
             ))
             INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
@@ -398,9 +356,17 @@ class Statistics
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventType($messageType, $filter, $startDate = null, $endDate = null)
+    protected function getCountByEventType($messageType, $filter, $startDate = null, $endDate = null, $isIncoming = false)
     {
         $isArchivalProfile = $filter == "archivalProfile";
+
+        if ($messageType == "ArchiveTransfer") {
+            $isIncomingTest = '';
+            if (!$isIncoming) {
+                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+            }
+            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+        }
 
         $query = 'SELECT  COUNT("unitIdentifier"."objectId")
             FROM "medona"."message" "message"
@@ -414,10 +380,11 @@ class Statistics
                 INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
                 ON "unitIdentifier"."messageId" = "message"."messageId"
                 WHERE "message"."type" = \''.$messageType.'\'
-                AND "message"."status" = \'processed\'
+                AND ("message"."status" = \'processed\''.
+                (isset($isIncomingTest) ? $isIncomingTest : ')').'
             ))
             WHERE "message"."type" = \''.$messageType.'\' 
-            AND "message"."status" = \'processed\''.
+            AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
             ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '');
 
         $count = $this->executeQuery($query)[0]['count'];
@@ -436,9 +403,17 @@ class Statistics
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventTypeOrdered($messageType, $startDate = null, $endDate = null, $groupBy = null)
+    protected function getCountByEventTypeOrdered($messageType, $startDate = null, $endDate = null, $groupBy = null, $isIncoming = false)
     {
         $isArchivalProfile = $groupBy == "archivalProfile";
+
+        if ($messageType == "ArchiveTransfer") {
+            $isIncomingTest = '';
+            if (!$isIncoming) {
+                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+            }
+            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+        }
 
         $query = 'SELECT '.($isArchivalProfile ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"').' as '.$groupBy.', COUNT("unitIdentifier"."objectId")
         FROM "medona"."message" "message"
@@ -451,7 +426,7 @@ class Statistics
             INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
             ON "unitIdentifier"."messageId" = "message"."messageId"
             WHERE "message"."type" = \''.$messageType.'\'
-            AND "message"."status" = \'processed\''.
+            AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
             ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
         ))'.
         ($isArchivalProfile
@@ -460,7 +435,7 @@ class Statistics
             : ' INNER JOIN "organization"."organization" "organization"
                 ON "organization"."registrationNumber" = "archive"."archiverOrgRegNumber"').
         ' WHERE "message"."type" = \''.$messageType.'\'
-        AND "message"."status" = \'processed\''.
+        AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
         ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
         GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
@@ -480,25 +455,33 @@ class Statistics
      *
      * @return integer                        Sum of size for events
      */
-    protected function getSizeByEventTypeOrdered($messageType, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null)
+    protected function getSizeByEventTypeOrdered($messageType, $eventTypes, $jsonColumnNumber, $startDate = null, $endDate = null, $groupBy = null, $isIncoming = false)
     {
         $explodingEventTypes = $this->stringifyEventTypes($eventTypes);
         $in = $explodingEventTypes['in'];
         $inParams = $explodingEventTypes['inParams'];
         $isArchivalProfile = $groupBy == "archivalProfile";
 
+        if ($messageType == "ArchiveTransfer") {
+            $isIncomingTest = '';
+            if (!$isIncoming) {
+                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+            }
+            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+        }
+
         $query = 'WITH RECURSIVE get_children_size(archive_id, volume, '.($isArchivalProfile ? "profile" : "org_reg").') AS (
             SELECT "archive"."archiveId", "event"."eventInfo"::json->>'.$jsonColumnNumber.', '.($isArchivalProfile ? 'COALESCE("archive"."archivalProfileReference", \'\')' : '"archive"."archiverOrgRegNumber"').'
             FROM "medona"."unitIdentifier" "unitIdentifier"
             INNER JOIN "medona"."message" "message"
-            ON "message"."messageId" = "unitIdentifier"."messageId" and "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+            ON "message"."messageId" = "unitIdentifier"."messageId" and "message"."type" = \''.$messageType.'\' AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
             ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
             INNER JOIN "recordsManagement"."archive" "archive"
             ON "archive"."archiveId" = "unitIdentifier"."objectId" and ("archive"."parentArchiveId" is null or "archive"."parentArchiveId" not in (
                 SELECT "unitIdentifier"."objectId"
                 FROM "medona"."unitIdentifier" "unitIdentifier"
                 INNER JOIN "medona"."message" "message"
-                ON "message"."messageId" = "unitIdentifier"."messageId" and "message"."type" = \''.$messageType.'\' AND "message"."status" = \'processed\''.
+                ON "message"."messageId" = "unitIdentifier"."messageId" and "message"."type" = \''.$messageType.'\' AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
                 ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '').'
             ))
             INNER JOIN "lifeCycle"."event" "event" ON "event"."objectId" = "archive"."archiveId" AND "event"."eventType" IN ('.$in.')
