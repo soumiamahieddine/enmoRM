@@ -299,7 +299,7 @@ class cluster
      */
     public function rollbackStorage($resource)
     {
-        if (count($resource->address)) {
+        if (is_array($resource->address)) {
             foreach ($resource->address as $address) {
                 $this->repositoryController->rollbackStorage($address);
             }
