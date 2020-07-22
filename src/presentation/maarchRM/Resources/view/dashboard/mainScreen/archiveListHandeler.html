@@ -165,7 +165,10 @@
                 dataType    : 'json',
                 success     : function (response) {
                     archive.find('.archiveContent').removeClass('hide').find('ul').html('');
-                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.contents, false);
+                    Archive.showChildrenArchives(archive.find('.archiveContent'), response.contents, false);
+                    Archive.showDigitalResources(archive.find('.archiveContent'), response.digitalResources, false);
+
+                    //Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.contents, false);
                     Archive.sortArchives(archive.find('.archiveContent'));
                 },
                 error       : function (response) {
@@ -187,46 +190,59 @@
             })
         },
 
-        showArchiveContent: function(parent, digitalResources, childrenArchives, hidden) {
+        showChildrenArchives: function(archive, childrenArchives, hidden) {
             var count=100
-            template = this.archiveContentTemplate.clone();
             if (childrenArchives) {
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
-                    Archive.mergeRow(parent, childrenArchives[j])
-
-                    Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
-                }
-            }
-
-            if (digitalResources) {
-                for(var i=0; i < digitalResources.length; i++) {
-                    template = this.archiveContentTemplate.clone();
-                    template.children('span')
-                            .addClass('document')
-                            .data('json', digitalResources[i])
-                            .children('span')
-                            .children('i')
-                            .html('&nbsp;&nbsp;&nbsp;')
-                            .siblings('span')
-                            .attr('id', digitalResources[i].resId)
-                            .append($('<i class="fa fa-file-o">&nbsp;</i>'))
-                            .append($('<span>').text(digitalResources[i].fileName));
-                    template.find('small, br, .addChildrenArchive').remove();
-
-                    BootstrapTree.addNode(parent, template, hidden);
+                    Archive.mergeArchiveRow(archive, childrenArchives[j])
+                    Archive.showChildrenArchives(archive, childrenArchives[j].contents, hidden);
+                    Archive.showDigitalResources(archive, childrenArchives[j].digitalResources, hidden);
+                    //Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
                 }
             }
         },
 
-        mergeRow: function(parent, archive) {
+        showDigitalResources: function(archive, digitalResources, hidden) {
+            if (digitalResources) {
+                for(var i=0; i < digitalResources.length; i++) {
+                    resource = Archive.mergeDigitalResourceRow(archive, digitalResources[i], hidden);
+
+                    Archive.showDigitalResources(resource, digitalResources[i].relatedResource, hidden);
+                }
+            }
+        },
+
+        mergeDigitalResourceRow: function(archive, digitalResource, hidden) {
+            template = this.archiveContentTemplate.clone();
+
+            template.children('span')
+                    .addClass('document')
+                    .data('json', digitalResource)
+                    .children('span')
+                    .children('i')
+                    .data('closed-icon', 'fa-caret-right')
+                    .data('opened-icon', 'fa-caret-down')
+                    .siblings('span')
+                    .data('id', digitalResource.resId)
+                    .append($('<i>').addClass('fa fa-file-o'))
+                    .append($('<span>').text(digitalResource.fileName));
+
+            template.find('small, br, .addChildrenArchive').remove();
+
+            BootstrapTree.addNode(archive, template, hidden);
+
+            return template;
+        },
+
+        mergeArchiveRow: function(parent, archive) {
             template = this.archiveContentTemplate.clone();
             var smalls = template.find('small');
 
             if (archive.fileplanLevel == 'item') {
-                var icon = $('<i class="fa fa-file">&nbsp;</i>');
+                var icon = "fa fa-file";
             } else {
-                var icon = $('<i class="fa fa-archive">&nbsp;</i>');
+                var icon = "fa fa-archive";
             }
 
             var BCDate = new Date(archive.depositDate.replace(',', '.'));
@@ -244,7 +260,7 @@
                     .siblings('span')
                     .addClass('childrenArchive')
                     .attr('id', archive.archiveId)
-                    .append(icon)
+                    .append($('<i>')).addClass(icon)
                     .append($('<span>').text(archive.archiveName))
                     .append($('<a/>').attr('href','#').class);
 
@@ -260,7 +276,7 @@
                 $(smalls[2]).text(' ' + archive.originatingDate);
             }
 
-            BootstrapTree.addNode(parent, template, false);    
+            BootstrapTree.addNode(parent, template, false);
         },
 
         sortArchives: function(parent){
