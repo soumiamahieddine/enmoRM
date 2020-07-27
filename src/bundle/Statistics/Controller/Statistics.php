@@ -471,10 +471,8 @@ class Statistics
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventType($messageType, $filter, $startDate = null, $endDate = null, $isIncoming = false)
+    protected function getCountByEventType($messageType, $startDate = null, $endDate = null, $isIncoming = false)
     {
-        $isArchivalProfile = $filter == "archivalProfile";
-
         if ($messageType == "ArchiveTransfer") {
             $isIncomingTest = '';
             if (!$isIncoming) {
@@ -724,10 +722,7 @@ EOT;
         $stmt->execute();
         $results = [];
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] /= pow(1000, $this->sizeFilter);
-            if ($result['sum'] != (integer)$result['sum']) {
-                $result['sum'] = number_format($result['sum'], 3, ",", " ");
-            }
+            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
             $results[] = $result;
         }
 
