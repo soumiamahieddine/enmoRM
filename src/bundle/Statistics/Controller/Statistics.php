@@ -105,7 +105,7 @@ class Statistics
 
         $statistics = ["unit" => $this->sizeFilters[$sizeFilter]];
         if (is_null($operation) || empty($operation)) {
-            $statistics = $this->defaultStats($startDate, $endDate, $filter, $statistics);
+            $statistics = $this->defaultStats($startDate, $endDate, $statistics);
         } elseif (!empty($operation) && !in_array($operation, ['deposit', 'deleted', 'conserved', 'restituted', 'transfered', 'communicated'])) {
             throw new \core\Exception\BadRequestException($this->translator->getText("Operation type not supported"));
         } elseif (!empty($operation) && is_null($filter)) {
@@ -143,25 +143,31 @@ class Statistics
      *
      * @param  datetime $startDate  Starting Date
      * @param  datetime $endDate    End date
-     * @param  string   $filter     Filtering parameter to group query by
      * @param  array    $statistics Array of statistics
      *
      * @return array                Associative array of statistics
      */
-    protected function defaultStats($startDate, $endDate, $filter, $statistics = [])
+    protected function defaultStats($startDate, $endDate, $statistics = [])
     {
-        $statistics['depositMemorySize'] = $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate, true);
-        $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $filter, $startDate, $endDate, true);
-        $statistics['deletedMemorySize'] = $this->getSizeByEventType('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonColumnNumber = 6, $startDate, $endDate);
-        $statistics['deletedMemoryCount'] = $this->getCountByEventType('ArchiveDestructionRequest', $filter, $startDate, $endDate);
+        $statistics['depositMemorySize'] = floatval(str_replace(" ", "", $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate, true)))
+                                        + floatval(str_replace(" ", "", $this->getSizeForDirectEvent('recordsManagement/deposit', 8, null, $startDate, $endDate)));
+        $statistics['depositMemorySize'] = $this->formatNumber($statistics['depositMemorySize'], false);
+        $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $startDate, $endDate, true)
+                                        + $this->getCountForDirectEvent('recordsManagement/deposit', null, $startDate, $endDate);
+
+        $statistics['deletedMemorySize'] = floatval(str_replace(" ", "", $this->getSizeByEventType('ArchiveDestructionRequest', ['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate)))
+                                        + floatval(str_replace(" ", "", $this->getSizeForDirectEvent('recordsManagement/destruction', 6, null, $startDate, $endDate)));
+        $statistics['deletedMemorySize'] = $this->formatNumber($statistics['deletedMemorySize'], false);
+        $statistics['deletedMemoryCount'] = $this->getCountByEventType('ArchiveDestructionRequest', $startDate, $endDate)
+                                        + $this->getCountForDirectEvent('recordsManagement/destruction', null, $startDate, $endDate);
 
         if (\laabs::configuration('medona')['transaction']) {
             $statistics['transferedMemorySize'] = $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/outgoingTransfer'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['transferedMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $filter, $startDate, $endDate);
+            $statistics['transferedMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $startDate, $endDate);
             $statistics['restitutionMemorySize'] = $this->getSizeByEventType('ArchiveRestitutionRequest', ['recordsManagement/restitution'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['restitutionMemoryCount'] = $this->getCountByEventType('ArchiveRestitutionRequest', $filter, $startDate, $endDate);
+            $statistics['restitutionMemoryCount'] = $this->getCountByEventType('ArchiveRestitutionRequest', $startDate, $endDate);
             $statistics['communicatedMemorySize'] = $this->getSizeByEventType('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonColumnNumber = 6, $startDate, $endDate);
-            $statistics['communicatedMemoryCount'] = $this->getCountByEventType('ArchiveDeliveryRequest', $filter, $startDate, $endDate);
+            $statistics['communicatedMemoryCount'] = $this->getCountByEventType('ArchiveDeliveryRequest', $startDate, $endDate);
         }
 
         $statistics['currentMemorySize'] = $this->getArchiveSize($endDate);
@@ -171,15 +177,37 @@ class Statistics
             $statistics['evolutionSize'] = $statistics['currentMemorySize'] - $this->getArchiveSize($startDate);
             $statistics['evolutionCount'] = $statistics['currentMemoryCount'] - $this->getArchiveCount($startDate);
             if ($statistics['evolutionSize'] != (integer)$statistics['evolutionSize']) {
-                $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ",", " ");
+                $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ".", " ");
             }
         }
 
         if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
-            $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ",", " ");
+            $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ".", " ");
         }
 
         return $statistics;
+    }
+
+    protected function addDirectStats($stats, $directStats, $filter, $resultType)
+    {
+        foreach ($directStats as $groupBy => $result) {
+            $groupByFound = false;
+            for ($i = 0; $i < count($stats); $i++) {
+                if ($stats[$i][$filter] == $groupby) {
+                    if ($resultType == 'sum') {
+                        $result1 = floatval(str_replace(" ", "", $stats[$i][$resultType]));
+                        $result2 = floatval(str_replace(" ", "", $result));
+                    }
+                    $stats[$i][$resultType] = $this->formatNumber($resultType == 'sum' ? $result1 + $result2 : $stats[$i][$resultType] + $result);
+                    $groupByFound = true;
+                    break;
+                }
+            }
+            if (!$groupByFound) {
+                $stats[] = [$filter => $groupBy, $resultType => $result];
+            }
+        }
+        return $stats;
     }
 
     /**
@@ -193,9 +221,14 @@ class Statistics
      */
     protected function depositStats($startDate, $endDate, $filter, $statistics = [])
     {
-        $jsonSizeColumnNumber = 8;
-        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonSizeColumnNumber, $startDate, $endDate, $filter, true);
+        $statistics['groupedDepositMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], 8, $startDate, $endDate, $filter, true);
+        $directArchiveTransferStatsSize = $this->getSizeForDirectEvent('recordsManagement/deposit', 8, $filter, $startDate, $endDate);
+        $statistics['groupedDepositMemorySize'] = $this->addDirectStats($statistics['groupedDepositMemorySize'], $directArchiveTransferStatsSize, strtolower($filter), 'sum');
+
         $statistics['groupedDepositMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveTransfer', $startDate, $endDate, $filter, true);
+        $directArchiveTransferStatsCount = $this->getCountForDirectEvent('recordsManagement/deposit', $filter, $startDate, $endDate);
+        $statistics['groupedDepositMemoryCount'] = $this->addDirectStats($statistics['groupedDepositMemoryCount'], $directArchiveTransferStatsCount, strtolower($filter), 'count');
+
         return $statistics;
     }
 
@@ -210,9 +243,13 @@ class Statistics
      */
     protected function deletedStats($startDate, $endDate, $filter, $statistics = [])
     {
-        $jsonSizeColumnNumber = 6;
-        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
+        $statistics['deletedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDestructionRequest', ['recordsManagement/destruction', 'recordsManagement/elimination'], 6, $startDate, $endDate, $filter);
+        $directDeletedStatsSize = $this->getSizeForDirectEvent('recordsManagement/destruction', 6, $filter, $startDate, $endDate);
+        $statistics['deletedGroupedMemorySize'] = $this->addDirectStats($statistics['deletedGroupedMemorySize'], $directDeletedStatsSize, strtolower($filter), 'sum');
+
         $statistics['deletedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDestructionRequest', $startDate, $endDate, $filter);
+        $directDeletedStatsCount = $this->getCountForDirectEvent('recordsManagement/destruction', $filter, $startDate, $endDate);
+        $statistics['deletedGroupedMemoryCount'] = $this->addDirectStats($statistics['deletedGroupedMemoryCount'], $directDeletedStatsCount, strtolower($filter), 'count');
 
         return $statistics;
     }
@@ -356,10 +393,8 @@ class Statistics
      *
      * @return integer                        Count of size for events
      */
-    protected function getCountByEventType($messageType, $filter, $startDate = null, $endDate = null, $isIncoming = false)
+    protected function getCountByEventType($messageType, $startDate = null, $endDate = null, $isIncoming = false)
     {
-        $isArchivalProfile = $filter == "archivalProfile";
-
         if ($messageType == "ArchiveTransfer") {
             $isIncomingTest = '';
             if (!$isIncoming) {
@@ -609,10 +644,7 @@ EOT;
         $stmt->execute();
         $results = [];
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] /= pow(1000, $this->sizeFilter);
-            if ($result['sum'] != (integer)$result['sum']) {
-                $result['sum'] = number_format($result['sum'], 3, ",", " ");
-            }
+            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
             $results[] = $result;
         }
 
@@ -665,6 +697,104 @@ EOT;
     }
 
     /**
+     * Sum all archives size for direct archive transfer
+     *
+     * @param  datetime $startDate        Starting Date
+     * @param  datetime $endDate          End date
+     *
+     * @return integer                    Sum of size for events
+     */
+    protected function getSizeForDirectEvent($eventType, $jsonSizeColumnNumber, $groupBy = null, $startDate = null, $endDate = null)
+    {
+        if ($groupBy) {
+            $selectCondition = $groupBy == 'archivalProfile' ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"';
+            $groupByCondition = $groupBy == 'archivalProfile' ? '"archivalProfile"."name"' : '"organization"."displayName"';
+            $joinCondition = $groupBy == 'archivalProfile'
+                ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
+                ON "archivalProfile"."reference" = "event"."eventInfo"::json->>10'
+                : ' INNER JOIN "organization"."organization" "organization"
+                ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
+        }
+
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS '.$groupBy.', ' : '').'SUM(CAST("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.' AS INTEGER))
+        FROM "lifeCycle"."event" "event"'.
+        ($groupBy ? $joinCondition : '').'
+        WHERE "event"."eventType" IN (\''.$eventType.'\')
+        AND "event"."objectId" NOT IN (
+            SELECT "objectId"
+            FROM "medona"."unitIdentifier"
+        )'.
+        ($startDate ? ' AND "event"."timestamp">\''.$startDate.'\'::timestamp AND "event"."timestamp"<\''.$endDate.'\'::timestamp' : '').
+        ($groupBy ? ' GROUP BY ' . $groupByCondition : '');
+
+        $result = $this->executeQuery($query);
+
+        $sum = 0;
+        if ($groupBy) {
+            $groupBy = strtolower($groupBy);
+            $sum = [];
+            foreach ($result as $row) {
+                if (isset($row[$groupBy])) {
+                    $sum[$row[$groupBy]] = $row["sum"];
+                }
+            }
+        } elseif (isset($result[0]['sum'])) {
+            $sum = $result[0]['sum'];
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Count all archives for direct archive transfer
+     *
+     * @param  datetime $startDate        Starting Date
+     * @param  datetime $endDate          End date
+     *
+     * @return integer                    Sum of size for events
+     */
+    protected function getCountForDirectEvent($eventType, $groupBy = false, $startDate = null, $endDate = null)
+    {
+        if ($groupBy) {
+            $selectCondition = $groupBy == 'archivalProfile' ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"';
+            $groupByCondition = $groupBy == 'archivalProfile' ? '"archivalProfile"."name"' : '"organization"."displayName"';
+            $joinCondition = $groupBy == 'archivalProfile'
+                ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
+                ON "archivalProfile"."reference" = "event"."eventInfo"::json->>10'
+                : ' INNER JOIN "organization"."organization" "organization"
+                ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
+        }
+
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS '.$groupBy.', ' : '').'COUNT("event"."eventId")
+        FROM "lifeCycle"."event" "event"'.
+        ($groupBy ? $joinCondition : '').'
+        WHERE "event"."eventType" IN (\''.$eventType.'\')
+        AND "event"."objectId" NOT IN (
+            SELECT "objectId"
+            FROM "medona"."unitIdentifier"
+        )'.
+        ($startDate ? ' AND "event"."timestamp">\''.$startDate.'\'::timestamp AND "event"."timestamp"<\''.$endDate.'\'::timestamp' : '').
+        ($groupBy ? ' GROUP BY ' . $groupByCondition : '');
+
+        $result = $this->executeQuery($query);
+        
+        $count = 0;
+        if ($groupBy) {
+            $groupBy = strtolower($groupBy);
+            $count = [];
+            foreach ($result as $row) {
+                if (isset($row[$groupBy])) {
+                    $count[$row[$groupBy]] = $row["count"];
+                }
+            }
+        } elseif (isset($result[0]['count'])) {
+            $count = $result[0]['count'];
+        }
+
+        return $count;
+    }
+
+    /**
      * Stringify array of type of events for better sql query
      *
      * @param string $eventTypes Types of event
@@ -689,30 +819,39 @@ EOT;
     }
 
     /**
+     * format a number
+     *
+     * @param float     $number     Number to format
+     *
+     * @return string               Formatted number
+     */
+    protected function formatNumber($number, $formatType = true)
+    {
+        if ($formatType) {
+            $number /= pow(1000, $this->sizeFilter);
+        }
+        if ($number != (integer)$number) {
+            $number = number_format($number, 3, ".", " ");
+        }
+        return $number;
+    }
+
+    /**
      * Execute query
      *
      * @param string   $query                           Query to send
      * @param string   $secondary_parameters            Secondary parameters
-     * @param DateTime $startDate                       Start Date
-     * @param DateTime $endDate                         End date
      *
      * @return array                                    Results of query
      */
-    public function executeQuery($query, $secondary_parameters = [], $addToEvolution = false)
+    public function executeQuery($query, $secondary_parameters = [])
     {
         $stmt = $this->pdo->prepare($query);
         $stmt->execute($secondary_parameters);
         $results = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            if (isset($result['sum'])) {
-                $result['sum'] /= pow(1000, $this->sizeFilter);
-                if ($result['sum'] != (integer)$result['sum']) {
-                    $result['sum'] = number_format($result['sum'], 3, ",", " ");
-                }
-            } else {
-                $result['sum'] = '0,000';
-            }
+            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
             $results[] = $result;
         }
 
