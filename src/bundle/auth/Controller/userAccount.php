@@ -129,7 +129,6 @@ class userAccount
                     break;
             }
         }
-
         $userAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
 
         return $this->removeSensibleData($userAccounts);
@@ -168,8 +167,6 @@ class userAccount
         } else {
             $query .= "accountType='user'";
         }
-        // var_dump($query);
-        // exit;
         $userAccounts = $this->sdoFactory->find('auth/account', $query);
 
         return $userAccounts;
@@ -221,10 +218,6 @@ class userAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->sdoFactory->read("auth/account", $accountToken->accountId);
 
-        if ($this->hasSecurityLevel) {
-            $this->checkPrivilegesAccess($account, $userAccount);
-        }
-
         $organizations = $userAccount->organizations;
         $userAccount = \laabs::cast($userAccount, "auth/account");
         $userAccount->accountId = \laabs::newId();
@@ -253,7 +246,25 @@ class userAccount
             throw \laabs::newException("auth/invalidUserInformationException", $validationErrors);
         }
 
-        $encryptedPassword = password_hash($userAccount->password, PASSWORD_DEFAULT);
+        $securityLevel = NULL;
+        if ($this->hasSecurityLevel) {
+            $securityLevel = $account->getSecurityLevel();
+        }
+        if ($securityLevel == $account::SECLEVEL_GENADMIN) {
+            if (!$userAccount->ownerOrgId || !$userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        } elseif ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
+            
+            if (!$organizations || $userAccount->isAdmin) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+        }
+
+        $encryptedPassword = $userAccount->password;
+        if ($this->passwordEncryption != null) {
+            $encryptedPassword = hash($this->passwordEncryption, $userAccount->password);
+        }
 
         $userAccount->password = $encryptedPassword;
         $userAccount->passwordChangeRequired = true;
@@ -294,6 +305,7 @@ class userAccount
     public function edit($userAccountId)
     {
         $userAccountModel = $this->sdoFactory->read('auth/account', $userAccountId);
+
         $roleMembers = $this->sdoFactory->find("auth/roleMember", "userAccountId='$userAccountId'");
         $userAccount = \laabs::castMessage($userAccountModel, 'auth/userAccount');
 
@@ -398,6 +410,9 @@ class userAccount
             throw \laabs::newException("auth/unknownUserException");
         }
 
+        $accountToken = \laabs::getToken('AUTH');
+        $currentUserAccount = $this->sdoFactory->read("auth/account", $accountToken->accountId);
+
         $allowUserModification = true;
         if (isset(\laabs::configuration('auth')['allowUserModification'])) {
             $allowUserModification = (bool) \laabs::configuration('auth')['allowUserModification'];
@@ -412,6 +427,11 @@ class userAccount
             $userAccount->emailAddress = $user->emailAddress;
         }
 
+        
+        if ($this->hasSecurityLevel && $currentUserAccount->getSecurityLevel() == \bundle\auth\Model\role::SECLEVEL_FUNCADMIN) {
+            $this->checkPrivilegesAccess($currentUserAccount, $userAccount);
+        }
+        
         if (!$userAccount->isAdmin) {
             if (isset($userAccount->modificationRight)) {
                 if ($userAccount->organizations == null) {
@@ -1097,6 +1117,15 @@ class userAccount
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
             if (!$targetUserAccount->organizations || $targetUserAccount->isAdmin) {
                 throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            }
+            
+            if (array_search($targetUserAccount->accountName, array_column($this->userList(), 'accountName')) === false) {
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this user account");
+            }
+            if ($securityLevel == $ownAccount::SECLEVEL_USER) {
+                if ($ownAccount != $targetServiceAccount) {
+                    throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+                }
             }
         }
     }

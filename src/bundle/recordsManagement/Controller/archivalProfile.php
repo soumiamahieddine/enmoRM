@@ -130,7 +130,7 @@ class archivalProfile
                 $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId);
             }
         } catch (\Exception $exception) {
-            throw new \core\Exception\BadRequestException("Profile %s not found", 200, null, $reference);
+            throw new \core\Exception\BadRequestException("Profile %s not found", 404, null, $reference);
         }
 
         return $archivalProfile;
