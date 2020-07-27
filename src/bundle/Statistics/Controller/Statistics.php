@@ -154,13 +154,13 @@ class Statistics
     {
         $statistics['depositMemorySize'] = floatval(str_replace(" ", "", $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate, true)))
                                         + floatval(str_replace(" ", "", $this->getSizeForDirectEvent('recordsManagement/deposit', 8, null, $startDate, $endDate)));
-        $statistics['depositMemorySize'] = $this->formatSize($statistics['depositMemorySize'], false);
+        $statistics['depositMemorySize'] = $this->formatNumber($statistics['depositMemorySize'], false);
         $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $startDate, $endDate, true)
                                         + $this->getCountForDirectEvent('recordsManagement/deposit', null, $startDate, $endDate);
 
         $statistics['deletedMemorySize'] = floatval(str_replace(" ", "", $this->getSizeByEventType('ArchiveDestructionRequest', ['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate)))
                                         + floatval(str_replace(" ", "", $this->getSizeForDirectEvent('recordsManagement/destruction', 6, null, $startDate, $endDate)));
-        $statistics['deletedMemorySize'] = $this->formatSize($statistics['deletedMemorySize'], false);
+        $statistics['deletedMemorySize'] = $this->formatNumber($statistics['deletedMemorySize'], false);
         $statistics['deletedMemoryCount'] = $this->getCountByEventType('ArchiveDestructionRequest', $startDate, $endDate)
                                         + $this->getCountForDirectEvent('recordsManagement/destruction', null, $startDate, $endDate);
 
@@ -189,10 +189,6 @@ class Statistics
             $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ".", " ");
         }
 
-        if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
-            $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ",", " ");
-        }
-
         return $statistics;
     }
 
@@ -206,7 +202,7 @@ class Statistics
                         $result1 = floatval(str_replace(" ", "", $stats[$i][$resultType]));
                         $result2 = floatval(str_replace(" ", "", $result));
                     }
-                    $stats[$i][$resultType] = $this->formatSize($resultType == 'sum' ? $result1 + $result2 : $stats[$i][$resultType] + $result);
+                    $stats[$i][$resultType] = $this->formatNumber($resultType == 'sum' ? $result1 + $result2 : $stats[$i][$resultType] + $result);
                     $groupByFound = true;
                     break;
                 }
@@ -751,10 +747,7 @@ EOT;
         $stmt->execute();
         $results = [];
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] /= pow(1000, $this->sizeFilter);
-            if ($result['sum'] != (integer)$result['sum']) {
-                $result['sum'] = number_format($result['sum'], 3, ",", " ");
-            }
+            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
             $results[] = $result;
         }
 
@@ -992,27 +985,24 @@ EOT;
     /**
      * Sum all archives size for direct archive transfer
      *
-     * @param  string   $eventType             Type of event
-     * @param  integer  $jsonSizeColumnNumber  json Column number for size parameter in lifeCycle event table
-     * @param  string   $groupBy               Ordering parameter
-     * @param  datetime $startDate             Starting Date
-     * @param  datetime $endDate               End date
+     * @param  datetime $startDate        Starting Date
+     * @param  datetime $endDate          End date
      *
-     * @return integer                         Sum of size for events
+     * @return integer                    Sum of size for events
      */
     protected function getSizeForDirectEvent($eventType, $jsonSizeColumnNumber, $groupBy = null, $startDate = null, $endDate = null)
     {
         if ($groupBy) {
-            $selectCondition = ($groupBy == 'archivalProfile') ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"';
-            $groupByCondition = ($groupBy == 'archivalProfile') ? '"archivalProfile"."name"' : '"organization"."displayName"';
-            $joinCondition = ($groupBy == 'archivalProfile')
+            $selectCondition = $groupBy == 'archivalProfile' ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"';
+            $groupByCondition = $groupBy == 'archivalProfile' ? '"archivalProfile"."name"' : '"organization"."displayName"';
+            $joinCondition = $groupBy == 'archivalProfile'
                 ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
                 ON "archivalProfile"."reference" = "event"."eventInfo"::json->>10'
                 : ' INNER JOIN "organization"."organization" "organization"
                 ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
         }
 
-        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'SUM(CAST("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.' AS INTEGER))
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS '.$groupBy.', ' : '').'SUM(CAST("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.' AS INTEGER))
         FROM "lifeCycle"."event" "event"'.
         ($groupBy ? $joinCondition : '').'
         WHERE "event"."eventType" IN (\''.$eventType.'\')
@@ -1027,6 +1017,7 @@ EOT;
 
         $sum = 0;
         if ($groupBy) {
+            $groupBy = strtolower($groupBy);
             $sum = [];
             foreach ($result as $row) {
                 if (isset($row[$groupBy])) {
@@ -1043,8 +1034,6 @@ EOT;
     /**
      * Count all archives for direct archive transfer
      *
-     * @param  string   $eventType        Type of event
-     * @param  string   $groupBy          Ordering parameter
      * @param  datetime $startDate        Starting Date
      * @param  datetime $endDate          End date
      *
@@ -1062,7 +1051,7 @@ EOT;
                 ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
         }
 
-        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'COUNT("event"."eventId")
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS '.$groupBy.', ' : '').'COUNT("event"."eventId")
         FROM "lifeCycle"."event" "event"'.
         ($groupBy ? $joinCondition : '').'
         WHERE "event"."eventType" IN (\''.$eventType.'\')
@@ -1077,6 +1066,7 @@ EOT;
         
         $count = 0;
         if ($groupBy) {
+            $groupBy = strtolower($groupBy);
             $count = [];
             foreach ($result as $row) {
                 if (isset($row[$groupBy])) {
@@ -1115,21 +1105,21 @@ EOT;
     }
 
     /**
-     * format a size
+     * format a number
      *
-     * @param float     $size       Size to format
+     * @param float     $number     Number to format
      *
-     * @return string               Formatted size
+     * @return string               Formatted number
      */
-    protected function formatSize($size, $formatType = true)
+    protected function formatNumber($number, $formatType = true)
     {
         if ($formatType) {
-            $size /= pow(1000, $this->sizeFilter);
+            $number /= pow(1000, $this->sizeFilter);
         }
-        if ($size != (integer)$size) {
-            $size = number_format($size, 3, ".", " ");
+        if ($number != (integer)$number) {
+            $number = number_format($number, 3, ".", " ");
         }
-        return $size;
+        return $number;
     }
 
     /**
@@ -1147,7 +1137,7 @@ EOT;
         $results = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] = isset($result['sum']) ? $this->formatSize($result['sum']) : '0.000';
+            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
             $results[] = $result;
         }
 
