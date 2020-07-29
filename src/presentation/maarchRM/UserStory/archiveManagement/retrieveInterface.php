@@ -69,8 +69,10 @@ interface retrieveInterface
      * @param string  $text
      * @param integer $maxResults
      *
-     * @return recordsManagement/archive/search
      * @uses recordsManagement/archives/read
+     * @uses recordsManagement/archives/readCount
+     *
+     * @return recordsManagement/archive/search
      */
     public function readRecordsmanagementArchives(
         $archiveId = null,

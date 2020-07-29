@@ -159,6 +159,19 @@ class log implements archiveDescriptionInterface
     }
 
     /**
+     * Count log objects
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
+     *
+     * @return object Array of description objects
+     */
+    public function count($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
+    {
+        return count($this->search($description, $text, $args, $checkAccess, $maxResults = null));
+    }
+
+    /**
      * Retrieve a journal by evenement date
      * @param string $type The journal type
      * @param string $date The date of the event

@@ -9,7 +9,7 @@
         </ol>
     </div>
     <div id="folderContents" class="folderContents hide">
-        <div id="fodlerToolbar" class="row">
+        <div id="folderToolbar" class="row">
             <h4 class="pull-left col-md-4 lockedFolder hide">
                 <i class="text-danger fa fa-lock" style="font-size: 30px"/>
             </h4>
@@ -230,7 +230,7 @@
                 type        : "GET",
                 dataType    : 'json',
                 success     : function (response) {
-                    ArchiveFolderList.buildResultList(response.archives);
+                    ArchiveFolderList.buildResultList(response.archives, null, false, response.countWithoutLimit);
                     if (locked || disabled) {
                         ArchiveFolderList.folderPanel.find('.addChildrenArchive').remove();
                     }
@@ -259,7 +259,7 @@
             $("#folderToolbarSearch").data("orgregnumber", orgRegNumber).data("folderid", folderId);
         },
 
-        buildResultList: function(archives, options, showArchivePath) {
+        buildResultList: function(archives, options, showArchivePath, totalResult) {
             // to inititate default value and avoid bug on IE 11
             if (options === undefined) {
                 options = null;
@@ -285,8 +285,9 @@
 
             defaultOptions = {
                 datas: archives,
+                total: totalResult,
                 rowMerge: ArchiveFolderList.mergeRow,
-                rowMaxNumber: 10,
+                rowMaxNumber: ($('#fullTextSearchForm').find('[name=maxResults]').val() != 'undefined' ? parseInt($('#fullTextSearchForm').find('[name=maxResults]').val(), 10) : 10),
                 rowTranslation: $('#rows_text').text(),
                 emptyMessage: '<i class="text-muted"><br\/><span class="fa fa-times">&nbsp;<\/span>' + $('#emptyFolder_text').html() + '<\/i>',
                 itemsName: [$('#archive_text').text(), $('#archives_text').text()],
