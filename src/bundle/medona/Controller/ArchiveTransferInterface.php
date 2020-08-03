@@ -37,6 +37,17 @@ interface ArchiveTransferInterface
     public function receive($message);
 
     /**
+     * Receive message with all contents embedded
+     * @param string $messageFile   The message binary contents OR a filename
+     * @param string $schema        The schema used
+     * @param string $source        The source name to use
+     * @param array  $schema        An array of params
+     *
+     * @return medona/message
+     */
+    public function receiveSource($messageFile, $schema, $source = null, $params = []);
+
+    /**
      * Validate message against schema and rules
      * @param string $messageId The message identifier
      * @param object $archivalAgreement The archival agreement
