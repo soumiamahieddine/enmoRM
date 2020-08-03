@@ -77,6 +77,17 @@ interface archiveTransferInterface
     public function create($messageFile, $attachments = array(), $schema = null, $filename = null);
 
     /**
+     * Receive message with all contents embedded
+     * @param string $messageFile   The message binary contents OR a filename
+     * @param string $schema        The schema used
+     * @param string $source        The source name to use
+     * @param array  $schema        An array of params
+     *
+     * @action medona/ArchiveTransfer/receiveSource
+     */
+    public function createSource($messageFile, $schema, $source = null, $params = []);
+
+    /**
      * Validate messages against schema and rules
      *
      * @action medona/ArchiveTransfer/validateBatch
