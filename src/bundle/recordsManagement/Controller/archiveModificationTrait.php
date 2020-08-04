@@ -96,6 +96,10 @@ trait archiveModificationTrait
                 $retentionRule->retentionDuration = $refRetentionRule->duration;
             }
         }
+        
+        if (isset(\laabs::configuration("medona")['formatDisplay'])) {
+            $formatDisplay = \laabs::configuration("medona")['formatDisplay'];
+        }
 
         $retentionRuleReceived = $retentionRule;
 

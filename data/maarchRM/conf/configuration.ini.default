@@ -156,6 +156,11 @@ chainWithTimestamp = false;
 ; false = Disable
 transaction = false
 
+;To display and choose the message's format on modification Request
+; true = visible
+; false = hidden
+formatDisplay = false
+
 ; Path to the message exchange directory
 messageDirectory = "%laabsDirectory%/data/maarchRM/medona"
 
