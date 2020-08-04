@@ -344,6 +344,7 @@ class Statistics
      * @param  datetime $startDate starting date
      * @param  datetime $endDate   End date
      * @param  string   $filter    Group by argument
+     * @param  array    $statistics Array of statistics
      *
      * @return array               Associative of statistics
      */
@@ -718,13 +719,7 @@ EOT;
         ).
         ' GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
         
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $results = [];
-        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
-            $results[] = $result;
-        }
+        $results = $this->executeQuery($query);
 
         return $results;
     }
@@ -764,12 +759,7 @@ EOT;
                 ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp)) AND "archive"."parentArchiveId" IS NULL
                 GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $results = [];
-        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $results[] = $result;
-        }
+        $results = $this->executeQuery($query);
 
         return $results;
     }
