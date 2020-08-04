@@ -175,8 +175,9 @@ class ArchiveTransfer extends abstractMessage
         if (!isset($params['params'])) {
             $params['params'] = [];
         }
+        $params['filename'] = "$messageDir/" . isset($params['filename']) ? $params['filename'] : $message->messageId;
 
-        $rawSource = $this->getRawSource($schema, $source);
+        $rawSource = $this->getRawSource($schema, $source, $params);
         $params['params'] = array_merge($params['params'], $rawSource['params']);
 
         $archiveTransferConnectorController = \laabs::newController($rawSource["service"]);
@@ -1234,13 +1235,15 @@ class ArchiveTransfer extends abstractMessage
         return $res;
     }
 
-    protected function getRawSource($schema, $source)
+    protected function getRawSource($schema, $source, $params)
     {
         $rawSource = ["params" => []];
 
         if (!isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source])) {
             $this->sendError("404", "The source '".$source."' is unknown for schema '".$schema."'");
-            throw \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            $exception->errors = $this->errors;
+            throw $exception;
         }
 
         $sourceJson = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source];
@@ -1249,7 +1252,15 @@ class ArchiveTransfer extends abstractMessage
         foreach ($sourceJson['params'] as $name => $param) {
             if ($param['source'] == 'param') {
                 $rawSource["params"][$name] = $param;
+            } elseif (isset($param['required']) && $param['required'] = true) {
+                $this->sendError("404", "Missing required parameter '".$name."'");
             }
+        }
+
+        if (count($this->errors) > 0) {
+            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            $exception->errors = $this->errors;
+            throw $exception;
         }
 
         return $rawSource;
