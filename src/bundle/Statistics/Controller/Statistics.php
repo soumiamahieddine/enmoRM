@@ -340,6 +340,7 @@ class Statistics
      * @param  datetime $startDate starting date
      * @param  datetime $endDate   End date
      * @param  string   $filter    Group by argument
+     * @param  array    $statistics Array of statistics
      *
      * @return array               Associative of statistics
      */
@@ -714,13 +715,7 @@ EOT;
         ).
         ' GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
         
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $results = [];
-        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
-            $results[] = $result;
-        }
+        $results = $this->executeQuery($query);
 
         return $results;
     }
@@ -760,12 +755,7 @@ EOT;
                 ' WHERE "depositDate" < \''.$endDate.'\'::timestamp AND ("status" = \'preserved\' OR ("lastModificationDate" IS NOT NULL AND "lastModificationDate">\''.$endDate.'\'::timestamp)) AND "archive"."parentArchiveId" IS NULL
                 GROUP BY '.($isArchivalProfile ? '"archivalProfile"."name"' : '"organization"."displayName"');
 
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute();
-        $results = [];
-        while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $results[] = $result;
-        }
+        $results = $this->executeQuery($query);
 
         return $results;
     }
@@ -781,16 +771,16 @@ EOT;
     protected function getSizeForDirectEvent($eventType, $jsonSizeColumnNumber, $groupBy = null, $startDate = null, $endDate = null)
     {
         if ($groupBy) {
-            $selectCondition = $groupBy == 'archivalProfile' ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"';
-            $groupByCondition = $groupBy == 'archivalProfile' ? '"archivalProfile"."name"' : '"organization"."displayName"';
-            $joinCondition = $groupBy == 'archivalProfile'
+            $selectCondition = ($groupBy == 'archivalProfile') ? 'COALESCE("archivalProfile"."name", \'Without profile\')' : '"organization"."displayName"';
+            $groupByCondition = ($groupBy == 'archivalProfile') ? '"archivalProfile"."name"' : '"organization"."displayName"';
+            $joinCondition = ($groupBy == 'archivalProfile')
                 ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
                 ON "archivalProfile"."reference" = "event"."eventInfo"::json->>10'
                 : ' INNER JOIN "organization"."organization" "organization"
                 ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
         }
 
-        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS '.$groupBy.', ' : '').'SUM(CAST("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.' AS INTEGER))
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'SUM(CAST("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.' AS INTEGER))
         FROM "lifeCycle"."event" "event"'.
         ($groupBy ? $joinCondition : '').'
         WHERE "event"."eventType" IN (\''.$eventType.'\')
@@ -805,7 +795,6 @@ EOT;
 
         $sum = 0;
         if ($groupBy) {
-            $groupBy = strtolower($groupBy);
             $sum = [];
             foreach ($result as $row) {
                 if (isset($row[$groupBy])) {
@@ -839,7 +828,7 @@ EOT;
                 ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
         }
 
-        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS '.$groupBy.', ' : '').'COUNT("event"."eventId")
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'COUNT("event"."eventId")
         FROM "lifeCycle"."event" "event"'.
         ($groupBy ? $joinCondition : '').'
         WHERE "event"."eventType" IN (\''.$eventType.'\')
@@ -854,7 +843,6 @@ EOT;
         
         $count = 0;
         if ($groupBy) {
-            $groupBy = strtolower($groupBy);
             $count = [];
             foreach ($result as $row) {
                 if (isset($row[$groupBy])) {
