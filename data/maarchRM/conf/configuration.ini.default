@@ -5,7 +5,7 @@
 @include menu.ini
 
 ; Default max result in search screens
-maxResults = 200
+maxResults = 500
 
 ; Public archive mode
 publicArchives = false
