@@ -37,11 +37,11 @@ interface StatisticsInterface
     /**
      * Retrieve basics stats
      *
-     * @param string $operation
-     * @param string $startDate
-     * @param string $endDate
-     * @param string $filter
-     * @param float  $sizeFilter
+     * @param string   $operation
+     * @param string   $startDate
+     * @param string   $endDate
+     * @param string   $filter
+     * @param integer  $sizeFilter
      *
      * @action Statistics/Statistics/retrieve
      */

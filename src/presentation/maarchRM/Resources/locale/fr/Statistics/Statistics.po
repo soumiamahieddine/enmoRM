@@ -62,8 +62,8 @@ msgstr "La date de début est obligatoire si la date de fin est remplie"
 msgid "Operation type not supported"
 msgstr "Le type d'opération n'est pas supporté"
 
-msgid "Filter cannot be null if operation is not"
-msgstr "Le filtre ne peut pas être nul si l'opération ne l'est pas"
+msgid "Filter cannot be null if an operation is selected"
+msgstr "Le filtre ne peut être vide si une opération est sélectionnée"
 
 msgid "Start Date cannot be past end date"
 msgstr "La date de début ne peut pas être après la date de fin"
