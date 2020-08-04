@@ -29,30 +29,32 @@ trait archiveAccessTrait
 {
     /**
      * Search archives by profile / dates / agreement
-     * @param string $archiveId
-     * @param string $profileReference
-     * @param string $status
-     * @param string $archiveName
-     * @param string $agreementReference
-     * @param string $archiveExpired
-     * @param string $finalDisposition
-     * @param string $originatorOrgRegNumber
-     * @param string $originatorOwnerOrgId
-     * @param string $originatorArchiveId
-     * @param array  $originatingDate
-     * @param string $filePlanPosition
-     * @param bool   $hasParent
-     * @param string $description
-     * @param string $text
-     * @param bool   $partialRetentionRule
-     * @param string $retentionRuleCode
-     * @param string $depositStartDate
-     * @param string $depositEndDate
-     * @param string $originatingStartDate
-     * @param string $originatingEndDate
-     * @param string $archiverArchiveId
-     * @param string $processingStatus
-     * @param bool   $checkAccess
+     *
+     * @param string  $archiveId
+     * @param string  $profileReference
+     * @param string  $status
+     * @param string  $archiveName
+     * @param string  $agreementReference
+     * @param string  $archiveExpired
+     * @param string  $finalDisposition
+     * @param string  $originatorOrgRegNumber
+     * @param string  $originatorOwnerOrgId
+     * @param string  $originatorArchiveId
+     * @param array   $originatingDate
+     * @param string  $filePlanPosition
+     * @param bool    $hasParent
+     * @param string  $description
+     * @param string  $text
+     * @param bool    $partialRetentionRule
+     * @param string  $retentionRuleCode
+     * @param string  $depositStartDate
+     * @param string  $depositEndDate
+     * @param string  $originatingStartDate
+     * @param string  $originatingEndDate
+     * @param string  $archiverArchiveId
+     * @param string  $processingStatus
+     * @param bool    $checkAccess
+     * @param integer $maxResults
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -80,13 +82,163 @@ trait archiveAccessTrait
         $originatingEndDate = null,
         $archiverArchiveId = null,
         $processingStatus = null,
-        $checkAccess = true
+        $checkAccess = true,
+        $maxResults = null
     ) {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
 
         $archives = [];
 
+        list($searchClasses, $archiveArgs) = $this->getClassesAndArchiveArgsForSearch(
+            $archiveId,
+            $profileReference,
+            $status,
+            $archiveName,
+            $agreementReference,
+            $archiveExpired,
+            $finalDisposition,
+            $originatorOrgRegNumber,
+            $originatorOwnerOrgId,
+            $originatorArchiveId,
+            $originatingDate,
+            $filePlanPosition,
+            $hasParent,
+            $partialRetentionRule,
+            $retentionRuleCode,
+            $depositStartDate,
+            $depositEndDate,
+            $originatingStartDate,
+            $originatingEndDate,
+            $archiverArchiveId,
+            $processingStatus
+        );
+
+        foreach ($searchClasses as $descriptionClass => $descriptionController) {
+            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs, $checkAccess, $maxResults));
+        }
+
+        return $archives;
+    }
+
+    /**
+     * Count archives by profile / dates / agreement
+     *
+     * @param string  $archiveId
+     * @param string  $profileReference
+     * @param string  $status
+     * @param string  $archiveName
+     * @param string  $agreementReference
+     * @param string  $archiveExpired
+     * @param string  $finalDisposition
+     * @param string  $originatorOrgRegNumber
+     * @param string  $originatorOwnerOrgId
+     * @param string  $originatorArchiveId
+     * @param array   $originatingDate
+     * @param string  $filePlanPosition
+     * @param bool    $hasParent
+     * @param string  $description
+     * @param string  $text
+     * @param bool    $partialRetentionRule
+     * @param string  $retentionRuleCode
+     * @param string  $depositStartDate
+     * @param string  $depositEndDate
+     * @param string  $originatingStartDate
+     * @param string  $originatingEndDate
+     * @param string  $archiverArchiveId
+     * @param string  $processingStatus
+     * @param bool    $checkAccess
+     * @param integer $maxResults
+     *
+     * @return integer $count Count of archives from search
+     */
+    public function count(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $description = null,
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null,
+        $archiverArchiveId = null,
+        $processingStatus = null,
+        $checkAccess = true,
+        $maxResults = null
+    ) {
+        $accountController = \laabs::newController('auth/userAccount');
+        $accountController->isAuthorized('user');
+
+        $archives = [];
+
+        list($searchClasses, $archiveArgs) = $this->getClassesAndArchiveArgsForSearch(
+            $archiveId,
+            $profileReference,
+            $status,
+            $archiveName,
+            $agreementReference,
+            $archiveExpired,
+            $finalDisposition,
+            $originatorOrgRegNumber,
+            $originatorOwnerOrgId,
+            $originatorArchiveId,
+            $originatingDate,
+            $filePlanPosition,
+            $hasParent,
+            $partialRetentionRule,
+            $retentionRuleCode,
+            $depositStartDate,
+            $depositEndDate,
+            $originatingStartDate,
+            $originatingEndDate,
+            $archiverArchiveId,
+            $processingStatus
+        );
+
+        $count = 0;
+        foreach ($searchClasses as $descriptionClass => $descriptionController) {
+            $count += $descriptionController->count($description, $text, $archiveArgs, $checkAccess, $maxResults);
+        }
+
+        return $count;
+    }
+
+    protected function getClassesAndArchiveArgsForSearch(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null,
+        $archiverArchiveId = null,
+        $processingStatus = null
+    ) {
         $archiveArgs = [
             'archiveId' => $archiveId,
             'profileReference' => $profileReference,
@@ -121,7 +273,7 @@ trait archiveAccessTrait
             $descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
             foreach ($descriptionSchemeController->index() as $name => $descriptionScheme) {
-                if (isset($descriptionScheme->search) && !empty($descriptionScheme->search)) {
+                if (isset($descriptionScheme->search)) {
                     $searchClasses[$name] = $this->useDescriptionController($descriptionScheme->search);
                 }
             }
@@ -133,11 +285,8 @@ trait archiveAccessTrait
                 $searchClasses['recordsManagement/description'] = $this->useDescriptionController('recordsManagement/description');
             }
         }
-        foreach ($searchClasses as $descriptionClass => $descriptionController) {
-            $archives = array_merge($archives, $descriptionController->search($description, $text, $archiveArgs, $checkAccess));
-        }
 
-        return $archives;
+        return [$searchClasses, $archiveArgs];
     }
 
     /**
@@ -273,8 +422,8 @@ trait archiveAccessTrait
             }
 
             if ($partialRetentionRule) {
-                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL 
-                OR retentionStartDate=NULL 
+                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL
+                OR retentionStartDate=NULL
                 OR retentionRuleCode=NULL)";
             }
 
@@ -319,8 +468,31 @@ trait archiveAccessTrait
      */
     public function index($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false)
     {
-        $queryParts = array();
-        $queryParams = array();
+        list($queryString, $queryParams) = $this->getQueryStringAndParams($originatorOrgRegNumber, $filePlanPosition, $archiveUnit);
+
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $archives = $this->sdoFactory->find(
+            'recordsManagement/archive',
+            $queryString,
+            $queryParams,
+            false,
+            false,
+            $maxResults
+        );
+
+        foreach ($archives as $archive) {
+            if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
+                $archive->disposable = true;
+            }
+        }
+
+        return $archives;
+    }
+
+    protected function getQueryStringAndParams($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false)
+    {
+        $queryParts = [];
+        $queryParams = [];
 
         $currentDate = \laabs::newDate();
         $currentDateString = $currentDate->format('Y-m-d');
@@ -353,31 +525,33 @@ trait archiveAccessTrait
         if ($accessRuleAssert) {
             $queryParts[] = $accessRuleAssert;
         }
-        
+
         $queryString = \laabs\implode(' AND ', $queryParts);
-        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
-        $archives = $this->sdoFactory->find(
-            'recordsManagement/archive',
-            $queryString,
-            $queryParams,
-            false,
-            false,
-            $maxResults
-        );
 
-        foreach ($archives as $archive) {
-            if (!empty($archive->disposalDate) && $archive->disposalDate <= \laabs::newDate()) {
-                $archive->disposable = true;
-            }
-        }
+        return [$queryString, $queryParams];
+    }
 
-        return $archives;
+    /**
+     * Get archives count
+     *
+     * @param string  $originatorOrgRegNumber The organization registration number
+     * @param string  $filePlanPosition       The file plan position
+     * @param boolean $archiveUnit            List the archive unit
+     *
+     * @return integer $count
+     */
+    public function countList($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false)
+    {
+        list($queryString, $queryParams) = $this->getQueryStringAndParams($originatorOrgRegNumber, $filePlanPosition, $archiveUnit);
+        $count = $this->sdoFactory->count('recordsManagement/archive', $queryString, $queryParams);
+
+        return $count;
     }
 
     /**
      * Get archive metadata
      * @param string $archiveId   The archive identifier
-     * 
+     *
      * @return recordsManagement/archive The archive metadata
      */
     public function getMetadata($archiveId, $checkAccess = true)

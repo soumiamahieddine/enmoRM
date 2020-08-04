@@ -1,9 +1,14 @@
 <div class="row" data-translate-catalog="recordsManagement/messages" id="archiveList">
+    <?merge hasReachMaxResults ?>
+    <h4><span>Your query returns too much results, only first results are displayed.</span></h4>
     <div class="panel panel-primary">
         <input type="hidden" id="transaction" value="[?merge transaction ?]" />
         <div class="panel-heading clearfix">
             <div class="pull-left">
-                <h4><?merge archive.count() ?> result(s)</h4>
+                <?merge hasReachMaxResults.not() ?>
+                <h4><?merge archive.count() ?> archive(s)</h4>
+                <?merge hasReachMaxResults ?>
+                <h4><?merge archive.count() ?> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
             </div>
             <div class="dropdown pull-right">
                 <button class="btn btn-warning dropdown-toggle" type="button" id="archiveList_actions" data-toggle="dropdown" aria-expanded="true" title="Actions" disabled="disabled">
@@ -33,10 +38,10 @@
                     <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]" data-iscommunicable="[?merge .isCommunicable ?]">
                         <td>
                             <?merge .hasRights.bool() ?>
-                            <input type="checkbox" 
-                                data-archive-status="[?merge .status ?]" 
-                                data-final-disposition='[?merge .finalDisposition ?]' 
-                                data-disposable="[?merge .disposable ?]" 
+                            <input type="checkbox"
+                                data-archive-status="[?merge .status ?]"
+                                data-final-disposition='[?merge .finalDisposition ?]'
+                                data-disposable="[?merge .disposable ?]"
                                 data-noretention="[?merge .noRetention ?]"
                                 value="[?merge .archiveId ?]"/>
                         </td>

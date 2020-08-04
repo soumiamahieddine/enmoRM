@@ -613,3 +613,6 @@ msgstr "La taille de la ressource est nulle"
 
 msgid "Attempt to access without a valid token"
 msgstr "Une erreur est survenue. Si le problème persiste, veuillez recharger la page."
+
+msgid "Your query returns too much results, only first results are displayed."
+msgstr "Le nombre de résultats retournés est trop important. Veuillez affiner votre recherche."

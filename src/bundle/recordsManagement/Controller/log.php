@@ -131,13 +131,16 @@ class log implements archiveDescriptionInterface
 
     /**
      * Search the description objects
-     * @param string $description The search args on description object
-     * @param string $text        The search args on text
-     * @param array  $args        The search args on archive std properties
+     *
+     * @param string  $description The search args on description object
+     * @param string  $text        The search args on text
+     * @param array   $args        The search args on archive std properties
+     * @param bool    $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param integer $maxResults  Max results to display
      *
      * @return object Array of description objects
      */
-    public function search($description = null, $text = null, array $args = [])
+    public function search($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
     {
         $queryParams = $queryParts = [];
         $queryString = "";
@@ -172,8 +175,8 @@ class log implements archiveDescriptionInterface
         $archives = [];
 
         $sortBy = ">fromDate";
-        $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
-        $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, [], $sortBy, 0, $numberOfResult);
+
+        $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, [], $sortBy, 0, $maxResults);
 
         foreach ($logs as $log) {
             try {
@@ -186,6 +189,20 @@ class log implements archiveDescriptionInterface
 
         return $archives;
     }
+
+    /**
+     * Count log objects
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
+     *
+     * @return object Array of description objects
+     */
+    public function count($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
+    {
+        return count($this->search($description, $text, $args, $checkAccess, $maxResults = null));
+    }
+
 
     /**
      * Retrieve a journal by evenement date
