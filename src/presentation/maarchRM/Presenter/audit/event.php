@@ -108,19 +108,17 @@ class event
             $event->label = $translator->getText($event->path, false, "audit/messages");
             $events[] = $event;
         }
-        
+
+        $maxResults = null;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
+            $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+
         $this->view->addContentFile("audit/search.html");
         $this->view->setSource("events", $events);
+        $this->view->setSource("maxResults", $maxResults);
         $this->view->translate();
         $this->view->merge();
-
-        $this->view->addScriptSrc(
-<<<EOD
-    $.ajaxSetup({
-        headers: { 'X-Laabs-Max-Count': 300}
-    });
-EOD
-        );
 
         return $this->view->saveHtml();
     }
@@ -128,11 +126,12 @@ EOD
     /**
      * Get result
      *
-     * @param Array $events Array of audit/event object
+     * @param array   $events       Array of audit/event object
+     * @param integer $totalResults Max number of total results from query
      *
      * @return string view
      */
-    public function search($events)
+    public function search($events, $totalResults)
     {
         $this->view->addContentFile("audit/result.html");
 
@@ -142,7 +141,15 @@ EOD
         } else {
             $multipleInstance = false;
         }
-        
+
+        $hasReachMaxResults = false;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && $totalResults >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+            $hasReachMaxResults = true;
+        }
+
+        $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
+        $this->view->setSource('totalResults', $totalResults);
         $this->view->setSource('multipleInstance', $multipleInstance);
         $this->view->setSource("events", $events);
         $this->view->merge();
