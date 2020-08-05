@@ -346,7 +346,7 @@ class Statistics
      * @param  string   $filter    Group by argument
      * @param  array    $statistics Array of statistics
      *
-     * @return array               Associative of statistics
+     * @return array                Associative of statistics
      */
     protected function communicatedStats($startDate, $endDate, $filter, $statistics = [])
     {
@@ -469,17 +469,18 @@ class Statistics
      * @param  integer  $jsonColumnNumber      json Column number for size parameter in lifeCycle event table
      * @param  datetime $startDate             Starting Date
      * @param  datetime $endDate               End date
+     * @param  boolean  $isIncoming            Is the message incoming if type is Archive Transfer
      *
-     * @return integer                        Count of size for events
+     * @return integer                         Count of size for events
      */
     protected function getCountByEventType($messageType, $startDate = null, $endDate = null, $isIncoming = false)
     {
         if ($messageType == "ArchiveTransfer") {
-            $isIncomingTest = '';
+            $isIncomingCondition = '';
             if (!$isIncoming) {
-                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+                $isIncomingCondition .= ' OR "message"."status" = \'validated\'';
             }
-            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+            $isIncomingCondition .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
         }
 
         $query = 'SELECT  COUNT("unitIdentifier"."objectId")
@@ -495,10 +496,10 @@ class Statistics
                 ON "unitIdentifier"."messageId" = "message"."messageId"
                 WHERE "message"."type" = \''.$messageType.'\'
                 AND ("message"."status" = \'processed\''.
-                (isset($isIncomingTest) ? $isIncomingTest : ')').'
+                (isset($isIncomingCondition) ? $isIncomingCondition : ')').'
             ))
             WHERE "message"."type" = \''.$messageType.'\' 
-            AND ("message"."status" = \'processed\''. (isset($isIncomingTest) ? $isIncomingTest : ')') .
+            AND ("message"."status" = \'processed\''. (isset($isIncomingCondition) ? $isIncomingCondition : ')') .
             ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '');
 
         $count = $this->executeQuery($query)[0]['count'];
