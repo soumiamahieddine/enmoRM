@@ -25,15 +25,16 @@ interface logInterface
 {
     /**
      * Get a  search result
-     * @param string $archiveId      The archive identifier
-     * @param string $type           The type
-     * @param date   $fromDate       The date
-     * @param date   $toDate         The date
-     * @param string $processName    The process name
-     * @param string $processId      The process identifier
-     * @param string $sortBy         The process identifier
-     * @param int    $numberOfResult The process identifier
-
+     *
+     * @param string  $archiveId   The archive identifier
+     * @param string  $type        The type
+     * @param date    $fromDate    The date
+     * @param date    $toDate      The date
+     * @param string  $processName The process name
+     * @param string  $processId   The process identifier
+     * @param string  $sortBy      The process identifier
+     * @param integer $maxResults  Max number of results to return
+     *
      * @action recordsManagement/log/find
      */
     public function readFind(
@@ -44,7 +45,28 @@ interface logInterface
         $processName = null,
         $processId = null,
         $sortBy = ">fromDate",
-        $numberOfResult = null
+        $maxResults = null
+    );
+
+    /**
+     * Count search results
+     *
+     * @param string  $archiveId   The archive identifier
+     * @param string  $type        The type
+     * @param date    $fromDate    The date
+     * @param date    $toDate      The date
+     * @param string  $processName The process name
+     * @param string  $processId   The process identifier
+
+     * @action recordsManagement/log/countFind
+     */
+    public function countFind(
+        $archiveId = null,
+        $type = null,
+        $fromDate = null,
+        $toDate = null,
+        $processName = null,
+        $processId = null
     );
 
     /**
