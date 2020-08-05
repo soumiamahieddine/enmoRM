@@ -154,13 +154,13 @@ class Statistics
     {
         $statistics['depositMemorySize'] = floatval(str_replace(" ", "", $this->getSizeByEventType('ArchiveTransfer', ['recordsManagement/deposit', 'recordsManagement/depositNewResource'], $jsonColumnNumber = 8, $startDate, $endDate, true)))
                                         + floatval(str_replace(" ", "", $this->getSizeForDirectEvent('recordsManagement/deposit', 8, null, $startDate, $endDate)));
-        $statistics['depositMemorySize'] = $this->formatNumber($statistics['depositMemorySize'], false);
+        $statistics['depositMemorySize'] = $this->formatSize($statistics['depositMemorySize'], false);
         $statistics['depositMemoryCount'] = $this->getCountByEventType('ArchiveTransfer', $startDate, $endDate, true)
                                         + $this->getCountForDirectEvent('recordsManagement/deposit', null, $startDate, $endDate);
 
         $statistics['deletedMemorySize'] = floatval(str_replace(" ", "", $this->getSizeByEventType('ArchiveDestructionRequest', ['recordsManagement/destruction'], $jsonColumnNumber = 6, $startDate, $endDate)))
                                         + floatval(str_replace(" ", "", $this->getSizeForDirectEvent('recordsManagement/destruction', 6, null, $startDate, $endDate)));
-        $statistics['deletedMemorySize'] = $this->formatNumber($statistics['deletedMemorySize'], false);
+        $statistics['deletedMemorySize'] = $this->formatSize($statistics['deletedMemorySize'], false);
         $statistics['deletedMemoryCount'] = $this->getCountByEventType('ArchiveDestructionRequest', $startDate, $endDate)
                                         + $this->getCountForDirectEvent('recordsManagement/destruction', null, $startDate, $endDate);
 
@@ -202,7 +202,7 @@ class Statistics
                         $result1 = floatval(str_replace(" ", "", $stats[$i][$resultType]));
                         $result2 = floatval(str_replace(" ", "", $result));
                     }
-                    $stats[$i][$resultType] = $this->formatNumber($resultType == 'sum' ? $result1 + $result2 : $stats[$i][$resultType] + $result);
+                    $stats[$i][$resultType] = $this->formatSize($resultType == 'sum' ? $result1 + $result2 : $stats[$i][$resultType] + $result);
                     $groupByFound = true;
                     break;
                 }
@@ -502,9 +502,9 @@ class Statistics
         if ($messageType == "ArchiveTransfer") {
             $isIncomingTest = '';
             if (!$isIncoming) {
-                $isIncomingTest .= ' OR "message"."status" = \'validated\'';
+                $isIncomingCondition .= ' OR "message"."status" = \'validated\'';
             }
-            $isIncomingTest .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
+            $isIncomingCondition .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
         }
 
         $query = 'SELECT  COUNT("unitIdentifier"."objectId")
@@ -975,10 +975,13 @@ EOT;
     /**
      * Sum all archives size for direct archive transfer
      *
-     * @param  datetime $startDate        Starting Date
-     * @param  datetime $endDate          End date
+     * @param  string   $eventType             Type of event
+     * @param  integer  $jsonSizeColumnNumber  json Column number for size parameter in lifeCycle event table
+     * @param  string   $groupBy               Ordering parameter
+     * @param  datetime $startDate             Starting Date
+     * @param  datetime $endDate               End date
      *
-     * @return integer                    Sum of size for events
+     * @return integer                         Sum of size for events
      */
     protected function getSizeForDirectEvent($eventType, $jsonSizeColumnNumber, $groupBy = null, $startDate = null, $endDate = null)
     {
@@ -1023,6 +1026,8 @@ EOT;
     /**
      * Count all archives for direct archive transfer
      *
+     * @param  string   $eventType        Type of event
+     * @param  string   $groupBy          Ordering parameter
      * @param  datetime $startDate        Starting Date
      * @param  datetime $endDate          End date
      *
@@ -1093,21 +1098,21 @@ EOT;
     }
 
     /**
-     * format a number
+     * format a size
      *
-     * @param float     $number     Number to format
+     * @param float     $size       Size to format
      *
-     * @return string               Formatted number
+     * @return string               Formatted size
      */
-    protected function formatNumber($number, $formatType = true)
+    protected function formatSize($size, $formatType = true)
     {
         if ($formatType) {
-            $number /= pow(1000, $this->sizeFilter);
+            $size /= pow(1000, $this->sizeFilter);
         }
-        if ($number != (integer)$number) {
-            $number = number_format($number, 3, ".", " ");
+        if ($size != (integer)$size) {
+            $size = number_format($size, 3, ".", " ");
         }
-        return $number;
+        return $size;
     }
 
     /**
@@ -1125,7 +1130,7 @@ EOT;
         $results = [];
 
         while ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $result['sum'] = isset($result['sum']) ? $this->formatNumber($result['sum']) : '0.000';
+            $result['sum'] = isset($result['sum']) ? $this->formatSize($result['sum']) : '0.000';
             $results[] = $result;
         }
 
