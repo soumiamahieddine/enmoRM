@@ -175,13 +175,15 @@ class ArchiveTransfer extends abstractMessage
         if (!isset($params['params'])) {
             $params['params'] = [];
         }
-        $params['filename'] = "$messageDir/" . isset($params['filename']) ? $params['filename'] : $message->messageId;
+        $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
 
         $rawSource = $this->getRawSource($schema, $source, $params);
         $params['params'] = array_merge($params['params'], $rawSource['params']);
 
         $archiveTransferConnectorController = \laabs::newController($rawSource["service"]);
         $archiveTransferConnectorController->transform($message, $messageFile, $params);
+
+        $this->receiveAttachments($message, $messageFile, $params['attachments']);
 
         try {
             if (empty($message->path)) {
@@ -393,7 +395,7 @@ class ArchiveTransfer extends abstractMessage
         $this->receiveAttachments($message, $data, $attachments, $filename);
     }
 
-    protected function receiveAttachments($message, $data, $attachments, $filename=false)
+    protected function receiveAttachments($message, $data, $attachments)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
@@ -1241,9 +1243,7 @@ class ArchiveTransfer extends abstractMessage
 
         if (!isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source])) {
             $this->sendError("404", "The source '".$source."' is unknown for schema '".$schema."'");
-            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
-            $exception->errors = $this->errors;
-            throw $exception;
+            throw \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
         }
 
         $sourceJson = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source];
@@ -1252,7 +1252,7 @@ class ArchiveTransfer extends abstractMessage
         foreach ($sourceJson['params'] as $name => $param) {
             if ($param['source'] == 'param') {
                 $rawSource["params"][$name] = $param;
-            } elseif (isset($param['required']) && $param['required'] = true) {
+            } elseif (isset($param['required']) && $param['required']) {
                 $this->sendError("404", "Missing required parameter '".$name."'");
             }
         }
