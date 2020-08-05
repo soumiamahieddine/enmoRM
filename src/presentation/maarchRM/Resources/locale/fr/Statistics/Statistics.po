@@ -68,6 +68,9 @@ msgstr "Le filtre ne peut être vide si une opération est sélectionnée"
 msgid "Start Date cannot be past end date"
 msgstr "La date de début ne peut pas être après la date de fin"
 
+msgid "The sizeFilter parameter must be between 0 and 3 included"
+msgstr "Le paramètre sizeFilter doit être compris entre 0 et 3 inclus"
+
 msgid "Byte"
 msgstr "Octet"
 
