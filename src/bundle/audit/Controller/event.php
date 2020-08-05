@@ -206,16 +206,86 @@ class event
 
     /**
      * Get result of search form
-     * @param timestamp $toDate
+     *
      * @param timestamp $fromDate
+     * @param timestamp $toDate
      * @param string    $event
      * @param string    $accountId
      * @param string    $status
      * @param string    $term      Term to search
+     * @param integer   $maxResults Max results to display
      *
      * @return audit/event[] Array of audit/event object
      */
-    public function search($toDate = null, $fromDate = null, $event = null, $accountId = null, $status = null, $term = null)
+    public function search($fromDate = null, $toDate = null, $event = null, $accountId = null, $status = null, $term = null, $maxResults = null)
+    {
+        list($queryString, $queryParams) = $this->queryBuilder($fromDate, $toDate, $event, $accountId, $status, $term);
+
+        $events = $this->sdoFactory->find("audit/event", $queryString, $queryParams, ">eventDate", 0, $maxResults);
+
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $users = $userAccountController->index();
+        foreach ($users as $i => $user) {
+            $users[(string) $user->accountId] = $user;
+            unset($users[$i]);
+        }
+
+        $serviceAccountController = \laabs::newController('auth/serviceAccount');
+        $services = $serviceAccountController->index();
+        foreach ($services as $i => $service) {
+            $services[(string) $service->accountId] = $service;
+            unset($services[$i]);
+        }
+
+        foreach ($events as $i => $event) {
+            if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
+                $event->accountName = $users[(string) $event->accountId]->accountName;
+            } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
+                $event->accountName = $services[(string) $event->accountId]->accountName;
+            } else {
+                $event->accountName = "__system__";
+            }
+
+            $event->origin = strtok($event->path, LAABS_URI_SEPARATOR);
+            $event->typeCode = strtok(LAABS_URI_SEPARATOR);
+        }
+
+        return $events;
+    }
+
+    /**
+     * Get count result of search form
+     *
+     * @param timestamp $fromDate
+     * @param timestamp $toDate
+     * @param string    $event
+     * @param string    $accountId
+     * @param string    $status
+     * @param string    $term       Term to search
+     *
+     * @return integer Count of max results from query
+     */
+    public function count($fromDate = null, $toDate = null, $event = null, $accountId = null, $status = null, $term = null)
+    {
+        list($queryString, $queryParams) = $this->queryBuilder($fromDate, $toDate, $event, $accountId, $status, $term);
+
+        $count = $this->sdoFactory->count("audit/event", $queryString, $queryParams, ">eventDate");
+
+        return $count;
+    }
+
+    /**
+     * Build query
+     *
+     * @param timestamp $fromDate
+     * @param timestamp $toDate
+     * @param string    $event
+     * @param string    $accountId
+     * @param string    $status
+     * @param string    $term       Term to search
+     * @param string    $wording    Wording to search
+     */
+    private function queryBuilder($fromDate = null, $toDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
     {
         $queryParts = array();
         $queryParams = array();
@@ -249,58 +319,21 @@ class event
             $queryParts['instanceName'] = "instanceName = '".\laabs::getInstanceName()."'";
         }
 
-        $queryString = implode(' AND ', $queryParts );
-        //$length = \laabs::getRequestMaxCount();
-        $length = 400;
-        $events = $this->sdoFactory->find("audit/event", $queryString, $queryParams, ">eventDate", 0, $length);
+        $queryString = implode(' AND ', $queryParts);
 
-        $userAccountController = \laabs::newController('auth/userAccount');
-        $users = $userAccountController->index();
-        foreach ($users as $i => $user) {
-            $users[(string) $user->accountId] = $user;
-            unset($users[$i]);
-        }
-
-        $serviceAccountController = \laabs::newController('auth/serviceAccount');
-        $services = $serviceAccountController->index();
-        foreach ($services as $i => $service) {
-            $services[(string) $service->accountId] = $service;
-            unset($services[$i]);
-        }
-
-        foreach ($events as $i => $event) {
-            if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
-                $event->accountName = $users[(string) $event->accountId]->accountName;
-            } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
-                $event->accountName = $services[(string) $event->accountId]->accountName;
-            } else {
-                $event->accountName = "__system__";
-            }
-
-            $event->origin = strtok($event->path, LAABS_URI_SEPARATOR);
-            $event->typeCode = strtok(LAABS_URI_SEPARATOR);
-        }
-
-        /*if (count($events) >= $length) {
-            $count = $this->sdoFactory->count("audit/event", $queryString, $queryParams);
-            
-            \laabs::setResponseCode(206);
-            \laabs::setResponseCount($count);
-        }*/
-        
-        return $events;
+        return [$queryString, $queryParams];
     }
-    
+
     /**
      * Get event
      * @param string $eventId
-     * 
+     *
      * @return audit/event Object
      */
     public function getEvent($eventId)
     {
         $event = $this->sdoFactory->read("audit/event", $eventId);
-    
+
         return $event;
     }
 }
