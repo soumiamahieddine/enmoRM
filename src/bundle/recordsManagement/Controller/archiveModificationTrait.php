@@ -97,9 +97,6 @@ trait archiveModificationTrait
             }
         }
         
-        if (isset(\laabs::configuration("medona")['formatDisplay'])) {
-            $formatDisplay = \laabs::configuration("medona")['formatDisplay'];
-        }
 
         $retentionRuleReceived = $retentionRule;
 
@@ -477,6 +474,10 @@ trait archiveModificationTrait
                 $this->useArchivalProfile($archive->archivalProfileReference);
 
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
+            }
+
+            if (isset(\laabs::configuration("medona")['formatDisplay']) && \laabs::configuration("medona")['formatDisplay']) {
+                $formatDisplay = \laabs::configuration("medona")['formatDisplay'];
             }
 
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
