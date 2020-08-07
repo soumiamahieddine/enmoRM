@@ -38,11 +38,53 @@ trait archiveTransferTrait
         if (isset(\laabs::configuration('medona')['packageSchemas'])) {
             $packageSchemas = \laabs::configuration('medona')['packageSchemas'];
         }
+        $packageSources = [];
+        foreach ($packageSchemas as $schema => $value) {
+            if (isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'])) {
+                $sources = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'];
+                foreach ($sources as $name => $source) {
+                    $packageSources[] = ["schema" => $schema, "name" => $name];
+                }
+            }
+        }
         
         $this->view->addContentFile("medona/archiveTransfer/messageImport.html");
         $this->view->translate();
 
         $this->view->setSource("packageSchemas", $packageSchemas);
+        $this->view->setSource("packageSources", $packageSources);
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * Get the source inputs form
+     *
+     * @param string $schema The source schema
+     * @param string $source The name of the source
+     *
+     * @return string The view
+     */
+    public function getSourceInputs($schema, $source)
+    {
+        $inputs = [];
+
+        if (isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source]['params'])) {
+            $sourceInputs = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source]['params'];
+            foreach ($sourceInputs as $key => $input) {
+                if ($input["source"] == "input") {
+                    $input['name'] = $key;
+                    $input['representation'] = json_encode($input);
+                    $inputs[] = $input;
+                }
+            }
+        }
+        
+        $this->view->addContentFile("medona/archiveTransfer/sourceInputsForm.html");
+        $this->view->translate();
+
+        $this->view->setSource("inputs", $inputs);
         $this->view->merge();
 
         return $this->view->saveHtml();

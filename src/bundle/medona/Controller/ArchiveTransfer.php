@@ -175,9 +175,10 @@ class ArchiveTransfer extends abstractMessage
         if (!isset($params['params'])) {
             $params['params'] = [];
         }
+        $params["params"] = json_decode(json_encode($params["params"]), true);
         $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
 
-        $rawSource = $this->getRawSource($schema, $source, $params);
+        $rawSource = $this->getRawSource($schema, $source, $params['params']);
         $params['params'] = array_merge($params['params'], $rawSource['params']);
 
         $archiveTransferConnectorController = \laabs::newController($rawSource["service"]);
@@ -1249,10 +1250,11 @@ class ArchiveTransfer extends abstractMessage
         $sourceJson = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source];
         $rawSource["service"] = $sourceJson['service'];
 
+        $param_keys = array_keys($params);
         foreach ($sourceJson['params'] as $name => $param) {
             if ($param['source'] == 'param') {
                 $rawSource["params"][$name] = $param;
-            } elseif (isset($param['required']) && $param['required']) {
+            } elseif (isset($param['required']) && $param['required'] && !in_array($name, $param_keys)) {
                 $this->sendError("404", "Missing required parameter '".$name."'");
             }
         }
