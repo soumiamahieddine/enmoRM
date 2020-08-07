@@ -420,6 +420,9 @@ msgstr "DUA"
 msgid "result(s)"
 msgstr "résultat(s)"
 
+msgid "archive(s) on"
+msgstr "archive(s) sur"
+
 msgid "Search"
 msgstr "Rechercher"
 
