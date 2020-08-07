@@ -54,16 +54,26 @@ class log
         $this->view->addContentFile('recordsManagement/log/searchForm.html');
         $this->view->translate();
 
+        $maxResults = null;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
+            $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+        $this->view->setSource("maxResults", $maxResults);
+        $this->view->translate();
+        $this->view->merge();
+
         return $this->view->saveHtml();
     }
 
     /**
      * Show result log search
-     * @param array $logs The arry of object
+     *
+     * @param array   $logs         The arry of object
+     * @param integer $totalResults Max number of total results from query
      *
      * @return string
      */
-    public function find($logs)
+    public function find($logs, $totalResults)
     {
         $this->view->addContentFile('recordsManagement/log/result.html');
         $this->view->translate();
@@ -79,6 +89,14 @@ class log
             $log->resId = \laabs::callService('recordsManagement/archives/readArchivecontents_archive_', (string) $log->archiveId)->digitalResources[0]->resId;
         }
 
+        $hasReachMaxResults = false;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && $totalResults >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+            $hasReachMaxResults = true;
+        }
+
+        $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
+        $this->view->setSource('totalResults', $totalResults);
         $this->view->setSource("logs", $logs);
         $this->view->merge();
 

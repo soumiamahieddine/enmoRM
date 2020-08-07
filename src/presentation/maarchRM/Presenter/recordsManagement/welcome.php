@@ -112,11 +112,18 @@ class welcome
 
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
 
+        $maxResults = null;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
+            $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+
+
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
+        $this->view->setSource("maxResults", $maxResults);
 
         $this->view->setSource('retentionRules', $retentionRules);
         $this->view->setSource('user', $user);
@@ -184,11 +191,12 @@ class welcome
 
     /**
      * Show a folder content
-     * @param array $archives
+     * @param array   $archives
+     * @param integer $count    Archives count without limit
      *
      * @return string
      */
-    public function folderContents($archives)
+    public function folderContents($archives, $count)
     {
         $organizations = \laabs::callService('organization/organization/readIndex');
         $orgsName = [];
@@ -212,6 +220,7 @@ class welcome
         }
 
         $this->json->archives = $archives;
+        $this->json->countWithoutLimit = $count;
 
         return $this->json->save();
     }

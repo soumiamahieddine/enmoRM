@@ -120,21 +120,41 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
             return json_decode($descriptionObject->description);
         } catch (\Exception $e) {
-            
+
         }
     }
 
     /**
      * Search the description objects
-     * @param string $description The search args on description object
-     * @param string $text        The search args on text
-     * @param array  $archiveArgs The search args on archive std properties
-     * @param bool   $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param string  $description The search args on description object
+     * @param string  $text        The search args on text
+     * @param array   $archiveArgs The search args on archive std properties
+     * @param bool    $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param integer $maxResults  Max results to display
      *
      * @return array The result of the research
      */
-    public function search($description = null, $text = null, array $archiveArgs = [], $checkAccess = true)
+    public function search($description = null, $text = null, array $archiveArgs = [], $checkAccess = true, $maxResults = null)
     {
+        list($queryString, $queryParams) = $this->getQueryStringAndParams($description, $text, $archiveArgs, $checkAccess);
+
+        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams, false, false, $maxResults);
+
+        foreach ($archiveUnits as $archiveUnit) {
+            if (!empty($archiveUnit->description)) {
+                $archiveUnit->descriptionObject = json_decode($archiveUnit->description);
+            }
+        }
+
+        return $archiveUnits;
+    }
+
+    protected function getQueryStringAndParams(
+        $description = null,
+        $text = null,
+        array $archiveArgs = [],
+        $checkAccess = true
+    ) {
         $queryParams = [];
         $queryParts = ['(description!=null and text!=null)'];
 
@@ -203,22 +223,34 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
         $queryString = \laabs\implode(' and ', $queryParts);
 
-        $archiveUnits = $this->sdoFactory->find('recordsManagement/archiveUnit', $queryString, $queryParams);
-
-        foreach ($archiveUnits as $archiveUnit) {
-            if (!empty($archiveUnit->description)) {
-                $archiveUnit->descriptionObject = json_decode($archiveUnit->description);
-            }
-        }
-
-        return $archiveUnits;
+        return [$queryString, $queryParams];
     }
+
+    /**
+     * Count the description objects
+     *
+     * @param string   $description The search args on description object
+     * @param string   $text        The search args on text
+     * @param array    $archiveArgs The search args on archive std properties
+     * @param bool     $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     *
+     * @return integer $count       Research count
+     */
+    public function count($description = null, $text = null, array $archiveArgs = [], $checkAccess = true)
+    {
+        list($queryString, $queryParams) = $this->getQueryStringAndParams($description, $text, $archiveArgs, $checkAccess);
+
+        $count = $this->sdoFactory->count('recordsManagement/archiveUnit', $queryString, $queryParams);
+
+        return $count;
+    }
+
 
     /**
      * Update the description
      * @param mixed  $description The description object
      * @param string $archiveId   The archive identifier
-     * 
+     *
      * @return bool The result of the operation
      */
     public function update($archive)

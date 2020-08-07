@@ -34,19 +34,22 @@ interface auditInterface
 
     /**
      * Get search form for entries
-     *@param string $eventType Type of event
-     *@param Date   $fromDate  Start date
-     *@param Date   $toDate    End date
-     *@param string $accountId Id of account
-     *@param string $event     Variables
-     *@param string $term      Term to search
-     *@param string $wording   Wording to search
+     *
+     * @param Date    $fromDate   Start date
+     * @param Date    $toDate     End date
+     * @param string  $accountId  Id of account
+     * @param string  $event      Variables
+     * @param string  $status
+     * @param string  $term       Term to search
+     * @param integer $maxResults Max number of results to return
      *
      *
      * @uses audit/event/readSearch
+     * @uses audit/event/readCount
+     *
      * @return audit/event/search
      */
-    public function readEvents($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null, $wording = null);
+    public function readEvents($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null);
 
     /**
      * Get event

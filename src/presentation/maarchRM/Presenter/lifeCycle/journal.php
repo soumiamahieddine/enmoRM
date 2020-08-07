@@ -135,7 +135,13 @@ class journal
             });
         }
 
+        $maxResults = null;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
+            $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+
         $this->view->setSource("eventType", $eventDomains);
+        $this->view->setSource("maxResults", $maxResults);
 
         $this->view->merge();
         $this->view->translate();
@@ -194,11 +200,13 @@ class journal
 
     /**
      * Show the result of the event search
-     * @param array $events The list of events
+     *
+     * @param array   $events       The list of events
+     * @param integer $totalResults Max number of results returned from query without limit
      *
      * @return string
      */
-    public function searchEvent($events)
+    public function searchEvent($events, $totalResults)
     {
         $this->view->addContentFile("lifeCycle/searchResult.html");
 
@@ -209,6 +217,14 @@ class journal
             $multipleInstance = false;
         }
 
+        $hasReachMaxResults = false;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && $totalResults >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+            $hasReachMaxResults = true;
+        }
+
+        $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
+        $this->view->setSource('totalResults', $totalResults);
         $this->view->setSource('multipleInstance', $multipleInstance);
         $this->view->setSource('events', $events);
         $this->view->merge();

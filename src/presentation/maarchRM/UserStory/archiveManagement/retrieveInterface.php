@@ -57,19 +57,22 @@ interface retrieveInterface
 
     /**
      * Search archives by profile / dates / agreement
-     * @param string $archiveId
-     * @param string $profileReference
-     * @param string $status
-     * @param string $archiveName
-     * @param string $agreementReference
-     * @param string $archiveExpired
-     * @param string $finalDisposition
-     * @param string $originatorOrgRegNumber
-     * @param string $description
-     * @param string $text
+     * @param string  $archiveId
+     * @param string  $profileReference
+     * @param string  $status
+     * @param string  $archiveName
+     * @param string  $agreementReference
+     * @param string  $archiveExpired
+     * @param string  $finalDisposition
+     * @param string  $originatorOrgRegNumber
+     * @param string  $description
+     * @param string  $text
+     * @param integer $maxResults
+     *
+     * @uses recordsManagement/archives/read
+     * @uses recordsManagement/archives/readCount
      *
      * @return recordsManagement/archive/search
-     * @uses recordsManagement/archives/read
      */
     public function readRecordsmanagementArchives(
         $archiveId = null,
@@ -81,7 +84,8 @@ interface retrieveInterface
         $finalDisposition = null,
         $originatorOrgRegNumber = null,
         $description = null,
-        $text = null
+        $text = null,
+        $maxResults = null
     );
 
     /**

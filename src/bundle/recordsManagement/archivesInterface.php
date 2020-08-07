@@ -32,28 +32,29 @@ interface archivesInterface
     */
     /**
      * Search archives by profile / dates / agreement
-     * @param string $archiveId
-     * @param string $profileReference
-     * @param string $status
-     * @param string $archiveName
-     * @param string $agreementReference
-     * @param string $archiveExpired
-     * @param string $finalDisposition
-     * @param string $originatorOrgRegNumber
-     * @param string $originatorOwnerOrgId
-     * @param string $originatorArchiveId
-     * @param array  $originatingDate
-     * @param string $filePlanPosition
-     * @param bool   $hasParent
-     * @param string $description
-     * @param string $text
-     * @param bool   $partialRetentionRule
-     * @param string $retentionRuleCode
-     * @param string $depositStartDate
-     * @param string $depositEndDate
-     * @param string $originatingStartDate
-     * @param string $originatingEndDate
-     * @param string $archiverArchiveId
+     * @param string  $archiveId
+     * @param string  $profileReference
+     * @param string  $status
+     * @param string  $archiveName
+     * @param string  $agreementReference
+     * @param string  $archiveExpired
+     * @param string  $finalDisposition
+     * @param string  $originatorOrgRegNumber
+     * @param string  $originatorOwnerOrgId
+     * @param string  $originatorArchiveId
+     * @param array   $originatingDate
+     * @param string  $filePlanPosition
+     * @param bool    $hasParent
+     * @param string  $description
+     * @param string  $text
+     * @param bool    $partialRetentionRule
+     * @param string  $retentionRuleCode
+     * @param string  $depositStartDate
+     * @param string  $depositEndDate
+     * @param string  $originatingStartDate
+     * @param string  $originatingEndDate
+     * @param string  $archiverArchiveId
+     * @param integer $maxResults
      *
      * @action recordsManagement/archive/search
      *
@@ -80,7 +81,64 @@ interface archivesInterface
         $depositEndDate = null,
         $originatingStartDate = null,
         $originatingEndDate = null,
-        $archiverArchiveId = null
+        $archiverArchiveId = null,
+        $maxResults = null
+    );
+
+    /**
+     * Count archives by profile / dates / agreement
+     *
+     * @param string  $archiveId
+     * @param string  $profileReference
+     * @param string  $status
+     * @param string  $archiveName
+     * @param string  $agreementReference
+     * @param string  $archiveExpired
+     * @param string  $finalDisposition
+     * @param string  $originatorOrgRegNumber
+     * @param string  $originatorOwnerOrgId
+     * @param string  $originatorArchiveId
+     * @param array   $originatingDate
+     * @param string  $filePlanPosition
+     * @param bool    $hasParent
+     * @param string  $description
+     * @param string  $text
+     * @param bool    $partialRetentionRule
+     * @param string  $retentionRuleCode
+     * @param string  $depositStartDate
+     * @param string  $depositEndDate
+     * @param string  $originatingStartDate
+     * @param string  $originatingEndDate
+     * @param string  $archiverArchiveId
+     * @param integer $maxResults
+     *
+     * @action recordsManagement/archive/count
+     *
+     */
+    public function readCount(
+        $archiveId = null,
+        $profileReference = null,
+        $status = null,
+        $archiveName = null,
+        $agreementReference = null,
+        $archiveExpired = null,
+        $finalDisposition = null,
+        $originatorOrgRegNumber = null,
+        $originatorOwnerOrgId = null,
+        $originatorArchiveId = null,
+        $originatingDate = null,
+        $filePlanPosition = null,
+        $hasParent = null,
+        $description = null,
+        $text = null,
+        $partialRetentionRule = null,
+        $retentionRuleCode = null,
+        $depositStartDate = null,
+        $depositEndDate = null,
+        $originatingStartDate = null,
+        $originatingEndDate = null,
+        $archiverArchiveId = null,
+        $maxResults = null
     );
 
     /**
@@ -143,6 +201,17 @@ interface archivesInterface
      * @action recordsManagement/archive/index
      */
     public function readList($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
+
+    /**
+     * Get archives Count without limit
+     *
+     * @param string  $originatorOrgRegNumber The organization registration number
+     * @param string  $filePlanPosition       The file plan position
+     * @param boolean $archiveUnit            List the archive unit
+     *
+     * @action recordsManagement/archive/countList
+     */
+    public function readCountList($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
 
     /*
         MODIFY ARCHIVES
