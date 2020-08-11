@@ -236,7 +236,7 @@ class cluster
                 }
             }
 
-            if (is_array($cluster->clusterRepository)) {
+            if (is_array($cluster->clusterRepository) && empty($cluster->clusterRepository)) {
                 throw \laabs::newException("digitalResource/noClusterRepositoryException", "No repository for %s mode", 404, null, [$mode]);
             }
         }
@@ -252,7 +252,7 @@ class cluster
      */
     public function openContainers($cluster, $path, $metadata = null)
     {
-        if (is_array($cluster->clusterRepository) && !empty($cluster->clusterRepository)) {
+        if (is_array($cluster->clusterRepository) && empty($cluster->clusterRepository)) {
             throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
         }
 
