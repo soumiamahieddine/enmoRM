@@ -63,13 +63,13 @@ $("#user_newUser").on('click',  function() {
 });
 
 //edit
-$("#user_userList").on('click', '.editUser', function() {
+$("#contain").on('click', '.editUser', function() {
     var accountId = $(this).data("accountid");
     load("/userAccount/"+accountId);
 });
 
 //unlock
-$("#user_userList").on('click', '.unlockUser', function() {
+$("#contain").on('click', '.unlockUser', function() {
     var button = $(this);
     var accountId = button.data('accountid');
 
