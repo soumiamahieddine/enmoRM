@@ -2,18 +2,18 @@
 
 /*
  *  Copyright (C) 2017 Maarch
- * 
+ *
  *  This file is part of bundle XXXX.
  *  Bundle recordsManagement is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
  *  (at your option) any later version.
- * 
+ *
  *  Bundle recordsManagement is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU General Public License
  *  along with bundle recordsManagement.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -121,7 +121,7 @@ trait archiveAccessTrait
             $descriptionSchemeController = \laabs::newController('recordsManagement/descriptionScheme');
 
             foreach ($descriptionSchemeController->index() as $name => $descriptionScheme) {
-                if (isset($descriptionScheme->search)) {
+                if (isset($descriptionScheme->search) && !empty($descriptionScheme->search)) {
                     $searchClasses[$name] = $this->useDescriptionController($descriptionScheme->search);
                 }
             }
@@ -273,8 +273,8 @@ trait archiveAccessTrait
             }
 
             if ($partialRetentionRule) {
-                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL 
-                OR retentionStartDate=NULL 
+                $queryParts['partialRetentionRule'] = "(retentionDuration=NULL
+                OR retentionStartDate=NULL
                 OR retentionRuleCode=NULL)";
             }
 
@@ -353,7 +353,7 @@ trait archiveAccessTrait
         if ($accessRuleAssert) {
             $queryParts[] = $accessRuleAssert;
         }
-        
+
         $queryString = \laabs\implode(' AND ', $queryParts);
         $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
         $archives = $this->sdoFactory->find(
@@ -377,7 +377,7 @@ trait archiveAccessTrait
     /**
      * Get archive metadata
      * @param string $archiveId   The archive identifier
-     * 
+     *
      * @return recordsManagement/archive The archive metadata
      */
     public function getMetadata($archiveId, $checkAccess = true)
@@ -404,7 +404,7 @@ trait archiveAccessTrait
      * Get the related information of an archive
      * @param string $archiveId   The identifier of the archive or the archive itself
      * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
-     * 
+     *
      * @return recordsManagement/archive
      */
     public function getRelatedInformation($archiveId, $checkAccess = true)
@@ -440,9 +440,9 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
-        
+
         $archive->digitalResources = $this->getDigitalResources($archive->archiveId, $checkAccess);
-        
+
         if ($archive->digitalResources) {
             if ($loadBinary) {
                 foreach ($archive->digitalResources as $i => $digitalResource) {
@@ -455,18 +455,18 @@ trait archiveAccessTrait
                 }
             }
         }
-        
+
         $archive->contents = $this->sdoFactory->find(
             "recordsManagement/archive",
             "parentArchiveId='".(string) $archive->archiveId."'"
         );
-        
+
         if ($archive->contents) {
             foreach ($archive->contents as $child) {
                 $this->listChildrenArchive($child, $loadResourcesInfo, $loadBinary, $checkAccess);
             }
         }
-        
+
         return $archive;
     }
 
@@ -491,7 +491,7 @@ trait archiveAccessTrait
      * Retrieve an archive resource contents
      * @param string $archiveId   The archive identifier
      * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
-     * 
+     *
      * @return digitalResource/digitalResource[] Array of digitalResource/digitalResource object
      */
     public function getDigitalResources($archiveId, $checkAccess = true)
@@ -512,7 +512,7 @@ trait archiveAccessTrait
      * @param string $resId       The resource identifier
      * @param bool   $checkAccess Check access for originator or archiver. if false, caller MUST control access before or after
      * @param bool   $embedded    Generate a binary content or a link
-     * 
+     *
      * @return digitalResource/digitalResource Archive resource contents
      */
     public function consultation($archiveId, $resId, $checkAccess = true, $isCommunication = false, $embedded = true)
@@ -632,7 +632,7 @@ trait archiveAccessTrait
 
         $response = \laabs::kernel()->response;
         $response->setHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
-        
+
         return $digitalResource->getHandler();
     }
 
@@ -655,17 +655,17 @@ trait archiveAccessTrait
         } else {
             $archive = $archiveId;
         }
-        
+
         if ($isCommunication) {
             $this->checkRights($archive, $isCommunication);
             $checkAccess = false;
         } else {
             $this->checkRights($archive);
         }
-        
+
         $this->getMetadata($archive, $checkAccess);
         $archive->originatorOrg = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
-        
+
         if (!empty($archive->archiverOrgRegNumber)) {
             $archive->archiverOrg = $this->organizationController->getOrgByRegNumber($archive->archiverOrgRegNumber);
         }
@@ -674,7 +674,7 @@ trait archiveAccessTrait
         }
         $this->getRelatedInformation($archive, $checkAccess);
         $this->listChildrenArchive($archive, true, $withBinary, $checkAccess);
-        
+
         $this->getParentArchive($archive);
 
         if (!empty($archive->contents)) {
@@ -838,8 +838,8 @@ trait archiveAccessTrait
         }
         if (!empty($args['partialRetentionRule']) && $args['partialRetentionRule'] == "true") {
             $queryParts['partialRetentionRule'] = "(
-            retentionDuration=NULL 
-            OR retentionStartDate=NULL 
+            retentionDuration=NULL
+            OR retentionStartDate=NULL
             OR retentionRuleCode=NULL
             )";
         }
@@ -917,7 +917,7 @@ trait archiveAccessTrait
                 $queryParts['hasParent'] = "parentArchiveId=null";
             }
         }
-        
+
         if (isset($args['processingStatus'])) {
             if ($args['processingStatus'] === true) {
                 $queryParts['processingStatus'] = "processingStatus!=null";
@@ -1178,7 +1178,7 @@ trait archiveAccessTrait
         $userPositionController = \laabs::newController('organization/userPosition');
         $userServices = array_values($userPositionController->readDescandantService($currentUserService->orgId));
         $userServices[] = $currentUserService->registrationNumber;
-        
+
         // OWNER access
         if (!is_null($currentUserService->orgRoleCodes)
             && \laabs\in_array('owner', $currentUserService->orgRoleCodes)) {
