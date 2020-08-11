@@ -260,8 +260,8 @@ class csrf
      */
     private function checkRequestToken()
     {
-
-        $this->requestToken = \laabs::getToken($this->config["cookieName"]);
+        // getToken's param must be in Camelcase
+        $this->requestToken = \laabs::getToken($this->config["cookieName"], LAABS_IN_HEADER);
 
         if (empty($this->requestToken)) {
             throw new \core\Exception('Attempt to access without a valid token', 412);
