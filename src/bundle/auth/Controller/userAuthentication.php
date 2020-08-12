@@ -110,7 +110,7 @@ class userAuthentication
                 && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1
             ) {
                 $userAccountController = \laabs::newController('auth/userAccount');
-                $userAccountController->lock($userLogin->accountId);
+                $userAccountController->lock($userLogin->accountId, true);
 
                 $eventController = \laabs::newController('audit/event');
                 $eventController->add(
