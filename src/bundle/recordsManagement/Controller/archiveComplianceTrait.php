@@ -95,7 +95,7 @@ trait archiveComplianceTrait
             $nbArchivesToCheck = ceil($nbArchivesToCheck);
             $nbArchivesInSample = ceil($nbArchivesInSample);
 
-            $archives = $this->sdoFactory->find("recordsManagement/archive", \laabs\implode(" AND ", $queryPart), [], "<lastCheckDate <depositDate", null, $nbArchivesToCheck);
+            $archives = $this->sdoFactory->find("recordsManagement/archive", \laabs\implode(" AND ", $queryPart), [], "<lastCheckDate, <depositDate", null, $nbArchivesToCheck);
             shuffle($archives);
 
             $success = true;
