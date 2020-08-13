@@ -128,7 +128,6 @@ class digitalResource
     /**
      * The handler to resource
      *
-     * @var resource
      */
     public $handler;
 
