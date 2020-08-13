@@ -78,6 +78,12 @@ trait archiveEntryTrait
      */
     public function receive($archive, $zipContainer = false)
     {
+        if ($zipContainer) {
+            $zipResource = $archive->digitalResources[0];
+            $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
+        }
         $archive = \laabs::cast($archive, 'recordsManagement/archive');
 
         if (!isset($archive->archiveId)) {
@@ -87,12 +93,6 @@ trait archiveEntryTrait
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();
 
-        if ($zipContainer) {
-            $zipResource = $archive->digitalResources[0];
-            $archive = $this->processZipContainer($archive);
-        } else {
-            $this->receiveAttachments($archive);
-        }
 
         try {
             // Verify if deposit archive has proper hash
@@ -145,11 +145,13 @@ trait archiveEntryTrait
         if (is_array($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
                 $receivedHandler = $digitalResource->getHandler();
-
                 switch (true) {
                     case is_string($receivedHandler)
                         && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
-                        $handler = fopen($receivedHandler, 'r');
+                        $fromHandler = fopen($receivedHandler, 'r');
+                        $handler = fopen("php://temp", 'w+');
+                        stream_copy_to_stream($fromHandler, $handler);
+                        rewind($handler);
                         break;
 
                     case is_string($receivedHandler) &&
