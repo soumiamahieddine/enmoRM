@@ -48,8 +48,8 @@ class csrf
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
-        $this->config = \laabs::configuration("auth")["csrfConfig"];
-        $this->whiteList = \laabs::configuration("auth")["csrfWhiteList"];
+        $this->config = \laabs::configuration("auth")['csrfConfig'];
+        $this->whiteList = \laabs::configuration("auth")['csrfWhiteList'];
     }
 
     /**
@@ -253,14 +253,16 @@ class csrf
     }
 
     /**
-     * Checks wthat a token has been sent with request
+     * Checks that a token has been sent with request
      * and that it can be found on account auth object
      *
-     * @throws Exception If no token or not found
+     * @throws Exception If no token or not found or token limit reached
      */
     private function checkRequestToken()
     {
-        $this->requestToken = \laabs::getToken("Csrf", LAABS_IN_HEADER);
+        // getToken's param must be in Camelcase
+        $this->requestToken = \laabs::getToken($this->config["cookieName"], LAABS_IN_HEADER);
+
         if (empty($this->requestToken)) {
             throw new \core\Exception('Attempt to access without a valid token', 412);
         }
