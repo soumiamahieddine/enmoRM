@@ -35,9 +35,6 @@ class scheduling
 
     public $logSchedulingController;
 
-    protected $stashedAuthToken;
-    protected $stashedOrgToken;
-
     /**
      * Constructor of access control class
      * @param \dependency\sdo\Factory $sdoFactory The factory
@@ -180,8 +177,6 @@ class scheduling
             $launchedBy = "__system__";
         }
 
-        $this->stashCurrentTokens();
-
         $this->applyServiceTokens($scheduling->executedBy);
 
         $this->changeStatus($schedulingId, "running");
@@ -201,7 +196,7 @@ class scheduling
             \laabs::notify(LAABS_BUSINESS_EXCEPTION, $info);
         }
 
-        $this->applyStashedTokens();
+        $this->removeServiceTokens();
 
         if ($status) {
             $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
@@ -557,16 +552,10 @@ class scheduling
         return $i;
     }
 
-    protected function stashCurrentTokens()
+    protected function removeServiceTokens()
     {
-        $this->stashedAuthToken = $GLOBALS["TOKEN"]['AUTH'];
-        $this->stashedOrgToken = $GLOBALS["TOKEN"]['ORGANIZATION'];
-    }
-
-    protected function applyStashedTokens()
-    {
-        $GLOBALS["TOKEN"]['AUTH'] = $this->stashedAuthToken;
-        $GLOBALS["TOKEN"]['ORGANIZATION'] = $this->stashedOrgToken;
+        unset($GLOBALS["TOKEN"]['AUTH']);
+        unset($GLOBALS["TOKEN"]['ORGANIZATION']);
     }
     
     private function applyServiceTokens($serviceAccountId)
@@ -576,9 +565,6 @@ class scheduling
         if (!$account->enabled) {
             throw \laabs::newException("auth/authenticationException", "Service account disabled");
         }
-
-        $data = new \StdClass();
-        $data->accountId = $serviceAccountId;
 
         $cryptedToken = base64_decode($account->password);
         $jsonToken = \laabs::decrypt($cryptedToken, \laabs::getCryptKey());
