@@ -96,6 +96,7 @@ trait archiveModificationTrait
                 $retentionRule->retentionDuration = $refRetentionRule->duration;
             }
         }
+        
 
         $retentionRuleReceived = $retentionRule;
 
