@@ -61,17 +61,12 @@ class scheduling
 
         $tasks = \laabs::callService('batchProcessing/scheduling/readTasks');
 
-        $serviceAccounts = \laabs::callService('auth/serviceAccount/readIndex');
+        $serviceAccounts = \laabs::callService('auth/serviceAccount/readSearch');
 
         foreach ($serviceAccounts as $key => $serviceAccount) {
             $serviceURI = [];
             $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
             if (!$serviceAccount->enabled) {
-                unset($serviceAccounts[$key]);
-                continue;
-            }
-
-            if ($serviceAccount->isAdmin) {
                 unset($serviceAccounts[$key]);
                 continue;
             }
@@ -126,12 +121,12 @@ class scheduling
         $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         if (is_null($account->securityLevel)
-            || $account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
+            || !$account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
             || !$hasSecurityLevel
         ) {
-            $isUser = true;
-        } else {
             $isUser = false;
+        } else {
+            $isUser = true;
         }
 
         $this->view->translate();
