@@ -35,6 +35,9 @@ class scheduling
 
     public $logSchedulingController;
 
+    protected $stashedAuthToken;
+    protected $stashedOrgToken;
+
     /**
      * Constructor of access control class
      * @param \dependency\sdo\Factory $sdoFactory The factory
@@ -177,26 +180,28 @@ class scheduling
             $launchedBy = "__system__";
         }
 
-        $this->serviceToken($scheduling->executedBy);
+        $this->stashCurrentTokens();
+
+        $this->applyServiceTokens($scheduling->executedBy);
 
         $this->changeStatus($schedulingId, "running");
 
         try {
             $pathRouter = new \core\Route\PathRouter($task->route);
-            \core\Observer\Dispatcher::notify(LAABS_SERVICE_PATH,$pathRouter->path);
+            \core\Observer\Dispatcher::notify(LAABS_SERVICE_PATH, $pathRouter->path);
             if (!empty($scheduling->parameters)) {
                 \laabs::callServiceArgs($task->route, (array) $scheduling->parameters);
-
             } else {
                 \laabs::callService($task->route);
             }
-
         } catch (\Exception $info) {
             $this->changeStatus($schedulingId, "error");
             $status = false;
             
             \laabs::notify(LAABS_BUSINESS_EXCEPTION, $info);
-        }       
+        }
+
+        $this->applyStashedTokens();
 
         if ($status) {
             $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
@@ -245,7 +250,7 @@ class scheduling
             if (empty($scheduling->nextExecution)) {
                 $frequency = explode(";", $scheduling->frequency);
                 $scheduling->nextExecution = $this->nextExecution($frequency);
-                $this->sdoFactory->update($scheduling,"batchProcessing/scheduling");
+                $this->sdoFactory->update($scheduling, "batchProcessing/scheduling");
             }
 
             $interval = $scheduling->nextExecution->getTimestamp() - $currentDate->getTimestamp();
@@ -259,12 +264,12 @@ class scheduling
             }
         }
 
-        return $res; 
+        return $res;
     }
 
     /**
      * Change status
-     * 
+     *
      * @param type $schedulingId
      * @param type $status
      *
@@ -315,11 +320,11 @@ class scheduling
          * Thursday 18h -> 20h every 5 Minutes
          */
 
-        if(!empty($frequency[1])) {
-            $frequency[1] -= $H_Offset; 
+        if (!empty($frequency[1])) {
+            $frequency[1] -= $H_Offset;
         }
-        if(!empty($frequency[8] && $frequency[8] != "00")) {
-            $frequency[8] -= $H_Offset; 
+        if (!empty($frequency[8] && $frequency[8] != "00")) {
+            $frequency[8] -= $H_Offset;
         }
         if ($frequency[1] < 0) {
             $frequency[1] = 24 + $frequency[1];
@@ -551,12 +556,24 @@ class scheduling
 
         return $i;
     }
+
+    protected function stashCurrentTokens()
+    {
+        $this->stashedAuthToken = $GLOBALS["TOKEN"]['AUTH'];
+        $this->stashedOrgToken = $GLOBALS["TOKEN"]['ORGANIZATION'];
+    }
+
+    protected function applyStashedTokens()
+    {
+        $GLOBALS["TOKEN"]['AUTH'] = $this->stashedAuthToken;
+        $GLOBALS["TOKEN"]['ORGANIZATION'] = $this->stashedOrgToken;
+    }
     
-    private function serviceToken($serviceAccountId)
+    private function applyServiceTokens($serviceAccountId)
     {
         $account = $this->sdoFactory->read("auth/account", $serviceAccountId);
 
-        if(!$account->enabled) {
+        if (!$account->enabled) {
             throw \laabs::newException("auth/authenticationException", "Service account disabled");
         }
 
