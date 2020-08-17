@@ -184,7 +184,7 @@ class digitalResource
      */
     public function setContents($contents)
     {
-        $this->handler = \laabs::createMemoryStream($contents);
+        $this->handler = \laabs::createTempStream($contents);
     }
 
     /**
