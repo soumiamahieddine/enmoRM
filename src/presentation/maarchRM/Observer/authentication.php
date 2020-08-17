@@ -28,25 +28,12 @@ namespace presentation\maarchRM\Observer;
 class authentication
 {
     protected $sdoFactory;
-    protected $accountId;
-    protected $accountAuth;
-
-    protected $accountId;
-    protected $accountAuth;
-
-    protected $accountId;
-    protected $accountAuth;
+    protected $config;
+    protected $whiteList;
 
     protected $accountId;
     protected $account;
     protected $accountAuth;
-    protected $accountToken;
-
-    protected $requestToken;
-    protected $requestTokenTime;
-
-    protected $responseToken;
-    protected $responseTokenTime;
 
     /**
      * Construct the observer
