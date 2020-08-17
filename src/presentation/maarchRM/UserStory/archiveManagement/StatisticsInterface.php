@@ -34,14 +34,6 @@ interface StatisticsInterface
      * @uses   Statistics/Statistics/index
      * @return Statistics/Statistics/index
      *
-     * @param string $operation
-     * @param string $startDate
-     * @param string $endDate
-     * @param string $originatingOrg
-     * @param string $archivalProfile
-     *
-     * @uses Statistics/Statistics/retrieve
-     *
      */
     public function readStatistics();
 
