@@ -183,7 +183,6 @@ class Statistics
                 $statistics['evolutionSize'] = number_format($statistics['evolutionSize'], 3, ".", " ");
             }
         }
-        $statistics['currentMemoryCount'] = $this->getArchiveCount($endDate);
 
         if ($statistics['currentMemorySize'] != (integer)$statistics['currentMemorySize']) {
             $statistics['currentMemorySize'] = number_format($statistics['currentMemorySize'], 3, ".", " ");
@@ -335,25 +334,6 @@ class Statistics
     }
 
     /**
-     * Statistics aggregator for communicated event
-     *
-     * @param  datetime $startDate starting date
-     * @param  datetime $endDate   End date
-     * @param  string   $filter    Group by argument
-     * @param  array    $statistics Array of statistics
-     *
-     * @return array                Associative of statistics
-     */
-    protected function communicatedStats($startDate, $endDate, $filter, $statistics = [])
-    {
-        $jsonSizeColumnNumber = 6;
-        $statistics['communicatedGroupedMemorySize'] = $this->getSizeByEventTypeOrdered('ArchiveDeliveryRequest', ['recordsManagement/delivery'], $jsonSizeColumnNumber, $startDate, $endDate, $filter);
-        $statistics['communicatedGroupedMemoryCount'] = $this->getCountByEventTypeOrdered('ArchiveDeliveryRequest', $startDate, $endDate, $filter);
-
-        return $statistics;
-    }
-
-    /**
      * Sum all event info for a particular event
      *
      * @param  array    $messageType      The type of the message
@@ -418,51 +398,6 @@ class Statistics
      * Count all event info for particular event(s)
      *
      * @param  array    $messageType           The type of the message
-     * @param  datetime $startDate             Starting Date
-     * @param  datetime $endDate               End date
-     * @param  boolean  $isIncoming            Is the message incoming if type is Archive Transfer
-     *
-     * @return integer                         Count of size for events
-     */
-    protected function getCountByEventType($messageType, $startDate = null, $endDate = null, $isIncoming = false)
-    {
-        if ($messageType == "ArchiveTransfer") {
-            $isIncomingCondition = '';
-            if (!$isIncoming) {
-                $isIncomingCondition .= ' OR "message"."status" = \'validated\'';
-            }
-            $isIncomingCondition .= ') AND "message"."isIncoming" = ' . ($isIncoming ? 'TRUE' : 'FALSE');
-        }
-        $sum = $this->executeQuery($query, $eventTypes, $inParams);
-
-        $query = 'SELECT  COUNT("unitIdentifier"."objectId")
-            FROM "medona"."message" "message"
-            INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
-            ON "unitIdentifier"."messageId" = "message"."messageId"
-            INNER JOIN "recordsManagement"."archive" "archive"
-            ON "archive"."archiveId" = "unitIdentifier"."objectId"
-            AND ("archive"."parentArchiveId" IS NULL OR NOT "archive"."parentArchiveId" IN (
-                SELECT "unitIdentifier"."objectId"
-                FROM "medona"."message" "message"
-                INNER JOIN "medona"."unitIdentifier" "unitIdentifier"
-                ON "unitIdentifier"."messageId" = "message"."messageId"
-                WHERE "message"."type" = \''.$messageType.'\'
-                AND ("message"."status" = \'processed\''.
-                (isset($isIncomingCondition) ? $isIncomingCondition : ')').'
-            ))
-            WHERE "message"."type" = \''.$messageType.'\' 
-            AND ("message"."status" = \'processed\''. (isset($isIncomingCondition) ? $isIncomingCondition : ')') .
-            ($startDate ? ' AND "message"."date">\''.$startDate.'\'::timestamp AND "message"."date"<\''.$endDate.'\'::timestamp' : '');
-
-        $count = $this->executeQuery($query)[0]['count'];
-        return $count;
-    }
-
-    /**
-     * Count all event info for particular event(s)
-     *
-     * @param  array    $eventTypes            Array of event types
-     * @param  integer  $jsonColumnNumber      json Column number for size parameter in lifeCycle event table
      * @param  datetime $startDate             Starting Date
      * @param  datetime $endDate               End date
      * @param  boolean  $isIncoming            Is the message incoming if type is Archive Transfer
