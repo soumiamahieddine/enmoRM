@@ -47,6 +47,7 @@ class ArchiveTransfer extends abstractMessage
      */
     public function receive($messageFile, $attachments = array(), $schema = null, $filename = false)
     {
+        // Factoriser partie 1 avec schema
         $messageId = \laabs::newId();
         $message = \laabs::newInstance('medona/message');
         $message->messageId = $messageId;
@@ -60,12 +61,14 @@ class ArchiveTransfer extends abstractMessage
             mkdir($messageDir, 0777, true);
         }
 
+        // Spécifique receive
         $this->receivePackage($message, $messageFile, $attachments, $filename);
 
         if (empty($schema)) {
             $this->detectSchema($message);
         }
 
+        // Factoriser partie 2 avec $message
         try {
             if (empty($message->path)) {
                 $this->sendError("202", "Name of zip and his content files doesn't match");
@@ -159,6 +162,7 @@ class ArchiveTransfer extends abstractMessage
      */
     public function receiveSource($messageFile, $schema, $source, $params = [])
     {
+        // Factoriser partie 1 avec schema
         $messageId = \laabs::newId();
         $message = \laabs::newInstance('medona/message');
         $message->messageId = $messageId;
@@ -172,20 +176,35 @@ class ArchiveTransfer extends abstractMessage
             mkdir($messageDir, 0777, true);
         }
 
+        // Spécifique ReceiveSource
+        // if source
+        // ??????
         if (!isset($params['params'])) {
             $params['params'] = [];
         }
         $params["params"] = json_decode(json_encode($params["params"]), true);
         $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
+        /// Fin ?????
 
+        // $sourceConfig = $this->packageSchemas[$schema]['sources'][$source]
+        // si existe pas exception
+        // si existe, bind des params avec la config pour avoir type, required, etc
+        // Si param source = param, la valeur est dans la config, si input la valeur est reçue dans le tableau $params
         $rawSource = $this->getRawSource($schema, $source, $params['params']);
         $params['params'] = array_merge($params['params'], $rawSource['params']);
 
+        // Utiliser \laabs::newservice($sourceConfig['service']) bundle/seda2/Connectors/Octave
         $archiveTransferConnectorController = \laabs::newController($rawSource["service"]);
+
+        // Mettre à jour $message OU renvoyer un objet contenant le message et un tableau d'attachments
         $archiveTransferConnectorController->transform($message, $messageFile, $params);
 
+        // Remplacer par une nouvelle méthode unique de réception/enregistrement sas,
+        // $message->path et tableau d'attachments sur $message
         $this->receiveAttachments($message, $messageFile, $params['attachments']);
+        // Fin spécifique
 
+        // Factoriser partie 2 avec $message
         try {
             if (empty($message->path)) {
                 $this->sendError("202", "Name of zip and his content files doesn't match");
@@ -307,7 +326,7 @@ class ArchiveTransfer extends abstractMessage
             case 'application/zip':
             case 'application/octet-stream':
             case 'application/x-7z-compressed':
-                $this->receiveZip($message, $data, $attachments, $filename);
+                $this->receiveZip($message, $data, $filename);
                 break;
 
             default:
@@ -315,7 +334,7 @@ class ArchiveTransfer extends abstractMessage
         }
     }
 
-    protected function receiveZip($message, $data, $attachments, $filename)
+    protected function receiveZip($message, $data, $filename)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
