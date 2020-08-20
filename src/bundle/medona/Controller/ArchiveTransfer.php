@@ -63,48 +63,61 @@ class ArchiveTransfer extends abstractMessage
 
         /**
      * Receive message with all contents embedded
-     * @param string $messageFile   The message binary contents OR a filename
-     * @param string $schema        The schema used
-     * @param string $source        The source name to use
-     * @param array  $params        An array of params
+     * @param string $package   The message binary contents OR a filename
+     * @param string $connector The source name to use
+     * @param array  $params    An array of params
      *
      * @return medona/message
      */
-    public function receiveSource($messageFile, $schema = null, $source, $params = [])
+    public function receiveSource($package, $connector, $params = [])
     {
-        $this->createNewMessage($schema)
-
-        // Spécifique ReceiveSource
-        // if source
-        // ??????
-        if (!isset($params['params'])) {
-            $params['params'] = [];
+        if (!isset($this->packageConnectors[$connector])) {
+            throw \laabs::newException('medona/invalidMessageException', "Invalid message: unknown connector", 400);
         }
-        $params["params"] = json_decode(json_encode($params["params"]), true);
-        $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
-        /// Fin ?????
 
-        // $sourceConfig = $this->packageSchemas[$schema]['sources'][$source]
-        // si existe pas exception
-        // si existe, bind des params avec la config pour avoir type, required, etc
-        // Si param source = param, la valeur est dans la config, si input la valeur est reçue dans le tableau $params
-        $rawSource = $this->getRawSource($schema, $source, $params['params']);
-        $params['params'] = array_merge($params['params'], $rawSource['params']);
+        $connectorConf = $this->packageConnectors[$connector];
 
-        // Utiliser \laabs::newservice($sourceConfig['service']) bundle/seda2/Connectors/Octave
-        $archiveTransferConnectorController = \laabs::newController($rawSource["service"]);
+        if (!isset($connectorConf['schema']) || !isset($this->packageSchemas[$connectorConf['schema']])) {
+            throw \laabs::newException('medona/invalidMessageException', "Invalid message: unknown schema", 400);
+        }
 
-        // Mettre à jour $message OU renvoyer un objet contenant le message et un tableau d'attachments
-        $archiveTransferConnectorController->transform($message, $messageFile, $params);
+        $schema = $connectorConf['schema'];
 
-        // Remplacer par une nouvelle méthode unique de réception/enregistrement sas,
-        // $message->path et tableau d'attachments sur $message
-        $this->receiveAttachments($message, $messageFile, $params['attachments']);
-        // Fin spécifique
+        $this->createNewMessage($schema);
 
-        // Factoriser partie 2 avec $message
+        if (isset($connectorConf['service'])) {
+            // Spécifique ReceiveSource
+            // if source
+            // ??????
+            if (!isset($params['params'])) {
+                $params['params'] = [];
+            }
+            $params["params"] = json_decode(json_encode($params["params"]), true);
+            $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
+            /// Fin ?????
+
+            // si existe, bind des params avec la config pour avoir type, required, etc
+            // Si param source = param, la valeur est dans la config, si input la valeur est reçue dans le tableau $params
+            $rawSource = $this->getRawSource($schema, $source, $params['params']);
+            $params['params'] = array_merge($params['params'], $rawSource['params']);
+
+            // Instanciate the connector service
+            $connectorService = \laabs::newService($connectorConf['service']);
+
+            // Call service to transform received package into a digest message+attachments
+            list ($messageFile, $attachments) = $connectorService->transform($message, $package, $params);
+        } else {
+            $messageFile = $package;
+            $attachments = [];
+        }
+
+        // Recevoir les parties du paquet
+        $this->receivePackage($message, $messageFile, $attachments);
+
+        // Traiter le schéma spécifique
         $this->receiveMessage($message);
 
+        // envoyer l'AR
         $this->sendAcknowledgement($message);
     }
 
@@ -339,7 +352,7 @@ class ArchiveTransfer extends abstractMessage
 
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$filename;
 
-        $this->receiveAttachments($message, $data, $attachments, $filename);
+        $this->receiveAttachments($message, $data, $attachments);
     }
 
     protected function receiveAttachments($message, $data, $attachments)

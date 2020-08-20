@@ -80,6 +80,7 @@ class message
     protected $finfo;
 
     protected $packageSchemas = [];
+    protected $packageConnectors = [];
 
     /**
      * Constructor
@@ -97,7 +98,8 @@ class message
         $removeMessageTask = null,
         $autoValidateSize = 0,
         $autoProcessSize = 0,
-        $packageSchemas = []
+        $packageSchemas = [],
+        $packageConnectors = []
     ) {
         $this->orgController = \laabs::newController('organization/organization');
         $this->archiveController = \laabs::newController('recordsManagement/archive');
@@ -127,6 +129,7 @@ class message
         $this->finfo = new \finfo(\FILEINFO_MIME_TYPE);
 
         $this->packageSchemas = $packageSchemas;
+        $this->packageConnectors = $packageConnectors;
     }
 
     /**
