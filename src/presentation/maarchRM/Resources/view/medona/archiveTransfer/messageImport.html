@@ -353,12 +353,22 @@ var zipContent = "";
             if ($(this).attr("type") != 'file') {
                 jsonObject.params[name] = $(this).val();
             } else {
-                jsonObject.params[name] = [];
-                var file = {
-                    filename : $(this).val(),
-                    data     : $(this).data('base64')
-                };
-                jsonObject.params[name].push(file);
+                if ($(this).attr("multiple")) {
+                    jsonObject.params[name] = [];
+                    var files = $(this).get(0).files;
+                    for(var i=0; i<files.length; i++) {
+                        var file = files[i];
+                        console.log(file);
+                        var oFileReader = new FileReader();
+                        oFileReader.readAsDataURL(file);
+                        jsonObject.params[name].push(oFileReader.result);
+                    };
+                } else {
+                    var file = $(this).get(0).file;
+                    var oFileReader = new FileReader();
+                    oFileReader.readAsDataURL(file);
+                    jsonObject.params[name].push(oFileReader.result);
+                }
                 /*var files = $(this).siblings('input');
                 $.each(files, function() {
                     var file = {

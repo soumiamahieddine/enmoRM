@@ -20,14 +20,7 @@
 
         <?merge .['type'].ifeq('file') ?>
         <div class="form-group col-sm-8">
-            <label class="btn btn-success" for="fileInput_[?merge .['name'] ?]">
-                <input id="fileInput_[?merge .['name'] ?]" type="file" name="[?merge .['name'] ?]" class="fileBrowser hide" multiple>
-                <i class="fa fa-plus">&nbsp;</i>
-            </label>
-            <!--input type="file" name="[?merge .['name'] ?]" class="fileBrowser" multiple/-->
-            <br/>
-            <br/>
-            <div class="form-group filesContainer" />
+            <input type="file" name="[?merge .['name'] ?]" class="fileBrowser btn btn-light" multiple data-show-upload="true" data-show-caption="true">
         </div>
     </div>   
 </div>
@@ -40,14 +33,9 @@
     })
 
     // Add
-    $('.fileBrowser').on('change', function() {
-        console.log('fileBrowser on change');
+    /*$('.fileBrowser').on('change', function() {
         for (var i = 0; i < $(this).get(0).files.length; i++) {
-            var fileName = this.files[i].name;
-
-            uploadAttachement(this.files[i], function(e){
-                newAttachement(fileName, e.target.result);
-            })
+            uploadAttachement(this.files[i], $(this).attr('name'))
         }
     })
 
@@ -55,19 +43,19 @@
         $(this).closest('.input-group').remove();
     })
 
-    function uploadAttachement(file) {
-        console.log('uploadAttachement()');
+    function uploadAttachement(file, name) {
+        console.log('uploadAttachement() for '+name);
         var oFileReader = new FileReader();
         oFileReader.readAsDataURL(file);
         oFileReader.onload = function() {
-            newAttachement(file.name, oFileReader.result.replace(/^data:.*?;base64,/, ""));
+            newAttachement(file.name, oFileReader.result.replace(/^data:.*?;base64,/, ""), name);
         }
     }
 
-    function newAttachement(fileName, base64) {
+    function newAttachement(fileName, base64, name) {
         var inputGroup = $('<div/>')
                             .addClass('input-group')
-                            .appendTo($('.filesContainer'));
+                            .appendTo($('.filesContainer[name="'+name+'"]'));
 
         var input = $('<input/>')
                         .attr('type', 'text')
@@ -90,5 +78,5 @@
         var icon = $('<i/>')
                         .addClass('fa fa-trash-o')
                         .appendTo(button);
-    }
+    }*/
 </script>
