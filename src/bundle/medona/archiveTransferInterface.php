@@ -25,7 +25,7 @@ namespace bundle\medona;
  * @package Medona
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-interface archiveTransferInterface 
+interface archiveTransferInterface
     extends messageInterface
 {
     /**
@@ -60,14 +60,14 @@ interface archiveTransferInterface
 
     /**
      * Count transfer messages
-     * 
+     *
      * @action medona/ArchiveTransfer/count
      */
     public function readCount();
 
     /**
      * Receive message with all contents embedded
-     * @param string $messageFile The message binary contents OR a filename
+     * @param string $messageFile The message binary contents or a filename
      * @param array  $attachments An array of filenames for attachments
      * @param string $schema      The schema of the message file
      * @param string $filename    The message file name
@@ -78,14 +78,14 @@ interface archiveTransferInterface
 
     /**
      * Receive message with all contents embedded
-     * @param string $messageFile   The message binary contents OR a filename
-     * @param string $schema        The schema used
-     * @param string $source        The source name to use
-     * @param array  $schema        An array of params
+     *
+     * @param mixed  $package  Message binary contents or a filename
+     * @param string $connector    Connector to use
+     * @param array  $params       Parameters to adapt message
      *
      * @action medona/ArchiveTransfer/receiveSource
      */
-    public function createSource($messageFile, $schema, $source = null, $params = []);
+    public function createSource($package, $connector, $params = []);
 
     /**
      * Validate messages against schema and rules

@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -71,13 +71,13 @@ class ArchiveTransfer extends abstractMessage
      */
     public function receiveSource($package, $connector, $params = [])
     {
-        if (!isset($this->packageConnectors[$connector])) {
+        if (!isset($this->packageConnectors[$connector]) || empty($this->packageConnectors[$connector])) {
             throw \laabs::newException('medona/invalidMessageException', "Invalid message: unknown connector", 400);
         }
 
         $connectorConf = $this->packageConnectors[$connector];
 
-        if (!isset($connectorConf['schema']) || !isset($this->packageSchemas[$connectorConf['schema']])) {
+        if (!isset($connectorConf['schema']) || empty($connectorConf['schema']) || !isset($this->packageSchemas[$connectorConf['schema']])) {
             throw \laabs::newException('medona/invalidMessageException', "Invalid message: unknown schema", 400);
         }
 
@@ -89,23 +89,23 @@ class ArchiveTransfer extends abstractMessage
             // Spécifique ReceiveSource
             // if source
             // ??????
-            if (!isset($params['params'])) {
-                $params['params'] = [];
-            }
-            $params["params"] = json_decode(json_encode($params["params"]), true);
-            $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
+            // if (!isset($params['params'])) {
+            //     $params['params'] = [];
+            // }
+            // $params["params"] = json_decode(json_encode($params["params"]), true);
+            // $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
             /// Fin ?????
 
             // si existe, bind des params avec la config pour avoir type, required, etc
             // Si param source = param, la valeur est dans la config, si input la valeur est reçue dans le tableau $params
-            $rawSource = $this->getRawSource($schema, $source, $params['params']);
-            $params['params'] = array_merge($params['params'], $rawSource['params']);
+            // $rawSource = $this->getRawSource($schema, $source, $params['params']);
+            // $params['params'] = array_merge($params['params'], $rawSource['params']);
 
             // Instanciate the connector service
             $connectorService = \laabs::newService($connectorConf['service']);
 
             // Call service to transform received package into a digest message+attachments
-            list ($messageFile, $attachments) = $connectorService->transform($message, $package, $params);
+            list ($messageFile, $attachments) = $connectorService->transform($package, $params);
         } else {
             $messageFile = $package;
             $attachments = [];

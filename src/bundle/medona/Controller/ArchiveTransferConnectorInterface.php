@@ -27,11 +27,10 @@ interface ArchiveTransferConnectorInterface
     /**
      * Get archive transfer transformed by connector
      *
-     * @param medona/message $message       The message
-     * @param source         $messageFile   The source of the message
-     * @param array          $params        Additional parameters
+     * @param mixed $messageFile The source of the message
+     * @param array $params      Additional parameters
      *
      * @return array Array of medona/message object
      */
-    public function transform($message, $messageFile, $params);
+    public function transform($messageFile, $params);
 }
