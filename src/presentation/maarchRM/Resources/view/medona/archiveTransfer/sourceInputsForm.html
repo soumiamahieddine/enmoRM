@@ -1,11 +1,94 @@
+<style>
+    .fileDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 70px 10px 70px 10px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+</style>
 <div>
-    <h3>Source Inputs</h3>
-    <br/>
     <?merge inputs ?>
     <div class="form-group">
         <label class="col-sm-4 control-label"><?merge .['label'] ?><?merge .['required'].bool() ?><span style="color: red"> *</span></label>
+        
+        <?merge .['type'].ifne('file') ?>
         <div class="form-group col-sm-8">
-            <input class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-json="[?merge .['representation'] ?]"/>
+            <input type="text" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]"/>
         </div>
-    </div>
+
+        <?merge .['type'].ifeq('file') ?>
+        <div class="form-group col-sm-8">
+            <label class="btn btn-success" for="fileInput_[?merge .['name'] ?]">
+                <input id="fileInput_[?merge .['name'] ?]" type="file" name="[?merge .['name'] ?]" class="fileBrowser hide" multiple>
+                <i class="fa fa-plus">&nbsp;</i>
+            </label>
+            <!--input type="file" name="[?merge .['name'] ?]" class="fileBrowser" multiple/-->
+            <br/>
+            <br/>
+            <div class="form-group filesContainer" />
+        </div>
+    </div>   
 </div>
+
+<script>
+    // Cancel
+    $('#messageImport_cancel').on('click', function() {
+        $('.fileBrowser').val('');
+        $('.filesContainer').empty("");
+    })
+
+    // Add
+    $('.fileBrowser').on('change', function() {
+        console.log('fileBrowser on change');
+        for (var i = 0; i < $(this).get(0).files.length; i++) {
+            var fileName = this.files[i].name;
+
+            uploadAttachement(this.files[i], function(e){
+                newAttachement(fileName, e.target.result);
+            })
+        }
+    })
+
+    $('.filesContainer').on('click', '.removeFile', function() {
+        $(this).closest('.input-group').remove();
+    })
+
+    function uploadAttachement(file) {
+        console.log('uploadAttachement()');
+        var oFileReader = new FileReader();
+        oFileReader.readAsDataURL(file);
+        oFileReader.onload = function() {
+            newAttachement(file.name, oFileReader.result.replace(/^data:.*?;base64,/, ""));
+        }
+    }
+
+    function newAttachement(fileName, base64) {
+        var inputGroup = $('<div/>')
+                            .addClass('input-group')
+                            .appendTo($('.filesContainer'));
+
+        var input = $('<input/>')
+                        .attr('type', 'text')
+                        .addClass('form-control')
+                        .prop('readonly', true)
+                        .data('base64', base64)
+                        .val(fileName)
+                        .appendTo(inputGroup);
+
+        var span = $('<span/>')
+                        .addClass('input-group-btn')
+                        .appendTo(inputGroup);
+
+        var button = $('<button/>')
+                        .attr('title', $('#remove_text').html())
+                        .addClass('btn btn-danger removeFile')
+                        .attr('type', 'button')
+                        .appendTo(span);
+
+        var icon = $('<i/>')
+                        .addClass('fa fa-trash-o')
+                        .appendTo(button);
+    }
+</script>

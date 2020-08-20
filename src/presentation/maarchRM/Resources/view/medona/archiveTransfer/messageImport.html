@@ -41,37 +41,19 @@
                             </td>
                         </tr>
                     </table>
-                    <div id="attachementImport_XMLDropZone" >
-                        <h4>Click or drop documents<h4>
-                    </div>
-                    <input type="file" id="messageImport_attachementsBrowser" class="hide" multiple>
-                    <br/>
 
-                    <div id="messageImport_attachments" class="form-group">
-                    </div>
-
-                    <?merge packageSchemas.count().bool() ?>
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label">Schema</label>
-                        <div class="form-group col-sm-8">
-                            <select class="form-control" id="messageImport_schema" name="messageImport_schema">
-                                <?merge packageSchemas ?>
-                                <option value="[?merge packageSchemas.key() ?]"><?merge .['label'] ?></option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label">Source</label>
                         <div class="form-group col-sm-8">
                             <select class="form-control" id="messageImport_source" name="messageImport_source">
                                 <option value="default">Default</option>
-                                <?merge packageSources ?>
-                                <option class="source_schema_[?merge .['schema'] ?] source_option" value="[?merge .['name'] ?]"><?merge .['name'] ?></option>
+                                <?merge packageConnectors ?>
+                                <option class="source_option" value="[?merge packageConnectors.key() ?]" data-params="[?merge .['params'].json ?]"><?merge .['label'] ?></option>
                             </select>
                         </div>
                     </div>
                     <br/>
-                    <div id="source_inputs">
+                    <div id="userInputs">
                     </div>
                     <br/>
                     <br/>
@@ -122,15 +104,6 @@
     .fileIcon {
         font-size: 400%;
     }
-
-    #attachementImport_XMLDropZone {
-        border: 2px dashed grey;
-        cursor: pointer;
-        padding: 70px 10px 70px 10px;
-        text-align: center;
-        color: grey;
-        opacity: 0.5;
-    }
 </style>
 
 <script>
@@ -138,18 +111,18 @@
 /* ------ MESSAGE FILE ------ */
 var zipContent = "";
     // Drag & drop
-    $("#messageImport_XMLDropZone, #attachementImport_XMLDropZone").on('dragenter', function(e) {
+    $("#messageImport_XMLDropZone").on('dragenter', function(e) {
         e.preventDefault();
         e.stopPropagation();
     })
 
-    $("#messageImport_XMLDropZone, #attachementImport_XMLDropZone").on('dragover', function(e) {
+    $("#messageImport_XMLDropZone").on('dragover', function(e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).css('opacity', '1');
     })
 
-    $("#messageImport_XMLDropZone, #attachementImport_XMLDropZone").on('dragleave', function(e) {
+    $("#messageImport_XMLDropZone").on('dragleave', function(e) {
         $(this).css('opacity', '0.5');
     })
 
@@ -166,37 +139,6 @@ var zipContent = "";
         }
     );
 
-    $('#attachementImport_XMLDropZone').on('drop', function(e) {
-        if(!e.originalEvent.dataTransfer || !e.originalEvent.dataTransfer.files.length){
-            return;
-        }
-
-        e.preventDefault();
-        e.stopPropagation();
-        $('#attachementImport_XMLDropZone').css('opacity', '0.5');
-        var files = e.originalEvent.dataTransfer.files;
-
-        $.each(files, function(key, file) {
-            oFileReader = new FileReader();
-            if ( file.type == "application/x-zip-compressed") {
-                oFileReader.readAsDataURL(file);
-            } else {
-                oFileReader.readAsText(file);
-            }
-            oFileReader.onload = function() {
-
-                uploadAttachement(file, function(e){
-                    newAttachement(file.name, e.target.result);
-                })
-            }
-        })
-    })
-
-    // Files browser
-    $('#attachementImport_XMLDropZone').on('click', function() {
-        $('#messageImport_attachementsBrowser').click();
-    })
-
     $('#messageImport_XMLDropZone').on('click', function() {
         $('#messageImport_erreur').addClass('hide');
         $('#messageImport_filesBrowser').click();
@@ -212,8 +154,6 @@ var zipContent = "";
         $('#messageImport_XMLDropZone').removeClass('hide');
         $('#messageImport_FileInfo').addClass('hide');
         $('#messageImport_filesBrowser').val('');
-        $('#messageImport_attachementsBrowser').val('');
-        $('#messageImport_attachments').empty("");
         $('#messageImport_submit').attr('disabled',false);
     })
 
@@ -290,27 +230,6 @@ var zipContent = "";
         });
     })
 
-/* ------ ATTACHEMENT ------ */
-    $('#messageImport_addAttachement').on('click', function() {
-        $('#messageImport_attachementsBrowser').click();
-    })
-
-    $('#messageImport_attachementsBrowser').on('change', function() {
-
-        for (var i = 0; i < $(this).get(0).files.length; i++)
-        {
-            var fileName = this.files[i].name;
-
-            uploadAttachement(this.files[i], function(e){
-                newAttachement(fileName, e.target.result);
-            })
-        }
-    })
-
-    $('#messageImport_attachments').on('click', '.removeAttachement', function() {
-        $(this).closest('.input-group').remove();
-    })
-
 /* ------ FUNCTION ------ */
 
     function uploadMessage(file) {
@@ -324,13 +243,9 @@ var zipContent = "";
             if ( file.type == "application/x-zip-compressed" || file.type == "application/zip") {
                 $('#messageImport_filesBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
                 $('#messageImport_filesBrowser').data('filename', file.name);
-                $('#messageImport_addAttachement').addClass('hide');
-                $('#attachementImport_XMLDropZone').addClass('hide');
                 
             } else {
                 $('#messageImport_filesBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
-                $('#messageImport_addAttachement').removeClass('hide');
-                $('#attachementImport_XMLDropZone').removeClass('hide');
             }
 
             $('#messageImport_fileName').html(file.name);
@@ -345,42 +260,6 @@ var zipContent = "";
             $('#messageImport_XMLDropZone').addClass('hide');
             $('#messageImport_FileInfo').removeClass('hide');
         };
-    }
-
-    function uploadAttachement(file) {
-        var oFileReader = new FileReader();
-        oFileReader.readAsDataURL(file);
-        oFileReader.onload = function() {
-            newAttachement(file.name, oFileReader.result.replace(/^data:.*?;base64,/, ""));
-        }
-    }
-
-    function newAttachement(fileName, base64) {
-        var inputGroup = $('<div/>')
-                            .addClass('input-group')
-                            .appendTo($('#messageImport_attachments'));
-
-        var input = $('<input/>')
-                        .attr('type', 'text')
-                        .addClass('form-control')
-                        .prop('readonly', true)
-                        .data('base64', base64)
-                        .val(fileName)
-                        .appendTo(inputGroup);
-
-        var span = $('<span/>')
-                        .addClass('input-group-btn')
-                        .appendTo(inputGroup);
-
-        var button = $('<button/>')
-                        .attr('title', $('#remove_text').html())
-                        .addClass('btn btn-danger removeAttachement')
-                        .attr('type', 'button')
-                        .appendTo(span);
-
-        var icon = $('<i/>')
-                        .addClass('fa fa-trash-o')
-                        .appendTo(button);
     }
 
     function validateMessage(messageId) {
@@ -447,7 +326,7 @@ var zipContent = "";
             filename : $('#messageImport_filesBrowser').data('filename')
         };
 
-        var attachments = $('#messageImport_attachments').find('input');
+        var attachments = $('#attachmentsContainer').find('input');
 
         $.each(attachments, function() {
             var attachement = {
@@ -463,48 +342,49 @@ var zipContent = "";
     function serializeSource() {
         var jsonObject = {
             messageFile : $('#messageImport_filesBrowser').data('base64'),
-            schema : $('#messageImport_schema').val(),
             source : $('#messageImport_source').val(),
-            params : {
-                attachments : [],
-                filename : $('#messageImport_filesBrowser').data('filename'),
-                params : {}
-            }
+            params : {}
         };
 
-        var attachments = $('#messageImport_attachments').find('input');
-
-        $.each(attachments, function() {
-            var attachment = {
-                filename : $(this).val(),
-                data     : $(this).data('base64')
-            };
-            jsonObject.params.attachments.push(attachment);
-        })
-
-        var sourceInputs = $('#source_inputs').find('input');
+        var sourceInputs = $('#userInputs').find('input');
 
         $.each(sourceInputs, function() {
-            var param = $(this).data("json");
-            param.value = $(this).val();
-            jsonObject.params.params[$(this).attr("name")] = param;
+            var name = $(this).attr("name");
+            if ($(this).attr("type") != 'file') {
+                jsonObject.params[name] = $(this).val();
+            } else {
+                jsonObject.params[name] = [];
+                var file = {
+                    filename : $(this).val(),
+                    data     : $(this).data('base64')
+                };
+                jsonObject.params[name].push(file);
+                /*var files = $(this).siblings('input');
+                $.each(files, function() {
+                    var file = {
+                        filename : $(this).val(),
+                        data     : $(this).data('base64')
+                    };
+                    jsonObject.params[name].push(file);
+                })*/
+            }
         });
 
         return jsonObject;
     }
 
-    $("#messageImport_schema").on("change", (event) => {
+    /*$("#messageImport_schema").on("change", (event) => {
         let schema = $(event.target).val();
         $(".source_option").addClass('hide');
         $(".source_schema_" + schema).removeClass('hide');
         $("#messageImport_source").val("default");
-        $('#source_inputs').empty();
-    });
+        $('#userInputs').empty();
+    });*/
 
     $("#messageImport_source").on("change", (event) => {
         let source = $(event.target).val();
         if (source == "default") {
-            $('#source_inputs').empty();
+            $('#userInputs').empty();
             return;
         }
         let schema = $("#messageImport_schema").val();
@@ -515,11 +395,9 @@ var zipContent = "";
             contentType : 'application/json',
             async       : false,
             success     : function (response) {
-                $('#source_inputs').empty().html(response);
+                $('#userInputs').empty().html(response);
             }
         });
     });
-
-    $("#messageImport_schema").change();
 
 </script>

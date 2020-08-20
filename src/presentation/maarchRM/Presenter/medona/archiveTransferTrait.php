@@ -38,21 +38,17 @@ trait archiveTransferTrait
         if (isset(\laabs::configuration('medona')['packageSchemas'])) {
             $packageSchemas = \laabs::configuration('medona')['packageSchemas'];
         }
-        $packageSources = [];
-        foreach ($packageSchemas as $schema => $value) {
-            if (isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'])) {
-                $sources = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'];
-                foreach ($sources as $name => $source) {
-                    $packageSources[] = ["schema" => $schema, "name" => $name];
-                }
-            }
+        
+        $packageConnectors = [];
+        if (isset(\laabs::configuration('medona')['packageConnectors'])) {
+            $packageConnectors = \laabs::configuration('medona')['packageConnectors'];
         }
         
         $this->view->addContentFile("medona/archiveTransfer/messageImport.html");
         $this->view->translate();
 
         $this->view->setSource("packageSchemas", $packageSchemas);
-        $this->view->setSource("packageSources", $packageSources);
+        $this->view->setSource("packageConnectors", $packageConnectors);
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -70,12 +66,14 @@ trait archiveTransferTrait
     {
         $inputs = [];
 
-        if (isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source]['params'])) {
-            $sourceInputs = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source]['params'];
+        if (isset(\laabs::configuration('medona')['packageConnectors'][$source]['params'])) {
+            $sourceInputs = \laabs::configuration('medona')['packageConnectors'][$source]['params'];
             foreach ($sourceInputs as $key => $input) {
-                if ($input["source"] == "input") {
+                if (isset($input["source"]) && $input["source"] == 'input') {
                     $input['name'] = $key;
-                    $input['representation'] = json_encode($input);
+                    if (!isset($input['type'])) {
+                        $input['type'] = 'string';
+                    }
                     $inputs[] = $input;
                 }
             }
