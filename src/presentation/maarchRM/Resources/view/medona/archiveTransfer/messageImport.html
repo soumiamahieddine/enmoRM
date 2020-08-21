@@ -245,7 +245,7 @@ var zipContent = "";
             if ( file.type == "application/x-zip-compressed" || file.type == "application/zip") {
                 $('#packagefileBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
                 $('#packagefileBrowser').data('filename', file.name);
-                
+
             } else {
                 $('#packagefileBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
             }
@@ -343,8 +343,10 @@ var zipContent = "";
 
     function serializeSource() {
         var jsonObject = {
-            package : $('#packagefileBrowser').data('base64'),
-            source : $('#messageImport_source').val(),
+            package : {
+                messageFile : $('#packagefileBrowser').data('base64')
+            },
+            connector : $('#messageImport_source').val(),
             params : {}
         };
 
