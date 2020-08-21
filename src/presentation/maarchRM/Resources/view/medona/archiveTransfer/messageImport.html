@@ -14,15 +14,15 @@
             </h1>
         </div>
         <div id="messageImortView" lang="en" data-translate-catalog="medona/messages">
-            <input type="file" id="messageImport_filesBrowser" class="hide">
+            <input type="file" id="packagefileBrowser" class="hide">
             <br/>
             <div class="col-md-8">
-                <div id="messageImport_XMLDropZone">
+                <div id="packageDropZone">
                     <i class="fa fa-file-text fileIcon">&nbsp;</i>
                     <h4>Click or drop a message file<h4>
                 </div>
 
-                <div id="messageImport_FileInfo" class="hide col-md-8 col-md-offset-2">
+                <div id="packageFileInfo" class="hide col-md-8 col-md-offset-2">
                     <br/>
                     <table>
                         <tr>
@@ -30,13 +30,13 @@
                             <td>
                                 <dl class="dl-horizontal">
                                     <dt>File name</dt>
-                                    <dd id="messageImport_fileName"></dd>
+                                    <dd id="packageFileName"></dd>
 
                                     <dt>Size</dt>
-                                    <dd id="messageImport_fileSize"></dd>
+                                    <dd id="packageFileSize"></dd>
 
                                     <dt>Type</dt>
-                                    <dd id="messageImport_fileType"></dd>
+                                    <dd id="packageFileType"></dd>
                                 </dl>
                             </td>
                         </tr>
@@ -93,7 +93,7 @@
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 
 <style>
-    #messageImport_XMLDropZone {
+    #packageDropZone {
         border: 2px dashed grey;
         cursor: pointer;
         padding: 100px;
@@ -111,50 +111,52 @@
 /* ------ MESSAGE FILE ------ */
 var zipContent = "";
     // Drag & drop
-    $("#messageImport_XMLDropZone").on('dragenter', function(e) {
+    $("#packageDropZone").on('dragenter', function(e) {
         e.preventDefault();
         e.stopPropagation();
     })
 
-    $("#messageImport_XMLDropZone").on('dragover', function(e) {
+    $("#packageDropZone").on('dragover', function(e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).css('opacity', '1');
     })
 
-    $("#messageImport_XMLDropZone").on('dragleave', function(e) {
+    $("#packageDropZone").on('dragleave', function(e) {
         $(this).css('opacity', '0.5');
     })
 
-    $('#messageImport_XMLDropZone').on('drop', function(e) {
+    $('#packageDropZone').on('drop', function(e) {
             $('#messageImport_erreur').addClass('hide');
             if(e.originalEvent.dataTransfer){
                 if(e.originalEvent.dataTransfer.files.length) {
                     e.preventDefault();
                     e.stopPropagation();
-                    $('#messageImport_XMLDropZone').css('opacity', '0.5');
+                    $('#packageDropZone').css('opacity', '0.5');
                     uploadMessage(e.originalEvent.dataTransfer.files[0]);
                 }
             }
         }
     );
 
-    $('#messageImport_XMLDropZone').on('click', function() {
+    $('#packageDropZone').on('click', function() {
         $('#messageImport_erreur').addClass('hide');
-        $('#messageImport_filesBrowser').click();
+        $('#packagefileBrowser').click();
     })
 
 
-    $('#messageImport_filesBrowser').on('change', function() {
+    $('#packagefileBrowser').on('change', function() {
         uploadMessage($(this).get(0).files[0]);
     })
 
     // Cancel
     $('#messageImport_cancel').on('click', function() {
-        $('#messageImport_XMLDropZone').removeClass('hide');
-        $('#messageImport_FileInfo').addClass('hide');
-        $('#messageImport_filesBrowser').val('');
+        $('#packageDropZone').removeClass('hide');
+        $('#packageFileInfo').addClass('hide');
+        $('#packagefileBrowser').val('');
         $('#messageImport_submit').attr('disabled',false);
+        $("#messageImport_source").val("default");
+        $('#userInputs').empty();
     })
 
     // Submit
@@ -241,24 +243,24 @@ var zipContent = "";
         }
         oFileReader.onload = function() {
             if ( file.type == "application/x-zip-compressed" || file.type == "application/zip") {
-                $('#messageImport_filesBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
-                $('#messageImport_filesBrowser').data('filename', file.name);
+                $('#packagefileBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
+                $('#packagefileBrowser').data('filename', file.name);
                 
             } else {
-                $('#messageImport_filesBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
+                $('#packagefileBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
             }
 
-            $('#messageImport_fileName').html(file.name);
-            $('#messageImport_fileSize').html(file.size + ' ' + $('#byte_text').html());
+            $('#packageFileName').html(file.name);
+            $('#packageFileSize').html(file.size + ' ' + $('#byte_text').html());
 
             if (!file.type || file.type == "") {
                 gritter.show($('#empty_file_type_text').html(), false);
                 $('#messageImport_submit').attr('disabled',true);
             } else {
-                $('#messageImport_fileType').html(file.type);
+                $('#packageFileType').html(file.type);
             }
-            $('#messageImport_XMLDropZone').addClass('hide');
-            $('#messageImport_FileInfo').removeClass('hide');
+            $('#packageDropZone').addClass('hide');
+            $('#packageFileInfo').removeClass('hide');
         };
     }
 
@@ -320,10 +322,10 @@ var zipContent = "";
 
     function serialize() {
         var jsonObject = {
-            messageFile : $('#messageImport_filesBrowser').data('base64'),
+            messageFile : $('#packagefileBrowser').data('base64'),
             attachments : [],
             schema : $('#messageImport_schema option:selected').val(),
-            filename : $('#messageImport_filesBrowser').data('filename')
+            filename : $('#packagefileBrowser').data('filename')
         };
 
         var attachments = $('#attachmentsContainer').find('input');
@@ -341,7 +343,7 @@ var zipContent = "";
 
     function serializeSource() {
         var jsonObject = {
-            messageFile : $('#messageImport_filesBrowser').data('base64'),
+            package : $('#packagefileBrowser').data('base64'),
             source : $('#messageImport_source').val(),
             params : {}
         };
@@ -350,37 +352,39 @@ var zipContent = "";
 
         $.each(sourceInputs, function() {
             var name = $(this).attr("name");
-            if ($(this).attr("type") != 'file') {
-                jsonObject.params[name] = $(this).val();
-            } else {
-                if ($(this).attr("multiple")) {
-                    jsonObject.params[name] = [];
-                    var files = $(this).get(0).files;
-                    for(var i=0; i<files.length; i++) {
-                        var file = files[i];
-                        console.log(file);
-                        var oFileReader = new FileReader();
-                        oFileReader.readAsDataURL(file);
-                        jsonObject.params[name].push(oFileReader.result);
-                    };
-                } else {
-                    var file = $(this).get(0).file;
-                    var oFileReader = new FileReader();
-                    oFileReader.readAsDataURL(file);
-                    jsonObject.params[name].push(oFileReader.result);
-                }
-                /*var files = $(this).siblings('input');
-                $.each(files, function() {
-                    var file = {
-                        filename : $(this).val(),
-                        data     : $(this).data('base64')
-                    };
-                    jsonObject.params[name].push(file);
-                })*/
+
+            switch($(this).attr("type")) {
+                case 'file':
+                    if ($(this).attr("multiple")) {
+                        jsonObject.params[name] = [];
+                        var files = $(this).get(0).files;
+                        var readers = $(this).data('readers');
+                        for (var i = 0; i < files.length; i++) {
+                            jsonObject.params[name].push(serializeFile(files[i], readers[i]));
+                        }
+                    } else {
+                        var file = $(this).get(0).files[0];
+                        var reader = $(this).data('readers')[0];
+                        jsonObject.params[name] = serializeFile(file, reader);
+                    }
+                    break;
+
+                case 'text':
+                default:
+                    jsonObject.params[name] = $(this).val();
             }
         });
 
         return jsonObject;
+    }
+
+    function serializeFile(file, reader) {
+        return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            contents: reader.result..replace(/^data:.*?;base64,/, "")
+        };
     }
 
     /*$("#messageImport_schema").on("change", (event) => {
