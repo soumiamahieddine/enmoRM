@@ -357,10 +357,8 @@ var zipContent = "";
                 case 'file':
                     if ($(this).attr("multiple")) {
                         jsonObject.params[name] = [];
-                        var files = $(this).get(0).files;
-                        var readers = $(this).data('readers');
-                        for (var i = 0; i < files.length; i++) {
-                            jsonObject.params[name].push(serializeFile(files[i], readers[i]));
+                        for (var i = 0; i < $(this).get(0).files.length; i++) {
+                            jsonObject.params[name].push(serializeFile($(this).get(0).files[i], $(this).data('readers')[i]));
                         }
                     } else {
                         var file = $(this).get(0).files[0];
@@ -383,7 +381,8 @@ var zipContent = "";
             name: file.name,
             type: file.type,
             size: file.size,
-            contents: reader.result..replace(/^data:.*?;base64,/, "")
+            encoding: 'base64',
+            contents: reader.result.replace(/^data:.*?;base64,/, "")
         };
     }
 
