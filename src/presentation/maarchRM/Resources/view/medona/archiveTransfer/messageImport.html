@@ -245,9 +245,13 @@ var zipContent = "";
             if ( file.type == "application/x-zip-compressed" || file.type == "application/zip") {
                 $('#packagefileBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
                 $('#packagefileBrowser').data('filename', file.name);
+                $('#packagefileBrowser').data('size', file.size);
 
             } else {
                 $('#packagefileBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
+                $('#packagefileBrowser').data('filename', file.name);
+                $('#packagefileBrowser').data('size', file.size);
+                $('#packagefileBrowser').data('type', file.type);
             }
 
             $('#packageFileName').html(file.name);
@@ -322,7 +326,10 @@ var zipContent = "";
 
     function serialize() {
         var jsonObject = {
-            messageFile : $('#packagefileBrowser').data('base64'),
+            package : {
+                data : $('#packagefileBrowser').data('base64'),
+                encoding : 'base64'
+            },
             attachments : [],
             schema : $('#messageImport_schema option:selected').val(),
             filename : $('#packagefileBrowser').data('filename')
@@ -331,11 +338,11 @@ var zipContent = "";
         var attachments = $('#attachmentsContainer').find('input');
 
         $.each(attachments, function() {
-            var attachement = {
+            var attachment = {
                 filename : $(this).val(),
                 data     : $(this).data('base64')
             };
-            jsonObject.attachments.push(attachement);
+            jsonObject.attachments.push(attachment);
         })
 
         return jsonObject;
@@ -344,7 +351,10 @@ var zipContent = "";
     function serializeSource() {
         var jsonObject = {
             package : {
-                messageFile : $('#packagefileBrowser').data('base64')
+                data : $('#packagefileBrowser').data('base64'),
+                encoding : 'base64',
+                type : $('#packagefileBrowser').data('type'),
+                size: $('#packagefileBrowser').data('size')
             },
             connector : $('#messageImport_source').val(),
             params : {}
@@ -384,7 +394,7 @@ var zipContent = "";
             type: file.type,
             size: file.size,
             encoding: 'base64',
-            contents: reader.result.replace(/^data:.*?;base64,/, "")
+            data: reader.result.replace(/^data:.*?;base64,/, "")
         };
     }
 
