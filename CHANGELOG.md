@@ -2,19 +2,21 @@
 
 ## Version 2.6.6
 
-- `Fixed` Gestion d'erreur lors de contrôle d'intégrité d'une archive.
+- `Fixed` Gestion d'erreur lors du contrôle d'intégrité d'une archive.
 - `Fixed` Gestion de l'algorithme de chiffrement par défaut.
 - `Added` Les administrateurs fonctionnels peuvent désormais créer des comptes de service d'utilisateurs simples.
-- `Added` Intégration d'un plugin permettant aux opérateurs d'archivage de créer une régle de conversion des documents au format PDF 1.4 (et > 1.4) vers le format PDF-A .
 - `Added` Ajout du paramètre timestampService dans le fichier de configuration permettant de renseigner le chemin d'un service d'horodatage de test à utiliser pour le chaînage des journaux.
 - `Fixed` Gestion d'erreur lors de la détection de format.
-- `Fixed` Renforcement des contrôles lors de la création d'un utilisateur.
-- `Fixed` Recherche de logs par API.
-- `Fixed` Gestion des droits de création dans le planificateur de tâches.
-- `Fixed` Gestion des logs lors d'une consultation du journal des évènements depuis l'IHM.
-- `Fixed` Recherche sur l'écran principale concernant les archives versées en SEDA1.
-- `Added` Affichage des conversions de la plus récente à la plus ancienne en plus du document original dans l'écran principale.
-- `Added` Versement d'une archive avec transmission du contenu numérique via une URI désormais disponible.
+- `Added` Recherche de logs et archives de journaux par Web Service.
+- `Fixed` Gestion des droits de création de tâches dans le planificateur.
+- `Fixed` Gestion d'erreur lors d'une recherche sur l'écran principal concernant les archives versées en SEDA1.
+- `Added` Affichage des conversions de la plus récente à la plus ancienne en dessous du document original dans l'écran principal.
+- `Added` Versement d'une archive distante avec transmission du contenu numérique via une URI désormais disponible.
+- `Changed` Performance renforcée sur les contrôles d'intégrités périodiques.
+- `Changed` Renforcement des contrôles lors de la création d'un utilisateur et d'un compte de service.
+- `Added` Le paramètre maxResults du fichier de configuration limite également le nombre de résultats retournés par les fonctions de recherche d'archives, de logs et de journaux.
+- `Fixed` Correction d'un bug dans la mémoire temporaire lors d'une erreur au versement de documents
+- `Fixed` Correction d'un bug empêchant le déverrouillage d'un utilisateur verrouillé
 
 ## Version 2.6.5
 
