@@ -26,8 +26,8 @@
                             <td><strong>Message format</strong></td>
                             <td>
                                 <select class="form-control" name="format" id="format">
-                                    <option value="seda">Seda 1</option>
-                                    <option value="seda2">Seda 2</option>
+                                    <?merge packageSchemas ?>
+                                    <option value="[?merge packageSchemas.key() ?]"><?merge .["label"] ?></option>
                                 </select>
                             </td> 
                         <tr>

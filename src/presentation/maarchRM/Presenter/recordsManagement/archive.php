@@ -246,6 +246,8 @@ class archive
 
         $this->readPrivilegesOnArchives();
 
+        $packageSchemas = \laabs::configuration("medona")["packageSchemas"];
+
         $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
         $this->view->setSource('maxResults', \laabs::configuration('presentation.maarchRM')['maxResults']);
         $this->view->setSource('totalResultsWithoutLimit', $count);
@@ -253,6 +255,7 @@ class archive
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
         $this->view->setSource('transaction', $this->transaction);
+        $this->view->setSource('packageSchemas', $packageSchemas);
         $this->view->merge();
 
         return $this->view->saveHtml();
