@@ -155,7 +155,8 @@ class ArchiveDeliveryRequestReply extends abstractMessage
             mkdir($this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId, 0777, true);
 
             if ($message->schema != 'medona') {
-                $archiveDeliveryRequestReplyController = \laabs::newController($message->schema.'/ArchiveDeliveryRequestReply');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveDeliveryRequestReplyController = \laabs::newController("$namespace/ArchiveDeliveryRequestReply");
                 $archiveDeliveryRequestReplyController->send($message);
             } else {
                 $archiveDeliveryRequestReply = $this->sendMessage($message);

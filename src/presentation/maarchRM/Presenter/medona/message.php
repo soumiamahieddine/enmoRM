@@ -948,7 +948,8 @@ class message
             $message->schema = $messageSchema;
         }
 
-        $this->messageTypeSerializer = \laabs::newSerializer($message->schema.LAABS_URI_SEPARATOR.$message->type, $format);
+        $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+        $this->messageTypeSerializer = \laabs::newSerializer($namespace.LAABS_URI_SEPARATOR.$message->type, $format);
 
         return $this->messageTypeSerializer;
     }

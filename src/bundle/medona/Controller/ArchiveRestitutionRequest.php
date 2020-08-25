@@ -199,7 +199,8 @@ class ArchiveRestitutionRequest extends abstractMessage
             }
 
             if ($message->schema != 'medona') {
-                $archiveRestitutionRequestController = \laabs::newController($message->schema.'/ArchiveRestitutionRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveRestitutionRequestController = \laabs::newController("$namespace/ArchiveRestitutionRequest");
                 $archiveRestitutionRequestController->send($message);
             } else {
                 $archiveRestitutionRequest = $this->sendMessage($message);
@@ -263,7 +264,8 @@ class ArchiveRestitutionRequest extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $archiveRestitutionRequestController = \laabs::newController($message->schema.'/ArchiveRestitutionRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveRestitutionRequestController = \laabs::newController("$namespace/ArchiveRestitutionRequest");
                 $archiveRestitutionRequestController->send($message);
             } else {
                 $archiveRestitutionRequest = $this->sendMessage($message);

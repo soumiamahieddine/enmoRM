@@ -72,7 +72,8 @@ class ArchiveTransfer extends abstractMessage
                 throw \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
             }
 
-            $archiveTransferController = \laabs::newController($message->schema. '/ArchiveTransfer');
+            $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+            $archiveTransferController = \laabs::newController("$namespace/ArchiveTransfer");
             $archiveTransferController->receive($message);
 
             if ($archiveTransferController->replyCode) {
@@ -460,8 +461,8 @@ class ArchiveTransfer extends abstractMessage
 
         try {
             $this->validateMessageHeaders($message);
-
-            $archiveTransferController = \laabs::newController($message->schema.'/ArchiveTransfer');
+            $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+            $archiveTransferController = \laabs::newController("$namespace/ArchiveTransfer");
             $res = $archiveTransferController->validate($message, $this->currentArchivalAgreement);
 
             if ($archiveTransferController->replyCode) {
@@ -552,8 +553,8 @@ class ArchiveTransfer extends abstractMessage
 
         try {
             $this->validateMessageHeaders($message);
-
-            $archiveTransferController = \laabs::newController($message->schema.'/ArchiveTransfer');
+            $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+            $archiveTransferController = \laabs::newController("$namespace/ArchiveTransfer");
             $archiveTransferController->validate($message, $this->currentArchivalAgreement);
 
             $this->errors = array_merge($this->errors, $archiveTransferController->errors);
@@ -822,7 +823,8 @@ class ArchiveTransfer extends abstractMessage
         }
 
         try {
-            $archiveTransferController = \laabs::newController($message->schema.'/ArchiveTransfer');
+            $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+            $archiveTransferController = \laabs::newController("$namespace/ArchiveTransfer");
             list($archives, $archiveRelationships) = $archiveTransferController->process($message);
 
             $operationResult = true;

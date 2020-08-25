@@ -76,8 +76,8 @@ class ArchiveDestructionNotification extends ArchiveNotification
 
         try {
             if ($message->schema != 'medona') {
-
-                $archiveModificationNotificationController = \laabs::newController($message->schema.'/ArchiveModificationNotification');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveModificationNotificationController = \laabs::newController("$namespace/ArchiveModificationNotification");
                 $archiveModificationNotificationController->send($message);
 
             } else {
