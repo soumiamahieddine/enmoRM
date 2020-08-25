@@ -1,12 +1,28 @@
 # CHANGELOG
 
+## Version 2.6.6
+
+- `Fixed` Gestion d'erreur lors de contrôle d'intégrité d'une archive.
+- `Fixed` Gestion de l'algorithme de chiffrement par défaut.
+- `Added` Les administrateurs fonctionnels peuvent désormais créer des comptes de service d'utilisateurs simples.
+- `Added` Intégration d'un plugin permettant aux opérateurs d'archivage de créer une régle de conversion des documents au format PDF 1.4 (et > 1.4) vers le format PDF-A .
+- `Added` Ajout du paramètre timestampService dans le fichier de configuration permettant de renseigner le chemin d'un service d'horodatage de test à utiliser pour le chaînage des journaux.
+- `Fixed` Gestion d'erreur lors de la détection de format.
+- `Fixed` Renforcement des contrôles lors de la création d'un utilisateur.
+- `Fixed` Recherche de logs par API.
+- `Fixed` Gestion des droits de création dans le planificateur de tâches.
+- `Fixed` Gestion des logs lors d'une consultation du journal des évènements depuis l'IHM.
+- `Fixed` Recherche sur l'écran principale concernant les archives versées en SEDA1.
+- `Added` Affichage des conversions de la plus récente à la plus ancienne en plus du document original dans l'écran principale.
+- `Added` Versement d'une archive avec transmission du contenu numérique via une URI désormais disponible.
+
 ## Version 2.6.5
 
 - `Fixed` Rétablissement du changement de mot de passe pour les nouveaux utilisateurs.
 - `Added` Ajout de la directive LAABS_SESSION_START dans le fichier vhost par défaut empêchant la création d'une session sur le serveur.
 - `Added` Ajout de la directive LAABS_SECURE_COOKIE dans le fichier vhost par défaut permettant d'ajouter l'attribut secure aux cookies dans le cas d'une instance en HTTPS.
 - `Fixed` Retrait de certaines données sensibles dans les données retournées par l'application.
-- `Fixed` Désactivation de l'autocomplete sur les formulaires contenant des mots de passe.
+- `Fixed` Désactivation de l'auto-complétion sur les formulaires contenant des mots de passe.
 
 ## Version 2.6.4
 
