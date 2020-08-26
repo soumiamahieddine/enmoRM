@@ -14,4 +14,9 @@ class StringFile extends abstractFile
         $this->encoding = $encoding;
         $this->type = $type;
     }
+
+    public function save($messageDirectory)
+    {
+        file_put_contents($messageDirectory . DIRECTORY_SEPARATOR . $this->name, $this->data);
+    }
 }
