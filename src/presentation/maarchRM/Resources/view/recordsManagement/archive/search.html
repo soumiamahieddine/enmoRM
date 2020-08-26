@@ -18,18 +18,19 @@
     <div class="container-fluid" lang="en" data-translate-catalog="recordsManagement/messages">
         <?merge emptyRole ?>
         <h3><i class="fa fa-times"></i> You have to choose a working organization unit to proceed this action.</h3>
-        <?merge emptyRole.not() ?>        
+        <?merge emptyRole.not() ?>
         <div class="panel-group" id="accordionSearch">
             <div class="panel panel-default">
                 <div class="panel-heading" data-toggle="collapse" data-parent="#accordionSearch" href="#collapseOne" style="cursor:pointer;">
                     <h4 class="panel-title" style="float:left;">
-                        Search form 
+                        Search form
                     </h4>
                     <i class="fa fa-caret-down" style="float:right;"></i>
                     <div style="clear:both;"></div>
                 </div>
                 <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
                     <form class="form-horizontal" id="archive_searchForm">
+                        <input type="hidden" name="maxResults" id="maxResults" value="[?merge maxResults ?]"/>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Archive identifier</label>
@@ -250,8 +251,8 @@
                 $('#archive_search').prop('disabled', false);
             },
             error    : function(response) {
-                responseJSON = JSON.parse(response.responseText);
-                gritter.show(responseJSON.message);
+                response = JSON.parse(response.responseText);
+                gritter.show(response.message);
                 $('#archive_search').prop('disabled', false);
             }
         });
@@ -274,7 +275,7 @@
     function searchFormSerialize() {
         var parameters = new Object();
 
-        $('#archive_searchForm').find('input[type="text"], input[type="number"], select').each(function(){
+        $('#archive_searchForm').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(function(){
 
             if(!$(this).hasClass('orgHide')) {
                 parameters[$(this).attr('name')] = $(this).val();

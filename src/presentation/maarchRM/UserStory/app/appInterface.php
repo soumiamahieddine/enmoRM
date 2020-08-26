@@ -19,8 +19,10 @@ interface appInterface
      * @param string  $originatorOrgRegNumber The organization registration number
      * @param string  $filePlanPosition       The file plan position
      * @param boolean $archiveUnit            List the archive unit
-     * 
+     *
      * @uses recordsManagement/archives/readList
+     * @uses recordsManagement/archives/readCountList
+     *
      * @return recordsManagement/welcome/folderContents
      */
     public function readFolder($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
@@ -105,6 +107,7 @@ interface appInterface
      * @param string $originatingEndDate
      *
      * @uses recordsManagement/archives/read
+     * @uses recordsManagement/archives/readCount
      *
      * @return recordsManagement/welcome/folderContents
      */

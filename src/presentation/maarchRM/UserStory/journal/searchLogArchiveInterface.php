@@ -31,8 +31,10 @@ interface searchLogArchiveInterface
     public function readLogSearch();
 
     /**
+     * @uses recordsManagement/log/readFind
+     * @uses recordsManagement/log/countFind
+     *
      * @return recordsManagement/log/find
-     * @uses recordsManagement/log/find
      */
     public function readLogs();
 

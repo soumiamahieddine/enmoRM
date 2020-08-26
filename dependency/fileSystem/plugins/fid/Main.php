@@ -425,9 +425,7 @@ class Droid
         $matchedFormats = array();
         $containerSignatures = $this->containerTypes[$containerType];
         foreach ($containerSignatures as $containerSignature) {
-
             if ($containerSignature->match($tmpdir)) {
-
                 $puid = $this->fileFormatMappings[$containerSignature->id];
 
                 $format = $this->getFormatByPuid($puid);
@@ -436,6 +434,8 @@ class Droid
                 $matchedFormats[$format->id] = $format;
             }
         }
+
+        \laabs\rmdir($tmpdir, true);
 
         return $matchedFormats;
     }

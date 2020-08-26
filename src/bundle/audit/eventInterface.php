@@ -39,16 +39,32 @@ interface eventInterface
 
     /**
      * Get search form for entries
-     * @param string    $eventType Type of event
+     *
      * @param timestamp $fromDate  Start date
      * @param timestamp $toDate    End date
-     * @param string    $accountId Id of account
      * @param string    $event     Variables
+     * @param string    $accountId Id of account
+     * @param string    $status
      * @param string    $term      Term to search
+     * @param integer   $maxResults Max results to display
      *
      * @action audit/event/search
      */
-    public function readSearch($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null);
+    public function readSearch($fromDate = null, $toDate = null, $event = null, $accountId = null, $status = null, $term = null, $maxResults = null);
+
+    /**
+     * Get count search for entries
+     *
+     * @param timestamp $fromDate   Start date
+     * @param timestamp $toDate     End date
+     * @param string    $event      Variables
+     * @param string    $accountId  Id of account
+     * @param string    $status
+     * @param string    $term       Term to search
+     *
+     * @action audit/event/count
+     */
+    public function readCount($fromDate = null, $toDate = null, $event = null, $accountId = null, $status = null, $term = null);
 
     /**
      * Get search form for entries

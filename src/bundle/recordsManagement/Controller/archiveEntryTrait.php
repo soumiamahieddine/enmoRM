@@ -76,7 +76,14 @@ trait archiveEntryTrait
      */
     public function receive($archive, $zipContainer = false)
     {
-        $archive = \laabs::cast($archive, 'recordsManagement/archive');
+        if ($zipContainer) {
+            $archive = \laabs::cast($archive, 'recordsManagement/archive');
+            $archive = $this->processZipContainer($archive);
+        } else {
+            $this->receiveAttachments($archive);
+            $archive = \laabs::cast($archive, 'recordsManagement/archive');
+        }
+
 
         if (!isset($archive->archiveId)) {
             $archive->archiveId = \laabs::newId();
@@ -85,11 +92,6 @@ trait archiveEntryTrait
         $archive->status = "received";
         $archive->depositDate = \laabs::newTimestamp();
 
-        if ($zipContainer) {
-            $archive = $this->processZipContainer($archive);
-        } else {
-            $this->receiveAttachments($archive);
-        }
 
         // Load archival profile, service level if specified
         // Instantiate description controller
@@ -131,14 +133,17 @@ trait archiveEntryTrait
                 switch (true) {
                     case is_string($receivedHandler)
                         && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
-                        $handler = fopen($receivedHandler, 'r');
+                        $fromHandler = fopen($receivedHandler, 'r');
+                        $handler = fopen("php://temp", 'w+');
+                        stream_copy_to_stream($fromHandler, $handler);
+                        rewind($handler);
                         break;
 
                     case is_string($receivedHandler) &&
                         preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $receivedHandler):
                         $handler = \laabs::createTempStream(base64_decode($receivedHandler));
                         break;
-                
+
                     case is_resource($receivedHandler):
                         $handler = \core\Encoding\Base64::decode($receivedHandler);
                 }

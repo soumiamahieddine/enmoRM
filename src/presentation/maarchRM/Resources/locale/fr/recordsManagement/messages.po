@@ -612,6 +612,9 @@ msgstr "archive(s) sélectionnée(s)"
 msgid "Result"
 msgstr "Résultat"
 
+msgid "archive(s) on"
+msgstr "archive(s) sur"
+
 msgid "Select all"
 msgstr "Tous"
 
@@ -762,7 +765,7 @@ msgid "%1$s destruction(s) can not be canceled."
 msgstr "%1$s destruction(s) ne sont pas annulée(s)."
 
 msgid "%1$s resource(s) can\'t be deleted."
-msgstr "la ressource %1$s ne peut pas être supprimée." 
+msgstr "la ressource %1$s ne peut pas être supprimée."
 
 msgid "%1$s resource(s) deleted."
 msgstr "%1$s ressource(s) supprimée(s)"
@@ -1104,5 +1107,15 @@ msgstr "Cliquer pour modifier '%1$s'"
 msgid "* At least one field must be filled in."
 msgstr "* Au moins un champ doit être renseigné."
 
+msgid "Your query returns too much results, only first results are displayed."
+msgstr "Le nombre de résultats retournés est trop important. Veuillez affiner votre recherche."
+
+
 msgid "Export to "
 msgstr "Exporter en "
+
+msgid "Your query returns too much results, only first"
+msgstr "Votre recherche a retourné trop de résultats, seulement les"
+
+msgid "results are displayed"
+msgstr "premiers sont affichés"

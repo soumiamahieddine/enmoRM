@@ -22,6 +22,7 @@
             </div>
             <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
                 <form class="form-horizontal">
+                    <input type="hidden" id="maxResults" value="[?merge maxResults ?]">
                     <div class="row">
                         <div class="col-md-6 col-lg-5 col-lg-offset-1">
                             <div class="form-group">
@@ -143,19 +144,23 @@
         var minDate = $('#minDate').val();
         var maxDate = $('#maxDate').val();
         var org = $('#org').val();
+        var sortBy = ">timestamp";
+        var maxResults = parseInt($('#maxResults').val(), 10);
 
         if(''+eventType+objectClass+objectId+minDate+maxDate+org) {
             ajax($(this), {
                 url         : "/journals",
                 type        : "GET",
                 data        : {
-                                eventType : eventType,
-                                objectClass : objectClass,
-                                objectId : objectId,
-                                minDate : minDate,
-                                maxDate : maxDate,
-                                org : org
-                                },
+                    eventType : eventType,
+                    objectClass : objectClass,
+                    objectId : objectId,
+                    minDate : minDate,
+                    maxDate : maxDate,
+                    org : org,
+                    sortBy : sortBy,
+                    maxResults: maxResults
+                },
                 contentType : 'application/json',
                 dataType    : 'html',
                 success     : function(response){

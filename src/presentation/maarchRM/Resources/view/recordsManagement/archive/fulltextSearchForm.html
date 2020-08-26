@@ -7,6 +7,7 @@
 #-->
 <!-- Search field -->
 <div class="form-horizontal" id="fullTextSearchForm" data-translate-catalog="recordsManagement/message">
+    <input type="hidden" name="maxResults" id ="maxResults" value="[?merge maxResults ?]">
     <div class="form-group">
         <div class="input-group">
             <div id="profileSelection" class="input-group-btn">
@@ -259,7 +260,8 @@ FulltextSearchForm = {
             filePlanPosition     : this.form.data('folderid'),
             orgRegNumber         : this.form.data('orgregnumber'),
             originatingStartDate : advancedSearchPanel.find('[name="originatingDateMin"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
-            originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd')
+            originatingEndDate   : advancedSearchPanel.find('[name="originatingDateMax"]').data('datepicker').getFormattedDate('yyyy-mm-dd'),
+            maxResults           : this.form.find('[name="maxResults"]').val()
         };
 
         var text = this.form.find('[name="searchForm_inputSearch"]').val().trim();
@@ -377,7 +379,7 @@ FulltextSearchForm = {
     },
 
     clearForm : function() {
-        $('#fullTextSearchForm > input').val('');
+        this.form.find('input[type=search], input[type=text], input[type=number], input[type=date], select').val('');
         this.advancedSearchForm.find('input[type=text], input[type=number], input[type=date], select').val('');
     }
 }

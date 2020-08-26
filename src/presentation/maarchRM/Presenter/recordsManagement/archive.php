@@ -94,6 +94,12 @@ class archive
             $deleteDescription = (bool) \laabs::configuration("recordsManagement")['deleteDescription'];
         }
 
+        $maxResults = null;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
+            $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
+
+        $this->view->setSource("maxResults", $maxResults);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
@@ -112,11 +118,12 @@ class archive
 
     /**
      * get archives with information
-     * @param array $archives Array of archive object
+     * @param array   $archives Array of archive object
+     * @param integer $count    Count of archive object without limit
      *
      * @return string
      */
-    public function search($archives)
+    public function search($archives, $count)
     {
         $this->view->addContentFile("recordsManagement/archive/resultList.html");
 
@@ -198,6 +205,12 @@ class archive
             }
         }
 
+        $hasReachMaxResults = false;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && count($archives) >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+            $hasReachMaxResults = true;
+        }
+
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
@@ -233,6 +246,9 @@ class archive
 
         $this->readPrivilegesOnArchives();
 
+        $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
+        $this->view->setSource('maxResults', \laabs::configuration('presentation.maarchRM')['maxResults']);
+        $this->view->setSource('totalResultsWithoutLimit', $count);
         $this->view->setSource("accessRules", $accessRules);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
@@ -339,7 +355,6 @@ class archive
         $this->view->setSource("archivalProfileList", $archive->archivalProfileList);
         $this->view->setSource("acceptArchiveWithoutProfile", $archive->acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $archive->acceptUserIndex);
-
 
         $this->view->translate();
         $this->view->merge();
@@ -1400,6 +1415,7 @@ class archive
                 }
             }
         }
+
         return $ownerOriginatorOrgs;
     }
 }

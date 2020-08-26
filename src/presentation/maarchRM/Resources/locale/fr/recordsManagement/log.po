@@ -65,3 +65,5 @@ msgstr "La vérification d'intégrité du journal a échoué."
 msgid "The journal is integrity is valid."
 msgstr "Le journal est intègre."
 
+msgid "result(s) on"
+msgstr "résultat(s) sur"
