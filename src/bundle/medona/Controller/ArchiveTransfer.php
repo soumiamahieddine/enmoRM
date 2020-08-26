@@ -83,7 +83,7 @@ class ArchiveTransfer extends abstractMessage
 
         $schema = $connectorConf['schema'];
 
-        $this->createNewMessage($schema);
+        $message = $this->createNewMessage($schema);
 
         if (isset($connectorConf['service'])) {
             // Spécifique ReceiveSource
@@ -105,14 +105,14 @@ class ArchiveTransfer extends abstractMessage
             $connectorService = \laabs::newService($connectorConf['service']);
 
             // Call service to transform received package into a digest message+attachments
-            list ($messageFile, $attachments) = $connectorService->transform($package, $params);
+            list($messageFile, $attachments) = $connectorService->transform($package, $params);
         } else {
             $messageFile = $package;
             $attachments = [];
         }
 
         // Recevoir les parties du paquet
-        $this->receivePackage($message, $messageFile, $attachments);
+        $this->receivePackage($message, $messageFile, $attachments, $filename = false);
 
         // Traiter le schéma spécifique
         $this->receiveMessage($message);
@@ -244,6 +244,8 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receiveStream($message, $messageFile, $attachments, $filename)
     {
+        var_dump($messageFile);
+        exit;
         switch (true) {
             case is_string($messageFile)
                 && (filter_var(substr($messageFile, 0, 10), FILTER_VALIDATE_URL) || is_file($messageFile)):
