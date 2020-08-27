@@ -235,6 +235,10 @@ menu = "[
                 'href'  : '/delivery/list'
             },
             {
+                'label' : 'Communications à finaliser',
+                'href'  : '/delivery/Process'
+            },
+            {
                 'label' : 'Historique de communication',
                 'href'  : '/delivery/history'
             }

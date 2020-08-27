@@ -731,7 +731,6 @@ class message
      */
     protected function setMessageActions($message, $messages, $registrationNumber)
     {
-
         if (in_array($message->recipientOrgRegNumber, $registrationNumber)) {
             $messageId = (string) $message->messageId;
 
@@ -777,6 +776,8 @@ class message
                             $message->rejectButton = "/delivery/".$messageId."/Reject";
                             $message->derogationButton = "/delivery/".$messageId."/Derogation";
                         }
+                    } elseif ($message->status == "accepted") {
+                        $message->processButton = "/delivery/".$messageId."/process";
                     }
                     break;
 

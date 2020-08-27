@@ -126,4 +126,22 @@ trait archiveDeliveryTrait
 
         return $this->view->saveHtml();
     }
+
+    /**
+     * Show delivery message list
+     * @param array $messages Array of message object
+     *
+     * @return string The view
+     */
+    public function deliveryProcessList($messages)
+    {
+        $this->view->addContentFile('medona/archiveDelivery/deliveryProcessList.html');
+
+        $this->prepareMesageList($messages);
+
+        $this->view->setSource("recipient", true);
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
 }

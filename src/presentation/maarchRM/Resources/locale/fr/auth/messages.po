@@ -206,6 +206,10 @@ msgid "deliveryAuthorizationRequest"
 msgstr "Traiter les demandes d'autorisation"
 msgctxt "userStory"
 
+msgid "deliveryProcess"
+msgstr "Traiter les communications"
+msgctxt "userStory"
+
 # ---------------------------------------------------------
 # Destruction
 # ---------------------------------------------------------
