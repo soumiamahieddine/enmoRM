@@ -58,7 +58,7 @@ class ArchiveTransfer extends abstractMessage
 
         $this->receiveMessage($message);
 
-        $this->sendAcknowledgement($message);
+        return $this->sendAcknowledgement($message);
     }
 
         /**
@@ -102,7 +102,7 @@ class ArchiveTransfer extends abstractMessage
         $this->receiveMessage($message);
 
         // envoyer l'AR
-        $this->sendAcknowledgement($message);
+        return $this->sendAcknowledgement($message);
     }
 
     protected function createNewMessage($schema = null)
@@ -213,7 +213,6 @@ class ArchiveTransfer extends abstractMessage
         $acknowledgementController = \laabs::newController('medona/Acknowledgement');
         $acknowledgement = $acknowledgementController->send($message);
         $acknowledgement->receivedMessageId = $message->messageId;
-        var_dump($acknowledgement);
 
         return $acknowledgement;
     }
