@@ -33,7 +33,9 @@ class UriFile extends abstractFile
         fclose($inputStream);
         fclose($outputStream);
 
-        return $streamFile->decodeBase64();
+        $streamFile->decodeBase64();
+
+        return $streamFile;
     }
 
     public function save($messageDirectory)

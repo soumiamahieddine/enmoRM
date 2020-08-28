@@ -166,7 +166,7 @@ var zipContent = "";
             var url = '/transfer/source';
             var data = JSON.stringify(serializeSource())
             var contentType = 'application/json';
-        } else if ( zipContent != "") {
+        } else if (zipContent != "") {
             var url = '/message/receiveZip';
             var data = zipContent;
             var contentType = 'application/zip';
@@ -210,6 +210,7 @@ var zipContent = "";
 
             },
             error       : function (response) {
+                console.log(response);
                 gritter.show(response.responseJSON.message, response.responseJSON.status);
 
                 var arg = "";

@@ -86,33 +86,17 @@ class ArchiveTransfer extends abstractMessage
         $message = $this->createNewMessage($schema);
 
         if (isset($connectorConf['service'])) {
-            // Spécifique ReceiveSource
-            // if source
-            // ??????
-            // if (!isset($params['params'])) {
-            //     $params['params'] = [];
-            // }
-            // $params["params"] = json_decode(json_encode($params["params"]), true);
-            // $params['filename'] = "$messageDir/" . (isset($params['filename']) ? $params['filename'] : $message->messageId);
-            /// Fin ?????
-
-            // si existe, bind des params avec la config pour avoir type, required, etc
-            // Si param source = param, la valeur est dans la config, si input la valeur est reçue dans le tableau $params
-            // $rawSource = $this->getRawSource($schema, $source, $params['params']);
-            // $params['params'] = array_merge($params['params'], $rawSource['params']);
-
-            // Instanciate the connector service
             $connectorService = \laabs::newService($connectorConf['service']);
-
-            // Call service to transform received package into a digest message+attachments
-            list($messageFile, $attachments) = $connectorService->transform($package, $params);
+            $message->path = $connectorService->receive(
+                $package,
+                $params,
+                $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId
+            );
         } else {
             $messageFile = $package;
             $attachments = [];
         }
 
-        // Recevoir les parties du paquet
-        $this->receivePackage($message, $messageFile, $attachments, $filename = false);
 
         // Traiter le schéma spécifique
         $this->receiveMessage($message);
@@ -209,6 +193,13 @@ class ArchiveTransfer extends abstractMessage
         }
     }
 
+    /**
+     * sendAcknowledgement message
+     *
+     * @param  medona/message $message
+     *
+     * @return medona/message $acknowledgement
+     */
     protected function sendAcknowledgement($message)
     {
         $event = $this->lifeCycleJournalController->logEvent(
@@ -222,6 +213,7 @@ class ArchiveTransfer extends abstractMessage
         $acknowledgementController = \laabs::newController('medona/Acknowledgement');
         $acknowledgement = $acknowledgementController->send($message);
         $acknowledgement->receivedMessageId = $message->messageId;
+        var_dump($acknowledgement);
 
         return $acknowledgement;
     }
@@ -235,6 +227,16 @@ class ArchiveTransfer extends abstractMessage
         }
     }
 
+    protected function receivePackageSource($message, $messageFile, $attachments)
+    {
+        if ($messageFile instanceof \core\Type\StringFile) {
+            $data = $messageFile->getData();
+        } elseif ($messageFile instanceof \ore\Type\StreamFile) {
+            $data = stream_get_contents($messageFile->getStream());
+        }
+        $this->receiveFiles($message, $data, $attachments, $messageFile->getName(), $mediatype);
+    }
+
     protected function receiveObject($message, $messageFile, $attachments, $filename)
     {
         $data = json_encode($messageFile);
@@ -244,8 +246,6 @@ class ArchiveTransfer extends abstractMessage
 
     protected function receiveStream($message, $messageFile, $attachments, $filename)
     {
-        var_dump($messageFile);
-        exit;
         switch (true) {
             case is_string($messageFile)
                 && (filter_var(substr($messageFile, 0, 10), FILTER_VALIDATE_URL) || is_file($messageFile)):

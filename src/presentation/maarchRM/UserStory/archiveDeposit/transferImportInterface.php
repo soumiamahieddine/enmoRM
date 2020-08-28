@@ -35,15 +35,16 @@ interface transferImportInterface
 
     /**
      * Receive message with all contents embedded
+     *
      * @param string $messageFile   The message binary contents OR a filename
-     * @param string $schema        The schema used
-     * @param string $source        The source name to use
-     * @param array  $schema        An array of params
+     * @param string $connector        The schema used
+     * @param array  $params        An array of params
      *
      * @uses medona/ArchiveTransfer/createSource
+     *
      * @return medona/message/receive
      */
-    public function createTransferSource($messageFile, $schema, $source = null, $params = []);
+    public function createTransferSource($messageFile, $connector, $params = []);
 
     /**
      * Get the source inputs view

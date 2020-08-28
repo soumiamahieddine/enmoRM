@@ -19,4 +19,9 @@ class StringFile extends abstractFile
     {
         file_put_contents($messageDirectory . DIRECTORY_SEPARATOR . $this->name, $this->data);
     }
+
+    public function getData()
+    {
+        return $this->data;
+    }
 }
