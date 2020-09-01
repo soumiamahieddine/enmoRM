@@ -129,6 +129,10 @@ msgid "modificationRequestProcess"
 msgstr "Traiter les demandes de modification"
 msgctxt "userStory"
 
+msgid "export"
+msgstr "Exporter une archive"
+msgctxt "userStory"
+
 
 # ---------------------------------------------------------
 # Journal

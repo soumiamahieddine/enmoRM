@@ -1360,4 +1360,19 @@ class archive
         }
         return $ownerOriginatorOrgs;
     }
+
+    /**
+     * Export method
+     * @param resource $file The file
+     *
+     * @return resource
+     */
+    public function export($file)
+    {
+        \laabs::setResponseType("application/zip");
+        $response = \laabs::kernel()->response;
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.\laabs::newId(). '.zip"');
+
+        return $file;
+    }
 }

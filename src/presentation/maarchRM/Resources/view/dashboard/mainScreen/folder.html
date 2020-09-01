@@ -37,7 +37,7 @@
 </div>
 
 <div id="listTemplate" class="hide">
-    <div class="archive row" style="border-bottom: 1px solid #DDD">
+    <div class="archive row archiveItem" style="border-bottom: 1px solid #DDD">
         <div class="archiveInfo pull-left">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
@@ -55,8 +55,14 @@
                 </small>
             </h5>
         </div>
+        <?merge exportPrivilege.bool() ?>
+        <div class="pull-right addChildrenArchive addingNew exportArchive hide">
+            <button class="btn btn-xs btn-default">
+                <span class="fa fa-download"></span>
+            </button>
+        </div>
         <?merge depositPrivilege.bool() ?>
-        <div class="dropdown pull-right addChildrenArchive addingNew hide">
+        <div class="pull-right dropdown addChildrenArchive addingNew hide">
             <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-plus"></span>
             </button>
