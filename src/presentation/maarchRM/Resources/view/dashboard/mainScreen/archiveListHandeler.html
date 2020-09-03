@@ -193,19 +193,19 @@
             if (childrenArchives) {
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
-                    Archive.mergeRow(parent, childrenArchives[j])
+                    Archive.mergeArchiveRow(parent, childrenArchives[j])
                     Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
                 }
             }
 
             if (digitalResources) {
                 for(var i=0; i < digitalResources.length; i++) {
-                    Archive.showDigitalResource(parent, digitalResources[i], hidden);
+                    Archive.mergeDigitalResourceRow(parent, digitalResources[i], hidden);
                 }
             }
         },
 
-        showDigitalResource: function(parent, digitalResource, hidden) {
+        mergeDigitalResourceRow: function(parent, digitalResource, hidden) {
             template = this.archiveContentTemplate.clone();
             template.children('span')
                     .addClass('document')
@@ -225,12 +225,12 @@
 
             if (digitalResource.relatedResource) {
                 for(var i=0; i < digitalResource.relatedResource.length; i++) {
-                    Archive.showDigitalResource(template, digitalResource.relatedResource[i], hidden);
+                    Archive.mergeDigitalResourceRow(template, digitalResource.relatedResource[i], hidden);
                 }
             }
         },
 
-        mergeRow: function(parent, archive) {
+        mergeArchiveRow: function(parent, archive) {
             template = this.archiveContentTemplate.clone();
             var smalls = template.find('small');
 
@@ -270,11 +270,6 @@
             if (archive.originatingDate) {
                 $(smalls[2]).text(' ' + archive.originatingDate);
             }
-
-            /*if (!archive.archivalProfileName && !archive.originatorArchiveId && !archive.originatingDate) {
-                var br = template.find('br');
-                br.remove();
-            }*/
 
             BootstrapTree.addNode(parent, template, false);    
         },
