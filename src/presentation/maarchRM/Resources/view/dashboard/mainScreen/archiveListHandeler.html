@@ -158,19 +158,6 @@
             })
         },
 
-        getResourceInfo: function(resource) {
-            $.ajax({
-                url         : "/documentInfo",
-                type        : "GET",
-                success     : function (response) {
-                    trigger("showDocumentDetails.recordsManagement", [response, resource.data('json')]);
-                },
-                error       : function (response) {
-                    gritter.show(response.responseText, false);
-                }
-            })
-        },
-
         getContent: function(archive) {
             $.ajax({
                 url         : "/archiveContents/"+archive.attr('id'),
@@ -180,6 +167,19 @@
                     archive.find('.archiveContent').removeClass('hide').find('ul').html('');
                     Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.contents, false);
                     Archive.sortArchives(archive.find('.archiveContent'));
+                },
+                error       : function (response) {
+                    gritter.show(response.responseText, false);
+                }
+            })
+        },
+        
+        getResourceInfo: function(resource) {
+            $.ajax({
+                url         : "/documentInfo",
+                type        : "GET",
+                success     : function (response) {
+                    trigger("showDocumentDetails.recordsManagement", [response, resource.data('json')]);
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
