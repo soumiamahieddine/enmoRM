@@ -106,7 +106,7 @@
 </style>
 
 <script type="text/javascript">
-	var Archive = {
+    var Archive = {
         archiveContentTemplate: $('#archiveContentTemplate').children('li'),
 
         selected: null,
@@ -165,10 +165,7 @@
                 dataType    : 'json',
                 success     : function (response) {
                     archive.find('.archiveContent').removeClass('hide').find('ul').html('');
-                    Archive.showChildrenArchives(archive.find('.archiveContent'), response.contents, false);
-                    Archive.showDigitalResources(archive.find('.archiveContent'), response.digitalResources, false);
-
-                    //Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.contents, false);
+                    Archive.showArchiveContent(archive.find('.archiveContent'), response.digitalResources, response.contents, false);
                     Archive.sortArchives(archive.find('.archiveContent'));
                 },
                 error       : function (response) {
@@ -190,32 +187,26 @@
             })
         },
 
-        showChildrenArchives: function(archive, childrenArchives, hidden) {
+        showArchiveContent: function(parent, digitalResources, childrenArchives, hidden) {
             var count=100
+            template = this.archiveContentTemplate.clone();
             if (childrenArchives) {
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
-                    Archive.mergeArchiveRow(archive, childrenArchives[j])
-                    Archive.showChildrenArchives(archive, childrenArchives[j].contents, hidden);
-                    Archive.showDigitalResources(archive, childrenArchives[j].digitalResources, hidden);
-                    //Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
+                    Archive.mergeArchiveRow(parent, childrenArchives[j])
+                    Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
                 }
             }
-        },
 
-        showDigitalResources: function(archive, digitalResources, hidden) {
             if (digitalResources) {
                 for(var i=0; i < digitalResources.length; i++) {
-                    resource = Archive.mergeDigitalResourceRow(archive, digitalResources[i], hidden);
-
-                    Archive.showDigitalResources(resource, digitalResources[i].relatedResource, hidden);
+                    Archive.mergeDigitalResourceRow(parent, digitalResources[i], hidden);
                 }
             }
         },
 
-        mergeDigitalResourceRow: function(archive, digitalResource, hidden) {
+        mergeDigitalResourceRow: function(parent, digitalResource, hidden) {
             template = this.archiveContentTemplate.clone();
-
             template.children('span')
                     .addClass('document')
                     .data('json', digitalResource)
@@ -230,9 +221,13 @@
 
             template.find('small, br, .addChildrenArchive').remove();
 
-            BootstrapTree.addNode(archive, template, hidden);
+            BootstrapTree.addNode(parent, template, hidden);
 
-            return template;
+            if (digitalResource.relatedResource) {
+                for(var i=0; i < digitalResource.relatedResource.length; i++) {
+                    Archive.mergeDigitalResourceRow(template, digitalResource.relatedResource[i], hidden);
+                }
+            }
         },
 
         mergeArchiveRow: function(parent, archive) {
@@ -240,9 +235,9 @@
             var smalls = template.find('small');
 
             if (archive.fileplanLevel == 'item') {
-                var icon = "fa fa-file";
+                var icon = $('<i class="fa fa-file">&nbsp;</i>');
             } else {
-                var icon = "fa fa-archive";
+                var icon = $('<i class="fa fa-archive">&nbsp;</i>');
             }
 
             var BCDate = new Date(archive.depositDate.replace(',', '.'));
@@ -260,7 +255,7 @@
                     .siblings('span')
                     .addClass('childrenArchive')
                     .attr('id', archive.archiveId)
-                    .append($('<i>')).addClass(icon)
+                    .append(icon)
                     .append($('<span>').text(archive.archiveName))
                     .append($('<a/>').attr('href','#').class);
 
@@ -276,12 +271,12 @@
                 $(smalls[2]).text(' ' + archive.originatingDate);
             }
 
-            BootstrapTree.addNode(parent, template, false);
+            BootstrapTree.addNode(parent, template, false);    
         },
 
         sortArchives: function(parent){
             var list = parent.find("ul").children('.child');
-            if (list.length > 1){
+            if (list.size() > 1){
                 list.sort(function(a, b){
                     return  $(a).data("depositdate") > $(b).data("depositdate");
                 }).each(function(){
@@ -350,11 +345,11 @@
         var caret = $(this);
         if (caret.hasClass('fa-caret-right')) {
             caret.removeClass('fa-caret-right')
-            	 .addClass('fa-caret-down')
-            	 .closest('.dataList')
-            	 .find('.fa-caret-down')
+                 .addClass('fa-caret-down')
+                 .closest('.dataList')
+                 .find('.fa-caret-down')
                  .not(caret)
-            	 .click();
+                 .click();
             Archive.getContent(caret.closest('.archive'));
         } else {
             caret.removeClass('fa-caret-down').addClass('fa-caret-right')
@@ -378,7 +373,7 @@
     })
 
     $('#middleColumn').on('click', '.childrenArchiveSelection', function() {
-    	var child = $(this).find('.childrenArchive:first');
+        var child = $(this).find('.childrenArchive:first');
         var parentArchive = child.closest('.archive');
         var archiveId = child.attr('id');
         Archive.select(parentArchive, child);
@@ -386,7 +381,7 @@
     })
 
     $('#middleColumn').on('click', '.document', function() {
-    	var doc = $(this);
+        var doc = $(this);
         var parentArchive = doc.closest('.archive');
         Archive.select(parentArchive, doc);
         Archive.getResourceInfo(doc);
