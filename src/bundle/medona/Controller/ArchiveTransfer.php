@@ -1197,34 +1197,4 @@ class ArchiveTransfer extends abstractMessage
 
         return $res;
     }
-
-    protected function getRawSource($schema, $source, $params)
-    {
-        $rawSource = ["params" => []];
-
-        if (!isset(\laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source])) {
-            $this->sendError("404", "The source '".$source."' is unknown for schema '".$schema."'");
-            throw \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
-        }
-
-        $sourceJson = \laabs::configuration('recordsManagement')['descriptionSchemes'][$schema]['sources'][$source];
-        $rawSource["service"] = $sourceJson['service'];
-
-        $param_keys = array_keys($params);
-        foreach ($sourceJson['params'] as $name => $param) {
-            if ($param['source'] == 'param') {
-                $rawSource["params"][$name] = $param;
-            } elseif (isset($param['required']) && $param['required'] && !in_array($name, $param_keys)) {
-                $this->sendError("404", "Missing required parameter '".$name."'");
-            }
-        }
-
-        if (count($this->errors) > 0) {
-            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
-            $exception->errors = $this->errors;
-            throw $exception;
-        }
-
-        return $rawSource;
-    }
 }

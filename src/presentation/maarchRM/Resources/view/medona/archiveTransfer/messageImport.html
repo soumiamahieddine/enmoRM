@@ -46,7 +46,6 @@
                         <label class="col-sm-4 control-label">Source</label>
                         <div class="form-group col-sm-8">
                             <select class="form-control" id="messageImport_source" name="messageImport_source">
-                                <option value="default">Default</option>
                                 <?merge packageConnectors ?>
                                 <option class="source_option" value="[?merge packageConnectors.key() ?]" data-params="[?merge .['params'].json ?]"><?merge .['label'] ?></option>
                             </select>
