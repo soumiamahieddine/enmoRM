@@ -26,7 +26,59 @@
                             <button type="button" class="btn btn-default btn-sm" id="user_newUser" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
                         </div>
                     </div>
-                    <div id="list_user" class="panel-body" style="padding: 0;">
+                    <div class="panel-body" style="padding: 0;">
+                        <table class="table table-condensed dataTable" id="user_userList" style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th name="userName">User name</th>
+                                    <th>Full name</th>
+                                    <th>Email</th>
+                                    <th>Locked</th>
+                                    <th>Enabled</th>
+                                    <th style="min-width:160px"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?merge users ?>
+                                <tr id="[?merge .accountId ?]">
+                                    <td><?merge .accountName ?></td>
+                                    <td><?merge .displayName ?></td>
+                                    <td><?merge .emailAddress ?></td>
+                                    <td class="lockStatus">
+                                        <?merge .locked.not() ?><i class="fa fa-unlock"></i>
+                                        <?merge .locked.ifne(false) ?><i class="fa fa-lock"></i>
+                                    </td>
+                                    <td class="userStatus">
+                                        <?merge .enabled.not() ?><i class="fa fa-ban"></i>
+                                        <?merge .enabled.ifne(false) ?><i class="fa fa-check"></i>
+                                    </td>
+                                    <td>
+                                        <div id="actionButtons" class="btn-group pull-right">
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
+                                            <button type="button" class="editUser btn btn-info" data-accountid="[?merge .accountId ?]" title="Edit">
+                                                <span class="fa fa-fw fa-edit"></span>
+                                            </button>
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
+                                            <a href="#" class="lockUser btn btn-warning" style="display: [?merge .locked.then('none', '') ?]" data-accountid="[?merge .accountId ?]" title="Lock">
+                                                <span class="fa fa-fw fa-lock"></span> 
+                                            </a>
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
+                                            <a href="#" class="unlockUser btn btn-warning" style="display: [?merge .locked.then('', 'none') ?]" data-accountid="[?merge .accountId ?]" title="Unlock">
+                                                <span class="fa fa-fw fa-unlock"></span>
+                                            </a>
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
+                                            <a href="#" class="enableUser btn btn-danger" style="display: [?merge .enabled.then('none', '') ?]" data-accountid="[?merge .accountId ?]" title="Enable">
+                                                <span class="fa fa-fw fa-check"></span>
+                                            </a>
+                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
+                                            <a href="#" class="disableUser btn btn-danger" style="display: [?merge .enabled.then('', 'none') ?]" data-accountid="[?merge .accountId ?]" title="Disable">
+                                                <span class="fa fa-fw fa-times"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -56,7 +108,7 @@ $("#activatedUsers").change(function() {
         }
     });
 });
-    
+
 //add
 $("#user_newUser").on('click',  function() {
     load("/userAccount");

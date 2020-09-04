@@ -86,15 +86,8 @@ trait archiveRestitutionTrait
     {
         $this->verifyIntegrity($archiveId);
 
-        $archiveChildrenIds = [];
-        $archiveChildrenIds = array_merge($archiveChildrenIds, $this->listChildrenArchiveId($archiveId));
-
-        foreach ($archiveChildrenIds as $archiveChildrenId) {
-            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveChildrenId);
-            $this->logRestitution($archive);
-        }
-
         $archive = $this->retrieve((string)$archiveId, true);
+        $this->logRestitution($archive);
         return $archive;
     }
 

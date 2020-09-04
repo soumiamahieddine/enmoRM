@@ -1,0 +1,19 @@
+<table class="table defaultStatistics dataTable" data-translate-catalog="Statistics/Statistics">
+    <thead>
+        <tr>
+            <th><?merge filter ?></th>
+            <th>Size<span> (<?merge unit ?>)</span></th>
+            <th>Archives number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?merge condensedStats ?>
+        <tr>
+            <td><?merge condensedStats.key().ifeq('').then('Unknown', condensedStats.key()) ?></td>
+            <?merge .['sum'].isnotnull() ?>
+                <td><?merge .['sum'] ?></td>
+            <?merge .['count'].isnotnull() ?>
+                <td><?merge .['count'] ?></td>
+        </tr>
+    </tbody>
+</table>
