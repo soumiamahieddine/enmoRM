@@ -307,7 +307,7 @@ abstract class abstractMessage
             }
         }
         if ($withBinaries) {
-            $this->sendArchiveBinaries($message->object->dataObjectPackage);
+            $this->sendArchiveBinaries($message);
         }
     }
 
@@ -408,14 +408,15 @@ abstract class abstractMessage
         return $archiveUnit;
     }
 
-    protected function sendArchiveBinaries($dataObjectPackage)
+    protected function sendArchiveBinaries($message)
     {
+        $dataObjectPackage = $message->object->dataObjectPackage;
         foreach ($this->currentDigitalResources as $digitalResource) {
-            $dataObjectPackage->binaryDataObjects->{$digitalResource->resId} = $this->sendArchiveBinary($digitalResource);
+            $dataObjectPackage->binaryDataObjects->{$digitalResource->resId} = $this->sendArchiveBinary($message, $digitalResource);
         }
     }
 
-    protected function sendArchiveBinary($digitalResource)
+    protected function sendArchiveBinary($message, $digitalResource)
     {
         
         $binaryDataObject = new \stdClass();
@@ -430,6 +431,7 @@ abstract class abstractMessage
             }
             
             $binaryDataObject->size = $digitalResource->size;
+            $message->size += $binaryDataObject->size;
         }
 
         if (isset($digitalResource->mimetype)) {
