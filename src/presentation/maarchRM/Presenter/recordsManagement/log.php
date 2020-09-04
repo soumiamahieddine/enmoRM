@@ -60,6 +60,8 @@ class log
         }
         $this->view->setSource("maxResults", $maxResults);
         $this->view->translate();
+        $packageSchemas = \laabs::configuration("medona")["packageSchemas"];
+        $this->view->setSource('packageSchemas', $packageSchemas);
         $this->view->merge();
 
         return $this->view->saveHtml();
