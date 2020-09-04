@@ -379,6 +379,9 @@ trait archiveEntryTrait
 
     protected function checkintegrity($archive)
     {
+        if (!isset($archive->digitalResources)) {
+            return;
+        }
         foreach ($archive->digitalResources as $resource) {
             if ((isset($resource->hash) && !is_null($resource->hash))
                 && (isset($resource->hashAlgorithm) && !is_null($resource->hashAlgorithm))
