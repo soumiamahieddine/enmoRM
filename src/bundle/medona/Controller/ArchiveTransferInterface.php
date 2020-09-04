@@ -37,17 +37,6 @@ interface ArchiveTransferInterface
     public function receive($message);
 
     /**
-     * Receive message with all contents embedded
-     *
-     * @param string $package   The message binary contents OR a filename
-     * @param string $connector The connector to use used
-     * @param array  $params    An array of params
-     *
-     * @return mixed medona/message The acknowledgement
-     */
-    public function receiveSource($package, $connector, $params = []);
-
-    /**
      * Validate message against schema and rules
      * @param string $messageId The message identifier
      * @param object $archivalAgreement The archival agreement
