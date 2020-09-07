@@ -806,3 +806,6 @@ msgstr "Archive mades compressée"
 
 msgid "Mades zip"
 msgstr "Bordereau mades avec pièces jointes"
+
+msgid "Message name"
+msgstr "Nom du bordereau"

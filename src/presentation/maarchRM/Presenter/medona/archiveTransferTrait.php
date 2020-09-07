@@ -77,12 +77,11 @@ trait archiveTransferTrait
                 }
             }
         }
-        
-        $this->view->addContentFile("medona/archiveTransfer/sourceInputsForm.html");
-        $this->view->translate();
 
+        $this->view->addContentFile("medona/archiveTransfer/sourceInputsForm.html");
         $this->view->setSource("inputs", $inputs);
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
@@ -104,7 +103,7 @@ trait archiveTransferTrait
 
         return $this->view->saveHtml();
     }
-    
+
     /**
      * Show outgoing transfer message list
      * @param array $messages Array of message object

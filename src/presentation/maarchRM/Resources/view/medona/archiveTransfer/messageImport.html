@@ -405,11 +405,12 @@ var zipContent = "";
 
     $("#messageImport_source").on("change", (event) => {
         let source = $(event.target).val();
-        if (source == "default") {
+        if (source == "" || source === null) {
             $('#userInputs').empty();
             return;
         }
-        let schema = $("#messageImport_schema").val();
+        let schema = $('#messageImport_source').val()
+        // let schema = $("#messageImport_schema").val();
         $.ajax({
             type        : "GET",
             url         : "/transfer/"+schema+"/inputs/"+source,
