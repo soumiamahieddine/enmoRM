@@ -188,6 +188,35 @@ packageSchemas = "{
     }
 }"
 
+;if package are comming from an external source
+packageConnectors = "{
+    'mades' : {
+        'label' : 'Mades message with attachment',
+        'service'  :'medona/Connectors/Multiparts',
+        'schema' : 'mades',
+        'params' : {
+            'attachments' : {
+                'label' : 'Pièces',
+                'source' : 'input',
+                'type' : 'file',
+                'multiple' : true
+            }
+        }
+    },
+    'madesZip' : {
+        'label' : 'Mades zip',
+        'service'  :'medona/Connectors/Zip',
+        'schema' : 'mades',
+        'params' : {
+            'manifest' : {
+                'label' : 'Message name',
+                'source' : 'input',
+                'required' : false
+            }
+        }
+    }
+}"
+
 ; Message exchange menu
 ; 'label' is the title of menu
 ; 'href'  is the path to the action

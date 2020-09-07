@@ -38,18 +38,17 @@ trait archiveTransferTrait
         if (isset(\laabs::configuration('medona')['packageSchemas'])) {
             $packageSchemas = \laabs::configuration('medona')['packageSchemas'];
         }
-        
+
         $packageConnectors = [];
         if (isset(\laabs::configuration('medona')['packageConnectors'])) {
             $packageConnectors = \laabs::configuration('medona')['packageConnectors'];
         }
-        
         $this->view->addContentFile("medona/archiveTransfer/messageImport.html");
-        $this->view->translate();
 
         $this->view->setSource("packageSchemas", $packageSchemas);
         $this->view->setSource("packageConnectors", $packageConnectors);
         $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }

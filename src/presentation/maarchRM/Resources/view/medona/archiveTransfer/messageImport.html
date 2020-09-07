@@ -43,9 +43,10 @@
                     </table>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label">Source</label>
+                        <label class="col-sm-4 control-label">Source<span style="color:red;">&nbsp;*&nbsp;</span></label>
                         <div class="form-group col-sm-8">
                             <select class="form-control" id="messageImport_source" name="messageImport_source">
+                                <option value="" disabled selected>Pick a connector</option>
                                 <?merge packageConnectors ?>
                                 <option class="source_option" value="[?merge packageConnectors.key() ?]" data-params="[?merge .['params'].json ?]"><?merge .['label'] ?></option>
                             </select>
@@ -86,6 +87,7 @@
     </div>
     <div style="display:none" data-translate-catalog="medona/messages">
         <span id="empty_file_type_text">Your browser did not recognize the type of file transmitted. Please try with another browser.</span>
+        <span id="empty_connectory_text">Connector type is missing</span>
     </div>
 </div>
 
@@ -154,25 +156,20 @@ var zipContent = "";
         $('#packageFileInfo').addClass('hide');
         $('#packagefileBrowser').val('');
         $('#messageImport_submit').attr('disabled',false);
-        $("#messageImport_source").val("default");
+        $("#messageImport_source").val("");
         $('#userInputs').empty();
     })
 
     // Submit
     $('#messageImport_submit').on('click', function() {
         let source = $("#messageImport_source").val();
-        if (source != "default") {
+        if (source != "" && source !== null) {
             var url = '/transfer/source';
             var data = JSON.stringify(serializeSource())
             var contentType = 'application/json';
-        } else if (zipContent != "") {
-            var url = '/message/receiveZip';
-            var data = zipContent;
-            var contentType = 'application/zip';
         } else {
-            var url = '/Transfer';
-            var data = JSON.stringify(serialize());
-            var contentType = 'application/json';
+            gritter.show($('#empty_connectory_text').html(), false);
+            return;
         }
 
         $(this).attr('disabled',true);
