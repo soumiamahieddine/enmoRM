@@ -1591,7 +1591,7 @@ msgid "recordsManagement/descriptionScheme/read_name_Descriptionfields"
 msgstr "Lecture des champs d'un schéma de description"
 
 msgid "recordsManagement/archive/readExport_archiveId_"
-msgstr "Exportation d'une archive"
+msgstr "Export d'une archive"
 
 msgid "filePlan/filePlan/readTree"
 msgstr "Lecture du plan de classement"
