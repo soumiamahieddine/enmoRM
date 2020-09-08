@@ -1542,16 +1542,17 @@ trait archiveAccessTrait
      */
     protected function addArchiveToExport($archive, $parentDir)
     {
-        $archiveDir = "$parentDir/" . (string)$archive->archiveId;
+        $archiveDir = "$parentDir/" . $archive->archiveName . "_" . (string)$archive->archiveId;
         mkdir($archiveDir);
         if (isset($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
                 $extension = "";
+                $filename = "";
                 if (isset($digitalResource->fileName)) {
-                    $fileName = explode(".", $digitalResource->fileName);
-                    $extension = "." . end($fileName);
+                    $filename = pathinfo($digitalResource->fileName, PATHINFO_FILENAME) . "_";
+                    $extension = pathinfo($digitalResource->fileName, PATHINFO_EXTENSION);
                 }
-                file_put_contents("$archiveDir/" . (string)$digitalResource->resId . $extension, $digitalResource->getContents());
+                file_put_contents("$archiveDir/" . $filename . (string)$digitalResource->resId . $extension, $digitalResource->getContents());
             }
         }
         if (isset($archive->contents)) {
@@ -1573,7 +1574,7 @@ trait archiveAccessTrait
 
         $tmpDir = \laabs\tempdir();
 
-        file_put_contents("$tmpDir/" . (string)$archive->archiveId . ".json", json_encode($archive));
+        file_put_contents("$tmpDir/" . $archive->archiveName . "_" . (string)$archive->archiveId . ".json", json_encode($archive));
 
         $this->addArchiveToExport($archive, $tmpDir);
 
