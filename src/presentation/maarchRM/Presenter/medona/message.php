@@ -777,6 +777,9 @@ class message
                             $message->derogationButton = "/delivery/".$messageId."/Derogation";
                         }
                     }
+                    if ($message->status == "accepted") {
+                        $message->processButton = "/delivery/".$messageId."/process";
+                    }
                     break;
 
                 case 'ArchiveDeliveryRequestReply':
@@ -888,10 +891,6 @@ class message
                         $message->validationButton = "/outgoingTransfer/".$messageId."/process";
                     }
                     break;
-                case 'ArchiveDeliveryRequest':
-                    if ($message->status == "accepted") {
-                        $message->processButton = "/delivery/".$messageId."/process";
-                    }
             }
         }
     }
