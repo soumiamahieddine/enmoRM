@@ -1550,7 +1550,7 @@ trait archiveAccessTrait
                 $filename = "";
                 if (isset($digitalResource->fileName)) {
                     $filename = pathinfo($digitalResource->fileName, PATHINFO_FILENAME) . "_";
-                    $extension = pathinfo($digitalResource->fileName, PATHINFO_EXTENSION);
+                    $extension = "." . pathinfo($digitalResource->fileName, PATHINFO_EXTENSION);
                 }
                 file_put_contents("$archiveDir/" . $filename . (string)$digitalResource->resId . $extension, $digitalResource->getContents());
             }
