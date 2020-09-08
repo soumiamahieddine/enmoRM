@@ -565,7 +565,7 @@ class ArchiveDeliveryRequest extends abstractMessage
 
         $queryParts = [];
         $queryParts[] = "type='ArchiveDeliveryRequest'";
-        $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
+        $queryParts[] = "senderOrgRegNumber=$registrationNumber";
         $queryParts[] = "status='accepted'";
         $queryParts[] = "active=true";
 
