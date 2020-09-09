@@ -194,10 +194,6 @@ class ArchiveDeliveryRequest extends abstractMessage
                     $i++;
                     $unique['reference'] = $reference = $identifier.'_'.$i;
                 }
-                $derogation = true;
-                if ($key == 'communicable') {
-                    $derogation = false;
-                }
                 $message = $this->send(
                     $reference,
                     $archives,
