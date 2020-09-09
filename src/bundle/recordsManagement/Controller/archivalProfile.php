@@ -65,12 +65,13 @@ class archivalProfile
      * List archival profiles
      *
      * @param integer $limit Maximal number of results to dispay
+     * @param string  $query The query filter
      *
      * @return recordsManagement/archivalProfile[] The list of archival profiles
      */
-    public function index($limit = null)
+    public function index($limit = null, $query = null)
     {
-        $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', null, null, null, null, $limit);
+        $archivalProfiles = $this->sdoFactory->find('recordsManagement/archivalProfile', $query, null, null, null, $limit);
 
         foreach ($archivalProfiles as $archivalProfile) {
             $archivalProfile->containedProfiles = $this->getContentsProfiles($archivalProfile->archivalProfileId, true);
@@ -436,7 +437,12 @@ class archivalProfile
         file_put_contents($profilesDirectory, $content);
 
         $archivalProfile = $this->getByReference($profileReference);
-        $archivalProfile->descriptionSchema = $profilesDirectory;
+
+        if (strpos($content, "fr:gouv:culture:archivesdefrance:seda:v1") > -1) {
+            $archivalProfile->descriptionSchema = "seda";
+        } elseif (strpos($content, "fr:gouv:culture:archivesdefrance:seda:v2") > -1) {
+            $archivalProfile->descriptionSchema = "seda2";
+        }
 
         $this->sdoFactory->update($archivalProfile, "recordsManagement/archivalProfile");
 
