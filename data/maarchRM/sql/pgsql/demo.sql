@@ -82,6 +82,7 @@ INSERT INTO "auth"."privilege" ("roleId","userStory") VALUES
 ('CORRESPONDANT_ARCHIVES', 'archiveManagement/migration'),
 ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modifyDescription'),
 ('CORRESPONDANT_ARCHIVES', 'archiveManagement/modify'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/export'),
 ('CORRESPONDANT_ARCHIVES', 'archiveManagement/retrieve'),
 ('CORRESPONDANT_ARCHIVES', 'destruction/destructionRequest'),
 ('CORRESPONDANT_ARCHIVES', 'journal/certificate'),

@@ -133,6 +133,11 @@ msgid "Statistics"
 msgstr "Accéder aux statistiques"
 msgctxt "userStory"
 
+msgid "export"
+msgstr "Exporter une archive"
+msgctxt "userStory"
+
+
 # ---------------------------------------------------------
 # Journal
 # ---------------------------------------------------------

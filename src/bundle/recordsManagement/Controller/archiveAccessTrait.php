@@ -1534,4 +1534,58 @@ trait archiveAccessTrait
 
         return $uri;
     }
+
+    /**
+     * Add an archive to the export folder
+     * @param   recordsManagement/archive   $archive    The archive to export
+     * @param   string                      $parentDir  The name of the parent directory
+     */
+    protected function addArchiveToExport($archive, $parentDir)
+    {
+        $archiveDir = "$parentDir/" . $archive->archiveName . "_" . (string)$archive->archiveId;
+        mkdir($archiveDir);
+        if (isset($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $extension = "";
+                $filename = "";
+                if (isset($digitalResource->fileName)) {
+                    $filename = pathinfo($digitalResource->fileName, PATHINFO_FILENAME) . "_";
+                    $extension = "." . pathinfo($digitalResource->fileName, PATHINFO_EXTENSION);
+                }
+                file_put_contents("$archiveDir/" . $filename . (string)$digitalResource->resId . $extension, $digitalResource->getContents());
+            }
+        }
+        if (isset($archive->contents)) {
+            foreach ($archive->contents as $childArchive) {
+                $this->addArchiveToExport($childArchive, $archiveDir);
+            }
+        }
+    }
+
+    /**
+     * Export archive and children
+     * @param   string $archiveId The archive or the identifier of the archive
+     *
+     * @return  resource The zipped file
+     */
+    public function export($archiveId)
+    {
+        $archive = $this->retrieve($archiveId, true);
+
+        $tmpDir = \laabs\tempdir();
+
+        file_put_contents("$tmpDir/" . $archive->archiveName . "_" . (string)$archive->archiveId . ".json", json_encode($archive));
+
+        $this->addArchiveToExport($archive, $tmpDir);
+
+        $zip = \laabs::newService('dependency/fileSystem/plugins/zip');
+
+        $zipfile = $tmpDir.".zip";
+        if (!is_file($zipfile)) {
+            $zip->add($zipfile, $tmpDir.DIRECTORY_SEPARATOR."*");
+        }
+
+        $handler = fopen($zipfile, 'r');
+        return $handler;
+    }
 }

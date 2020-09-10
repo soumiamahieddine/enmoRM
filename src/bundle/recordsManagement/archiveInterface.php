@@ -174,4 +174,11 @@ interface archiveInterface
      * @action recordsManagement/archive/deleteResource
      */
     public function delete_archiveId_Digitalresource($resIds);
+
+    /**
+     * Export archive and children
+     *
+     * @action recordsManagement/archive/export
+     */
+    public function readExport_archiveId_();
 }

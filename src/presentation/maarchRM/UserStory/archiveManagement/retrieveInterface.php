@@ -115,4 +115,12 @@ interface retrieveInterface
      * @uses recordsManagement/archive/read_archiveId_Exists
      */
     public function readRecordsmanagementArchive_archiveId_Exists($archiveId);
+
+    /**
+     * Export archive and children
+     *
+     * @uses recordsManagement/archive/readExport_archiveId_
+     * @return recordsManagement/archive/export
+     */
+    public function readRecordsmanagementExport_archiveId_();
 }

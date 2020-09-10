@@ -111,6 +111,7 @@ class welcome
         }
 
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $exportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/export");
 
         $maxResults = null;
         if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
@@ -119,6 +120,7 @@ class welcome
 
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("exportPrivilege", $exportPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
