@@ -670,13 +670,13 @@ tasks = "[
 ;    },
 ;    {
 ;        'taskId': '04',
-;        'route' : 'medona/ArchiveDelivery/updateProcessBatch',
-;        'description' : 'Traiter les communications'
+;        'route' : 'medona/ArchiveDestruction/updateProcessAll',
+;        'description' : 'Traiter les destructions'
 ;    },
 ;    {
 ;        'taskId': '05',
-;        'route' : 'medona/ArchiveDestruction/updateProcessAll',
-;        'description' : 'Traiter les destructions'
+;        'route' : 'medona/message/deleteMessageDirectoryPurge',
+;        'description' : 'Purge des bordereaux'
 ;    },
 ;    {
 ;        'taskId': '06',
@@ -695,8 +695,8 @@ tasks = "[
 ;    },
 ;    {
 ;        'taskId': '09',
-;        'route' : 'medona/message/deleteMessageDirectoryPurge',
-;        'description' : 'Purge des bordereaux'
+;        'route' : 'medona/ArchiveDelivery/updateProcessBatch',
+;        'description' : 'Traiter les communications'
 ;    },
 ;    {
 ;        'taskId': '10',
