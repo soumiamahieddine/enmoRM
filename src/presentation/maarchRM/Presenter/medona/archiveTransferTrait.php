@@ -38,12 +38,50 @@ trait archiveTransferTrait
         if (isset(\laabs::configuration('medona')['packageSchemas'])) {
             $packageSchemas = \laabs::configuration('medona')['packageSchemas'];
         }
-        
+
+        $packageConnectors = [];
+        if (isset(\laabs::configuration('medona')['packageConnectors'])) {
+            $packageConnectors = \laabs::configuration('medona')['packageConnectors'];
+        }
         $this->view->addContentFile("medona/archiveTransfer/messageImport.html");
-        $this->view->translate();
 
         $this->view->setSource("packageSchemas", $packageSchemas);
+        $this->view->setSource("packageConnectors", $packageConnectors);
         $this->view->merge();
+        $this->view->translate();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * Get the source inputs form
+     *
+     * @param string $schema The source schema
+     * @param string $source The name of the source
+     *
+     * @return string The view
+     */
+    public function getSourceInputs($schema, $source)
+    {
+        $inputs = [];
+
+        if (isset(\laabs::configuration('medona')['packageConnectors'][$source]['params'])) {
+            $sourceInputs = \laabs::configuration('medona')['packageConnectors'][$source]['params'];
+            foreach ($sourceInputs as $key => $input) {
+                if (isset($input["source"]) && $input["source"] == 'input') {
+                    $input['name'] = $key;
+                    if (!isset($input['type'])) {
+                        $input['type'] = 'string';
+                    }
+                    $inputs[] = $input;
+                }
+            }
+        }
+
+        $this->view->addContentFile("medona/archiveTransfer/sourceInputsForm.html");
+        $this->view->setSource("inputs", $inputs);
+        $this->view->merge();
+        $this->view->translate();
 
         return $this->view->saveHtml();
     }
@@ -65,7 +103,7 @@ trait archiveTransferTrait
 
         return $this->view->saveHtml();
     }
-    
+
     /**
      * Show outgoing transfer message list
      * @param array $messages Array of message object

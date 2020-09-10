@@ -300,6 +300,45 @@ trait laabsModelTrait
     }
 
     /**
+     * Get a new PackageFile object
+     *
+     * @param string $data
+     * @param string  $name
+     *
+     * @return PackageFile
+     */
+    public static function newFileFromString($data, $name, $size = null, $encoding = null, $type = null)
+    {
+        return new \core\Type\StringFile($data, $name, $size, $encoding, $type);
+    }
+
+    /**
+     * Get a new PackageFile object
+     *
+     * @param resource $data
+     * @param string   $name
+     *
+     * @return PackageFile
+     */
+    public static function newFileFromStream($data, $name, $size = null, $encoding = null, $type = null)
+    {
+        return new \core\Type\StreamFile($data, $name, $size, $encoding, $type);
+    }
+
+    /**
+     * Get a new PackageFile object
+     *
+     * @param string $data
+     * @param string  $name
+     *
+     * @return PackageFile
+     */
+    public static function newFileFromUri($data, $name, $size = null, $encoding = null, $type = null)
+    {
+        return new \core\Type\UriFile($data, $name, $size, $encoding, $type);
+    }
+
+    /**
      * Check if a type is built-in
      * @param string $typename
      *
@@ -620,7 +659,35 @@ trait laabsModelTrait
                 }
 
                 return self::newXString($sourceValue);
-
+            case 'file':
+                switch ($sourceValue['packageType']) {
+                    case 'string':
+                        return self::newFileFromString(
+                            $sourceValue['data'],
+                            $sourceValue['name'],
+                            $sourceValue['size'],
+                            $sourceValue['type'],
+                            $sourceValue['encoding']
+                        );
+                    case 'stream':
+                        return self::newFileFromStream(
+                            $sourceValue['data'],
+                            $sourceValue['name'],
+                            $sourceValue['size'],
+                            $sourceValue['type'],
+                            $sourceValue['encoding']
+                        );
+                    case 'uri':
+                        return self::newFileFromUri(
+                            $sourceValue['data'],
+                            $sourceValue['name'],
+                            $sourceValue['size'],
+                            $sourceValue['type'],
+                            $sourceValue['encoding']
+                        );
+                    // no break
+                }
+                // no break
             default:
                 // Cast to a typed array
                 if (substr($typeName, -2) == "[]") {

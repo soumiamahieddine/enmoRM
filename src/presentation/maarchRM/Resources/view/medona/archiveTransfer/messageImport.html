@@ -14,15 +14,15 @@
             </h1>
         </div>
         <div id="messageImortView" lang="en" data-translate-catalog="medona/messages">
-            <input type="file" id="messageImport_filesBrowser" class="hide">
+            <input type="file" id="packagefileBrowser" class="hide">
             <br/>
             <div class="col-md-8">
-                <div id="messageImport_XMLDropZone">
+                <div id="packageDropZone">
                     <i class="fa fa-file-text fileIcon">&nbsp;</i>
                     <h4>Click or drop a message file<h4>
                 </div>
 
-                <div id="messageImport_FileInfo" class="hide col-md-8 col-md-offset-2">
+                <div id="packageFileInfo" class="hide col-md-8 col-md-offset-2">
                     <br/>
                     <table>
                         <tr>
@@ -30,35 +30,30 @@
                             <td>
                                 <dl class="dl-horizontal">
                                     <dt>File name</dt>
-                                    <dd id="messageImport_fileName"></dd>
+                                    <dd id="packageFileName"></dd>
 
                                     <dt>Size</dt>
-                                    <dd id="messageImport_fileSize"></dd>
+                                    <dd id="packageFileSize"></dd>
 
                                     <dt>Type</dt>
-                                    <dd id="messageImport_fileType"></dd>
+                                    <dd id="packageFileType"></dd>
                                 </dl>
                             </td>
                         </tr>
                     </table>
-                    <div id="attachementImport_XMLDropZone" >
-                        <h4>Click or drop documents<h4>
-                    </div>
-                    <input type="file" id="messageImport_attachementsBrowser" class="hide" multiple>
-                    <br/>
 
-                    <div id="messageImport_attachments" class="form-group">
-                    </div>
-
-                    <?merge packageSchemas.count().bool() ?>
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Schema</label>
-                        <div class="form-group col-sm-7">
-                            <select class="form-control" id="messageImport_schema" name="messageImport_schema">
-                                <?merge packageSchemas ?>
-                                <option value="[?merge packageSchemas.key() ?]"><?merge .['label'] ?></option>
+                        <label class="col-sm-4 control-label">Source<span style="color:red;">&nbsp;*&nbsp;</span></label>
+                        <div class="form-group col-sm-8">
+                            <select class="form-control" id="messageImport_source" name="messageImport_source">
+                                <option value="" disabled selected>Pick a connector</option>
+                                <?merge packageConnectors ?>
+                                <option class="source_option" value="[?merge packageConnectors.key() ?]" data-params="[?merge .['params'].json ?]"><?merge .['label'] ?></option>
                             </select>
                         </div>
+                    </div>
+                    <br/>
+                    <div id="userInputs">
                     </div>
                     <br/>
                     <br/>
@@ -92,13 +87,14 @@
     </div>
     <div style="display:none" data-translate-catalog="medona/messages">
         <span id="empty_file_type_text">Your browser did not recognize the type of file transmitted. Please try with another browser.</span>
+        <span id="empty_connectory_text">Connector type is missing</span>
     </div>
 </div>
 
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 
 <style>
-    #messageImport_XMLDropZone {
+    #packageDropZone {
         border: 2px dashed grey;
         cursor: pointer;
         padding: 100px;
@@ -109,15 +105,6 @@
     .fileIcon {
         font-size: 400%;
     }
-
-    #attachementImport_XMLDropZone {
-        border: 2px dashed grey;
-        cursor: pointer;
-        padding: 70px 10px 70px 10px;
-        text-align: center;
-        color: grey;
-        opacity: 0.5;
-    }
 </style>
 
 <script>
@@ -125,95 +112,64 @@
 /* ------ MESSAGE FILE ------ */
 var zipContent = "";
     // Drag & drop
-    $("#messageImport_XMLDropZone, #attachementImport_XMLDropZone").on('dragenter', function(e) {
+    $("#packageDropZone").on('dragenter', function(e) {
         e.preventDefault();
         e.stopPropagation();
     })
 
-    $("#messageImport_XMLDropZone, #attachementImport_XMLDropZone").on('dragover', function(e) {
+    $("#packageDropZone").on('dragover', function(e) {
         e.preventDefault();
         e.stopPropagation();
         $(this).css('opacity', '1');
     })
 
-    $("#messageImport_XMLDropZone, #attachementImport_XMLDropZone").on('dragleave', function(e) {
+    $("#packageDropZone").on('dragleave', function(e) {
         $(this).css('opacity', '0.5');
     })
 
-    $('#messageImport_XMLDropZone').on('drop', function(e) {
+    $('#packageDropZone').on('drop', function(e) {
             $('#messageImport_erreur').addClass('hide');
             if(e.originalEvent.dataTransfer){
                 if(e.originalEvent.dataTransfer.files.length) {
                     e.preventDefault();
                     e.stopPropagation();
-                    $('#messageImport_XMLDropZone').css('opacity', '0.5');
+                    $('#packageDropZone').css('opacity', '0.5');
                     uploadMessage(e.originalEvent.dataTransfer.files[0]);
                 }
             }
         }
     );
 
-    $('#attachementImport_XMLDropZone').on('drop', function(e) {
-        if(!e.originalEvent.dataTransfer || !e.originalEvent.dataTransfer.files.length){
-            return;
-        }
-
-        e.preventDefault();
-        e.stopPropagation();
-        $('#attachementImport_XMLDropZone').css('opacity', '0.5');
-        var files = e.originalEvent.dataTransfer.files;
-
-        $.each(files, function(key, file) {
-            oFileReader = new FileReader();
-            if ( file.type == "application/x-zip-compressed") {
-                oFileReader.readAsDataURL(file);
-            } else {
-                oFileReader.readAsText(file);
-            }
-            oFileReader.onload = function() {
-
-                uploadAttachement(file, function(e){
-                    newAttachement(file.name, e.target.result);
-                })
-            }
-        })
-    })
-
-    // Files browser
-    $('#attachementImport_XMLDropZone').on('click', function() {
-        $('#messageImport_attachementsBrowser').click();
-    })
-
-    $('#messageImport_XMLDropZone').on('click', function() {
+    $('#packageDropZone').on('click', function() {
         $('#messageImport_erreur').addClass('hide');
-        $('#messageImport_filesBrowser').click();
+        $('#packagefileBrowser').click();
     })
 
 
-    $('#messageImport_filesBrowser').on('change', function() {
+    $('#packagefileBrowser').on('change', function() {
         uploadMessage($(this).get(0).files[0]);
     })
 
     // Cancel
     $('#messageImport_cancel').on('click', function() {
-        $('#messageImport_XMLDropZone').removeClass('hide');
-        $('#messageImport_FileInfo').addClass('hide');
-        $('#messageImport_filesBrowser').val('');
-        $('#messageImport_attachementsBrowser').val('');
-        $('#messageImport_attachments').empty("");
+        $('#packageDropZone').removeClass('hide');
+        $('#packageFileInfo').addClass('hide');
+        $('#packagefileBrowser').val('');
         $('#messageImport_submit').attr('disabled',false);
+        $("#messageImport_source").val("");
+        $('#userInputs').empty();
     })
 
     // Submit
     $('#messageImport_submit').on('click', function() {
-        if ( zipContent != "") {
-            var url = '/message/receiveZip';
-            var data = zipContent;
-            var contentType = 'application/zip';
-        } else {
-            var url = '/Transfer';
-            var data = JSON.stringify(serialize());
+        let source = $("#messageImport_source").val();
+        if (source != "" && source !== null) {
+            var url = '/transfer/source';
+            var data = JSON.stringify(serializeSource())
             var contentType = 'application/json';
+        } else {
+            gritter.show($('#empty_connectory_text').html(), false);
+            return;
         }
 
         $(this).attr('disabled',true);
@@ -250,6 +206,7 @@ var zipContent = "";
 
             },
             error       : function (response) {
+                console.log(response);
                 gritter.show(response.responseJSON.message, response.responseJSON.status);
 
                 var arg = "";
@@ -272,27 +229,6 @@ var zipContent = "";
         });
     })
 
-/* ------ ATTACHEMENT ------ */
-    $('#messageImport_addAttachement').on('click', function() {
-        $('#messageImport_attachementsBrowser').click();
-    })
-
-    $('#messageImport_attachementsBrowser').on('change', function() {
-
-        for (var i = 0; i < $(this).get(0).files.length; i++)
-        {
-            var fileName = this.files[i].name;
-
-            uploadAttachement(this.files[i], function(e){
-                newAttachement(fileName, e.target.result);
-            })
-        }
-    })
-
-    $('#messageImport_attachments').on('click', '.removeAttachement', function() {
-        $(this).closest('.input-group').remove();
-    })
-
 /* ------ FUNCTION ------ */
 
     function uploadMessage(file) {
@@ -304,65 +240,29 @@ var zipContent = "";
         }
         oFileReader.onload = function() {
             if ( file.type == "application/x-zip-compressed" || file.type == "application/zip") {
-                $('#messageImport_filesBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
-                $('#messageImport_filesBrowser').data('filename', file.name);
-                $('#messageImport_addAttachement').addClass('hide');
-                $('#attachementImport_XMLDropZone').addClass('hide');
-                
+                $('#packagefileBrowser').data('base64', oFileReader.result.replace(/^data:.*?;base64,/, ""));
+                $('#packagefileBrowser').data('filename', file.name);
+                $('#packagefileBrowser').data('size', file.size);
+
             } else {
-                $('#messageImport_filesBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
-                $('#messageImport_addAttachement').removeClass('hide');
-                $('#attachementImport_XMLDropZone').removeClass('hide');
+                $('#packagefileBrowser').data('base64', btoa(unescape(encodeURIComponent(oFileReader.result))));
+                $('#packagefileBrowser').data('filename', file.name);
+                $('#packagefileBrowser').data('size', file.size);
+                $('#packagefileBrowser').data('type', file.type);
             }
 
-            $('#messageImport_fileName').html(file.name);
-            $('#messageImport_fileSize').html(file.size + ' ' + $('#byte_text').html());
+            $('#packageFileName').html(file.name);
+            $('#packageFileSize').html(file.size + ' ' + $('#byte_text').html());
 
             if (!file.type || file.type == "") {
                 gritter.show($('#empty_file_type_text').html(), false);
                 $('#messageImport_submit').attr('disabled',true);
             } else {
-                $('#messageImport_fileType').html(file.type);
+                $('#packageFileType').html(file.type);
             }
-            $('#messageImport_XMLDropZone').addClass('hide');
-            $('#messageImport_FileInfo').removeClass('hide');
+            $('#packageDropZone').addClass('hide');
+            $('#packageFileInfo').removeClass('hide');
         };
-    }
-
-    function uploadAttachement(file) {
-        var oFileReader = new FileReader();
-        oFileReader.readAsDataURL(file);
-        oFileReader.onload = function() {
-            newAttachement(file.name, oFileReader.result.replace(/^data:.*?;base64,/, ""));
-        }
-    }
-
-    function newAttachement(fileName, base64) {
-        var inputGroup = $('<div/>')
-                            .addClass('input-group')
-                            .appendTo($('#messageImport_attachments'));
-
-        var input = $('<input/>')
-                        .attr('type', 'text')
-                        .addClass('form-control')
-                        .prop('readonly', true)
-                        .data('base64', base64)
-                        .val(fileName)
-                        .appendTo(inputGroup);
-
-        var span = $('<span/>')
-                        .addClass('input-group-btn')
-                        .appendTo(inputGroup);
-
-        var button = $('<button/>')
-                        .attr('title', $('#remove_text').html())
-                        .addClass('btn btn-danger removeAttachement')
-                        .attr('type', 'button')
-                        .appendTo(span);
-
-        var icon = $('<i/>')
-                        .addClass('fa fa-trash-o')
-                        .appendTo(button);
     }
 
     function validateMessage(messageId) {
@@ -423,23 +323,104 @@ var zipContent = "";
 
     function serialize() {
         var jsonObject = {
-            messageFile : $('#messageImport_filesBrowser').data('base64'),
+            package : {
+                data : $('#packagefileBrowser').data('base64'),
+                encoding : 'base64'
+            },
             attachments : [],
             schema : $('#messageImport_schema option:selected').val(),
-            filename : $('#messageImport_filesBrowser').data('filename')
+            filename : $('#packagefileBrowser').data('filename')
         };
 
-        var attachments = $('#messageImport_attachments').find('input');
+        var attachments = $('#attachmentsContainer').find('input');
 
         $.each(attachments, function() {
-            var attachement = {
+            var attachment = {
                 filename : $(this).val(),
                 data     : $(this).data('base64')
             };
-            jsonObject.attachments.push(attachement);
+            jsonObject.attachments.push(attachment);
         })
 
         return jsonObject;
     }
+
+    function serializeSource() {
+        var jsonObject = {
+            package : {
+                data : $('#packagefileBrowser').data('base64'),
+                encoding : 'base64',
+                type : $('#packagefileBrowser').data('type'),
+                size: $('#packagefileBrowser').data('size')
+            },
+            connector : $('#messageImport_source').val(),
+            params : {}
+        };
+
+        var sourceInputs = $('#userInputs').find('input');
+
+        $.each(sourceInputs, function() {
+            var name = $(this).attr("name");
+
+            switch($(this).attr("type")) {
+                case 'file':
+                    if ($(this).attr("multiple")) {
+                        jsonObject.params[name] = [];
+                        for (var i = 0; i < $(this).get(0).files.length; i++) {
+                            jsonObject.params[name].push(serializeFile($(this).get(0).files[i], $(this).data('readers')[i]));
+                        }
+                    } else {
+                        var file = $(this).get(0).files[0];
+                        var reader = $(this).data('readers')[0];
+                        jsonObject.params[name] = serializeFile(file, reader);
+                    }
+                    break;
+
+                case 'text':
+                default:
+                    jsonObject.params[name] = $(this).val();
+            }
+        });
+
+        return jsonObject;
+    }
+
+    function serializeFile(file, reader) {
+        return {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            encoding: 'base64',
+            data: reader.result.replace(/^data:.*?;base64,/, "")
+        };
+    }
+
+    /*$("#messageImport_schema").on("change", (event) => {
+        let schema = $(event.target).val();
+        $(".source_option").addClass('hide');
+        $(".source_schema_" + schema).removeClass('hide');
+        $("#messageImport_source").val("default");
+        $('#userInputs').empty();
+    });*/
+
+    $("#messageImport_source").on("change", (event) => {
+        let source = $(event.target).val();
+        if (source == "" || source === null) {
+            $('#userInputs').empty();
+            return;
+        }
+        let schema = $('#messageImport_source').val()
+        // let schema = $("#messageImport_schema").val();
+        $.ajax({
+            type        : "GET",
+            url         : "/transfer/"+schema+"/inputs/"+source,
+            dataType    : 'html',
+            contentType : 'application/json',
+            async       : false,
+            success     : function (response) {
+                $('#userInputs').empty().html(response);
+            }
+        });
+    });
 
 </script>

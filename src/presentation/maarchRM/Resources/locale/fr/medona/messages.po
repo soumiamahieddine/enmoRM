@@ -782,3 +782,30 @@ msgstr "Votre navigateur n'a pas reconnu le type du fichier transmis. Veuillez e
 
 msgid "User has no organization. Please contact your administrator"
 msgstr "L'utilisateur courant n'est affecté à aucune organisation. Contactez votre administrateur."
+
+msgid "Connector type is missing"
+msgstr "Le choix du connecteur est manquant"
+
+msgid "Pick a connector"
+msgstr "Choisissez un connecteur"
+
+msgid "SEDA 1 message with attachment"
+msgstr "Bordereau seda 1 avec pièces jointes"
+
+msgid "SEDA 1 zip"
+msgstr "Archive seda 1 compressée"
+
+msgid "SEDA 2.1 message with attachment"
+msgstr "Bordereau seda 2.1 avec pièces jointes"
+
+msgid "SEDA 2.1 zip"
+msgstr "Archive seda 2.1 compressée"
+
+msgid "Mades message with attachment"
+msgstr "Archive mades compressée"
+
+msgid "Mades zip"
+msgstr "Bordereau mades avec pièces jointes"
+
+msgid "Message name"
+msgstr "Nom du bordereau"

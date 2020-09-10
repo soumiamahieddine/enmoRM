@@ -1,0 +1,48 @@
+<style>
+    .fileDropZone {
+        border: 2px dashed grey;
+        cursor: pointer;
+        padding: 70px 10px 70px 10px;
+        text-align: center;
+        color: grey;
+        opacity: 0.5;
+    }
+</style>
+<div>
+    <?merge inputs ?>
+    <div class="form-group">
+        <label class="col-sm-4 control-label"><?merge .['label'] ?><?merge .['required'].bool() ?><span style="color: red"> *</span></label>
+
+        <?merge .['type'].ifne('file') ?>
+        <div class="form-group col-sm-8">
+            <input type="text" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]"/>
+        </div>
+
+        <?merge .['type'].ifeq('file') ?>
+        <div class="form-group col-sm-8">
+            <?merge .['multiple'] @multiple ?>
+            <input type="file" name="[?merge .['name'] ?]" class="fileBrowser btn btn-light" data-show-upload="true" data-show-caption="true">
+        </div>
+    </div>
+</div>
+
+<script>
+    // Cancel
+    $('#messageImport_cancel').on('click', function() {
+        $('.fileBrowser').val('');
+    })
+
+
+    // Add
+    $('.fileBrowser').on('change', function() {
+        $(this).data('readers', []);
+
+        for (var i = 0; i < $(this).get(0).files.length; i++) {
+            file = $(this).get(0).files[i];
+            var oFileReader = new FileReader();
+            oFileReader.readAsDataURL(file);
+
+            $(this).data('readers').push(oFileReader);
+        }
+    });
+</script>

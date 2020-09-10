@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -47,6 +47,66 @@ class ArchiveTransfer extends abstractMessage
      */
     public function receive($messageFile, $attachments = array(), $schema = null, $filename = false)
     {
+        $message = $this->createNewMessage($schema);
+
+        // Spécifique receive
+        $this->receivePackage($message, $messageFile, $attachments, $filename);
+
+        if (empty($schema)) {
+            $this->detectSchema($message);
+        }
+
+        $this->receiveMessage($message);
+
+        return $this->sendAcknowledgement($message);
+    }
+
+        /**
+     * Receive message with all contents embedded
+     * @param string $package   The message binary contents OR a filename
+     * @param string $connector The source name to use
+     * @param array  $params    An array of params
+     *
+     * @return medona/message
+     */
+    public function receiveSource($package, $connector, $params = [])
+    {
+        if (!isset($this->packageConnectors[$connector]) || empty($this->packageConnectors[$connector])) {
+            throw \laabs::newException('medona/invalidMessageException', "Invalid message: unknown connector", 400);
+        }
+
+        $connectorConf = $this->packageConnectors[$connector];
+
+        if (!isset($connectorConf['schema']) || empty($connectorConf['schema']) || !isset($this->packageSchemas[$connectorConf['schema']])) {
+            throw \laabs::newException('medona/invalidMessageException', "Invalid message: unknown schema", 400);
+        }
+
+        $schema = $connectorConf['schema'];
+
+        $message = $this->createNewMessage($schema);
+
+        if (isset($connectorConf['service'])) {
+            $connectorService = \laabs::newService($connectorConf['service']);
+            $message->path = $connectorService->receive(
+                $package,
+                $params,
+                $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId
+            );
+        } else {
+            $messageFile = $package;
+            $attachments = [];
+        }
+
+
+        // Traiter le schéma spécifique
+        $this->receiveMessage($message);
+
+        // envoyer l'AR
+        return $this->sendAcknowledgement($message);
+    }
+
+    protected function createNewMessage($schema = null)
+    {
         $messageId = \laabs::newId();
         $message = \laabs::newInstance('medona/message');
         $message->messageId = $messageId;
@@ -60,12 +120,11 @@ class ArchiveTransfer extends abstractMessage
             mkdir($messageDir, 0777, true);
         }
 
-        $this->receivePackage($message, $messageFile, $attachments, $filename);
+        return $message;
+    }
 
-        if (empty($schema)) {
-            $this->detectSchema($message);
-        }
-
+    protected function receiveMessage($message)
+    {
         try {
             if (empty($message->path)) {
                 $this->sendError("202", "Name of zip and his content files doesn't match");
@@ -132,7 +191,17 @@ class ArchiveTransfer extends abstractMessage
 
             throw $exception;
         }
+    }
 
+    /**
+     * sendAcknowledgement message
+     *
+     * @param  medona/message $message
+     *
+     * @return medona/message $acknowledgement
+     */
+    protected function sendAcknowledgement($message)
+    {
         $event = $this->lifeCycleJournalController->logEvent(
             'medona/reception',
             'medona/message',
@@ -157,11 +226,21 @@ class ArchiveTransfer extends abstractMessage
         }
     }
 
+    protected function receivePackageSource($message, $messageFile, $attachments)
+    {
+        if ($messageFile instanceof \core\Type\StringFile) {
+            $data = $messageFile->getData();
+        } elseif ($messageFile instanceof \ore\Type\StreamFile) {
+            $data = stream_get_contents($messageFile->getStream());
+        }
+        $this->receiveFiles($message, $data, $attachments, $messageFile->getName(), $mediatype);
+    }
+
     protected function receiveObject($message, $messageFile, $attachments, $filename)
     {
         $data = json_encode($messageFile);
 
-        $this->receiveFiles($message, $data, $attachments, $filename, 'application/json');       
+        $this->receiveFiles($message, $data, $attachments, $filename, 'application/json');
     }
 
     protected function receiveStream($message, $messageFile, $attachments, $filename)
@@ -176,7 +255,7 @@ class ArchiveTransfer extends abstractMessage
                 preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $messageFile):
                 $data = base64_decode($messageFile);
                 break;
-        
+
             case is_resource($messageFile):
                 $handler = \core\Encoding\Base64::decode($messageFile);
                 $data = stream_get_contents($handler);
@@ -188,7 +267,7 @@ class ArchiveTransfer extends abstractMessage
             case 'application/zip':
             case 'application/octet-stream':
             case 'application/x-7z-compressed':
-                $this->receiveZip($message, $data, $attachments, $filename);
+                $this->receiveZip($message, $data, $filename);
                 break;
 
             default:
@@ -196,7 +275,7 @@ class ArchiveTransfer extends abstractMessage
         }
     }
 
-    protected function receiveZip($message, $data, $attachments, $filename)
+    protected function receiveZip($message, $data, $filename)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
@@ -224,15 +303,15 @@ class ArchiveTransfer extends abstractMessage
         if (!isset($zipContents[2])) {
             throw \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
         }
-        
+
         $message->attachments = [];
-        
+
         if (is_dir($tmpdir.DIRECTORY_SEPARATOR.$zipContents[2])) {
             $zipFolder = $tmpdir.DIRECTORY_SEPARATOR.$zipContents[2];
         } else {
             $zipFolder = $tmpdir;
         }
-        
+
         $messagePathinfo = pathinfo($filename, PATHINFO_FILENAME);
 
         foreach (scandir($zipFolder) as $file) {
@@ -271,13 +350,13 @@ class ArchiveTransfer extends abstractMessage
         }
 
         file_put_contents($messageDir.DIRECTORY_SEPARATOR.$filename, $data);
-        
+
         $message->path = $messageDir.DIRECTORY_SEPARATOR.$filename;
 
-        $this->receiveAttachments($message, $data, $attachments, $filename);
+        $this->receiveAttachments($message, $data, $attachments);
     }
 
-    protected function receiveAttachments($message, $data, $attachments, $filename=false)
+    protected function receiveAttachments($message, $data, $attachments)
     {
         $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId;
 
@@ -343,7 +422,7 @@ class ArchiveTransfer extends abstractMessage
             if (empty($schema)) {
                 throw \laabs::newException('medona/invalidMessageException', "Unknown message schema'.$messageNamespace", 400);
             }
-            
+
             $message->schema = $schema;
         } else {
             $message->schema = 'recordsManagement';
@@ -470,7 +549,7 @@ class ArchiveTransfer extends abstractMessage
 
             $this->errors = array_merge($this->errors, $archiveTransferController->errors);
             $this->infos = array_merge($this->infos, $archiveTransferController->infos);
-        
+
         } catch (\Exception $exception) {
             $this->errors[] = new \core\Error($exception->getMessage());
             $this->sendValidationError($message);
@@ -592,7 +671,7 @@ class ArchiveTransfer extends abstractMessage
         foreach ((array) $this->errors as $error) {
             $eventInfo['code'] = $error->getCode();
             $eventInfo['info'] = $error->getMessage();
-            
+
             $event = $this->lifeCycleJournalController->logEvent(
                 'medona/validation',
                 'medona/message',
@@ -955,12 +1034,12 @@ class ArchiveTransfer extends abstractMessage
         $queryParts[] = "type='ArchiveTransfer'";
         $queryParts[] = "active=true";
         $queryParts[] = "isIncoming=true";
-        $queryParts[] = "status != 'processed' 
-        AND status != 'error' 
-        AND status != 'invalid' 
-        AND status !='draft' 
-        AND status !='template' 
-        AND status !='rejected' 
+        $queryParts[] = "status != 'processed'
+        AND status != 'error'
+        AND status != 'invalid'
+        AND status !='draft'
+        AND status !='template'
+        AND status !='rejected'
         AND status !='acknowledge'" ;
 
         $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
