@@ -16,7 +16,7 @@
         <?merge .['type'].ifne('file') ?>
         <div class="form-group col-sm-8">
             <input type="text" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]"/>
-            <span>Default : <?merge .['default'] ?></span>
+            <span><span data-translate-catalog="medona/messages">Default</span> : <?merge .['default'] ?></span>
         </div>
 
         <?merge .['type'].ifeq('file') ?>
