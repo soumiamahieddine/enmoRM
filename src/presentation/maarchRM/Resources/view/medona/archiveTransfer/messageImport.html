@@ -171,6 +171,7 @@ var zipContent = "";
             gritter.show($('#empty_connectory_text').html(), false);
             return;
         }
+        return;
 
         $(this).attr('disabled',true);
         $('#messageImport_cancel').attr('disabled', true);
@@ -378,7 +379,13 @@ var zipContent = "";
 
                 case 'text':
                 default:
-                    jsonObject.params[name] = $(this).val();
+                    let value = $(this).val();
+                    let defaultVal = $(this).data("default");
+                    if (defaultVal && value == "") {
+                        value = defaultVal;
+                    }
+                    console.log(name, value);
+                    jsonObject.params[name] = value;
             }
         });
 

@@ -11,11 +11,12 @@
 <div>
     <?merge inputs ?>
     <div class="form-group">
-        <label class="col-sm-4 control-label"><?merge .['label'] ?><?merge .['required'].bool() ?><span style="color: red"> *</span></label>
+        <label class="col-sm-4 control-label" data-toggle="tooltip" title="[?merge .['help'] ?]"><?merge .['label'] ?><?merge .['required'].bool() ?><span style="color: red"> *</span></label>
 
         <?merge .['type'].ifne('file') ?>
         <div class="form-group col-sm-8">
-            <input type="text" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]"/>
+            <input type="text" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]"/>
+            <span>Default : <?merge .['default'] ?></span>
         </div>
 
         <?merge .['type'].ifeq('file') ?>
@@ -44,5 +45,9 @@
 
             $(this).data('readers').push(oFileReader);
         }
+    });
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
