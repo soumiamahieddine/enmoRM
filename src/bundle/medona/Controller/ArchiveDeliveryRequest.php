@@ -549,4 +549,30 @@ class ArchiveDeliveryRequest extends abstractMessage
 
         return $exportResult;
     }
+
+    /**
+     * Get process delivery message
+     *
+     * @return array Array of medona/message object
+     */
+    public function processList()
+    {
+        $registrationNumber = $this->getCurrentRegistrationNumber();
+
+        $queryParts = [];
+        $queryParts[] = "type='ArchiveDeliveryRequest'";
+        $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
+        $queryParts[] = "status='accepted'";
+        $queryParts[] = "active=true";
+
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
+    }
 }

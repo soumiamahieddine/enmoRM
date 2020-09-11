@@ -59,6 +59,9 @@ msgstr "Transferts en attente de traitement"
 msgid "Delivery incoming list"
 msgstr "Demandes de communication"
 
+msgid "Delivery process list"
+msgstr "Communications à finaliser"
+
 msgid "Destruction incoming list"
 msgstr "Demandes d'élimination"
 
