@@ -177,8 +177,9 @@ class ArchiveDestructionRequest extends abstractMessage
             }
 
             if ($message->schema != 'medona') {
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
                 $archiveDestructionRequestController = \laabs::newController(
-                    $message->schema.'/ArchiveDestructionRequest'
+                    "$namespace/ArchiveDestructionRequest"
                 );
                 $archiveDestructionRequestController->send($message);
             } else {

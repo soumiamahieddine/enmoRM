@@ -78,7 +78,8 @@ class ArchiveRestitutionRequestReply extends abstractMessage
             mkdir($this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId, 0777, true);
 
             if ($message->schema != 'medona') {
-                $archiveRestitutionRequestReplyController = \laabs::newController($message->schema.'/ArchiveRestitutionRequestReply');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveRestitutionRequestReplyController = \laabs::newController("$namespace/ArchiveRestitutionRequestReply");
                 $archiveRestitutionRequestReplyController->send($message);
             } else {
                 $archiveRestitutionRequestReply = $this->sendMessage($message);

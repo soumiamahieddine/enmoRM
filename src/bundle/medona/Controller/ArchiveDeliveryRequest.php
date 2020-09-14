@@ -302,7 +302,8 @@ class ArchiveDeliveryRequest extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $archiveDeliveryRequestController = \laabs::newController($message->schema.'/ArchiveDeliveryRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveDeliveryRequestController = \laabs::newController("$namespace/ArchiveDeliveryRequest");
                 $archiveDeliveryRequestController->send($message);
             } else {
                 $archiveDeliveryRequest = $this->sendMessage($message);

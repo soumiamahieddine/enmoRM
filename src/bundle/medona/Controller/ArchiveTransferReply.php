@@ -108,7 +108,8 @@ class ArchiveTransferReply extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $archiveTransferReplyController = \laabs::newController($message->schema.'/ArchiveTransferReply');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveTransferReplyController = \laabs::newController("$namespace/ArchiveTransferReply");
                 $archiveTransferReplyController->send($message);
             } else {
                 $archiveTransferReply = $this->sendMessage($message);

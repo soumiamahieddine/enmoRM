@@ -812,7 +812,8 @@ class message
         $message->object = json_decode($message->data);
 
         if ($message->schema != 'medona') {
-            $messageController = \laabs::newController($message->schema.'/'.$message->type);
+            $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+            $messageController = \laabs::newController("$namespace/".$message->type);
 
             $resource = $messageController->getAttachment($message, $attachmentId);
 
@@ -914,7 +915,8 @@ class message
             $message->schema = $messageSchema;
         }
 
-        $this->messageTypeParser = \laabs::newParser($message->schema.LAABS_URI_SEPARATOR.$message->type, $format);
+        $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+        $this->messageTypeParser = \laabs::newParser($namespace.LAABS_URI_SEPARATOR.$message->type, $format);
 
         return $this->messageTypeParser;
     }
@@ -939,8 +941,9 @@ class message
             }
             $message->schema = $messageSchema;
         }
+        $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
         $this->messageTypeSerializer = \laabs::newSerializer(
-            $message->schema. LAABS_URI_SEPARATOR. $message->type,
+            $namespace. LAABS_URI_SEPARATOR. $message->type,
             $format
         );
 

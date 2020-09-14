@@ -85,7 +85,8 @@ class ArchiveModificationNotification extends ArchiveNotification
 
         try {
             if ($message->schema) {
-                $archiveModificationNotificationController = \laabs::newController($message->schema.'/ArchiveModificationNotification');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveModificationNotificationController = \laabs::newController("$namespace/ArchiveModificationNotification");
                 $archiveModificationNotificationController->send($message);
             }
             $operationResult = true;

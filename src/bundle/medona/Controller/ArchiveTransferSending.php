@@ -226,7 +226,8 @@ class ArchiveTransferSending extends abstractMessage
             $message->dataObjectCount = count($archives);
 
             if ($message->schema != 'medona') {
-                $archiveTransferController = \laabs::newController($message->schema.'/ArchiveTransfer');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveTransferController = \laabs::newController("$namespace/ArchiveTransfer");
                 $archiveTransferController->send($message);
             } else {
                 $archiveTransfer = $this->sendMessage($message);

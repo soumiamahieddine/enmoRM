@@ -80,7 +80,8 @@ class AuthorizationOriginatingAgencyRequestReply extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $authorizationOriginatingAgencyRequestReplyController = \laabs::newController($message->schema.'/AuthorizationOriginatingAgencyRequestReply');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $authorizationOriginatingAgencyRequestReplyController = \laabs::newController("$namespace/AuthorizationOriginatingAgencyRequestReply");
                 $authorizationOriginatingAgencyRequestReplyController->send($message);
             } else {
                 $authorizationOriginatingAgencyRequestReply = $this->sendMessage($message);
