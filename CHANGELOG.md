@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 2.6.7
+
+- `Fixed` Gestion de l'affichage des ressources et pièces dans l'écran principal.
+
 ## Version 2.6.6
 
 - `Fixed` Gestion d'erreur lors du contrôle d'intégrité d'une archive.
