@@ -82,6 +82,9 @@ class ArchiveTransfer extends abstractMessage
         }
 
         $schema = $connectorConf['schema'];
+        $confParams = $connectorConf['params'];
+
+        $params = $this->checkParamsConstraints($confParams, $params);
 
         $message = $this->createNewMessage($schema);
 
@@ -103,6 +106,56 @@ class ArchiveTransfer extends abstractMessage
 
         // envoyer l'AR
         return $this->sendAcknowledgement($message);
+    }
+
+    protected function checkParamsConstraints($confParams, $params)
+    {
+        $this->translator->setCatalog("medona/messages");
+        foreach ($params as $name => $param) {
+            if (!isset($confParams[$name])) {
+                $this->sendError("404", "The sent parameters don't match the configuration parameters");
+                break;
+            }
+            $confParam = $confParams[$name];
+
+            if (!isset($confParam["type"])) {
+                $confParam["type"] = "text";
+            }
+
+            switch ($confParam["type"]) {
+                case 'number':
+                    if (!is_numeric($param)) {
+                        $this->sendError("405", $this->translator->getText("The parameter") . " '$name' " . $this->translator->getText("needs to be a number"));
+                    }
+                    break;
+                case 'boolean':
+                    if ($param !== true && $param !== false) {
+                        $this->sendError("405", $this->translator->getText("The parameter") . " '$name' " . $this->translator->getText("needs to be a boolean"));
+                    }
+                    break;
+                case 'enum':
+                    if (!in_array($param, $confParam["enumNames"])) {
+                        $this->sendError("405", $this->translator->getText("The parameter") . " '$name' " . $this->translator->getText("is not in the list"));
+                    }
+                    break;
+                case 'organization':
+                    $this->orgController->getOrgByRegNumber($param);
+                    break;
+                case 'archivalProfile':
+                    $this->archivalProfileController->getByReference($param);
+                    break;
+            }
+
+            if ($this->errors == 0 && isset($confParam["default"]) && $confParam["type"] != "file" && $param == '') {
+                $params[$name] = $confParam["default"];
+            }
+        }
+        if (count($this->errors) > 0) {
+            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            $exception->errors = $this->errors;
+            throw $exception;
+        }
+        return $params;
     }
 
     protected function createNewMessage($schema = null)

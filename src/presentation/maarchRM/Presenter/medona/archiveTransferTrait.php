@@ -64,6 +64,7 @@ trait archiveTransferTrait
     public function getSourceInputs($schema, $source)
     {
         $inputs = [];
+        $notTextTypes = ['file', 'boolean', 'number', 'enum'];
 
         if (isset(\laabs::configuration('medona')['packageConnectors'][$source]['params'])) {
             $sourceInputs = \laabs::configuration('medona')['packageConnectors'][$source]['params'];
@@ -71,7 +72,11 @@ trait archiveTransferTrait
                 if (isset($input["source"]) && $input["source"] == 'input') {
                     $input['name'] = $key;
                     if (!isset($input['type'])) {
-                        $input['type'] = 'string';
+                        $input['type'] = 'text';
+                    }
+                    $input['typeAccepted'] = false;
+                    if (in_array($input['type'], $notTextTypes)) {
+                        $input['typeAccepted'] = true;
                     }
                     $inputs[] = $input;
                 }
