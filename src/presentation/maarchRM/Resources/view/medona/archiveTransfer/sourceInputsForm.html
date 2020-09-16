@@ -10,12 +10,39 @@
 </style>
 <div>
     <?merge inputs ?>
-    <div class="form-group">
-        <label class="col-sm-4 control-label"><?merge .['label'] ?><?merge .['required'].bool() ?><span style="color: red"> *</span></label>
+    <div class="form-group" id="inputsDiv">
+        <label class="col-sm-4 control-label" data-toggle="tooltip" title="[?merge .['help'] ?]"><?merge .['label'] ?><?merge .['required'].bool() ?><span style="color: red"> *</span></label>
 
-        <?merge .['type'].ifne('file') ?>
+        <?merge .['typeAccepted'].not() ?>
         <div class="form-group col-sm-8">
-            <input type="text" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]"/>
+            <input type="text"
+                class="form-control [?merge .['type'].in('organization', 'archivalProfile').then(inputs.current().['type'], '') ?]"
+                name="[?merge .['name'] ?]"
+                required="[?merge .['required'].bool().then('true', 'false') ?]"
+                data-default="[?merge .['default'] ?]"
+                data-external="[?merge .['type'].ifeq('external').then(inputs.current().['ref'], '') ?]"/>
+            <?merge .['default'].bool() ?>
+            <span><span data-translate-catalog="medona/messages">Default</span> : <?merge .['default'] ?></span>
+        </div>
+
+        <?merge .['type'].ifeq('number') ?>
+        <div class="form-group col-sm-8">
+            <input type="number" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]"/>
+            <?merge .['default'].bool() ?>
+            <span><span data-translate-catalog="medona/messages">Default</span> : <?merge .['default'] ?></span>
+        </div>
+
+        <?merge .['type'].ifeq('boolean') ?>
+        <div class="form-group col-sm-8">
+            <input type="checkbox" class="form-check-input" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]"/>
+        </div>
+
+        <?merge .['type'].ifeq('enum') ?>
+        <div class="form-group col-sm-8">
+            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]">
+                <?merge .['enumNames'] ?>
+                <option value="[?merge . ?]"><?merge . ?></option>
+            </select>
         </div>
 
         <?merge .['type'].ifeq('file') ?>
@@ -24,6 +51,7 @@
             <input type="file" name="[?merge .['name'] ?]" class="fileBrowser btn btn-light" data-show-upload="true" data-show-caption="true">
         </div>
     </div>
+    <span id="noOriginatorFound" class="hide">No originator found</span>
 </div>
 
 <script>
@@ -45,4 +73,103 @@
             $(this).data('readers').push(oFileReader);
         }
     });
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    function getTypeahead(field) {
+        let fieldName = field.data("external");
+        var data = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/descriptionRef/'+fieldName+'?query=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+        data.initialize();
+
+        field.typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: 'data',
+                source: data.ttAdapter(),
+                templates: {
+                    suggestion: function(data) {
+                        delete data._query;
+                        var html = $('<div>');
+                        var keyname = Object.keys(data)[0];
+                        var key = data.keyname;
+                        html.append($('<strong class="badge">').text(key));
+                        delete data[keyname];
+                        var value = Object.keys(data).map(function(name){return data[name]}).join(" - ");
+                        html.append(' '+value);
+                        return html;
+                    }
+                }
+            }
+        ).on('typeahead:selected', function ($event, suggestion, source) {
+            var keys = Object.keys(suggestion); //fetched the key at first index
+            field.val(suggestion[keys[1]]);
+            field.typeahead('val', suggestion[keys[1]]);
+        });
+
+        return field;
+    }
+
+    function setTypeahead(url, key, name) {
+        var entities = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace(key),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {url: url, ttl: '0'},
+            limit: 100
+        });
+
+        entities.initialize();
+
+        // initialize typeahead
+        $('.' + name).typeahead(
+            {
+                hint: true,
+                highlight: true,
+                minLength: 1
+            },
+            {
+                name: name + 's',
+                displayKey: key,
+                templates: {
+                    suggestion: function(entity) {
+                        var display =
+                            "<span>"
+                            + "<span style='font-family:Helvetica, sans-serif;'>";
+                        display += entity[key] + "</span></span><br>";
+
+                        return display;
+                    }
+                },
+                source: function(query, cb) {
+                    entities.search(query, function(suggestions) {
+                        cb(suggestions);
+                    });
+                },
+                skipCache: true
+            }
+        );
+    }
+
+    $("#inputsDiv").ready(() => {
+        $('[data-external]').each(function() {
+            let field = $(this);
+            getTypeahead(field);
+        });
+
+        window.localStorage.clear();
+        setTypeahead('/organizations/todisplay?orgUnit=true&ownerOrg=true', 'registrationNumber', 'organization');
+        setTypeahead('/archivalprofiles/todisplay', 'reference', 'archivalProfile');
+    })
 </script>

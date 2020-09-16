@@ -358,9 +358,14 @@ var zipContent = "";
         };
 
         var sourceInputs = $('#userInputs').find('input');
+        var sourceSelects = $('#userInputs').find('select');
 
         $.each(sourceInputs, function() {
             var name = $(this).attr("name");
+            if (!name) {
+                return;
+            }
+            let value;
 
             switch($(this).attr("type")) {
                 case 'file':
@@ -375,11 +380,25 @@ var zipContent = "";
                         jsonObject.params[name] = serializeFile(file, reader);
                     }
                     break;
-
+                case 'checkbox':
+                    value = $(this).is(":checked");
+                    jsonObject.params[name] = value;
+                    break;
                 case 'text':
                 default:
-                    jsonObject.params[name] = $(this).val();
+                    value = $(this).val();
+                    let defaultVal = $(this).data("default");
+                    if (defaultVal && value == "") {
+                        value = defaultVal;
+                    }
+                    jsonObject.params[name] = value;
             }
+        });
+
+        $.each(sourceSelects, function() {
+            let value = $(this).val();
+            let name = $(this).attr("name");
+            jsonObject.params[name] = value;
         });
 
         return jsonObject;

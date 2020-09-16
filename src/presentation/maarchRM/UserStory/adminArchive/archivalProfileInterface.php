@@ -35,6 +35,14 @@ interface archivalProfileInterface
     public function readArchivalprofiles();
 
     /**
+     * Get the archivalProfiles list
+     *
+     * @return recordsManagement/archivalProfile/archivalProfileList
+     * @uses recordsManagement/archivalProfile/readIndex
+     */
+    public function readArchivalprofilesTodisplay();
+
+    /**
      * New empty archival profile with default values
      * 
      * @return recordsManagement/archivalProfile/edit The archival profile edition view
