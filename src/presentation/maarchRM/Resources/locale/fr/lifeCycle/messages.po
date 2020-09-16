@@ -747,6 +747,8 @@ msgid "certificateName"
 msgstr "Attestation de destruction"
 msgctxt "recordsManagement/destruction"
 
-
 msgid "Organization"
 msgstr "Organisation"
+
+msgid "result(s) on"
+msgstr "résultat(s) sur"

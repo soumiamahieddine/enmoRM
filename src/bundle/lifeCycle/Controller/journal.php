@@ -308,14 +308,15 @@ class journal
 
     /**
      * Search a journal event
+     *
      * @param string    $eventType      The type of the event
      * @param string    $objectClass    The object class
      * @param string    $objectId       The identifier of the object
      * @param timestamp $minDate        The minimum date of the event
      * @param timestamp $maxDate        The maximum date of the event
-     * @param string    $org            An org reg number on one of the event header or info 
+     * @param string    $org            An org reg number on one of the event header or info
      * @param string    $sortBy         The event sorting request
-     * @param int       $numberOfResult The number of result
+     * @param integer   $maxResults The number of result
      *
      * @throws \Exception
      *
@@ -329,10 +330,100 @@ class journal
         $maxDate = null,
         $org = null,
         $sortBy = ">timestamp",
-        $numberOfResult = null
+        $maxResults = null
     ) {
-        $query = array();
-        $queryParams = array();
+        list($queryParams, $queryString) = $this->queryBuilder($eventType, $objectClass, $objectId, $minDate, $maxDate, $org);
+
+        $events = $this->sdoFactory->find(
+            'lifeCycle/event',
+            $queryString,
+            $queryParams,
+            $sortBy,
+            null,
+            $maxResults
+        );
+
+        $userAccountController = \laabs::newController('auth/userAccount');
+        $users = $userAccountController->index();
+        foreach ($users as $i => $user) {
+            $users[(string) $user->accountId] = $user;
+            unset($users[$i]);
+        }
+
+        $serviceAccountController = \laabs::newController('auth/serviceAccount');
+        $services = $serviceAccountController->index();
+        foreach ($services as $i => $service) {
+            $services[(string) $service->accountId] = $service;
+            unset($services[$i]);
+        }
+
+        foreach ($events as $i => $event) {
+            if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
+                $event->accountName = $users[(string) $event->accountId]->accountName;
+            } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
+                $event->accountName = $services[(string) $event->accountId]->accountName;
+            } else {
+                $event->accountName = "__system__";
+            }
+        }
+
+        return $events;
+    }
+
+     /**
+     * Count journal events
+     *
+     * @param string    $eventType      The type of the event
+     * @param string    $objectClass    The object class
+     * @param string    $objectId       The identifier of the object
+     * @param timestamp $minDate        The minimum date of the event
+     * @param timestamp $maxDate        The maximum date of the event
+     * @param string    $org            An org reg number on one of the event header or info
+     * @param string    $sortBy         The event sorting request
+     *
+     * @throws \Exception
+     *
+     * @return integer Count results of request
+     */
+    public function searchCount(
+        $eventType = null,
+        $objectClass = null,
+        $objectId = null,
+        $minDate = null,
+        $maxDate = null,
+        $org = null
+    ) {
+        list($queryParams, $queryString) = $this->queryBuilder($eventType, $objectClass, $objectId, $minDate, $maxDate, $org);
+
+        $count = $this->sdoFactory->count(
+            'lifeCycle/event',
+            $queryString,
+            $queryParams
+        );
+
+        return $count;
+    }
+
+    /**
+     * Build a search sql query
+     *
+     * @param string    $eventType      The type of the event
+     * @param string    $objectClass    The object class
+     * @param string    $objectId       The identifier of the object
+     * @param timestamp $minDate        The minimum date of the event
+     * @param timestamp $maxDate        The maximum date of the event
+     * @param string    $org            An org reg number on one of the event header or info
+     */
+    protected function queryBuilder(
+        $eventType = null,
+        $objectClass = null,
+        $objectId = null,
+        $minDate = null,
+        $maxDate = null,
+        $org = null
+    ) {
+        $query = [];
+        $queryParams = [];
 
         if ($this->separateInstance) {
             $queryParams['instanceName'] = \laabs::getInstanceName();
@@ -478,44 +569,7 @@ class journal
 
         $queryString = implode(' AND ', $query);
 
-        if (!$numberOfResult) {
-            $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
-        }
-
-        $events = $this->sdoFactory->find(
-            'lifeCycle/event',
-            $queryString,
-            $queryParams,
-            $sortBy,
-            null,
-            $numberOfResult
-        );
-
-        $userAccountController = \laabs::newController('auth/userAccount');
-        $users = $userAccountController->index();
-        foreach ($users as $i => $user) {
-            $users[(string) $user->accountId] = $user;
-            unset($users[$i]);
-        }
-
-        $serviceAccountController = \laabs::newController('auth/serviceAccount');
-        $services = $serviceAccountController->index();
-        foreach ($services as $i => $service) {
-            $services[(string) $service->accountId] = $service;
-            unset($services[$i]);
-        }
-
-        foreach ($events as $i => $event) {
-            if (isset($event->accountId) && isset($users[(string) $event->accountId])) {
-                $event->accountName = $users[(string) $event->accountId]->accountName;
-            } elseif (isset($event->accountId) && isset($services[(string) $event->accountId])) {
-                $event->accountName = $services[(string) $event->accountId]->accountName;
-            } else {
-                $event->accountName = "__system__";
-            }
-        }
-
-        return $events;
+        return [$queryParams, $queryString];
     }
 
     /**
@@ -1165,7 +1219,8 @@ class journal
         // create timestamp file
         if (isset(\laabs::configuration('lifeCycle')['chainWithTimestamp']) && \laabs::configuration('lifeCycle')['chainWithTimestamp']==true) {
             try {
-                $timestampService = \laabs::newService('dependency/timestamp/plugins/Timestamp');
+                $timestampServiceUri = \laabs::configuration('lifeCycle')['timestampService'];
+                $timestampService = \laabs::newService($timestampServiceUri);
                 $timestampFileName = $timestampService->getTimestamp($journalFilename);
 
             } catch (\Exception $e) {
@@ -1184,7 +1239,7 @@ class journal
      *
      * @return object The life cycle event object
      */
-    protected function decodeEventFormat($event)
+    public function decodeEventFormat($event)
     {
         if (isset($event->eventInfo)) {
             if (!isset($this->eventFormats[$event->eventType])) {

@@ -13,7 +13,7 @@ file that was distributed with this source code.
                 Format list
             </h1>
                 Version PRONOM :  <?merge description[0] ?> |
-                Date :   <?merge description[1] ?>      
+                Date :   <?merge description[1] ?>
         </div>
     </div>
     <div class="container-fluid" data-translate-catalog="digitalResource/format">
@@ -22,7 +22,7 @@ file that was distributed with this source code.
                 <div class="panel panel-primary">
                     <div class="panel-heading clearfix">
                         <div class="pull-left">
-                            <h4><?merge formats.count() ?> format(s)</h4> 
+                            <h4><?merge formats.count() ?> format(s)</h4>
 
                         </div>
                     </div>
@@ -83,7 +83,7 @@ file that was distributed with this source code.
                                 <td><i id="icon" class=""></i>&nbsp;<span id="mediatype"></span></td>
                             </tr>
                         </tbody>
-                    </table> 
+                    </table>
                 </div>
                 <input type="file" id="inputFormatFile" class="hide">
                 <br/>
@@ -214,7 +214,7 @@ file that was distributed with this source code.
                     e.stopPropagation();
                     $('#formatFileDropZone').css('opacity', '0.5');
                     uploadMessage(e.originalEvent.dataTransfer.files[0]);
-                }   
+                }
             }
         }
     );
@@ -246,7 +246,7 @@ file that was distributed with this source code.
                     contents  : file.contents,
                     extension : file.extension
             },*/
-            data : JSON.stringify({contents  : file.contents, extension : file.extension}),
+            data : JSON.stringify({'contents'  : file.contents, 'extension' : file.extension}),
             contentType : 'application/json',
             dataType    : 'json',
             success     : function (response) {
@@ -293,14 +293,14 @@ file that was distributed with this source code.
         return jsonObject;
     }
     /* --------------------------------------- */
-    
+
     // Cancel
     $('[data-hash-copy]').on('click', function() {
         $("#format-" + $(this).attr('data-hash-copy')).select();
         document.execCommand("copy");
         document.getSelection().removeAllRanges();
     })
-    
+
     $("#contain").on('mouseenter', '[data-format]', function() {
         $(this).find('td').each(function() {
             $("#" + $(this).attr('name')).text($(this).text());
@@ -340,6 +340,6 @@ file that was distributed with this source code.
         }
         $("#icon").removeAttr('class');
         $("#icon").addClass('fa ' + icon);
-        
+
     });
 </script>

@@ -151,7 +151,7 @@ class cluster
         try {
             $this->sdoFactory->update($cluster, "digitalResource/cluster");
             $this->sdoFactory->deleteChildren("digitalResource/clusterRepository", $cluster, "digitalResource/cluster");
-            if (count($cluster->clusterRepository) > 0) {
+            if (is_array($cluster->clusterRepository) && !empty($cluster->clusterRepository)) {
                 $this->sdoFactory->createCollection($cluster->clusterRepository, "digitalResource/clusterRepository");
             }
         } catch (\core\Route\Exception $e) {
@@ -236,7 +236,7 @@ class cluster
                 }
             }
 
-            if (count($cluster->clusterRepository) == 0) {
+            if (is_array($cluster->clusterRepository) && empty($cluster->clusterRepository)) {
                 throw \laabs::newException("digitalResource/noClusterRepositoryException", "No repository for %s mode", 404, null, [$mode]);
             }
         }
@@ -250,9 +250,9 @@ class cluster
      *
      * @return String[] Array of ressource container on the cluster
      */
-    public function openContainers($cluster, $path, $metadata=null)
+    public function openContainers($cluster, $path, $metadata = null)
     {
-        if (count($cluster->clusterRepository) < 1) {
+        if (is_array($cluster->clusterRepository) && empty($cluster->clusterRepository)) {
             throw \laabs::newException("digitalResource/clusterException", "All repositories must be accessible");
         }
 
@@ -299,7 +299,7 @@ class cluster
      */
     public function rollbackStorage($resource)
     {
-        if (count($resource->address)) {
+        if (is_array($resource->address) && !empty($resource->address)) {
             foreach ($resource->address as $address) {
                 $this->repositoryController->rollbackStorage($address);
             }
@@ -373,7 +373,7 @@ class cluster
             $queryParams['resId'] = $resource->resId;
             $queryParts['resId'] = "resId = :resId";
 
-            $queryString = implode(' AND ', $queryParts );
+            $queryString = implode(' AND ', $queryParts);
 
             $resource->address = $this->sdoFactory->find("digitalResource/address", $queryString, $queryParams);
 
@@ -397,7 +397,7 @@ class cluster
     private function checkHash($address, $resource, $handler)
     {
         $hash = \laabs\hash_stream($resource->hashAlgorithm, $handler);
-        
+
         $address->lastIntegrityCheck = \laabs::newTimestamp();
         $address->integrityCheckResult = false;
 
@@ -406,7 +406,7 @@ class cluster
         }
         $this->sdoFactory->update($address);
 
-        
+
 
         return $address->integrityCheckResult;
     }

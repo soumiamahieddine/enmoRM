@@ -329,21 +329,46 @@ class organization
      */
     public function create($organization)
     {
+        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
+
         if ($organization->isOrgUnit) {
             $this->accountController->isAuthorized(['func_admin', 'user']);
+
+            $securityLevel = null;
+            if ($this->hasSecurityLevel) {
+                $securityLevel = $user->getSecurityLevel();
+            }
+
+            if ($securityLevel == $user::SECLEVEL_FUNCADMIN) {
+                $userOrgIds = [$user->ownerOrgId];
+                foreach($this->readDescendantOrg($user->ownerOrgId) as $org){
+                    $userOrgIds[] = (string) $org->orgId;
+                }
+                if (!in_array($organization->ownerOrgId, $userOrgIds)){
+                    throw new \core\Exception\ForbiddenException("You are not allowed to do this action");
+                }
+            }
+
         } else {
             $this->accountController->isAuthorized('gen_admin');
         }
 
-        $user = $this->accountController->get(\laabs::getToken('AUTH')->accountId);
 
         if (!$organization->parentOrgId && !in_array($user->accountName, \laabs::configuration("auth")["adminUsers"])) {
             if (\laabs::getToken("ORGANIZATION")) {
                 if (!in_array('owner', \laabs::getToken("ORGANIZATION")->orgRoleCodes)) {
-                    throw new \core\Exception("You're not allowed to create an organization");
+                    throw new \core\Exception\ForbiddenException("You're not allowed to create an organization");
                 }
             } else {
-                throw new \core\Exception("You're not allowed to create an organization");
+                throw new \core\Exception\ForbiddenException("You're not allowed to create an organization");
+            }
+        } else {
+            if ($organization->parentOrgId) {
+                try {
+                    $this->read($organization->parentOrgId);
+                } catch (\Exception $e) {
+                    throw new \core\Exception\NotFoundException("Organization identified by " . $organization->parentOrgId . " was not find");
+                }
             }
         }
 
@@ -355,7 +380,7 @@ class organization
             $organization->orgId = \laabs::newId();
             $this->sdoFactory->create($organization, 'organization/organization');
         } catch (\Exception $e) {
-            throw new \core\Exception("Key already exists");
+            throw new \core\Exception\ConflictException("Key already exists");
         }
 
         return $organization->orgId;
@@ -587,14 +612,19 @@ class organization
         if ($this->hasSecurityLevel) {
             $securityLevel = $account->getSecurityLevel();
         }
+
         if ($securityLevel == $account::SECLEVEL_FUNCADMIN) {
-            if ($organization->ownerOrgId != $account->ownerOrgId) {
-                throw new \core\Exception\UnauthorizedException("You are not allowed to do this action");
+            $userOrgIds = [$account->ownerOrgId];
+            foreach($this->readDescendantOrg($account->ownerOrgId) as $org){
+                $userOrgIds[] = (string) $org->orgId;
+            }
+            if (!in_array($organization->ownerOrgId, $userOrgIds)){
+                throw new \core\Exception\ForbiddenException("You are not allowed to do this action");
             }
         }
 
         if (!$organization->isOrgUnit) {
-            throw new \core\Exception("An organization can't be disabled.");
+            throw new \core\Exception\ForbiddenException("An organization can't be disabled.");
         }
 
         if ($status == "true") {
@@ -1188,16 +1218,16 @@ class organization
      */
     public function createArchivalprofileaccess($archivalProfileAccess)
     {
-        if (null ==! $this->getArchivalProfileAccess(
-            $archivalProfileAccess->orgId,
-            $archivalProfileAccess->archivalProfileReference
-        )) {
-            throw new \core\Exception("Organization Archival Profile Access already exists.");
+        $archivalProfiles = $this->getArchivalProfileAccess($archivalProfileAccess->orgId);
+        
+        if (is_array($archivalProfiles) && array_search($archivalProfileAccess->archivalProfileReference, array_column($archivalProfiles, 'archivalProfileReference')) !== false){
+            throw new \core\Exception\ConflictException("Organization Archival Profile Access already exists.");
         }
+
         $org = $this->sdoFactory->read('organization/organization', $archivalProfileAccess->orgId);
         try {
             if (!$org->isOrgUnit) {
-                throw new \core\Exception("Organization Archival Profile Access can't be update ");
+                throw new \core\Exception\ForbiddenException("Organization Archival Profile Access can't be update ");
             }
         } catch (\Exception $e) {
             throw $e;
@@ -1205,7 +1235,7 @@ class organization
         $archivalProfileController = \laabs::newController("recordsManagement/archivalProfile");
 
         if ($archivalProfileAccess->archivalProfileReference === '*' && !$archivalProfileAccess->originatorAccess) {
-            throw new \core\Exception(
+            throw new \core\Exception\ForbiddenException(
                 "Organization Archival Profile Access cannot be created, archival profile without reference must have an originator access"
             );
         }
@@ -1213,7 +1243,7 @@ class organization
         if ($archivalProfileAccess->archivalProfileReference !== '*'
             && !$archivalProfileController->getByReference($archivalProfileAccess->archivalProfileReference)
         ) {
-            throw new \core\Exception(
+            throw new \core\Exception\NotFoundException(
                 "Organization Archival Profile Access cannot be created, archival profile does not exists"
             );
         }

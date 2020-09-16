@@ -22,21 +22,21 @@ namespace bundle\recordsManagement;
  * Standard interface for log archive description class
  */
 interface logInterface
-{   
+{
     /**
      * Get a  search result
-     * @param string $archiveId      The archive identifier
-     * @param string $type           The type
-     * @param date   $fromDate       The date
-     * @param date   $toDate         The date
-     * @param string $processName    The process name
-     * @param string $processId      The process identifier
-     * @param string $sortBy         The process identifier
-     * @param int    $numberOfResult The process identifier
+     * @param string  $archiveId   The archive identifier
+     * @param string  $type        The type
+     * @param date    $fromDate    The date
+     * @param date    $toDate      The date
+     * @param string  $processName The process name
+     * @param string  $processId   The process identifier
+     * @param string  $sortBy      The process identifier
+     * @param integer $maxResults  Max number of results to return
 
      * @action recordsManagement/log/find
      */
-    public function find(
+    public function readFind(
         $archiveId = null,
         $type = null,
         $fromDate = null,
@@ -44,9 +44,30 @@ interface logInterface
         $processName = null,
         $processId = null,
         $sortBy = ">fromDate",
-        $numberOfResult = null
+        $maxResults = null
     );
-    
+
+    /**
+     * Count search results
+     *
+     * @param string  $archiveId   The archive identifier
+     * @param string  $type        The type
+     * @param date    $fromDate    The date
+     * @param date    $toDate      The date
+     * @param string  $processName The process name
+     * @param string  $processId   The process identifier
+
+     * @action recordsManagement/log/countFind
+     */
+    public function countFind(
+        $archiveId = null,
+        $type = null,
+        $fromDate = null,
+        $toDate = null,
+        $processName = null,
+        $processId = null
+    );
+
     /**
      * Deposit a log file
      * @param string    $journalFileName   The name of the journal to deposit

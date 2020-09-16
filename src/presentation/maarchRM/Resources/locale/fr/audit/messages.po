@@ -1941,3 +1941,6 @@ msgstr "Import du référentiel de champ de description"
 
 msgid "recordsManagement/retentionRule/createImport"
 msgstr "Import du référentiel de règle de conservation"
+
+msgid "result(s) on"
+msgstr "résultat(s) sur"

@@ -106,7 +106,7 @@
 </style>
 
 <script type="text/javascript">
-	var Archive = {
+    var Archive = {
         archiveContentTemplate: $('#archiveContentTemplate').children('li'),
 
         selected: null,
@@ -194,27 +194,38 @@
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
                     Archive.mergeRow(parent, childrenArchives[j])
-
                     Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
                 }
             }
 
             if (digitalResources) {
                 for(var i=0; i < digitalResources.length; i++) {
-                    template = this.archiveContentTemplate.clone();
-                    template.children('span')
-                            .addClass('document')
-                            .data('json', digitalResources[i])
-                            .children('span')
-                            .children('i')
-                            .html('&nbsp;&nbsp;&nbsp;')
-                            .siblings('span')
-                            .attr('id', digitalResources[i].resId)
-                            .append($('<i class="fa fa-file-o">&nbsp;</i>'))
-                            .append($('<span>').text(digitalResources[i].fileName));
-                    template.find('small, br, .addChildrenArchive').remove();
+                    Archive.mergeDigitalResourceRow(parent, digitalResources[i], hidden);
+                }
+            }
+        },
 
-                    BootstrapTree.addNode(parent, template, hidden);
+        mergeDigitalResourceRow: function(parent, digitalResource, hidden) {
+            template = this.archiveContentTemplate.clone();
+            template.children('span')
+                    .addClass('document')
+                    .data('json', digitalResource)
+                    .children('span')
+                    .children('i')
+                    .data('closed-icon', 'fa-caret-right')
+                    .data('opened-icon', 'fa-caret-down')
+                    .siblings('span')
+                    .data('id', digitalResource.resId)
+                    .append($('<i>').addClass('fa fa-file-o'))
+                    .append($('<span>').text(digitalResource.fileName));
+
+            template.find('small, br, .addChildrenArchive').remove();
+
+            BootstrapTree.addNode(parent, template, hidden);
+
+            if (digitalResource.relatedResource) {
+                for(var i=0; i < digitalResource.relatedResource.length; i++) {
+                    Archive.mergeDigitalResourceRow(template, digitalResource.relatedResource[i], hidden);
                 }
             }
         },
@@ -334,11 +345,11 @@
         var caret = $(this);
         if (caret.hasClass('fa-caret-right')) {
             caret.removeClass('fa-caret-right')
-            	 .addClass('fa-caret-down')
-            	 .closest('.dataList')
-            	 .find('.fa-caret-down')
+                 .addClass('fa-caret-down')
+                 .closest('.dataList')
+                 .find('.fa-caret-down')
                  .not(caret)
-            	 .click();
+                 .click();
             Archive.getContent(caret.closest('.archive'));
         } else {
             caret.removeClass('fa-caret-down').addClass('fa-caret-right')
@@ -362,7 +373,7 @@
     })
 
     $('#middleColumn').on('click', '.childrenArchiveSelection', function() {
-    	var child = $(this).find('.childrenArchive:first');
+        var child = $(this).find('.childrenArchive:first');
         var parentArchive = child.closest('.archive');
         var archiveId = child.attr('id');
         Archive.select(parentArchive, child);
@@ -370,7 +381,7 @@
     })
 
     $('#middleColumn').on('click', '.document', function() {
-    	var doc = $(this);
+        var doc = $(this);
         var parentArchive = doc.closest('.archive');
         Archive.select(parentArchive, doc);
         Archive.getResourceInfo(doc);

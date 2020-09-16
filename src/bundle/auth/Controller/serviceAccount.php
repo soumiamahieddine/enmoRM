@@ -92,7 +92,18 @@ class serviceAccount
                     break;
 
                 case $account::SECLEVEL_FUNCADMIN:
-                    $queryAssert[] = "((ownerOrgId='". $account->ownerOrgId."' OR (isAdmin!='TRUE' AND ownerOrgId=null))";
+                    $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                    $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+                    $organizations[] = $organization;
+                    $organizationsIds = [];
+                    foreach ($organizations as $key => $organization) {
+                        $organizationsIds[] = (string) $organization->orgId;
+                    }
+
+                    $queryAssert[] = "((ownerOrgId= ['" .
+                        implode("', '", $organizationsIds) .
+                        "']) OR (isAdmin!=TRUE AND ownerOrgId=null))
+                        ";
                     break;
 
                 case $account::SECLEVEL_USER:
@@ -167,6 +178,9 @@ class serviceAccount
         $account = $this->read($accountToken->accountId);
 
         if ($this->hasSecurityLevel) {
+            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
@@ -191,12 +205,25 @@ class serviceAccount
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
 
+        if (isset($orgId) && !empty($orgId)) {
+            try {
+                $organization = $organizationController->read($orgId);
+            } catch (\Exception $e) {
+                throw new \core\Exception\NotFoundException("Organization unit identified by " . $orgId . " does not exist.");
+            }
+        }
+
         if ($this->hasSecurityLevel) {
+            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization->orgName, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
+                throw new \core\Exception\ForbiddenException("You are not allowed to add user in this organization");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
-        if (!$orgId && !empty($orgId)) {
-            $organization = $organizationController->read($orgId);
+        if (!$serviceAccount->ownerOrgId && !empty($orgId)) {
+            if(!empty($serviceAccount->ownerOrgId) && $serviceAccount->ownerOrgId != $organization->ownerOrgId) {
+                throw new \core\Exception\NotFoundException("Organization identified by " . $serviceAccount->ownerOrgId . " is not the owner organization of the organization identified by " . $orgId);
+            }
             $serviceAccount->ownerOrgId = $organization->ownerOrgId;
         }
 
@@ -204,7 +231,7 @@ class serviceAccount
             try {
                 $organizationController->read($serviceAccount->ownerOrgId);
             } catch (\Exception $e) {
-                throw new \core\Exception\UnauthorizedException($serviceAccount->ownerOrgId . " does not exist.");
+                throw new \core\Exception\NotFoundException("Organization identified by " . $serviceAccount->ownerOrgId . " does not exist.");
             }
         }
 
@@ -250,6 +277,7 @@ class serviceAccount
      */
     public function edit($serviceAccountId)
     {
+
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
         $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
@@ -303,7 +331,11 @@ class serviceAccount
         $organizationController = \laabs::newController("organization/organization");
         $accountToken = \laabs::getToken('AUTH');
         $account = $this->read($accountToken->accountId);
-        if ($this->hasSecurityLevel) {
+
+        if ($account->accountId != $serviceAccount->accountId && $this->hasSecurityLevel) {
+            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+            }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }
 
@@ -370,20 +402,21 @@ class serviceAccount
         // Check userAccount exists
         $currentDate = \laabs::newTimestamp();
 
-        if (!$this->sdoFactory->exists(
-            'auth/account',
-            array('accountId' => $serviceAccountId, "accountType" => "service")
-        )) {
-            \laabs::newController('audit/entry')->add(
-                "auth/serviceTokenGenerationFailure",
-                "auth/account",
-                "",
-                "Connection failure, unknow service ".$serviceAccountId
-            );
-            throw \laabs::newException('auth/authenticationException', 'Connection failure, invalid service name.');
+        try {
+            $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
+        } catch (\Exception $e) {
+            throw new \core\Exception\NotFoundException("Account identified by " . $serviceAccountId . " does not exist.");
         }
 
-        $serviceAccount = $this->sdoFactory->read('auth/account', array('accountId' => $serviceAccountId));
+        $accountToken = \laabs::getToken('AUTH');
+        $ownAccount = $this->read($accountToken->accountId);
+
+        if ($accountToken->accountId != $serviceAccountId && $this->hasSecurityLevel) {
+            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+                throw new \core\Exception\ForbiddenException("You are not allowed to modify this service account");
+            }
+            $this->checkPrivilegesAccess($ownAccount, $serviceAccount);
+        }
 
         $serviceAccount->salt = md5(microtime());
         $serviceAccount->tokenDate = $currentDate;
@@ -762,11 +795,15 @@ class serviceAccount
         $securityLevel = $ownAccount->getSecurityLevel();
         if ($securityLevel == $ownAccount::SECLEVEL_GENADMIN) {
             if (!isset($targetServiceAccount->ownerOrgId) || !$targetServiceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("Only a General administrator can do this action");
+                throw new \core\Exception\ForbiddenException("Only a Functional administrator can do this action");
             }
         } elseif ($securityLevel == $ownAccount::SECLEVEL_FUNCADMIN) {
-            if (!$targetServiceAccount->isAdmin) {
-                throw new \core\Exception\UnauthorizedException("Only a Functional administrator can do this action");
+            if ($targetServiceAccount->isAdmin) {
+                throw new \core\Exception\ForbiddenException("Only a General administrator can do this action");
+            }
+        } elseif ($securityLevel == $ownAccount::SECLEVEL_USER) {
+            if ($ownAccount != $targetServiceAccount) {
+                throw new \core\Exception\ForbiddenException("You are not allowed to do this action");
             }
         }
     }

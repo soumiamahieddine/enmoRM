@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </div>
             <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
                 <form id="searchForm" class="form-horizontal">
+                    <input type="hidden" id="maxResults" value="[?merge maxResults ?]">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -124,7 +125,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             fromDate : $("#searchForm #fromDate").data('datepicker').getFormattedDate('yyyy-mm-dd'),
             toDate : $("#searchForm #toDate").data('datepicker').getFormattedDate('yyyy-mm-dd'),
             processId : $("#searchForm #processId").val(),
-            processName : $("#searchForm #processName").val()
+            processName : $("#searchForm #processName").val(),
+            maxResults: $('#maxResults').val()
         }
 
         ajax($(this), {
@@ -138,10 +140,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 $('#archiveList').append(response);
             }
         });
-    }); 
+    });
 
     $("#contain").on("click",'[data-form-reset]', function () {
-        $("#searchForm").find('input').val('');
+        $("#searchForm").find('input[type=text], input[type=number], input[type=date], select').val('');
         $("#type").prop('selectedIndex', 0);
         $('#archiveList').html('');
     });

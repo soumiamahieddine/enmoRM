@@ -48,16 +48,17 @@ var DataList = {
 								'<option value="20">20</option>'+
 								'<option value="30">30</option>'+
 								'<option value="40">40</option>'+
-						'</select>'+    
+						'</select>'+
 					'</div>',
     sortingBtn      :'<div class="btn-group">'+
                         '<button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">'+
                             '<i class="fa fa-sort-amount-asc"\/>'+
                         '<\/button>'+
-                     '<\/div>',         
+                     '<\/div>',
 	selectAllHTML   :'<h4 class="pull-left" style="width:15px"><i class="selectAll multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
     selectorHTML    :'<h4 class="pull-left" style="width:15px"><i class="multipleSelection fa fa-square-o" style="cursor:pointer"\/><\/h4>',
-    resultNumberHTML:"<h2 class='itemNumber' style='margin:0px 0px 0px 40px'><small><span class='resultNumber' \/><span class='itemsName'\/><\/small><\/h2>",
+    resultNumberHTML:'<h2 class="itemNumber" style="margin:0px 0px 0px 40px"><small><span class="resultNumber"\/><span class="itemsName"\/><\/small><\/h2>',
+    resultNumberHTMLWithTotal:'<h2 class="itemNumber" style="margin:0px 0px 0px 40px"><small><span class="resultNumber"\/><span class="itemsName"\/>&nbsp;/&nbsp;<span class="total"\/>&nbsp;total<\/small><\/h2>',
 
 	init: function(options, element) {
 		var id = Math.round(new Date().getTime() + (Math.random() * 100));
@@ -96,27 +97,31 @@ var DataList = {
         } else {
             footer.append(this.buttonPagination);
         }
-        
+
         if(!options.rowTranslation) {
             options.rowTranslation = "lines";
         }
-        
+
 		header.prepend(this.initRowNumberSelect(options.rowTranslation, options.rowMaxNumber))
            .removeClass('hide')
            .find('.selectAll').on('click', DataList.bind_selectAll).on('click', DataList.bind_selection);
-		   
+
         // Set message for empty list
         if (options.emptyMessage) {
             this.dataList[id].emptyMessage = $(options.emptyMessage);
             list.before(this.dataList[id].emptyMessage.addClass('emptyMessage hide'));
         }
-        
+
         this.dataList[id].resultNumber = "<h4><span class='resultNumber'\/><\/h4>";
         if(!options.itemsName) {
             options.itemsName = ["result", "results"];
         }
 
-        header.append(this.resultNumberHTML);
+        if (options.total >= options.rowMaxNumber) {
+            header.append(this.resultNumberHTMLWithTotal);
+        } else {
+            header.append(this.resultNumberHTML);
+        }
 
         if (options.translation) {
             $.each(options.translation, function(key, value) {
@@ -198,6 +203,7 @@ var DataList = {
             paginationType  : options.paginationType,
             unsearchable    : options.unsearchable,
             itemsName       : options.itemsName,
+            total           : options.total,
             element         : this.dataList[id].element,
             list            : this.dataList[id].list,
             toolbar         : this.dataList[id].toolbar,
@@ -302,8 +308,9 @@ var DataList = {
     },
 
     buildList: function(id, range, filteredDatas) {
-
+        var totalResult = this.dataList[id].total;
         var datas = this.dataList[id].datas;
+
         if(filteredDatas != undefined){
             datas = filteredDatas;
         } else {
@@ -351,9 +358,14 @@ var DataList = {
 	        this.dataList[id].list.append(datas[i].html.data('index', i));
 	    }
 
-        // Set the result number
+        // Set the search result displayed (maxResult in conf)
         this.dataList[id].toolbar.find('.itemNumber .resultNumber').html(datas.length);
-        
+
+        // Set the total result number
+        if (totalResult >= datas.length) {
+            this.dataList[id].toolbar.find('.itemNumber .total').html(totalResult);
+        }
+
 	    this.dataList[id].element.find('.selectAll').removeClass('fa-check-square-o').addClass('fa-square-o');
         this.dataList[id].element.find('.multipleSelection').not('.selectAll').on('click', DataList.bind_selection);
 	},

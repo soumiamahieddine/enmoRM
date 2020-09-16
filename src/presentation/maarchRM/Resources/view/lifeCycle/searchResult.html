@@ -3,7 +3,10 @@
         <div class="panel panel-primary">
             <div class="panel-heading clearfix">
                 <div class="pull-left">
+                    <?merge hasReachMaxResults.not() ?>
                     <h4><?merge events.count() ?> result(s)</h4>
+                    <?merge hasReachMaxResults ?>
+                    <h4><?merge events.count() ?> result(s) on <?merge totalResults ?> total</h4>
                 </div>
             </div>
             <div class="panel-body" style="padding: 0;">

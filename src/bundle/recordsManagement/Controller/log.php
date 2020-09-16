@@ -53,14 +53,15 @@ class log implements archiveDescriptionInterface
 
     /**
      * Get a  search result
-     * @param string $archiveId      The archive identifier
-     * @param string $type           The type
-     * @param date   $fromDate       The date
-     * @param date   $toDate         The date
-     * @param string $processName    The process name
-     * @param string $processId      The process identifier
-     * @param string $sortBy         The process identifier
-     * @param int    $numberOfResult The process identifier
+     *
+     * @param string  $archiveId   The archive identifier
+     * @param string  $type        The type
+     * @param date    $fromDate    The date
+     * @param date    $toDate      The date
+     * @param string  $processName The process name
+     * @param string  $processId   The process identifier
+     * @param string  $sortBy      The process identifier
+     * @param integer $maxResults  The process identifier
      *
      * @return array Array of logs
      */
@@ -72,12 +73,44 @@ class log implements archiveDescriptionInterface
         $processName = null,
         $processId = null,
         $sortBy = ">fromDate",
-        $numberOfResult = null
+        $maxResults = null
     ) {
-        $queryParts = array();
-        $queryParams = array();
+        list($queryParams, $queryString) = $this->queryBuilder($archiveId, $type, $fromDate, $toDate, $processName, $processId);
 
-        //$queryParts[] = $this->auth->getUserAccessRule('recordsManagement/log');
+        $logs = $this->sdoFactory->find(
+            "recordsManagement/log",
+            $queryString,
+            $queryParams,
+            $sortBy,
+            0,
+            $maxResults
+        );
+
+        return $logs;
+    }
+
+    /**
+     * Create query for search
+     *
+     * @param string  $archiveId      The archive identifier
+     * @param string  $type           The type
+     * @param date    $fromDate       The date
+     * @param date    $toDate         The date
+     * @param string  $processName    The process name
+     * @param string  $processId      The process identifier
+     *
+     * @return
+     */
+    protected function queryBuilder(
+        $archiveId = null,
+        $type = null,
+        $fromDate = null,
+        $toDate = null,
+        $processName = null,
+        $processId = null
+    ) {
+        $queryParts = [];
+        $queryParams = [];
 
         if ($archiveId) {
             $queryParams['archiveId'] = $archiveId;
@@ -96,7 +129,6 @@ class log implements archiveDescriptionInterface
         } elseif ($fromDate) {
             $queryParams['fromDate'] = $fromDate->format('Y-m-d').'T00:00:00';
             $queryParts['date'] = "fromDate >= :fromDate";
-
         } elseif ($toDate) {
             $queryParams['toDate'] = $toDate->format('Y-m-d').'T23:59:59';
             $queryParts['date'] = "toDate <= :toDate";
@@ -114,20 +146,38 @@ class log implements archiveDescriptionInterface
 
         $queryString = implode(' AND ', $queryParts);
 
-        if (!$numberOfResult) {
-            $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
-        }
+        return [$queryParams, $queryString];
+    }
 
-        $logs = $this->sdoFactory->find(
+    /**
+     * Count search results
+     *
+     * @param string $archiveId      The archive identifier
+     * @param string $type           The type
+     * @param date   $fromDate       The date
+     * @param date   $toDate         The date
+     * @param string $processName    The process name
+     * @param string $processId      The process identifier
+     *
+     * @return integer
+     */
+    public function countFind(
+        $archiveId = null,
+        $type = null,
+        $fromDate = null,
+        $toDate = null,
+        $processName = null,
+        $processId = null
+    ) {
+        list($queryParams, $queryString) = $this->queryBuilder($archiveId, $type, $fromDate, $toDate, $processName, $processId);
+
+        $count = $this->sdoFactory->count(
             "recordsManagement/log",
             $queryString,
-            $queryParams,
-            $sortBy,
-            0,
-            $numberOfResult
+            $queryParams
         );
 
-        return $logs;
+        return $count;
     }
 
     /**
@@ -138,15 +188,14 @@ class log implements archiveDescriptionInterface
      *
      * @return object Array of description objects
      */
-    public function search($description = null, $text = null, array $args = [])
+    public function search($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
     {
         $archiveController = \laabs::newController('recordsManagement/archive');
         $archives = [];
 
         $sortBy = ">fromDate";
-        $numberOfResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $numberOfResult);
+        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $maxResults);
         foreach ($logs as $log) {
             try {
                 $archive = $archiveController->read($log->archiveId);
@@ -157,6 +206,19 @@ class log implements archiveDescriptionInterface
         }
 
         return $archives;
+    }
+
+    /**
+     * Count log objects
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $args        The search args on archive std properties
+     *
+     * @return object Array of description objects
+     */
+    public function count($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
+    {
+        return count($this->search($description, $text, $args, $checkAccess, $maxResults = null));
     }
 
     /**

@@ -1,12 +1,34 @@
 # CHANGELOG
 
+## Version 2.6.7
+
+- `Fixed` Gestion de l'affichage des ressources et pièces dans l'écran principal.
+
+## Version 2.6.6
+
+- `Fixed` Gestion d'erreur lors du contrôle d'intégrité d'une archive.
+- `Fixed` Gestion de l'algorithme de chiffrement par défaut.
+- `Added` Les administrateurs fonctionnels peuvent désormais créer des comptes de service de type "utilisateur simple".
+- `Added` Ajout du paramètre `timestampService` dans le fichier de configuration, permettant de renseigner le chemin d'un service d'horodatage de test à utiliser pour le chaînage des journaux.
+- `Fixed` Gestion d'erreur lors de la détection de format.
+- `Added` Recherche des logs et archives de journaux par Web Service.
+- `Fixed` Gestion des droits de création des tâches planifiées.
+- `Fixed` Gestion d'erreur lors d'une recherche sur l'écran principal concernant les archives versées en SEDA 1.0.
+- `Added` Affichage des conversions de la plus récente à la plus ancienne lors de la consultation.
+- `Added` Versement d'une archive distante avec transmission du contenu numérique via une URI.
+- `Changed` Performance renforcée sur les contrôles d'intégrité périodiques.
+- `Changed` Renforcement des contrôles lors de la création d'un utilisateur et d'un compte de service.
+- `Added` Le paramètre `maxResults` du fichier de configuration limite également le nombre de résultats retournés par les fonctions de recherche d'archives, de logs et de journaux.
+- `Fixed` Nettoyage de la mémoire temporaire lors d'une erreur au versement de documents.
+- `Fixed` Rétablissement de l'action de déverrouillage d'un utilisateur verrouillé.
+
 ## Version 2.6.5
 
 - `Fixed` Rétablissement du changement de mot de passe pour les nouveaux utilisateurs.
 - `Added` Ajout de la directive LAABS_SESSION_START dans le fichier vhost par défaut empêchant la création d'une session sur le serveur.
 - `Added` Ajout de la directive LAABS_SECURE_COOKIE dans le fichier vhost par défaut permettant d'ajouter l'attribut secure aux cookies dans le cas d'une instance en HTTPS.
 - `Fixed` Retrait de certaines données sensibles dans les données retournées par l'application.
-- `Fixed` Désactivation de l'autocomplete sur les formulaires contenant des mots de passe.
+- `Fixed` Désactivation de l'auto-complétion sur les formulaires contenant des mots de passe.
 
 ## Version 2.6.4
 
