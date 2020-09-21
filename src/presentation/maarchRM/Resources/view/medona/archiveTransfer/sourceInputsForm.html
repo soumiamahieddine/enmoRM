@@ -122,9 +122,9 @@
         return field;
     }
 
-    function setTypeahead(url, key, name) {
+    function setTypeahead(url, inputKey, displayKey, name) {
         var entities = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace(key),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace(displayKey),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {url: url, ttl: '0'},
             limit: 100
@@ -141,13 +141,13 @@
             },
             {
                 name: name + 's',
-                displayKey: key,
+                displayKey: inputKey,
                 templates: {
                     suggestion: function(entity) {
                         var display =
                             "<span>"
                             + "<span style='font-family:Helvetica, sans-serif;'>";
-                        display += entity[key] + "</span></span><br>";
+                        display += entity[displayKey] + "</span></span><br>";
 
                         return display;
                     }
@@ -169,7 +169,7 @@
         });
 
         window.localStorage.clear();
-        setTypeahead('/organizations/todisplay?orgUnit=true&ownerOrg=true', 'registrationNumber', 'organization');
-        setTypeahead('/archivalprofiles/todisplay', 'reference', 'archivalProfile');
+        setTypeahead('/organizations/todisplay?orgUnit=true&ownerOrg=true', 'registrationNumber', 'displayName', 'organization');
+        setTypeahead('/archivalprofiles/todisplay', 'reference', 'name', 'archivalProfile');
     })
 </script>
