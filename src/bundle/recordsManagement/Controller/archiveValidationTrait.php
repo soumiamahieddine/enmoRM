@@ -407,16 +407,8 @@ trait archiveValidationTrait
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
-        $providedMimeType = null;
-        if (isset($digitalResource->mimetype)) {
-            $providedMimeType = $digitalResource->mimetype;
-        }
         $finfo = new \finfo();
-        $mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
-        $digitalResource->mimetype = $mimetype;
-        if (!is_null($providedMimeType) && $digitalResource->mimetype != $providedMimeType) {
-            throw new \core\Exception\BadRequestException("Invalid mimetype for %s", 404, null, [$digitalResource->fileName]);
-        }
+        $digitalResource->mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
 
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {
