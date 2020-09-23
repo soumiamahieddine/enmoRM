@@ -914,6 +914,7 @@ input:invalid {
                 async       : false,
                 success     : function (response) {
                     Metadata.archive = response;
+                    Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
                 },
                 error       : function (response) {
                     gritter.show(response.responseText, false);
@@ -924,7 +925,6 @@ input:invalid {
             $("#syncImport").addClass("hide");
             $("#asyncImport").addClass("hide");
             $("#managementMetadataDiv").addClass("hide");
-            Metadata.checkAndFill(Metadata.archive, $("#importPanel"));
         },
 
         checkAndFill : function(data, target) {
@@ -956,8 +956,6 @@ input:invalid {
                     if (property == "description") {
                         if (value) {
                             $.each(value, function(descProperty, descValue) {
-                                console.log(target.find("[name='"+descProperty+"']"));
-                                console.log(target.find("[name='"+descProperty+"']").first());
                                 if(target.find("[name='"+descProperty+"']").first().length > 0) {
                                     if ($.isPlainObject(descValue)){
                                         objectTarget = $("#archivalProfileFields").children("[name='" + descProperty + "']").first();
