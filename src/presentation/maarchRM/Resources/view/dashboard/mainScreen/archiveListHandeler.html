@@ -285,12 +285,12 @@
                 $(smalls[2]).text(' ' + archive.originatingDate);
             }
 
-            BootstrapTree.addNode(parent, template, false);    
+            BootstrapTree.addNode(parent, template, false);
         },
 
         sortArchives: function(parent){
             var list = parent.find("ul").children('.child');
-            if (list.size() > 1){
+            if (list.length > 1){
                 list.sort(function(a, b){
                     return  $(a).data("depositdate") > $(b).data("depositdate");
                 }).each(function(){
