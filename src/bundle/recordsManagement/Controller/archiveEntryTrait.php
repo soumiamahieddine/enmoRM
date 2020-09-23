@@ -202,7 +202,7 @@ trait archiveEntryTrait
             $this->extractDir($archiveDirectory, $archive);
         } catch (\Exception $exception) {
             $this->deleteZipContainer($archive, $zipResource);
-            
+
             throw $exception;
         }
 
@@ -363,6 +363,7 @@ trait archiveEntryTrait
         }
 
         foreach ($archives as $archive) {
+            $archive = \laabs::castMessage($archive, 'recordsManagement/archive');
             foreach ($archive->digitalResources as $digitalResource) {
                 $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
 
