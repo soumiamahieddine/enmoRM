@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label>Registration number <span style="color: red">*</span></label>
                 <input type="text" class="form-control" name="registrationNumber" placeholder="Registration number">
-                <small class="help-block">You must use only letters and the special character '_'</small>
+                <small class="help-block">You must use only letters, numbers and the special character '_'</small>
             </div>
             <div class="form-group" id="orgForm_enabled" style="display: none">
                 <label>Enabled</label>
@@ -260,7 +260,7 @@
 
             var organization = OrganizationForm.serialize();
 
-            var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+            var pattern = new RegExp("^[A-Za-z0-9_]*[^A-Za-z0-9]$");
 
             if(!pattern.test(organization.registrationNumber)) {
                 return;
