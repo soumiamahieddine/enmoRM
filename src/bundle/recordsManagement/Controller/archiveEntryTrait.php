@@ -384,6 +384,7 @@ trait archiveEntryTrait
             return;
         }
         foreach ($archive->digitalResources as $resource) {
+            //Hash verification
             if ((isset($resource->hash) && !is_null($resource->hash))
                 && (isset($resource->hashAlgorithm) && !is_null($resource->hashAlgorithm))
             ) {
@@ -396,6 +397,18 @@ trait archiveEntryTrait
                 continue;
             } else {
                 throw \laabs::newException("recordsManagement/missingHashException", "Missing hash.");
+            }
+
+            //hash modification if hash algorithm different from² conf value
+            $confHashAlgorithm = 'sha256';
+            if (isset(\laabs::configuration('recordsManagement')['hashAlgorithm']) && !is_null(\laabs::configuration('recordsManagement')['hashAlgorithm'])) {
+                $confHashAlgorithm = \laabs::configuration('recordsManagement')['hashAlgorithm'];
+            }
+
+            if ($resource->hashAlgorithm != $confHashAlgorithm) {
+                $newHash= hash_stream($confHashAlgorithm, $resource->gethandler());
+                $resource->hash = $newHash;
+                $resource->hashAlgorithm = $confHashAlgorithm;
             }
         }
     }

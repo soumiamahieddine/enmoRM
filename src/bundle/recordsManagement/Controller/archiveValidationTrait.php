@@ -407,12 +407,9 @@ trait archiveValidationTrait
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
-        if (!isset($digitalResource->mimetype)) {
-            $finfo = new \finfo();
-            $mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
-            $digitalResource->mimetype = $mimetype;
-        }
-        
+        $finfo = new \finfo();
+        $digitalResource->mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
+
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {
             $format = $this->formatController->identifyFormat($filename);
