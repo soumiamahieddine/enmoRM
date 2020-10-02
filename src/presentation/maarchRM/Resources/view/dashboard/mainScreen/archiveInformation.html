@@ -586,11 +586,19 @@
     $('#editMetadata').on('click', function(){
         $("#documentForm").hide();
         var profile = $(this).parent().text().trim();
-        var profileMetadata = $("#folderToolbarBtn").find(".newArchive").filter(function() {
-            if ($(this).text().trim() === profile) {
-                return $(this);
+        var archivalProfiles = JSON.parse($('#searchByProfile').attr('data-archivalProfiles'));
+        var profileMetadata = "";
+        for (key in archivalProfiles) {
+            if (!archivalProfiles.hasOwnProperty(key)) continue;
+            var obj = archivalProfiles[key];
+            for (var prop in obj) {
+                if (!obj.hasOwnProperty(prop)) continue;
+                if ((prop === 'name') && (obj[prop] === profile)) {
+                    profileMetadata = obj;
+                }
             }
-        })
+        };
+
         originatingDateField = $("#archiveForm").find('[name="originatingDate"]');
         originatingDateField.datepicker('setDate', $('#archiveInformation').find('.originatingDate').val());
         archiveId = $(".archiveInformationId").val();
