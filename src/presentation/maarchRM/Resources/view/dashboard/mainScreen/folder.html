@@ -460,19 +460,7 @@
     $("#folderPanel").on('click', '.newArchive', function() {
         Metadata.isModification = false;
         var profile = $(this).parent().text().trim();
-        var archivalProfiles = JSON.parse($('#searchByProfile').attr('data-archivalProfiles'));
-        var profileMetadata = "";
-        for (key in archivalProfiles) {
-            if (!archivalProfiles.hasOwnProperty(key)) continue;
-            var obj = archivalProfiles[key];
-            for (var prop in obj) {
-                if (!obj.hasOwnProperty(prop)) continue;
-                if ((prop === 'name') && (obj[prop] === profile)) {
-                    profileMetadata = obj;
-                }
-            }
-        };
-
+        var profileMetadata = FulltextSearchForm.loadArchivalProfile(profile);
         NewArchive.loadImportForm(profileMetadata);
     });
 
