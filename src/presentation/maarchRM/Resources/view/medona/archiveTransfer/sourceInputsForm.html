@@ -19,27 +19,26 @@
                 class="form-control [?merge .['type'].in('organization', 'archivalProfile').then(inputs.current().['type'], '') ?]"
                 name="[?merge .['name'] ?]"
                 required="[?merge .['required'].bool().then('true', 'false') ?]"
-                data-default="[?merge .['default'] ?]"
+                placeholder="[?merge .['default'] ?]"
+                value="[?merge .['default'] ?]"
                 data-external="[?merge .['type'].ifeq('external').then(inputs.current().['ref'], '') ?]"/>
             <?merge .['default'].bool() ?>
-            <span><span data-translate-catalog="medona/messages">Default</span> : <?merge .['default'] ?></span>
         </div>
 
         <?merge .['type'].ifeq('number') ?>
         <div class="form-group col-sm-8">
-            <input type="number" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]"/>
+            <input type="number" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" placeholder="[?merge .['default'] ?]" value="[?merge .['default'] ?]"/>
             <?merge .['default'].bool() ?>
-            <span><span data-translate-catalog="medona/messages">Default</span> : <?merge .['default'] ?></span>
         </div>
 
         <?merge .['type'].ifeq('boolean') ?>
         <div class="form-group col-sm-8">
-            <input type="checkbox" class="form-check-input" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]"/>
+            <input type="checkbox" class="form-check-input" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" checked="[?merge .['default'].bool().then('true', '') ?]"/>
         </div>
 
         <?merge .['type'].ifeq('enum') ?>
         <div class="form-group col-sm-8">
-            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]" value="[?merge .['default'] ?]">
+            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" value="[?merge .['default'] ?]">
                 <?merge .['enumNames'] $enumNames ?>
                 <?merge $enumNames ?>
                 <option value="[?merge . ?]" selected="[?merge inputs.current().['default'].ifeq($enumNames.current()).then('true', '') ?]"><?merge . ?></option>
