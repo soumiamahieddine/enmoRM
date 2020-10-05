@@ -31,9 +31,10 @@
 
         <?merge .['type'].ifeq('enum') ?>
         <div class="form-group col-sm-8">
-            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]">
-                <?merge .['enumNames'] ?>
-                <option value="[?merge . ?]"><?merge . ?></option>
+            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" data-default="[?merge .['default'] ?]" value="[?merge .['default'] ?]">
+                <?merge .['enumNames'] $enumNames ?>
+                <?merge $enumNames ?>
+                <option value="[?merge . ?]" selected="[?merge inputs.current().['default'].ifeq($enumNames.current()).then('true', '') ?]"><?merge . ?></option>
             </select>
         </div>
 
@@ -161,7 +162,11 @@
         });
 
         window.localStorage.clear();
-        setTypeahead('/organizations/todisplay?orgUnit=true&ownerOrg=true', 'registrationNumber', 'displayName', 'organization');
-        setTypeahead('/archivalprofiles/todisplay', 'reference', 'name', 'archivalProfile');
+        if ($('.organization').length > 0) {
+            setTypeahead('/organizations/todisplay?orgUnit=true&ownerOrg=true', 'registrationNumber', 'displayName', 'organization');
+        }
+        if ($('.archivalProfile').length > 0) {
+            setTypeahead('/archivalprofiles/todisplay', 'reference', 'name', 'archivalProfile');
+        }
     })
 </script>
