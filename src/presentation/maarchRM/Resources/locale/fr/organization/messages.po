@@ -87,6 +87,9 @@ msgstr "Forme juridique"
 msgid "Business type"
 msgstr "Nature de l'activité"
 
+msgid "History"
+msgstr "Historique du service"
+
 msgid "Position set to default"
 msgstr "Position mise par défaut"
 

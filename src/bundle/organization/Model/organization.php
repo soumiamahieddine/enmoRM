@@ -19,10 +19,10 @@
  */
 namespace bundle\organization\Model;
 /**
- * Model of organization 
+ * Model of organization
  *
  * @package Organization
- * @author  Prosper DE LAURE <prosper.delaure@maarch.org> 
+ * @author  Prosper DE LAURE <prosper.delaure@maarch.org>
  *
  * @pkey [orgId]
  * @fkey [parentOrgId] organization/organization [orgId]
@@ -155,4 +155,10 @@ class organization
      */
     public $enabled = true;
 
+     /**
+     * Service historic information
+     *
+     * @var string
+     */
+    public $history;
 }
