@@ -2,11 +2,6 @@
     <!-- Used on archive detail modal -->
     <div>
         <table id="archiveDescriptionTable" class="table table-condensed">
-            <?merge archive.archiverArchiveId.bool() ?>
-            <tr class="archiverArchiveId">
-                <td><strong>Archival archive identifier</strong></td>
-                <td><?merge archive.archiverArchiveId ?></strong></td>
-            </tr>
             <?merge archive.archiveName.bool() ?>
             <tr class="archiveName">
                 <td><strong>Name</strong></td>
