@@ -934,7 +934,7 @@ class ArchiveTransfer extends abstractMessage
             $originatorOrgs = [];
             $organizationController = \laabs::newController("organization/organization");
 
-            $filePlanPosition = $this->archiveController->resolveStoragePath(get_object_vars($message));
+            $storagePath = $this->archiveController->resolveStoragePath(get_object_vars($message));
 
             foreach ($archives as $archive) {
                 if (!isset($originatorOrgs[$archive->originatorOrgRegNumber])) {
@@ -962,8 +962,10 @@ class ArchiveTransfer extends abstractMessage
                     $this->archiveController->completeServiceLevel($archive);
                 }
 
+                $this->archiveController->manageFileplanPosition($archive);
+
                 $this->archiveController->convertArchive($archive);
-                $this->archiveController->deposit($archive, $filePlanPosition);
+                $this->archiveController->deposit($archive, $storagePath);
 
                 $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
                 $unitIdentifier->messageId = $message->messageId;
