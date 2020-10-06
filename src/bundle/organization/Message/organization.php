@@ -177,6 +177,13 @@ class organization
     public $enabled = true;
 
     /**
+     * Service historic
+     *
+     * @var string
+     */
+    public $history;
+
+    /**
      * Get string of object
      * @return string
      */
