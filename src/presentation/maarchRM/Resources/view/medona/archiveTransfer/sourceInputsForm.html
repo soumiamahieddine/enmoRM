@@ -21,18 +21,16 @@
                 placeholder="[?merge .['default'] ?]"
                 value="[?merge .['default'] ?]"
                 data-external="[?merge .['type'].ifeq('external').then(inputs.current().['ref'], '') ?]"/>
-            <?merge .['default'].bool() ?>
         </div>
 
         <?merge .['type'].ifeq('number') ?>
         <div class="form-group col-sm-8">
             <input type="number" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" placeholder="[?merge .['default'] ?]" value="[?merge .['default'] ?]"/>
-            <?merge .['default'].bool() ?>
         </div>
 
         <?merge .['type'].ifeq('boolean') ?>
-        <div class="form-group col-sm-8">
-            <input type="checkbox" class="form-check-input" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" checked="[?merge .['default'].bool().then('true', '') ?]"/>
+        <div class="form-group col-sm-8 checkbox">
+            <input type="checkbox" class="form-check-input" data-toggle="toggle" data-on="Oui" data-off="Non" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" checked="[?merge .['default'].bool().then('true', '') ?]"/>
         </div>
 
         <?merge .['type'].ifeq('enum') ?>
@@ -175,4 +173,21 @@
             setTypeahead('/archivalprofiles/todisplay', 'reference', 'name', 'archivalProfile');
         }
     })
+
+    $('[type="checkbox"]').bootstrapToggle({
+        on: 'Oui',
+        off: 'Non'
+    });
+
+    $('[type="checkbox"]').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if ($(this).is(':checked')) {
+            $(this).bootstrapToggle('off');
+            //$('#partialRetentionRule label').addClass('btn-info').removeClass('btn-default');
+        } else {
+            $(this).bootstrapToggle('on');
+            //$('#partialRetentionRule label').addClass('btn-default').removeClass('btn-info');
+        }
+    });
 </script>
