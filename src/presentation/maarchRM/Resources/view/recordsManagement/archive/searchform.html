@@ -63,6 +63,16 @@
         </div>
     </div>
     <div class="col-md-12">
+        <!-- ARCHIVAL AGENCY ARCHIVE ID -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Archival archive identifier</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="archival_archiveIdentifier" name="archiverArchiveId"
+                    placeholder="Archival archive identifier" />
+                </div>
+            </div>
+        </div>
         <!-- ARCHIVAL PROFILE -->
         <div class="col-md-4">
             <div class="form-group">
@@ -102,6 +112,8 @@
                 </div> -->
             </div>
         </div>
+    </div>
+    <div class="col-md-12">
         <!-- PRODUCER ORGANIZATION -->
         <div class="col-md-4">
             <div class="form-group">
@@ -112,8 +124,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
         <!-- DEPOSIT DATE -->
         <div class="col-md-4">
             <div class="form-group">
@@ -143,9 +153,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-12">
         <!-- ARCHIVAL AGREEMENT -->
+        <?merge isPublicArchive.bool() ?>
         <div class="col-md-4">
-            <?merge isPublicArchive.bool() ?>
             <div class="form-group">
                 <label class="col-sm-4 control-label">Accord de versement</label>
                 <div class="col-sm-8">
@@ -157,8 +169,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
         <!-- STATUS -->
         <div class="col-md-4">
             <div class="form-group">
@@ -186,8 +196,8 @@
             </div>
         </div>
         <!-- DEPOSITOR -->
+        <?merge isPublicArchive.bool() ?>
         <div class="col-md-4">
-            <?merge isPublicArchive.bool() ?>
             <div class="form-group">
                 <label class="col-sm-4 control-label">Service versant</label>
                 <div class="col-sm-8">
@@ -202,8 +212,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
         <!-- OBJECT TYPE -->
         <div class="col-md-4">
             <div class="form-group">
@@ -223,8 +231,8 @@
             </div>
         </div>
         <!-- COMMUNICABLE -->
+        <?merge isPublicArchive.bool() ?>
         <div class="col-md-4">
-            <?merge isPublicArchive.bool() ?>
             <div class="form-group">
                 <label class="col-sm-4 control-label">Communicable</label>
                 <div class="btn-group col-sm-8" data-toggle="buttons">
@@ -237,16 +245,6 @@
                     <label class="btn btn-default col-sm-4" title="Oui">
                         <input type="radio" name="isCommunicable" value="1"/> Oui
                     </label>
-                </div>
-            </div>
-        </div>
-        <!-- ARCHIVAL AGENCY ARCHIVE ID -->
-        <div class="col-md-4">
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Archival archive identifier</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="archival_archiveIdentifier" name="archiverArchiveId"
-                    placeholder="Archival archive identifier" />
                 </div>
             </div>
         </div>
