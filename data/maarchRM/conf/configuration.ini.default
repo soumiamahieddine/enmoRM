@@ -189,6 +189,12 @@ packageSchemas = "{
 }"
 
 ;if package are comming from an external source
+;connector params properties:
+;   label:      Display name of the property
+;   source:     'input' | 'param'
+;   required:   true or false (default: false)
+;   type:       'file' | 'text' | 'number' | 'boolean' | 'enum' | 'organization' | 'archivalProfile' (default: 'text')
+;   enumNames:  (only if type is 'enum'), array of texts or numbers
 packageConnectors = "{
     'mades' : {
         'label' : 'Mades message with attachment',

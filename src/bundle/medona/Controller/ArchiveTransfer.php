@@ -110,7 +110,6 @@ class ArchiveTransfer extends abstractMessage
 
     protected function checkParamsConstraints($confParams, $params)
     {
-        $this->translator->setCatalog("medona/messages");
         foreach ($params as $name => $param) {
             if (!isset($confParams[$name])) {
                 $this->sendError("404", "The sent parameters don't match the configuration parameters");
@@ -122,20 +121,29 @@ class ArchiveTransfer extends abstractMessage
                 $confParam["type"] = "text";
             }
 
+            if (isset($confParam["default"]) && $confParam["type"] != "file" && $param == '') {
+                $params[$name] = $confParam["default"];
+            }
+
+            if (isset($confParam["required"]) && $confParam["required"] && $param == '') {
+                $this->sendError("404", "The parameter $name is required");
+                continue;
+            }
+
             switch ($confParam["type"]) {
                 case 'number':
                     if (!is_numeric($param)) {
-                        $this->sendError("405", $this->translator->getText("The parameter") . " '$name' " . $this->translator->getText("needs to be a number"));
+                        $this->sendError("405", "The parameter $name needs to be a number");
                     }
                     break;
                 case 'boolean':
                     if ($param !== true && $param !== false) {
-                        $this->sendError("405", $this->translator->getText("The parameter") . " '$name' " . $this->translator->getText("needs to be a boolean"));
+                        $this->sendError("405", "The parameter $name needs to be a boolean");
                     }
                     break;
                 case 'enum':
                     if (!in_array($param, $confParam["enumNames"])) {
-                        $this->sendError("405", $this->translator->getText("The parameter") . " '$name' " . $this->translator->getText("is not in the list"));
+                        $this->sendError("405", "The parameter $name is not in the given list");
                     }
                     break;
                 case 'organization':
@@ -144,10 +152,6 @@ class ArchiveTransfer extends abstractMessage
                 case 'archivalProfile':
                     $this->archivalProfileController->getByReference($param);
                     break;
-            }
-
-            if ($this->errors == 0 && isset($confParam["default"]) && $confParam["type"] != "file" && $param == '') {
-                $params[$name] = $confParam["default"];
             }
         }
         if (count($this->errors) > 0) {

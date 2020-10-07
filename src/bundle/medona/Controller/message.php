@@ -83,13 +83,11 @@ class message
 
     protected $packageSchemas = [];
     protected $packageConnectors = [];
-    protected $translator;
 
     /**
      * Constructor
      * @param string                  $messageDirectory  The message directory
      * @param \dependency\sdo\Factory $sdoFactory        The dependency Sdo Factory
-     * @param \dependency\localisation\TranslatorInterface $translator The localisation dependency
      * @param bool                    $parentsDerogation See the child org messages
      * @param array                   $removeMessageTask Tasks to remove medona messages directories
      * @param integer                 $autoValidateSize  Min size for auto-validation
@@ -98,7 +96,6 @@ class message
     public function __construct(
         $messageDirectory,
         \dependency\sdo\Factory $sdoFactory,
-        \dependency\localisation\TranslatorInterface $translator,
         $parentsDerogation = true,
         $removeMessageTask = null,
         $autoValidateSize = 0,
@@ -136,7 +133,6 @@ class message
 
         $this->packageSchemas = $packageSchemas;
         $this->packageConnectors = $packageConnectors;
-        $this->translator = $translator;
     }
 
     /**
