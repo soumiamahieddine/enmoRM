@@ -53,17 +53,19 @@
                         </div>
                     </div>
                     <br/>
-                    <div id="userInputs">
-                    </div>
-                    <br/>
-                    <br/>
-                    <div class="row">
-                        <div class="pull-right ">
-                            <!-- input type="checkbox" name="messageImport_schema" id="messageImport_schema" data-on="Seda 1 " data-off="Seda 2" data-toggle="toggle" data-onstyle="success" data-offstyle="primary"-->
-                            <button class="btn btn-warning" id="messageImport_cancel" title="Cancel"><i class='fa fa-times'>&nbsp;</i> Cancel</button>
-                            <button class="btn btn-success" id="messageImport_submit" title="Import"><i class='fa fa-level-down'>&nbsp;</i> Import</button>
+                    <form id="messageImport_form">
+                        <div id="userInputs">
                         </div>
-                    </div>
+                        <br/>
+                        <br/>
+                        <div class="row">
+                            <div class="pull-right ">
+                                <!-- input type="checkbox" name="messageImport_schema" id="messageImport_schema" data-on="Seda 1 " data-off="Seda 2" data-toggle="toggle" data-onstyle="success" data-offstyle="primary"-->
+                                <button class="btn btn-warning" id="messageImport_cancel" title="Cancel"><i class='fa fa-times'>&nbsp;</i> Cancel</button>
+                                <button class="btn btn-success" type="submit" id="messageImport_submit" title="Import"><i class='fa fa-level-down'>&nbsp;</i> Import</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <br>
                 <div id="messageImport_erreur" class="row hide well text-danger">
@@ -160,8 +162,22 @@ var zipContent = "";
         $('#userInputs').empty();
     })
 
+    function isMissingRequiredParams() {
+        if ($('input[required]').filter(function() { return $(this).val() == ""; }).length != 0) {
+            return true;
+        }
+        return false;
+    }
+
+    $('#messageImport_form').on('submit', function(e) {
+        e.preventDefault();
+    });
+
     // Submit
     $('#messageImport_submit').on('click', function() {
+        if (isMissingRequiredParams()) {
+            return;
+        }
         let source = $("#messageImport_source").val();
         if (source != "" && source !== null) {
             var url = '/transfer/source';
@@ -385,11 +401,7 @@ var zipContent = "";
                     break;
                 case 'text':
                 default:
-                    let value = $(this).val();
-                    let defaultVal = $(this).data("default");
-                    if (defaultVal && value == "") {
-                        value = defaultVal;
-                    }
+                    value = $(this).val();
                     jsonObject.params[name] = value;
             }
         });
