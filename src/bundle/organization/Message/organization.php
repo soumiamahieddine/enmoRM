@@ -177,7 +177,7 @@ class organization
     public $enabled = true;
 
     /**
-     * Service historic
+     * Service history
      *
      * @var string
      */
