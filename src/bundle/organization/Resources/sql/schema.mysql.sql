@@ -41,9 +41,10 @@ CREATE TABLE `organization.organization`
   `taxIdentifier` varchar(255),
   `parentOrgId` varchar(255),
   `ownerOrgId` varchar(255),
+  `history` text,
 
   `isOrgUnit` boolean,
-  
+
   PRIMARY KEY (`orgId`),
   UNIQUE (`registrationNumber`),
   UNIQUE (`taxIdentifier`),
