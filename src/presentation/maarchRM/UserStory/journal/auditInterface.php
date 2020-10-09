@@ -66,4 +66,11 @@ interface auditInterface
      */
     public function readUserTodisplay();
 
+    /**
+     * List all services to display
+     *
+     * @uses auth/serviceAccount/readIndex
+     */
+    public function readServiceTodisplay();
+
 }

@@ -67,7 +67,10 @@ class serviceAccount
      */
     public function index($limit = null)
     {
-        return $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
+        $serviceAccounts = $this->sdoFactory->find('auth/account', "accountType='service'", null, null, null, $limit);
+        $serviceAccounts = \laabs::castMessageCollection($serviceAccounts, 'auth/serviceAccountIndex');
+
+        return $serviceAccounts;
     }
 
     /**
