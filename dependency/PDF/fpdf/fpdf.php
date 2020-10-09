@@ -15,6 +15,7 @@ protected $page;               // current page number
 protected $n;                  // current object number
 protected $offsets;            // array of object offsets
 protected $buffer;             // buffer holding in-memory PDF
+protected $fp;                 // buffer holding in-memory PDF
 protected $pages;              // array containing pages
 protected $state;              // current document state
 protected $compress;           // compression flag
@@ -79,7 +80,8 @@ function __construct($orientation='P', $unit='mm', $size='A4')
 	$this->state = 0;
 	$this->page = 0;
 	$this->n = 2;
-	$this->buffer = '';
+	//$this->buffer = '';
+	$this->buffer = fopen('php://temp', 'w+');
 	$this->pages = array();
 	$this->PageInfo = array();
 	$this->fonts = array();
@@ -999,6 +1001,7 @@ function Output($dest='', $name='', $isUTF8=false)
 		$dest = 'I';
 	if($name=='')
 		$name = 'doc.pdf';
+	rewind($this->fp);
 	switch(strtoupper($dest))
 	{
 		case 'I':
@@ -1012,7 +1015,8 @@ function Output($dest='', $name='', $isUTF8=false)
 				header('Cache-Control: private, max-age=0, must-revalidate');
 				header('Pragma: public');
 			}
-			echo $this->buffer;
+			//echo $this->buffer;
+			echo stream_get_contents($this->buffer);
 			break;
 		case 'D':
 			// Download file
@@ -1021,16 +1025,23 @@ function Output($dest='', $name='', $isUTF8=false)
 			header('Content-Disposition: attachment; '.$this->_httpencode('filename',$name,$isUTF8));
 			header('Cache-Control: private, max-age=0, must-revalidate');
 			header('Pragma: public');
-			echo $this->buffer;
+			//echo $this->buffer;
+			echo stream_get_contents($this->buffer);
 			break;
 		case 'F':
 			// Save to local file
-			if(!file_put_contents($name,$this->buffer))
+		    
+		    //if(!file_put_contents($name, $this->buffer))
+			//	$this->Error('Unable to create output file: '.$name);
+			$fp = fopen($name, 'w');
+			if(!stream_copy_to_stream($this->buffer, $fp))
 				$this->Error('Unable to create output file: '.$name);
+			fclose($fp);
 			break;
 		case 'S':
 			// Return as a string
-			return $this->buffer;
+			//return $this->buffer;
+			return stream_get_contents($this->buffer);
 		default:
 			$this->Error('Incorrect output destination: '.$dest);
 	}
@@ -1461,12 +1472,14 @@ public function _out($s)
 
 protected function _put($s)
 {
-	$this->buffer .= $s."\n";
+	//$this->buffer .= $s."\n";
+	fwrite($this->buffer, $s."\n");
 }
 
 protected function _getoffset()
 {
-	return strlen($this->buffer);
+	//return strlen($this->buffer);
+	return ftell($this->buffer);
 }
 
 protected function _newobj($n=null)

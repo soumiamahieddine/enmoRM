@@ -139,9 +139,11 @@ class Fpdi extends FpdfTpl
     protected function _put($s, $newLine = true)
     {
         if ($newLine) {
-            $this->buffer .= $s . "\n";
+            //$this->buffer .= $s . "\n";
+            fwrite($this->buffer, $s . "\n");
         } else {
-            $this->buffer .= $s;
+            //$this->buffer .= $s;
+            fwrite($this->buffer, $s);
         }
     }
 }

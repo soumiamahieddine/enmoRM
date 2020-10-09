@@ -163,11 +163,21 @@ class StreamReader
      */
     public function getBuffer($atOffset = true)
     {
+        $end = ftell($this->buffer);
+
         if (false === $atOffset) {
-            return $this->buffer;
+            //return $this->buffer;
+            rewind($this->buffer);
+            $string = stream_get_contents($this->buffer);
+            fseek($this->buffer, $end);
+
+            return (string) $string;
         }
 
-        $string = substr($this->buffer, $this->offset);
+        //$string = substr($this->buffer, $this->offset);
+        fseek($this->buffer, $this->offset);
+        $string = stream_get_contents($this->buffer);
+        fseek($this->buffer, $end);
 
         return (string) $string;
     }
@@ -191,7 +201,13 @@ class StreamReader
             return false;
         }
 
-        return $this->buffer[$position];
+        //return $this->buffer[$position];
+        $end = ftell($this->buffer);
+        fseek($this->buffer, $position);
+        $byte = fread($this->buffer, 1);
+        fseek($this->buffer, $end);
+
+        return $byte;
     }
 
     /**
@@ -226,7 +242,13 @@ class StreamReader
         }
 
         $this->offset = $offset + 1;
-        return $this->buffer[$offset];
+        //return $byte;
+        $end = ftell($this->buffer);
+        fseek($this->buffer, $offset);
+        $byte = fread($this->buffer, 1);
+        fseek($this->buffer, $end);
+
+        return $byte;
     }
 
     /**
@@ -261,7 +283,12 @@ class StreamReader
             return false;
         }
 
-        $bytes = substr($this->buffer, $offset, $length);
+        //$bytes = substr($this->buffer, $offset, $length);
+        $end = ftell($this->buffer);
+        fseek($this->buffer, $offset);
+        $bytes = fread($this->buffer, $length);
+        fseek($this->buffer, $end);
+        
         $this->offset = $offset + $length;
 
         return $bytes;
@@ -403,8 +430,15 @@ class StreamReader
         fseek($this->stream, $pos);
 
         $this->position = $pos;
-        $this->buffer = $length > 0 ? fread($this->stream, $length) : '';
-        $this->bufferLength = strlen($this->buffer);
+        //$this->buffer = $length > 0 ? fread($this->stream, $length) : '';
+        //$this->bufferLength = strlen($this->buffer);
+        fclose($this->buffer);
+        $this->buffer = fopen('php://temp', 'w+');
+        if ($length > 0) {
+            $string = fread($this->stream, $length);
+            $this->bufferLength = fwrite($this->buffer, $string);
+        }
+        
         $this->offset = 0;
 
         // If a stream wrapper is in use it is possible that
@@ -412,8 +446,12 @@ class StreamReader
         // increaseLength()-method to correct that behavior
         if ($this->bufferLength < $length && $this->increaseLength($length - $this->bufferLength)) {
             // increaseLength parameter is $minLength, so cut to have only the required bytes in the buffer
-            $this->buffer = substr($this->buffer, 0, $length);
-            $this->bufferLength = strlen($this->buffer);
+            //$this->buffer = substr($this->buffer, 0, $length);
+            //$this->bufferLength = strlen($this->buffer);
+            $newBuffer = fopen('php://temp', 'w+');
+            stream_copy_to_stream($this->buffer, $newBuffer, $length);
+            $this->buffer = $newBuffer;
+            $this->bufferLength = $length;
         }
     }
 
@@ -452,8 +490,10 @@ class StreamReader
 
         $newLength = $this->bufferLength + $length;
         do {
-            $this->buffer .= fread($this->stream, $newLength - $this->bufferLength);
-            $this->bufferLength = strlen($this->buffer);
+            //$this->buffer .= fread($this->stream, $newLength - $this->bufferLength);
+            $addedLength = fwrite($this->buffer, fread($this->stream, $newLength - $this->bufferLength));
+            //$this->bufferLength = strlen($this->buffer);
+            $this->bufferLength += $addedLength;
         } while (($this->bufferLength !== $newLength) && !feof($this->stream));
 
         return true;
