@@ -453,14 +453,15 @@
     NewArchive = {
         loadImportForm: function(e) {
             $('#folderContents').addClass('hide');
-
-            trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
+            trigger('newArchiveForm.recordsManagement', [e, ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, $("#folderToolbarBtn").find(".newArchive").data('parent-archive-id'), $("#folderToolbarBtn").find(".newArchive").data('parent-archive-name')]);
         }
     }
 
     $("#folderPanel").on('click', '.newArchive', function() {
         Metadata.isModification = false;
-        NewArchive.loadImportForm($(this));
+        var profile = $(this).parent().text().trim();
+        var profileMetadata = FulltextSearchForm.loadArchivalProfile(profile);
+        NewArchive.loadImportForm(profileMetadata);
     });
 
     // Actions on list
