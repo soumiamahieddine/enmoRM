@@ -451,9 +451,9 @@
     }
 
     NewArchive = {
-        loadImportForm: function(e) {
+        loadImportForm: function(e, profileMetadata) {
             $('#folderContents').addClass('hide');
-            trigger('newArchiveForm.recordsManagement', [e, ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, $("#folderToolbarBtn").find(".newArchive").data('parent-archive-id'), $("#folderToolbarBtn").find(".newArchive").data('parent-archive-name')]);
+            trigger('newArchiveForm.recordsManagement', [profileMetadata, ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
     }
 
@@ -461,7 +461,7 @@
         Metadata.isModification = false;
         var profile = $(this).parent().text().trim();
         var profileMetadata = FulltextSearchForm.loadArchivalProfile(profile);
-        NewArchive.loadImportForm(profileMetadata);
+        NewArchive.loadImportForm($(this), profileMetadata);
     });
 
     // Actions on list
