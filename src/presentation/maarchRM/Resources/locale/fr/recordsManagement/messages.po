@@ -178,8 +178,8 @@ msgstr "Cote"
 msgid "Originator archive identifier"
 msgstr "Identifiant"
 
-msgid "Archival archive identifier"
-msgstr "Identifiant d'archive"
+msgid "Archiver archive identifier"
+msgstr "Cote du Service d'Archives"
 
 msgid "Archive name"
 msgstr "Nom"
