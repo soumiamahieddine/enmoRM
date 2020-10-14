@@ -592,7 +592,7 @@
         originatingDateField.datepicker('setDate', $('#archiveInformation').find('.originatingDate').val());
         archiveId = $(".archiveInformationId").val();
         Metadata.isModification = true;
-        NewArchive.loadImportForm(profileMetadata);
+        NewArchive.loadImportForm($(this), profileMetadata);
         Metadata.fillInMetadata(archiveId);
     });
 
