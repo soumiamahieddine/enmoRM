@@ -17,7 +17,7 @@
             <input type="text"
                 class="form-control [?merge .['type'].in('organization', 'archivalProfile').then(inputs.current().['type'], '') ?]"
                 name="[?merge .['name'] ?]"
-                required="[?merge .['required'].bool().then('true', 'false') ?]"
+                required="[?merge .['required'].bool().then('true', '') ?]"
                 placeholder="[?merge .['default'] ?]"
                 value="[?merge .['default'] ?]"
                 data-external="[?merge .['type'].ifeq('external').then(inputs.current().['ref'], '') ?]"/>
@@ -25,17 +25,17 @@
 
         <?merge .['type'].ifeq('number') ?>
         <div class="form-group col-sm-8">
-            <input type="number" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" placeholder="[?merge .['default'] ?]" value="[?merge .['default'] ?]"/>
+            <input type="number" class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', '') ?]" placeholder="[?merge .['default'] ?]" value="[?merge .['default'] ?]"/>
         </div>
 
         <?merge .['type'].ifeq('boolean') ?>
         <div class="form-group col-sm-8 checkbox">
-            <input type="checkbox" class="form-check-input" data-toggle="toggle" data-on="Oui" data-off="Non" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" checked="[?merge .['default'].bool().then('true', '') ?]"/>
+            <input type="checkbox" class="form-check-input" data-toggle="toggle" data-on="Oui" data-off="Non" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', '') ?]" checked="[?merge .['default'].bool().then('true', '') ?]"/>
         </div>
 
         <?merge .['type'].ifeq('enum') ?>
         <div class="form-group col-sm-8">
-            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', 'false') ?]" value="[?merge .['default'] ?]">
+            <select class="form-control" name="[?merge .['name'] ?]" required="[?merge .['required'].bool().then('true', '') ?]" value="[?merge .['default'] ?]">
                 <?merge .['enumNames'] $enumNames ?>
                 <?merge $enumNames ?>
                 <option value="[?merge . ?]" selected="[?merge inputs.current().['default'].ifeq($enumNames.current()).then('true', '') ?]"><?merge . ?></option>
@@ -45,7 +45,7 @@
         <?merge .['type'].ifeq('file') ?>
         <div class="form-group col-sm-8">
             <?merge .['multiple'] @multiple ?>
-            <input type="file" name="[?merge .['name'] ?]" class="fileBrowser btn btn-light" data-show-upload="true" data-show-caption="true">
+            <input type="file" name="[?merge .['name'] ?]" class="fileBrowser btn btn-light" data-show-upload="true" data-show-caption="true" required="[?merge .['required'].bool().then('true', '') ?]">
         </div>
     </div>
     <span id="noOriginatorFound" class="hide">No originator found</span>
