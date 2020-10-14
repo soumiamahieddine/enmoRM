@@ -112,7 +112,7 @@ class ArchiveTransfer extends abstractMessage
     {
         foreach ($params as $name => $param) {
             if (!isset($confParams[$name])) {
-                $this->sendError("404", "The sent parameters don't match the configuration parameters");
+                $this->sendError("404", 'The parameter %1$s is unknown in the configuration', [$name]);
                 break;
             }
             $confParam = $confParams[$name];
@@ -126,31 +126,43 @@ class ArchiveTransfer extends abstractMessage
             }
 
             if (isset($confParam["required"]) && $confParam["required"] && $param == '') {
-                $this->sendError("404", "The parameter $name is required");
+                $this->sendError("404", 'The parameter %1$s is required', [$name]);
+                continue;
+            }
+
+            if ($param == '') {
                 continue;
             }
 
             switch ($confParam["type"]) {
                 case 'number':
                     if (!is_numeric($param)) {
-                        $this->sendError("405", "The parameter $name needs to be a number");
+                        $this->sendError("405", 'The parameter %1$s needs to be a number', [$name]);
                     }
                     break;
                 case 'boolean':
                     if ($param !== true && $param !== false) {
-                        $this->sendError("405", "The parameter $name needs to be a boolean");
+                        $this->sendError("405", 'The parameter %1$s needs to be a boolean', [$name]);
                     }
                     break;
                 case 'enum':
                     if (!in_array($param, $confParam["enumNames"])) {
-                        $this->sendError("405", "The parameter $name is not in the given list");
+                        $this->sendError("405", 'The parameter %1$s is not in the given list', [$name]);
                     }
                     break;
                 case 'organization':
-                    $this->orgController->getOrgByRegNumber($param);
+                    try {
+                        $this->orgController->getOrgByRegNumber($param);
+                    } catch (\Exception $e) {
+                        $this->sendError("404", 'Organization identified by %1$s was not found', [$param]);
+                    }
                     break;
                 case 'archivalProfile':
-                    $this->archivalProfileController->getByReference($param);
+                    try {
+                        $this->archivalProfileController->getByReference($param);
+                    } catch (\Exception $e) {
+                        $this->sendError("404", 'Archival profile identified by %1$s was not found', [$param]);
+                    }
                     break;
             }
         }
