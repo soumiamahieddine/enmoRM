@@ -965,6 +965,9 @@ class ArchiveTransfer extends abstractMessage
                 $this->archiveController->manageFileplanPosition($archive);
 
                 $this->archiveController->convertArchive($archive);
+
+                $this->generateId($archive);
+
                 $this->archiveController->deposit($archive, $storagePath);
 
                 $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
@@ -982,6 +985,7 @@ class ArchiveTransfer extends abstractMessage
                     $this->archiveRelationshipController->create($relationship);
                 }
             }
+
 
             $message->status = "processed";
             $this->update($message);
@@ -1022,6 +1026,17 @@ class ArchiveTransfer extends abstractMessage
         $replyMessage = $archiveTransferReplyController->send($message, "000");
 
         return (string) $replyMessage->messageId;
+    }
+
+    protected function generateId($archive)
+    {
+        $generator = \laabs::configuration('recordsManagement')['archiveIdGenerator'];
+        if (empty($generator)) {
+            return;
+        }
+
+        $generatorService = \laabs::newService($generator['service']);
+        $generatorService->generate($archive);
     }
 
         /**
