@@ -585,7 +585,7 @@ msgid "The parameter %1$s is unknown in the configuration"
 msgstr "Le paramètre %1$s n'est pas indiqué dans la configuration"
 
 msgid "Organization identified by %1$s was not found"
-msgstr "L'organisation identifiée par %1$s n'a pas été trouvé"
+msgstr "L'organisation identifiée par %1$s n'a pas été trouvée"
 
 msgid "Archival profile identified by %1$s was not found"
 msgstr "Le profil d'archive identifié par %1$s n'a pas été trouvé"
