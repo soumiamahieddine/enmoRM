@@ -63,16 +63,6 @@
         </div>
     </div>
     <div class="col-md-12">
-        <!-- ARCHIVAL AGENCY ARCHIVE ID -->
-        <div class="col-md-4">
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Archiver archive identifier</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="archival_archiveIdentifier" name="archiverArchiveId"
-                    placeholder="Archiver archive identifier" />
-                </div>
-            </div>
-        </div>
         <!-- ARCHIVAL PROFILE -->
         <div class="col-md-4">
             <div class="form-group">
@@ -112,8 +102,6 @@
                 </div> -->
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
         <!-- PRODUCER ORGANIZATION -->
         <div class="col-md-4">
             <div class="form-group">
@@ -124,6 +112,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-12">
         <!-- DEPOSIT DATE -->
         <div class="col-md-4">
             <div class="form-group">
@@ -156,6 +146,7 @@
     </div>
     <div class="col-md-12">
         <!-- ARCHIVAL AGREEMENT -->
+        <?merge isPublicArchive.bool() ?>
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-4 control-label">Accord de versement</label>
@@ -229,6 +220,7 @@
             </div>
         </div>
         <!-- COMMUNICABLE -->
+        <?merge isPublicArchive.bool() ?>
         <div class="col-md-4">
             <div class="form-group">
                 <label class="col-sm-4 control-label">Communicable</label>
