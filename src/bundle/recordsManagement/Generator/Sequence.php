@@ -50,7 +50,7 @@ class Sequence implements \bundle\recordsManagement\Controller\archiverArchiveId
             return;
         }
 
-        if (isset($archive->parentArchiveId) && !empty($archive->parentArchiveId)) {
+        if (isset($archive->parentArchiveId) && !empty($archive->parentArchiveId) && $sequenceConfiguration['isInheritedFromParent']) {
             $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
             $parentArchiveId = (string) $parentArchive->archiveId;
             $directChildrenCount = $this->sdoFactory->count('recordsManagement/archive', "parentArchiveId='$parentArchiveId'");
