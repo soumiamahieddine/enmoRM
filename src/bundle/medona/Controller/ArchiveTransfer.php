@@ -141,7 +141,7 @@ class ArchiveTransfer extends abstractMessage
                     }
                     break;
                 case 'boolean':
-                    if ($param !== true && $param !== false) {
+                    if (!is_bool($param)) {
                         $this->sendError("405", 'The parameter %1$s needs to be a boolean', [$name]);
                     }
                     break;
