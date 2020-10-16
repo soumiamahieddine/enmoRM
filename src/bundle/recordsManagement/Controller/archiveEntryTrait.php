@@ -456,6 +456,12 @@ trait archiveEntryTrait
 
         $this->manageFileplanPosition($archive);
 
+        $generator = \laabs::configuration('recordsManagement')['archiveIdGenerator'];
+        if (!empty($generator)) {
+            $generatorService = \laabs::newService($generator['service']);
+            $generatorService->generate($archive);
+        }
+
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;
         }

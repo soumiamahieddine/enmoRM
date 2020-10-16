@@ -347,3 +347,5 @@ CREATE INDEX "recordsManagement_archive_originatorArchiveId_idx" ON "recordsMana
 CREATE INDEX "recordsManagement_archiveRelationship_archiveId_idx" ON "recordsManagement"."archiveRelationship" USING btree ("archiveId");
 
 CREATE INDEX "recordsManagement_archiveRelationship_relatedArchiveId_idx" ON "recordsManagement"."archiveRelationship" USING btree ("relatedArchiveId");
+
+CREATE SEQUENCE IF NOT EXISTS "recordsManagement"."archiverArchiveIdSequence";

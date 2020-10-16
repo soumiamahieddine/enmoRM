@@ -4,3 +4,5 @@ UPDATE "lifeCycle"."eventFormat" SET format = 'type senderOrgRegNumber senderOrg
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES ('digitalResource/integrityCheck', 'repositoryReference addressesToCheck checkedAddresses failed', 'Contrôle d''intégrité des ressources présentes dans %6$s', false);
 
 ALTER TABLE "organization"."organization" ADD COLUMN "history" text;
+
+CREATE SEQUENCE IF NOT EXISTS "recordsManagement"."archiverArchiveIdSequence";
