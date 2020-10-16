@@ -206,7 +206,6 @@ var zipContent = "";
 
             },
             error       : function (response) {
-                console.log(response);
                 gritter.show(response.responseJSON.message, response.responseJSON.status);
 
                 var arg = "";
@@ -378,7 +377,12 @@ var zipContent = "";
 
                 case 'text':
                 default:
-                    jsonObject.params[name] = $(this).val();
+                    let value = $(this).val();
+                    let defaultVal = $(this).data("default");
+                    if (defaultVal && value == "") {
+                        value = defaultVal;
+                    }
+                    jsonObject.params[name] = value;
             }
         });
 
