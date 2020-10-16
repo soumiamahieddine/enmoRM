@@ -68,6 +68,7 @@ interface retrieveInterface
      * @param string  $originatorOrgRegNumber
      * @param string  $description
      * @param string  $text
+     * @param string  $archiverArchiveId
      * @param integer $maxResults
      *
      * @uses recordsManagement/archives/read
@@ -86,6 +87,7 @@ interface retrieveInterface
         $originatorOrgRegNumber = null,
         $description = null,
         $text = null,
+        $archiverArchiveId = null,
         $maxResults = null
     );
 
