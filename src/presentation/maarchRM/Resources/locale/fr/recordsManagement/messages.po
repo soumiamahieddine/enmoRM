@@ -173,7 +173,7 @@ msgid "Life cycle events"
 msgstr "Évènements du cycle de vie"
 
 msgid "Archive identifier"
-msgstr "Cote"
+msgstr "Identifiant de l'archive"
 
 msgid "Originator archive identifier"
 msgstr "Identifiant"
