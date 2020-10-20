@@ -43,6 +43,8 @@ class message
 
     protected $archivalAgreementController;
 
+    protected $archivalProfileController;
+
     protected $sdoFactory;
 
     protected $messageTypeController;
@@ -107,6 +109,7 @@ class message
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
         $this->digitalResourceController = \laabs::newController('digitalResource/digitalResource');
         $this->archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+        $this->archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
 
         $this->profilesDirectory = \laabs::configuration('recordsManagement')['profilesDirectory'];
 

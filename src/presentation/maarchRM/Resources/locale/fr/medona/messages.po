@@ -59,9 +59,6 @@ msgstr "Transferts en attente de traitement"
 msgid "Delivery incoming list"
 msgstr "Demandes de communication"
 
-msgid "Delivery process list"
-msgstr "Communications à finaliser"
-
 msgid "Destruction incoming list"
 msgstr "Demandes d'élimination"
 
@@ -568,6 +565,30 @@ msgstr "Message invalide"
 
 msgid "Name of zip and his content files doesn't match"
 msgstr "Le nom du zip et de ses fichiers ne correspondent pas"
+
+msgid "The sent parameters don't match the configuration parameters"
+msgstr "Les paramètres envoyés ne correspondent pas avec les paramètres de la configuration"
+
+msgid "The parameter %1$s needs to be a number"
+msgstr "Le paramètre %1$s doit être un nombre"
+
+msgid "The parameter %1$s needs to be a boolean"
+msgstr "Le paramètre %1$s doit être un booléen"
+
+msgid "The parameter %1$s is not in the given list"
+msgstr "Le paramètre %1$s n'est pas dans la liste donnée"
+
+msgid "The parameter %1$s is required"
+msgstr "Le paramètre %1$s est requis"
+
+msgid "The parameter %1$s is unknown in the configuration"
+msgstr "Le paramètre %1$s n'est pas indiqué dans la configuration"
+
+msgid "Organization identified by %1$s was not found"
+msgstr "L'organisation identifiée par %1$s n'a pas été trouvée"
+
+msgid "Archival profile identified by %1$s was not found"
+msgstr "Le profil d'archive identifié par %1$s n'a pas été trouvé"
 
 msgid "Malformed XML"
 msgstr "Fichier XML malformé"

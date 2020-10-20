@@ -82,6 +82,9 @@ class ArchiveTransfer extends abstractMessage
         }
 
         $schema = $connectorConf['schema'];
+        $confParams = $connectorConf['params'];
+
+        $params = $this->checkParamsConstraints($confParams, $params);
 
         $message = $this->createNewMessage($schema);
 
@@ -103,6 +106,72 @@ class ArchiveTransfer extends abstractMessage
 
         // envoyer l'AR
         return $this->sendAcknowledgement($message);
+    }
+
+    protected function checkParamsConstraints($confParams, $params)
+    {
+        foreach ($params as $name => $param) {
+            if (!isset($confParams[$name])) {
+                $this->sendError("404", 'The parameter %1$s is unknown in the configuration', [$name]);
+                break;
+            }
+            $confParam = $confParams[$name];
+
+            if (!isset($confParam["type"])) {
+                $confParam["type"] = "text";
+            }
+
+            if (isset($confParam["default"]) && $confParam["type"] != "file" && $param == '') {
+                $params[$name] = $confParam["default"];
+            }
+
+            if (isset($confParam["required"]) && $confParam["required"] && $param == '') {
+                $this->sendError("404", 'The parameter %1$s is required', [$name]);
+                continue;
+            }
+
+            if ($param == '') {
+                continue;
+            }
+
+            switch ($confParam["type"]) {
+                case 'number':
+                    if (!is_numeric($param)) {
+                        $this->sendError("405", 'The parameter %1$s needs to be a number', [$name]);
+                    }
+                    break;
+                case 'boolean':
+                    if (!is_bool($param)) {
+                        $this->sendError("405", 'The parameter %1$s needs to be a boolean', [$name]);
+                    }
+                    break;
+                case 'enum':
+                    if (!in_array($param, $confParam["enumNames"])) {
+                        $this->sendError("405", 'The parameter %1$s is not in the given list', [$name]);
+                    }
+                    break;
+                case 'organization':
+                    try {
+                        $this->orgController->getOrgByRegNumber($param);
+                    } catch (\Exception $e) {
+                        $this->sendError("404", 'Organization identified by %1$s was not found', [$param]);
+                    }
+                    break;
+                case 'archivalProfile':
+                    try {
+                        $this->archivalProfileController->getByReference($param);
+                    } catch (\Exception $e) {
+                        $this->sendError("404", 'Archival profile identified by %1$s was not found', [$param]);
+                    }
+                    break;
+            }
+        }
+        if (count($this->errors) > 0) {
+            $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
+            $exception->errors = $this->errors;
+            throw $exception;
+        }
+        return $params;
     }
 
     protected function createNewMessage($schema = null)
