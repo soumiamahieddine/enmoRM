@@ -1,5 +1,70 @@
 # CHANGELOG
 
+## Version 2.7
+
+- `Added` Gestion du comportement des demandes de communications multiples
+- `Changed` Ne plus proposer de choix de format de ressortie lors d'une demande de modificaton.
+- `Added` Ajout d'un système de cotation automatique des unités d'archive.
+- `Fixed` Correction de la recherche des journaux du cycle de vie.
+- `Added` Choix de format d'échange lors des transaction de ressortie.
+- `Added` Contrôle d'empreinte lors des versements.
+- `Changed` Gestion des champs sur Ecran Registre pour une simplification d'utilisation.
+- `Added` Ajout du mode de dépôt contrôlé si le hash est transmis lors du versement.
+- `Added` Ajout d'un écran de statistiques permettant de visualiser les évènements suivants : Versement, Elimination, Communication, Conservation. Pour un type de rapport selectionné, une liste contenant le nombre d'archive et leur taille apparaît, cette liste peut être filtré par service producteur ou par profil d'archive.
+- `Added` Possibilité d'exporter le tableau de statistiques.
+- `Added` Ajout d'un champ 'historique du service' pour chaque service de l'organigramme.
+- `Changed` Une erreur de traitement dans le planificateur de tâche n'entraine plus une désactivation automatique de la tâche.
+- `Changed` Uniformisation des moteurs de recherches.
+- `Fixed` Gestion des erreurs lors d'un import de zip.
+- `Fixed` Gestion des erreurs lors d'un import sans archive.
+- `Fixed` Gestion de la sécurité dans le planificateur de tâche.
+- `Fixed` Gestion d'erreur lors des ressorties médona.
+- `Fixed` Gestion des erreurs lors des accès à la page Echanges.
+- `Fixed` Ergonomie lors d'une modification de service dans l'organigramme.
+- `Fixed` Modification du calcul du hash du mot de passe utilisateur.
+- `Changed` Nettoyage du stockage local des données du navigateur lors de la déconnexion.
+- `Changed` Possibilité pour le service producteur de rechercher les journaux dans l'écran principal.
+- `Fixed` Amélioration des performances dans le cas d'une recherche dans les journaux volumineux.
+- `Added` Affichage de la taille des ressources lors des ressorties.
+- `Added` Suppression des fichiers temporaires extraits lors du versement d'un zip.
+- `Added` Suppression des fichiers temporaires extraits lors de la détection de format.
+- `Fixed` Correction decodage du jeton utilisateur lors des requêtes AJAX.
+- `Fixed` Gestion des formats inconnus du système lors d'un versement.
+- `Fixed` Les exceptions liées à la base de données renvoient désormais une erreur 500.
+- `Added` Ajout de l'évènement "Contrôle d'intégrité du support de stockage" dans le journal du cycle de vie.
+- `Added` Bouton d'export des métadonnées et des pièces sur l'écran principal du référent métier.
+- `Added` Possibilité pour l'archiviste de traiter manuellement les communications.
+
+## Version 2.6.7
+
+- `Fixed` Gestion de l'affichage des ressources et pièces dans l'écran principal.
+
+## Version 2.6.6
+
+- `Fixed` Gestion d'erreur lors du contrôle d'intégrité d'une archive.
+- `Fixed` Gestion de l'algorithme de chiffrement par défaut.
+- `Added` Les administrateurs fonctionnels peuvent désormais créer des comptes de service de type "utilisateur simple".
+- `Added` Ajout du paramètre `timestampService` dans le fichier de configuration, permettant de renseigner le chemin d'un service d'horodatage de test à utiliser pour le chaînage des journaux.
+- `Fixed` Gestion d'erreur lors de la détection de format.
+- `Added` Recherche des logs et archives de journaux par Web Service.
+- `Fixed` Gestion des droits de création des tâches planifiées.
+- `Fixed` Gestion d'erreur lors d'une recherche sur l'écran principal concernant les archives versées en SEDA 1.0.
+- `Added` Affichage des conversions de la plus récente à la plus ancienne lors de la consultation.
+- `Added` Versement d'une archive distante avec transmission du contenu numérique via une URI.
+- `Changed` Performance renforcée sur les contrôles d'intégrité périodiques.
+- `Changed` Renforcement des contrôles lors de la création d'un utilisateur et d'un compte de service.
+- `Added` Le paramètre `maxResults` du fichier de configuration limite également le nombre de résultats retournés par les fonctions de recherche d'archives, de logs et de journaux.
+- `Fixed` Nettoyage de la mémoire temporaire lors d'une erreur au versement de documents.
+- `Fixed` Rétablissement de l'action de déverrouillage d'un utilisateur verrouillé.
+
+## Version 2.6.5
+
+- `Fixed` Rétablissement du changement de mot de passe pour les nouveaux utilisateurs.
+- `Added` Ajout de la directive LAABS_SESSION_START dans le fichier vhost par défaut empêchant la création d'une session sur le serveur.
+- `Added` Ajout de la directive LAABS_SECURE_COOKIE dans le fichier vhost par défaut permettant d'ajouter l'attribut secure aux cookies dans le cas d'une instance en HTTPS.
+- `Fixed` Retrait de certaines données sensibles dans les données retournées par l'application.
+- `Fixed` Désactivation de l'auto-complétion sur les formulaires contenant des mots de passe.
+
 ## Version 2.6.4
 
 - `Fixed` Correction faille de sécurité concernant le vol de compte via l'interface de login
@@ -23,7 +88,7 @@
 - `Changed` Le bundle `digitalSafe` a été déplacé vers la nouvelle extension éponyme, disponible dans le ![projet GitLab](https://labs.maarch.org/maarch/digitalSafe)
 
 ### Sécurité
-- `Fixed` Erreur courante `Attemp to access without a valid token` du module de protection CSRF, et traduction du message en français
+- `Fixed` Erreur courante `Attempt to access without a valid token` du module de protection CSRF, et traduction du message en français
 - `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur Fonctionnel à une organisation (au lieu d'un service) 
 - `Fixed` Faille XSS en faux positif sur la modale 404 "La page demandée n'existe pas"
 - `Added` Gestion renforcée de la sécurité (option de configuration) : gestion de niveaux de sécurité sur les rôles et privilèges, en lien avec les niveaux d'utilisateur
