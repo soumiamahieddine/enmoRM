@@ -49,7 +49,7 @@
                         <td><?merge .archiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
                         <td class="profile"><?merge .archivalProfileReference ?></td>
-                        <td data-order="[?merge .depositDate.format('Y-m-d') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
+                        <td data-order="[?merge .depositDate.format('Y-m-d H:i:s') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
                         <td>
