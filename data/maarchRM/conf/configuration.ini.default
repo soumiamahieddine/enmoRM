@@ -61,26 +61,33 @@ refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 archivalProfileType = 2
 
 ; Automatic generation of archiverArchiveId on deposit
-; format   :              The format with constant and variable values (see doc for available variables and parameters).
-;                         Variable parameters are following a %1$s syntax identic than one use for php sprintf function
-;                         % is mandatory, it tell system it's a variable
-;                         number. Argument repetition. 1 MUST be delegated to separator
-;                         $ mandatory
-;                         s see sprintf documentation
+; format   :              Format sequence to follow. Variables availables are sequence and date.
+;                         They must be followed by their name (for sequence) or type (like year, month, day, for date) between ().
+;                         Sequences configuration are as follow :
+;                              <sequence(sequenceName, paddingValue, paddingNumber).
+;                              paddingValue and paddingNumber are the maximum number of values to be added before sequence if needed
 ;
 ; isAutomaticallyForced : false : a value will be generated and set only if no value is provided on the submission
 ;                         true  : a value will be generated and replace any incoming value on the submission
-; sequenceSeparator     : string : a string representing the delimiter between sequences. This separator MUST not be used inside format
+; contentSuffix           Suffix, to add for children if isInheritedFromParent is selected
+;                         separator : string to add before suffix
+;                         value : value to padd suffix
+;                         length : padding length
 ;
 archiveIdGenerator = "{
     'service' : 'recordsManagement/Generator/Sequence',
     'archiverArchiveIdRules' : {
         'isAutomaticallyForced' : true,
         'isInheritedFromParent' : true,
-        'format' : 'FR094080%1$s%2$d%1$sAE%3$s',
-        'sequenceSeparator' : '_'
+        'format' : 'FR094080_<date(Y)>_AE<sequence(archiverArchiveIdSequence, 0, 4)>',
+        'contentSuffix' : {
+            'separator' : '_',
+            'value' : '0',
+            'length' : 3
+        }
     }
 }"
+
 
 ; Default Retention Rule if any retention rule is set up ("dispose" or "preserve")
 actionWithoutRetentionRule = "dispose"
