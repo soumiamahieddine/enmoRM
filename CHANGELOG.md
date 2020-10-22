@@ -2,8 +2,8 @@
 
 ## Version 2.7
 
-- `Added` Gestion du comportement des demandes de communications multiples
-- `Changed` Ne plus proposer de choix de format de ressortie lors d'une demande de modificaton.
+- `Added` Gestion du comportement des demandes de communications multiples.
+- `Changed` Suppression du choix de format de sortie lors d'une demande de modificaton.
 - `Added` Ajout d'un système de cotation automatique des unités d'archive.
 - `Fixed` Correction de la recherche des journaux du cycle de vie.
 - `Added` Choix de format d'échange lors des transaction de ressortie.
