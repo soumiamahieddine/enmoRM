@@ -3,37 +3,36 @@
 ## Version 2.7
 
 - `Added` Gestion du comportement des demandes de communications multiples.
-- `Changed` Suppression du choix de format de sortie lors d'une demande de modificaton.
 - `Added` Ajout d'un système de cotation automatique des unités d'archive.
-- `Fixed` Correction de la recherche des journaux du cycle de vie.
 - `Added` Choix de format d'échange lors des transaction de ressortie.
 - `Added` Contrôle d'empreinte lors des versements.
-- `Changed` Gestion des champs sur Ecran Registre pour une simplification d'utilisation.
-- `Added` Ajout du mode de dépôt contrôlé si le hash est transmis lors du versement.
-- `Added` Ajout d'un écran de statistiques permettant de visualiser les évènements suivants : Versement, Elimination, Communication, Conservation. Pour un type de rapport selectionné, une liste contenant le nombre d'archive et leur taille apparaît, cette liste peut être filtré par service producteur ou par profil d'archive.
-- `Added` Possibilité d'exporter le tableau de statistiques.
+- `Added` Statistiques de volume et nombre de Versement, Elimination, Communication, Conservation
 - `Added` Ajout d'un champ 'historique du service' pour chaque service de l'organigramme.
-- `Changed` Une erreur de traitement dans le planificateur de tâche n'entraine plus une désactivation automatique de la tâche.
-- `Changed` Uniformisation des moteurs de recherches.
-- `Fixed` Gestion des erreurs lors d'un import de zip.
-- `Fixed` Gestion des erreurs lors d'un import sans archive.
-- `Fixed` Gestion de la sécurité dans le planificateur de tâche.
-- `Fixed` Gestion d'erreur lors des ressorties médona.
-- `Fixed` Gestion des erreurs lors des accès à la page Echanges.
-- `Fixed` Ergonomie lors d'une modification de service dans l'organigramme.
-- `Fixed` Modification du calcul du hash du mot de passe utilisateur.
-- `Changed` Nettoyage du stockage local des données du navigateur lors de la déconnexion.
-- `Changed` Possibilité pour le service producteur de rechercher les journaux dans l'écran principal.
-- `Fixed` Amélioration des performances dans le cas d'une recherche dans les journaux volumineux.
-- `Added` Affichage de la taille des ressources lors des ressorties.
-- `Added` Suppression des fichiers temporaires extraits lors du versement d'un zip.
-- `Added` Suppression des fichiers temporaires extraits lors de la détection de format.
-- `Fixed` Correction decodage du jeton utilisateur lors des requêtes AJAX.
-- `Fixed` Gestion des formats inconnus du système lors d'un versement.
-- `Fixed` Les exceptions liées à la base de données renvoient désormais une erreur 500.
+- `Added` Conservation et journalisation de la taille des données lors des ressorties.
 - `Added` Ajout de l'évènement "Contrôle d'intégrité du support de stockage" dans le journal du cycle de vie.
 - `Added` Bouton d'export des métadonnées et des pièces sur l'écran principal du référent métier.
 - `Added` Possibilité pour l'archiviste de traiter manuellement les communications.
+- `Added` Possibilité pour le service producteur de rechercher les journaux depuis l'écran principal.
+
+- `Changed` Suppression du choix de format de sortie lors d'une demande de modificaton.
+- `Changed` Refonte du formulaire de recherche de l'écran de gestion
+- `Changed` Une erreur de traitement dans le planificateur de tâche n'entraine plus une désactivation automatique de la tâche.
+- `Changed` Nettoyage du stockage local des données du navigateur lors de la déconnexion.
+- `Changed` Amélioration du chiffrement du mot de passe utilisateur.
+- `Changed` Amélioration des performances dans le cas d'une recherche dans les journaux volumineux.
+
+- `Fixed` Suppression des fichiers temporaires extraits lors du versement d'un zip.
+- `Fixed` Suppression des fichiers temporaires extraits lors de la détection de format.
+- `Fixed` Correction de la recherche des journaux du cycle de vie.
+- `Fixed` Gestion des erreurs lors d'un import de zip.
+- `Fixed` Gestion des erreurs lors d'un import sans archive.
+- `Fixed` Filtrage des comptes de service disponibles dans le planificateur de tâche.
+- `Fixed` Gestion d'erreur lors des ressorties medona.
+- `Fixed` Gestion des erreurs lors des accès à la page Echanges.
+- `Fixed` Formulaire de modification persistant lors d'une modification de service dans l'organigramme.
+- `Fixed` Correction decodage du jeton utilisateur lors des requêtes AJAX.
+- `Fixed` Gestion des formats inconnus du système lors d'un versement.
+- `Fixed` Les exceptions liées à la base de données renvoient désormais une erreur 500.
 
 ## Version 2.6.7
 
