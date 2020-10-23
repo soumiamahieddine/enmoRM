@@ -54,8 +54,8 @@ function uniqid($prefix = "", $moreEntropy = true)
     if (!isset($parts[0])) {
         $msec = 0;
     } else {
-        // Only using decimal part of microseconde
-        $msec = substr($parts[0], strpos($parts[0], '.') + 1);
+        // Only using decimal part of microsecond 0.12345600 => 123456
+        $msec = substr($parts[0], 2, 6);
     }
 
     $uniqid = str_pad(base_convert($sec, 10, 36), 6, '0', STR_PAD_LEFT) . '-' . str_pad(base_convert($msec, 10, 36), 4, '0', STR_PAD_LEFT);
