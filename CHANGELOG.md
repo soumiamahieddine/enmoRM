@@ -21,6 +21,7 @@
 - `Fixed` Gestion d'erreur lors des ressorties médona.
 - `Fixed` Gestion des erreurs lors des accès à la page Echanges.
 - `Fixed` Ergonomie lors d'une modification de service dans l'organigramme.
+- `Fixed` Gestion du caractère spécial * dans le nom de dossier virtuel.
 - `Fixed` Modification du calcul du hash du mot de passe utilisateur.
 - `Changed` Nettoyage du stockage local des données du navigateur lors de la déconnexion.
 - `Changed` Possibilité pour le service producteur de rechercher les journaux dans l'écran principal.
@@ -89,7 +90,7 @@
 
 ### Sécurité
 - `Fixed` Erreur courante `Attempt to access without a valid token` du module de protection CSRF, et traduction du message en français
-- `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur Fonctionnel à une organisation (au lieu d'un service) 
+- `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur Fonctionnel à une organisation (au lieu d'un service)
 - `Fixed` Faille XSS en faux positif sur la modale 404 "La page demandée n'existe pas"
 - `Added` Gestion renforcée de la sécurité (option de configuration) : gestion de niveaux de sécurité sur les rôles et privilèges, en lien avec les niveaux d'utilisateur
 - `Changed` Filtrage des comptes d'utilisateurs et comptes de service en fonction du niveau de sécurité, notamment pour le compte utilisé dans le planificateur de tâches (si activé)
