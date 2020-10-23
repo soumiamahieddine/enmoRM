@@ -27,10 +27,12 @@ class Sequence implements \bundle\recordsManagement\Controller\archiverArchiveId
      * @var dependency/sdo/Factory
      */
     protected $sdoFactory;
+    protected $sequenceConfiguration;
 
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
+        $this->sequenceConfiguration = \laabs::configuration('recordsManagement')['archiveIdGenerator']['archiverArchiveIdRules'];
     }
     /**
      * Generate archiverArchiveId
@@ -41,34 +43,33 @@ class Sequence implements \bundle\recordsManagement\Controller\archiverArchiveId
      */
     public function generate($archive)
     {
-        $sequenceConfiguration = \laabs::configuration('recordsManagement')['archiveIdGenerator']['archiverArchiveIdRules'];
-        if (is_null($sequenceConfiguration) || empty($sequenceConfiguration)) {
+        if (is_null($this->sequenceConfiguration) || empty($this->sequenceConfiguration)) {
             return;
         }
 
-        if (!empty($archive->archiverArchiveId) && !$sequenceConfiguration['isAutomaticallyForced']) {
+        if (!empty($archive->archiverArchiveId) && !$this->sequenceConfiguration['isAutomaticallyForced']) {
             return;
         }
 
-        if (isset($archive->parentArchiveId) && !empty($archive->parentArchiveId) && $sequenceConfiguration['isInheritedFromParent']) {
+        if (isset($archive->parentArchiveId) && !empty($archive->parentArchiveId) && $this->sequenceConfiguration['isInheritedFromParent']) {
             $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
             $parentArchiveId = (string) $parentArchive->archiveId;
             $directChildrenCount = $this->sdoFactory->count('recordsManagement/archive', "parentArchiveId='$parentArchiveId'");
-
-            $archive->archiverArchiveId = $parentArchive->archiverArchiveId . $sequenceConfiguration['sequenceSeparator'] . str_pad($directChildrenCount + 1, 7, 0, STR_PAD_LEFT);
+            $separator = $this->sequenceConfiguration['contentSuffix']['separator'];
+            $paddingLength = $this->sequenceConfiguration['contentSuffix']['length'];
+            $paddingString = $this->sequenceConfiguration['contentSuffix']['value'];
+            $archive->archiverArchiveId = $parentArchive->archiverArchiveId . $separator . str_pad($directChildrenCount + 1, $paddingLength, $paddingString, STR_PAD_LEFT);
         } else {
-            $sequenceId = $this->getNewSequenceId();
-            $year = date("Y");
-            $archive->archiverArchiveId = sprintf($sequenceConfiguration['format'], $sequenceConfiguration['sequenceSeparator'], $year, str_pad($sequenceId, 7, 0, STR_PAD_LEFT));
+            $archive->archiverArchiveId = $this->resolveSequenceFormat($this->sequenceConfiguration['format']);
         }
     }
 
-    protected function getNewSequenceId()
+    protected function getNewSequenceId($sequenceName)
     {
         $sequenceId = null;
 
         $query = <<<EOT
-            SELECT NEXTVAL('"recordsManagement"."archiverArchiveIdSequence"');
+            SELECT NEXTVAL('"recordsManagement"."$sequenceName"');
 EOT;
         $stmt = $this->sdoFactory->das->pdo->prepare($query);
         $stmt->execute();
@@ -77,5 +78,43 @@ EOT;
         }
 
         return $sequenceId;
+    }
+
+    protected function resolveSequenceFormat($pattern = null)
+    {
+        if (is_null($pattern)) {
+            return;
+        }
+
+        if (preg_match_all("/\<[^\>]+\>/", $pattern, $variables)) {
+            foreach ($variables[0] as $variable) {
+                // retrieve parts between <> and switch on strings before ( character
+                // followings strok functions call retrieves parts of remaining string before )
+                $token = substr($variable, 1, -1);
+                switch (strtok($token, '(')) {
+                    case 'date':
+                        $pattern = str_replace($variable, date(strtok(')')), $pattern);
+                        break;
+                    case 'sequence':
+                        $sequenceParameters = explode(',', strtok(')'));
+                        $sequenceName = trim($sequenceParameters[0]);
+                        $paddingString = trim($sequenceParameters[1]);
+                        $paddingLength = trim($sequenceParameters[2]);
+                        $pattern = str_replace(
+                            $variable,
+                            str_pad(
+                                $this->getNewSequenceId($sequenceName),
+                                $paddingLength,
+                                $paddingString,
+                                STR_PAD_LEFT
+                            ),
+                            $pattern
+                        );
+                        break;
+                }
+            }
+        }
+
+        return $pattern;
     }
 }
