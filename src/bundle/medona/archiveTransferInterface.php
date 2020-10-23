@@ -67,7 +67,7 @@ interface archiveTransferInterface
 
     /**
      * Receive message with all contents embedded
-     * @param string $messageFile The message binary contents or a filename
+     * @param mixed  $messageFile The message binary contents or a filename
      * @param array  $attachments An array of filenames for attachments
      * @param string $schema      The schema of the message file
      * @param string $filename    The message file name
