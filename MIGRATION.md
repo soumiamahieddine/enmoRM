@@ -24,12 +24,18 @@ Le privilège se prénommant `Traiter les communications` a été ajouté, ce pr
 
 Un point de menu `Communications à finaliser` a été ajouté sur l'écran d'Echange pour effectuer le traitement manuel des communications:
 
-### Ajout du bundle Statistiques dans virtual host
+### Ajout du bundle Statistiques et configuration de session dans virtual host
 
 Afin d'accéder aux fonctionnalités relatives aux statistiques, le bundle `Statistics` doit être ajoutée à l'instance dans le fichier vhost.conf :
 
 ```
 SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics
+```
+
+Modifications liées à la configuration de la session :
+```
+SetEnv LAABS_SESSION_START Off
+#SetEnv LAABS_SECURE_COOKIE On
 ```
 
 ## Ajout d'un droit de compte de Service
