@@ -42,15 +42,17 @@ Dans la section [auth] de la configuration, ajout d'une fonctionnalité déclar�
 
 ### Modification de configuration
 
-La directive `maxResults` livré par défaut est désormais à 500.
-Modification de la configuration du CSRF :
+Dans la section [presentation.maarchRM], la directive `maxResults` livrée par défaut est désormais à 500.
+Dans la section [auth], modification de la configuration du CSRF :
 
+```
 csrfConfig = '{
     "cookieName" : "Csrf",
     "tokenLength" : 32
 }'
+```
 
-Modification de la configuration des schémas de description :
+Dans la section [recordsManagement], modification de la configuration des schémas de description :
 
 descriptionSchemes = "{
     'extension' : {
