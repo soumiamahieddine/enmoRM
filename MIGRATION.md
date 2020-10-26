@@ -20,9 +20,9 @@ pathToOpenSSL="C:\Program Files\OpenSSL-Win64\bin\openssl"
 
 ### Ajout d'un droit utilisateur
 
-La privilège se prénommant `Traiter les communications` a été ajoutée, ce privilège est dans 'Gestion de l'archive' et n'est utilisé que si le mode transactionnel est activé.
+Le privilège se prénommant `Traiter les communications` a été ajouté, ce privilège se trouve dans la catégorie 'Communication' et n'est accessible sur Socle que si le mode transactionnel est activé.
 
-Un point de menu `Communications à finaliser` a été ajouté sur l'écran d'Echange pour effectuer le traitement manuels des communications:
+Un point de menu `Communications à finaliser` a été ajouté sur l'écran d'Echange pour effectuer le traitement manuel des communications:
 
 ### Ajout du bundle Statistiques dans virtual host
 
