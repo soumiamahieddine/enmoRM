@@ -1099,10 +1099,10 @@ class ArchiveTransfer extends abstractMessage
 
     protected function generateId($archive)
     {
-        $generator = \laabs::configuration('recordsManagement')['archiveIdGenerator'];
-        if (empty($generator)) {
+        if (!isset(\laabs::configuration('recordsManagement')['archiveIdGenerator']) || empty(\laabs::configuration('recordsManagement')['archiveIdGenerator'])) {
             return;
         }
+        $generator = \laabs::configuration('recordsManagement')['archiveIdGenerator'];
 
         $generatorService = \laabs::newService($generator['service']);
         $generatorService->generate($archive);
