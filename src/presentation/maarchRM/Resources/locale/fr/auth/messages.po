@@ -239,7 +239,7 @@ msgstr "Annuler les demandes l'élimination"
 msgctxt "userStory"
 
 msgid "destructionAuthorizationRequest"
-msgstr "Traiter les demandes d'autorisation"
+msgstr "Traiter les demandes d'élimination"
 msgctxt "userStory"
 
 msgid "destructionProcess"
@@ -273,7 +273,7 @@ msgstr "Traiter les demandes de restitution"
 msgctxt "userStory"
 
 msgid "restitutionValidation"
-msgstr "Récupérer les restitutions"
+msgstr "Réceptionner les restitutions"
 msgctxt "userStory"
 
 #
