@@ -92,10 +92,8 @@ trait archiveValidationTrait
 
             $archivalProfileFields[$archiveDescription->fieldName] = $archiveDescription;
         }
-
         foreach ($object as $name => $value) {
             if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
-
                 throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
             }
 
@@ -149,6 +147,10 @@ trait archiveValidationTrait
     {
         if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration) && $value != '') {
             throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$descriptionField->name]);
+        }
+
+        if (!empty($descriptionField->ref) && $descriptionField->ref) {
+            $this->validateRef($descriptionField->name, $value);
         }
     }
 
@@ -228,7 +230,6 @@ trait archiveValidationTrait
             } else {
                 $descriptionField = $descriptionField->itemType;
             }
-
             foreach ($array as $name => $value) {
                 $this->validateDescriptionField($value, $descriptionField);
             }
@@ -428,5 +429,30 @@ trait archiveValidationTrait
             }
         }
         unlink($filename);
+    }
+
+    protected function validateRef($referentielName, $value)
+    {
+        $isValid = false;
+        $conf = \laabs::Configuration()['recordsManagement'];
+        if (isset($conf['refDirectory']) || is_dir($conf['refDirectory'])) {
+            $refDirectory = $conf['refDirectory'];
+            if (is_file($conf['refDirectory'].'/'.$referentielName.'.csv')) {
+                $handler = fopen($conf['refDirectory'].'/'.$referentielName.'.csv', 'r');
+                while ($line = fgetcsv($handler)) {
+                    if ($line[0] == $value) {
+                        $isValid = true;
+                        break;
+                    }
+                }
+                fclose($handler);
+            }
+        }
+
+        if (!$isValid) {
+            throw new \core\Exception\BadRequestException("Invalid value %s supplied for referentiel %s", 404, null, [$value, $referentielName]);
+        }
+
+        return true;
     }
 }
