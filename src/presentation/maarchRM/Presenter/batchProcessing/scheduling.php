@@ -120,11 +120,14 @@ class scheduling
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
         $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
-        if (is_null($account->securityLevel)
-            || !$account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
-            || !$hasSecurityLevel
-        ) {
-            $isUser = false;
+        if ($hasSecurityLevel) {
+            if (is_null($account->securityLevel)
+                || !$account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
+            ) {
+                $isUser = false;
+            } else {
+                $isUser = true;
+            }
         } else {
             $isUser = true;
         }
