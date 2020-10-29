@@ -1,4 +1,4 @@
-INSERT INTO "auth"."account" ("accountId","accountName","displayName","accountType","emailAddress","enabled","password","passwordChangeRequired","passwordLastChange","locked","lockDate","badPasswordCount","lastLogin","lastIp","replacingUserAccountId","firstName","lastName","title","salt","tokenDate","authentication","preferences","ownerOrgId","isAdmin") VALUES 
+INSERT INTO "auth"."account" ("accountId","accountName","displayName","accountType","emailAddress","enabled","password","passwordChangeRequired","passwordLastChange","locked","lockDate","badPasswordCount","lastLogin","lastIp","replacingUserAccountId","firstName","lastName","title","salt","tokenDate","authentication","preferences","ownerOrgId","isAdmin") VALUES
 ('aackermann', 'aackermann', 'Amanda ACKERMANN', 'user', 'support@maarch.fr', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Amanda', 'ACKERMANN', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
 ('aadams', 'aadams', 'Amy ADAMS', 'user', 'support@maarch.fr', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-03-15 10:20:33.964708', '127.0.0.1', NULL, 'Amy', 'ADAMS', 'Mme.', NULL, NULL, NULL, NULL, 'ACME', false),
 ('aalambic', 'aalambic', 'Alain ALAMBIC', 'user', 'support@maarch.fr', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, '2019-09-23 14:00:29.059065', '127.0.0.1', NULL, 'Alain', 'ALAMBIC', 'M.', NULL, NULL, '{"csrf": {"2019-09-23T14:05:44,406456Z": "a45c4a7784bd8ed0d7c25f74ce3029e24693f112e03fd606f38f508a61f9554b"}}', NULL, 'ACME', false),
@@ -43,7 +43,7 @@ INSERT INTO "auth"."account" ("accountId","accountName","displayName","accountTy
 ('vvictoire', 'vvictoire', 'Victor VICTOIRE', 'user', 'support@maarch.fr', true, 'fffd2272074225feae229658e248b81529639e6199051abdeb49b6ed60adf13d', false, NULL, false, NULL, 0, NULL, NULL, NULL, 'Victor', 'VICTOIRE', 'M.', NULL, NULL, NULL, NULL, 'ACME', false)
 ;
 
-INSERT INTO "auth"."role" ("roleId","roleName","description","securityLevel","enabled") VALUES 
+INSERT INTO "auth"."role" ("roleId","roleName","description","securityLevel","enabled") VALUES
 ('ADMIN_FONCTIONNEL', 'Administrateur fonctionnel', 'Groupe des administrateurs fonctionnels du système', 'func_admin', true),
 ('ADMIN_GENERAL', 'Administrateur général', 'Groupe des administrateurs techniques du système', 'gen_admin', true),
 ('CORRESPONDANT_ARCHIVES', 'Correspondant d''archives', 'Groupe des archivistes, records managers et référents d''archives', 'user', true),
@@ -52,7 +52,7 @@ INSERT INTO "auth"."role" ("roleId","roleName","description","securityLevel","en
 ('UTILISATEUR', 'Utilisateur', 'Groupe des utilisateurs, consultation et navigation', 'user', true)
 ;
 
-INSERT INTO "auth"."privilege" ("roleId","userStory") VALUES 
+INSERT INTO "auth"."privilege" ("roleId","userStory") VALUES
 ('ADMIN_FONCTIONNEL', 'adminFunc/adminAuthorization'),
 ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrganization'),
 ('ADMIN_FONCTIONNEL', 'adminFunc/adminOrgContact'),
@@ -67,23 +67,11 @@ INSERT INTO "auth"."privilege" ("roleId","userStory") VALUES
 ('ADMIN_GENERAL', 'adminFunc/adminUseraccount'),
 ('ADMIN_GENERAL', 'adminTech/*'),
 ('ADMIN_GENERAL', 'journal/audit'),
-('CORRESPONDANT_ARCHIVES', 'adminArchive/adminAccessRule'),
-('CORRESPONDANT_ARCHIVES', 'adminArchive/adminRetentionRule'),
-('CORRESPONDANT_ARCHIVES', 'adminArchive/archivalProfile'),
-('CORRESPONDANT_ARCHIVES', 'adminArchive/descriptionField'),
-('CORRESPONDANT_ARCHIVES', 'adminFunc/AdminArchivalProfileAccess'),
-('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrgContact'),
-('CORRESPONDANT_ARCHIVES', 'adminFunc/adminOrganization'),
+('CORRESPONDANT_ARCHIVES', 'adminArchive/*'),
+('CORRESPONDANT_ARCHIVES', 'adminFunc/*'),
 ('CORRESPONDANT_ARCHIVES', 'adminTech/adminFormat'),
-('CORRESPONDANT_ARCHIVES', 'archiveDeposit/deposit'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/addResource'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/checkIntegrity'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/filePlan'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/migration'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/modifyDescription'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/modify'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/export'),
-('CORRESPONDANT_ARCHIVES', 'archiveManagement/retrieve'),
+('CORRESPONDANT_ARCHIVES', 'archiveDeposit/*'),
+('CORRESPONDANT_ARCHIVES', 'archiveManagement/*'),
 ('CORRESPONDANT_ARCHIVES', 'destruction/destructionRequest'),
 ('CORRESPONDANT_ARCHIVES', 'journal/certificate'),
 ('CORRESPONDANT_ARCHIVES', 'journal/lifeCycleJournal'),
@@ -100,7 +88,7 @@ INSERT INTO "auth"."privilege" ("roleId","userStory") VALUES
 ('RESPONSABLE_ACTIVITE', 'destruction/destructionRequest')
 ;
 
-INSERT INTO "auth"."roleMember" ("roleId","userAccountId") VALUES 
+INSERT INTO "auth"."roleMember" ("roleId","userAccountId") VALUES
 ('ADMIN_FONCTIONNEL', 'nnataly'),
 ('ADMIN_GENERAL', 'superadmin'),
 ('CORRESPONDANT_ARCHIVES', 'bblier'),
@@ -145,7 +133,7 @@ INSERT INTO "auth"."roleMember" ("roleId","userAccountId") VALUES
 ('UTILISATEUR', 'sstallone')
 ;
 
-INSERT INTO "auth"."servicePrivilege" ("accountId","serviceURI") VALUES 
+INSERT INTO "auth"."servicePrivilege" ("accountId","serviceURI") VALUES
 ('System', 'audit/event/createChainjournal'),
 ('System', 'batchProcessing/scheduling/updateProcess'),
 ('System', 'lifeCycle/journal/createChainjournal'),
@@ -157,11 +145,11 @@ INSERT INTO "auth"."servicePrivilege" ("accountId","serviceURI") VALUES
 ('SystemDepositor', 'recordsManagement/archive/createArchiveBatch')
 ;
 
-INSERT INTO "batchProcessing"."logScheduling" ("logId","schedulingId","executedBy","launchedBy","logDate","status","info") VALUES 
+INSERT INTO "batchProcessing"."logScheduling" ("logId","schedulingId","executedBy","launchedBy","logDate","status","info") VALUES
 ('maarchRM_5k7cwmpb4-0000-7v4gda', 'chainJournalAudit', 'System', 'superadmin', '2019-09-19 09:24:29.660848', true, '[{"message":"Timestamp file generated","fullMessage":"Timestamp file generated"},{"message":"New journal identifier : %s","variables":"maarchRM_py2ngt-16cc-ylua9s","fullMessage":"New journal identifier : maarchRM_py2ngt-16cc-ylua9s"}]')
 ;
 
-INSERT INTO "batchProcessing"."scheduling" ("schedulingId","name","taskId","frequency","parameters","executedBy","lastExecution","nextExecution","status") VALUES 
+INSERT INTO "batchProcessing"."scheduling" ("schedulingId","name","taskId","frequency","parameters","executedBy","lastExecution","nextExecution","status") VALUES
 ('chainJournalAudit', 'Chaînage audit', '01', '00;20;;;;;;;', NULL, 'System', '2019-09-19 09:24:29.658821', '2019-09-20 18:00:00', 'scheduled'),
 ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled'),
 ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled'),
@@ -169,7 +157,7 @@ INSERT INTO "batchProcessing"."scheduling" ("schedulingId","name","taskId","freq
 ('purge', 'Purge', '05', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused')
 ;
 
-INSERT INTO "contact"."communicationMean" ("code","name","enabled") VALUES 
+INSERT INTO "contact"."communicationMean" ("code","name","enabled") VALUES
 ('AH', 'World Wide Web', false),
 ('AL', 'Téléphone mobile', true),
 ('AO', 'URL', true),
@@ -179,26 +167,26 @@ INSERT INTO "contact"."communicationMean" ("code","name","enabled") VALUES
 ('TE', 'Téléphone', true)
 ;
 
-INSERT INTO "digitalResource"."cluster" ("clusterId","clusterName","clusterDescription") VALUES 
+INSERT INTO "digitalResource"."cluster" ("clusterId","clusterName","clusterDescription") VALUES
 ('archives', 'Digital_resource_cluster_for_archives', 'Digital resource cluster for archives')
 ;
 
-INSERT INTO "digitalResource"."repository" ("repositoryId","repositoryName","repositoryReference","repositoryType","repositoryUri","parameters","maxSize","enabled") VALUES 
+INSERT INTO "digitalResource"."repository" ("repositoryId","repositoryName","repositoryReference","repositoryType","repositoryUri","parameters","maxSize","enabled") VALUES
 ('archives_1', 'Digital resource repository for archives', 'repository_1', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_1', NULL, NULL, true),
 ('archives_2', 'Digital resource repository for archives 2', 'repository_2', 'fileSystem', '/var/www/laabs/data/maarchRM/repository/archives_2', NULL, NULL, true)
 ;
 
-INSERT INTO "digitalResource"."clusterRepository" ("clusterId","repositoryId","writePriority","readPriority","deletePriority") VALUES 
+INSERT INTO "digitalResource"."clusterRepository" ("clusterId","repositoryId","writePriority","readPriority","deletePriority") VALUES
 ('archives', 'archives_1', 1, 1, 1),
 ('archives', 'archives_2', 1, 2, 2)
 ;
 
-INSERT INTO "digitalResource"."conversionRule" ("conversionRuleId","puid","conversionService","targetPuid") VALUES 
+INSERT INTO "digitalResource"."conversionRule" ("conversionRuleId","puid","conversionService","targetPuid") VALUES
 ('workflow_pod75x-151b-v9jsef', 'fmt/412', 'dependency/fileSystem/plugins/libreOffice', 'fmt/95'),
 ('workflow_pod763-1691-dli2t0', 'fmt/291', 'dependency/fileSystem/plugins/libreOffice', 'fmt/18')
 ;
 
-INSERT INTO "lifeCycle"."eventFormat" ("type","format","message","notification") VALUES 
+INSERT INTO "lifeCycle"."eventFormat" ("type","format","message","notification") VALUES
 ('digitalResource/integrityCheck', 'repositoryReference addressesToCheck checkedAddresses failed', 'Contrôle d''intégrité des ressources présentes dans %6$s', false),
 ('medona/acceptance', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Message %14$s de type %9$s accepté par %13$s (%12$s)', false),
 ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false),
@@ -243,7 +231,7 @@ INSERT INTO "organization"."orgType" ("code","name") VALUES ('Collectivite', 'Co
 ('Societe', 'Société')
 ;
 
-INSERT INTO "organization"."organization" ("orgId","orgName","otherOrgName","displayName","registrationNumber","beginDate","endDate","legalClassification","businessType","description","orgTypeCode","orgRoleCodes","taxIdentifier","parentOrgId","ownerOrgId","isOrgUnit","enabled") VALUES 
+INSERT INTO "organization"."organization" ("orgId","orgName","otherOrgName","displayName","registrationNumber","beginDate","endDate","legalClassification","businessType","description","orgTypeCode","orgRoleCodes","taxIdentifier","parentOrgId","ownerOrgId","isOrgUnit","enabled") VALUES
 ('ACME', 'Archives Conservation et Mémoire Électronique', NULL, 'Archives Conservation et Mémoire Électronique', 'ACME', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false, true),
 	('DAF', 'Direction Administrative et Financière', NULL, 'Direction Administrative et Financière', 'DAF', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'ACME', 'ACME', true, true),
 		('DSG', 'Services généraux', NULL, 'Direction des Services Généraux', 'DSG', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'DAF', 'ACME', true, true),
@@ -282,7 +270,7 @@ INSERT INTO "organization"."organization" ("orgId","orgName","otherOrgName","dis
 		('SOC', 'Charges Sociales', NULL, 'Charges Sociales', 'SOC', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'RH', 'ACME', true, true)
 ;
 
-INSERT INTO "organization"."archivalProfileAccess" ("orgId","archivalProfileReference","originatorAccess","serviceLevelReference","userAccess") VALUES 
+INSERT INTO "organization"."archivalProfileAccess" ("orgId","archivalProfileReference","originatorAccess","serviceLevelReference","userAccess") VALUES
 ('DAF', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}'),
 ('DIP', 'DOSIP', true, NULL, NULL),
 ('DSI', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"QUALIFIED": {"actions": {"reject": {}, "redirect": {}, "validate": {}}}, "VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}'),
@@ -305,12 +293,12 @@ INSERT INTO "organization"."archivalProfileAccess" ("orgId","archivalProfileRefe
 ('DCIAL', 'FACACH', false, NULL, '{"subProfile": {}, "processingStatuses": {"VALIDATED": {"actions": {"reject": {}, "approve": {}}}}}')
 ;
 
-INSERT INTO "organization"."servicePosition" ("serviceAccountId","orgId") VALUES 
+INSERT INTO "organization"."servicePosition" ("serviceAccountId","orgId") VALUES
 ('System', 'GIC'),
 ('SystemDepositor', 'GIC')
 ;
 
-INSERT INTO "organization"."userPosition" ("userAccountId","orgId","function","default") VALUES 
+INSERT INTO "organization"."userPosition" ("userAccountId","orgId","function","default") VALUES
 ('aackermann', 'FOUR', NULL, true),
 ('aadams', 'DAF', NULL, true),
 ('aalambic', 'FOUR', NULL, true),
@@ -351,7 +339,7 @@ INSERT INTO "organization"."userPosition" ("userAccountId","orgId","function","d
 ('vvictoire', 'RH', NULL, true)
 ;
 
-INSERT INTO "recordsManagement"."retentionRule" ("code","duration","finalDisposition","description","label","implementationDate") VALUES 
+INSERT INTO "recordsManagement"."retentionRule" ("code","duration","finalDisposition","description","label","implementationDate") VALUES
 ('BULPAI', 'P5Y', 'destruction', 'Code du Travail, art. L3243-4 - Code de la Sécurité Sociale, art. L243-12', 'Bulletins de paie', NULL),
 ('COM', 'P10Y', 'destruction', 'Code du commerce, Article L123-22', 'Documents comptables', NULL),
 ('DIP', 'P90Y', 'destruction', 'Convention Collective nationale de retraite et de prévoyance des cadres, art. 23', 'Dossier individuel du personnel', NULL),
@@ -361,7 +349,7 @@ INSERT INTO "recordsManagement"."retentionRule" ("code","duration","finalDisposi
 ('GES', 'P5Y', 'destruction', 'Documents de gestion', 'Documents de gestion', NULL)
 ;
 
-INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId","reference","name","descriptionSchema","descriptionClass","retentionStartDate","retentionRuleCode","description","accessRuleCode","acceptUserIndex","acceptArchiveWithoutProfile","fileplanLevel","processingStatuses") VALUES 
+INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId","reference","name","descriptionSchema","descriptionClass","retentionStartDate","retentionRuleCode","description","accessRuleCode","acceptUserIndex","acceptArchiveWithoutProfile","fileplanLevel","processingStatuses") VALUES
 ('1', 'COUA', 'Courrier Administratif', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
 ('2', 'PRVN', 'Procès-Verbal de Négociation', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
 ('3', 'PRVIF', 'Procès-verbal à Incidence Financière', NULL, NULL, 'originatingDate', NULL, NULL, NULL, true, true, 'item', NULL),
@@ -432,7 +420,7 @@ INSERT INTO "recordsManagement"."archivalProfile" ("archivalProfileId","referenc
 ('81', 'BULPAI', 'Bulletins de paie', NULL, NULL, NULL, 'BULPAI', NULL, NULL, false, false, 'item', '{}')
 ;
 
-INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId","containedProfileId") VALUES 
+INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId","containedProfileId") VALUES
 ('7', '8'),
 ('7', '9'),
 ('7', '10'),
@@ -485,7 +473,7 @@ INSERT INTO "recordsManagement"."archivalProfileContents" ("parentProfileId","co
 ('61', '69')
 ;
 
-INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId","fieldName","required","position","isImmutable","isRetained","isInList") VALUES 
+INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId","fieldName","required","position","isImmutable","isRetained","isInList") VALUES
 ('1', 'org', false, 0, false, false, false),
 ('2', 'org', false, 0, false, false, false),
 ('3', 'org', false, 0, false, false, false),
@@ -518,7 +506,7 @@ INSERT INTO "recordsManagement"."archiveDescription" ("archivalProfileId","field
 ('81', 'org', true, 3, false, NULL, false)
 ;
 
-INSERT INTO "recordsManagement"."descriptionField" ("name","label","type","default","minLength","maxLength","minValue","maxValue","enumeration","facets","pattern","isArray") VALUES 
+INSERT INTO "recordsManagement"."descriptionField" ("name","label","type","default","minLength","maxLength","minValue","maxValue","enumeration","facets","pattern","isArray") VALUES
 ('customer', 'Client', 'text', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
 ('documentId', 'Identifiant de document', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
 ('dueDate', 'Date d''échéance', 'date', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false),
@@ -533,7 +521,7 @@ INSERT INTO "recordsManagement"."descriptionField" ("name","label","type","defau
 ('taxIdentifier', 'N° TVA Intraco.', 'name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, false)
 ;
 
-INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId","reference","digitalResourceClusterId","control","default","samplingFrequency","samplingRate") VALUES 
+INSERT INTO "recordsManagement"."serviceLevel" ("serviceLevelId","reference","digitalResourceClusterId","control","default","samplingFrequency","samplingRate") VALUES
 ('ServiceLevel_001', 'serviceLevel_001', 'archives', 'formatDetection formatValidation virusCheck convertOnDeposit', false, 2, 50),
 ('ServiceLevel_002', 'serviceLevel_002', 'archives', NULL, true, 2, 50)
 ;
