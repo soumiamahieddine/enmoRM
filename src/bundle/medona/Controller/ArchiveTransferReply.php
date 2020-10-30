@@ -38,7 +38,7 @@ class ArchiveTransferReply extends abstractMessage
      *
      * @return The reply message generated
      */
-    public function send($transferMessage, $replyCode = "OK", $comment = null)
+    public function send($transferMessage, $archives, $replyCode = "OK", $comment = null)
     {
         if (is_scalar($transferMessage)) {
             $messageId = $transferMessage;
@@ -82,7 +82,7 @@ class ArchiveTransferReply extends abstractMessage
             $message->senderOrg = $recipientOrg;
         }
 
-        /*if ($archives) {
+        if ($archives) {
             foreach ($archives as $archive) {
                 $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
                 $unitIdentifier->messageId = $message->messageId;
@@ -93,7 +93,7 @@ class ArchiveTransferReply extends abstractMessage
             }
         }
 
-        $message->archive = $archives;*/
+        $message->archive = $archives;
 
         /*$message->lifeCycleEventId = \laabs::newTokenList();
         foreach ($archives as $archive) {
