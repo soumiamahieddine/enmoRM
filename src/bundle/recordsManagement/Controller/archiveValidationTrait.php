@@ -148,9 +148,8 @@ trait archiveValidationTrait
         if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration) && $value != '') {
             throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$descriptionField->name]);
         }
-
         if (!empty($descriptionField->ref) && $descriptionField->ref) {
-            $this->validateRef($descriptionField->name, $value);
+            $this->validateRef($descriptionField, $value);
         }
     }
 
@@ -431,9 +430,10 @@ trait archiveValidationTrait
         unlink($filename);
     }
 
-    protected function validateRef($referentielName, $value)
+    protected function validateRef($descriptionField, $value)
     {
         $isValid = false;
+        $referentielName = $descriptionField->name;
         $conf = \laabs::Configuration()['recordsManagement'];
         if (isset($conf['refDirectory']) || is_dir($conf['refDirectory'])) {
             $refDirectory = $conf['refDirectory'];
@@ -450,7 +450,7 @@ trait archiveValidationTrait
         }
 
         if (!$isValid) {
-            throw new \core\Exception\BadRequestException("Invalid value %s supplied for referentiel %s", 404, null, [$value, $referentielName]);
+            throw new \core\Exception\BadRequestException("Invalid value %s supplied for referentiel %s", 404, null, [$value, $descriptionField->label]);
         }
 
         return true;
