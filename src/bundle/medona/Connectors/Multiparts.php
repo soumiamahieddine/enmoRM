@@ -65,8 +65,7 @@ class Multiparts
         $modele->xml = \laabs::newService('dependency/xml/Document');
 
         if (is_resource($package->data)) {
-            // TODO verify
-            // $modele->xml->load(base64_decode(stream_get_contents($package->data)));
+            $modele->xml->loadXML(stream_get_contents(\core\Encoding\Base64::decode($package->data)));
         } elseif (filter_var($package->data, FILTER_VALIDATE_URL)) {
             // TODO verify
             // $modele->xml->load(stream_get_contents($attachment->data));

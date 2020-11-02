@@ -36,7 +36,7 @@ interface transferImportInterface
     /**
      * Receive message with all contents embedded
      *
-     * @param string $messageFile   The message binary contents OR a filename
+     * @param mixed  $messageFile   The message binary contents OR a filename
      * @param string $connector        The schema used
      * @param array  $params        An array of params
      *

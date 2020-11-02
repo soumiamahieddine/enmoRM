@@ -37,7 +37,7 @@ class ArchiveTransfer extends abstractMessage
 
     /**
      * Receive message with all contents embedded
-     * @param string $messageFile The message binary contents OR a filename
+     * @param mixed  $messageFile The message binary contents OR a filename
      * @param array  $attachments  An array of attachment binary data
      * @param string $filename    The message file name
      *
@@ -63,7 +63,7 @@ class ArchiveTransfer extends abstractMessage
 
         /**
      * Receive message with all contents embedded
-     * @param string $package   The message binary contents OR a filename
+     * @param mixed  $package   The message binary contents OR a filename
      * @param string $connector The source name to use
      * @param array  $params    An array of params
      *
