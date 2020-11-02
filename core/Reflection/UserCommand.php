@@ -202,7 +202,7 @@ class UserCommand
             array_shift($args);
 
             foreach ($args as $name => $value) {
-                if (ctype_alpha($name[0])) {
+                if (!empty($name) && ctype_alpha($name[0])) {
                     $matched->variables[$name] = $value;
                 }
             }
