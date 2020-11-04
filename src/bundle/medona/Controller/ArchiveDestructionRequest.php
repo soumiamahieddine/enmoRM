@@ -41,10 +41,10 @@ class ArchiveDestructionRequest extends abstractMessage
         $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
         $queryParts[] = "type='ArchiveDestructionRequest'";
         $queryParts[] = "active=true";
-        $queryParts[] = "status != 'processed' 
-        AND status != 'error' 
-        AND status != 'sent' 
-        AND status != 'validated' 
+        $queryParts[] = "status != 'processed'
+        AND status != 'error'
+        AND status != 'sent'
+        AND status != 'validated'
         AND status != 'rejected'";
 
         $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
@@ -351,7 +351,7 @@ class ArchiveDestructionRequest extends abstractMessage
     public function process($messageId)
     {
         if (is_scalar($messageId)) {
-            $message = $this->sdoFactory->read('medona/message', $messageId);
+            $message = $this->read($messageId);
         } else {
             $message = $messageId;
         }
