@@ -1092,7 +1092,7 @@ class ArchiveTransfer extends abstractMessage
 
         $archiveTransferReplyController = \laabs::newController('medona/ArchiveTransferReply');
 
-        $replyMessage = $archiveTransferReplyController->send($message, "000");
+        $replyMessage = $archiveTransferReplyController->send($message, $archives, "000");
 
         return (string) $replyMessage->messageId;
     }
