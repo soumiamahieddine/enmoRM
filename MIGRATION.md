@@ -2,13 +2,7 @@
 ## Configuration
 
 ## Ajout dans la configuration
-Dans la section [recordsManagement], ajout de la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
-
-Dans la section [recordsManagement], ajout de la directive `exportPath` qui permet de renseigner le chemin de stockage pour les exports réalisés dans l'application, le chemin par défaut est le suivant:
-
-```
-exportPath = "%laabsDirectory%/web/tmp"
-```
+Dans la section [recordsManagement], ajout dee la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
 
 Dans la section [medona], ajout de la directive `packageConnectors` qui permet la configuration de connecteurs pour faciliter le versement de paquets externes au format incomplet.
 
@@ -20,7 +14,7 @@ pathToOpenSSL="C:\Program Files\OpenSSL-Win64\bin\openssl"
 
 ### Ajout d'un droit utilisateur
 
-Le privilège se prénommant `Traiter les communications` a été ajouté, ce privilège se trouve dans la catégorie 'Communication' et n'est accessible sur Socle que si le mode transactionnel est activé.
+Le privilège `Traiter les communications` a été ajouté, ce privilège se trouve dans la catégorie 'Communication' et n'est accessible sur Socle que si le mode transactionnel est activé.
 
 Un point de menu `Communications à finaliser` a été ajouté sur l'écran d'Echange pour effectuer le traitement manuel des communications:
 
@@ -60,6 +54,7 @@ csrfConfig = '{
 
 Dans la section [recordsManagement], modification de la configuration des schémas de description :
 
+```
 descriptionSchemes = "{
     'extension' : {
         'label' : 'extension',
@@ -73,6 +68,7 @@ descriptionSchemes = "{
         'search': 'recordsManagement/log'
     }
 }"
+```
 
 ## Service horodatage tiers de test
 Dans la section [lifeCycle], si la directive `chainWithTimestamp` est activé, vous pouvez choisir votre service d'horodatage tiers dans la section nouvellement crée [dependency.timestamp] parmis les 3 suivants :
