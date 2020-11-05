@@ -2,6 +2,7 @@
 ## Configuration
 
 ## Ajout dans la configuration
+
 Dans la section [recordsManagement], ajout dee la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
 
 Dans la section [medona], ajout de la directive `packageConnectors` qui permet la configuration de connecteurs pour faciliter le versement de paquets externes au format incomplet.
@@ -14,9 +15,28 @@ pathToOpenSSL="C:\Program Files\OpenSSL-Win64\bin\openssl"
 
 ### Ajout d'un droit utilisateur
 
-Le privilège `Traiter les communications` a été ajouté, ce privilège se trouve dans la catégorie 'Communication' et n'est accessible sur Socle que si le mode transactionnel est activé.
+Si le mode transactionnel est activé, ajout du droit de traiter manuellement les communications.
+Pour l'ajouter :
 
-Un point de menu `Communications à finaliser` a été ajouté sur l'écran d'Echange pour effectuer le traitement manuel des communications:
+```
+        {
+            'serviceURI' : 'medona/ArchiveDelivery/updateProcessBatch',
+            'description' : 'Traiter les communications'
+        },
+```
+
+dans la directive `servicePrivileges` présente dans la section [auth] de votre fichier de configuration.
+
+De fait, un point de menu a été ajouté sur l'écran d'Echange pour traiter manuellement les communication, il faut ajouter dans la directive `menu` :
+
+```
+        {
+            'label' : 'Communications à finaliser',
+            'href'  : '/delivery/Process'
+        },
+```
+
+c'est un `submenu` présent sous le label `Communication` de la section [medona] de votre fichier de configuration.
 
 ### Ajout du bundle Statistiques et configuration de session dans virtual host
 
@@ -33,12 +53,17 @@ SetEnv LAABS_SESSION_START Off
 ```
 
 ## Ajout d'un droit de compte de Service
-Dans la section [auth] de la configuration, ajout d'une fonctionnalité déclaré dans`servicePrivileges` permet de récupérer directement le contenu d'une ressource d'archive :
 
+Ajout d'une fonctionnalité permettant de récupérer directement le contenu d'une ressource d'archive, il faut ajouter :
+
+```
     {
         'serviceURI' : 'recordsManagement/archive/read_archiveId_Digitalresource_resId_Contents',
         'description' : 'Récupérer directement le contenu d\'une ressource d\'archive'
     }
+```
+
+dans la directive `servicePrivileges` présente dans la section [auth] de votre fichier de configuration.
 
 ### Modification de configuration
 
@@ -71,7 +96,8 @@ descriptionSchemes = "{
 ```
 
 ## Service horodatage tiers de test
-Dans la section [lifeCycle], si la directive `chainWithTimestamp` est activé, vous pouvez choisir votre service d'horodatage tiers dans la section nouvellement crée [dependency.timestamp] parmis les 3 suivants :
+
+Dans la section [lifeCycle] du fichier de configuration, si la directive `chainWithTimestamp` est activé, vous pouvez choisir votre service d'horodatage tiers dans la section nouvellement crée [dependency.timestamp] parmis les 3 suivants :
 
 ```
 ; The URL of the TSA provider
@@ -82,6 +108,7 @@ Dans la section [lifeCycle], si la directive `chainWithTimestamp` est activé, v
 ```
 
 ### Mise à jour des fichiers de signature DROID
+
 Mise à jour des fichiers signature et container permettant la détection du format des fichiers
 
 ```
