@@ -1350,7 +1350,9 @@ trait archiveAccessTrait
         }
 
         $userPositionController = \laabs::newController('organization/userPosition');
-        $userServices = array_values($userPositionController->readDescandantService($currentUserService->orgId));
+        $org = $this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber);
+        $positionAncestors = $this->organizationController->readParentOrg($this->organizationController->getOrgByRegNumber($archive->originatorOrgRegNumber)->orgId);
+        $positionAncestors[] = $org;
         $userServices[] = $currentUserService->registrationNumber;
         
         // OWNER access
@@ -1367,8 +1369,10 @@ trait archiveAccessTrait
         }
 
         // ORIGINATOR ACCESS
-        if (\laabs\in_array($archive->originatorOrgRegNumber, $userServices)) {
-            return true;
+        foreach ($positionAncestors as $orgUnit) {
+            if ($orgUnit->registrationNumber == $currentUserService->registrationNumber) {
+                return true;
+            }
         }
 
         // COMMUNICATION ACCESS

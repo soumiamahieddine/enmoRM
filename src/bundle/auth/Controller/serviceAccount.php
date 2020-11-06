@@ -217,7 +217,7 @@ class serviceAccount
         }
 
         if ($this->hasSecurityLevel) {
-            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization->orgName, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
+            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($account->ownerOrgId, array_column($this->organizationController->readParentOrg($orgId), 'orgId')) === false){
                 throw new \core\Exception\ForbiddenException("You are not allowed to add user in this organization");
             }
             $this->checkPrivilegesAccess($account, $serviceAccount);
@@ -415,7 +415,10 @@ class serviceAccount
         $ownAccount = $this->read($accountToken->accountId);
 
         if ($accountToken->accountId != $serviceAccountId && $this->hasSecurityLevel) {
-            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+            $organization = $this->sdoFactory->read('organization/organization', $serviceAccount->ownerOrgId);
+            $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+            $organizations[] = $organization;
+            if (array_search($serviceAccount->ownerOrgId, array_column($organizations, 'orgId')) === false){
                 throw new \core\Exception\ForbiddenException("You are not allowed to modify this service account");
             }
             $this->checkPrivilegesAccess($ownAccount, $serviceAccount);
