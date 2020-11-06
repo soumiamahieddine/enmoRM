@@ -282,6 +282,8 @@ class serviceAccount
     {
 
         $serviceAccount = $this->sdoFactory->read('auth/account', $serviceAccountId);
+        // var_dump($serviceAccount);
+        // exit;
         $servicePosition = $this->servicePositionController->getPosition($serviceAccountId);
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
 

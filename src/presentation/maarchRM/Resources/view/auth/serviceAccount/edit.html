@@ -18,6 +18,10 @@
                         <div>
                             <input type="text" class="form-control" placeholder="Name" name="accountName" id="accountName" value=""/>
                         </div>
+                        <label class="control-label" for="accountName" style="padding-top: 5px;">Email</label>
+                        <div>
+                            <input type="text" class="form-control" placeholder="Email" name="emailAddress" id="emailAddress" value=""/>
+                        </div>
                     </div>
                     <div class="well">
                         <div class="form-group">
@@ -250,7 +254,8 @@
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
         serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").attr("data-ownerorgid");
-        serviceAccount.emailAddress = '';
+        serviceAccount.emailAddress = jQuery.trim($("#emailAddress").val());;
+        console.log(serviceAccount);
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
 
