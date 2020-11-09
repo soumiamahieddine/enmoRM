@@ -173,6 +173,7 @@
     <span id="whiteSpace_text">The fields contain white spaces.</span>
     <span id="nullValue_text">The fields is empty.</span>
     <span id="noServiceFound">No service found</span>
+    <span class="hide" id="invalidEmail_text">Email malformed</span>
 </div>
 
 <script type="application/javascript">
@@ -234,6 +235,7 @@
 
     //save
     $("#submitServiceAccount").on("click", function() {
+        let error = false;
         var url = '/serviceAccount';
         var type = 'POST';
 
@@ -253,9 +255,18 @@
         serviceAccount.accountId = $("#serviceAccountId").val();
         serviceAccount.accountName = jQuery.trim($("#accountName").val());
         serviceAccount.displayName = serviceAccount.accountName;
-        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").attr("data-ownerorgid");
         serviceAccount.emailAddress = jQuery.trim($("#emailAddress").val());;
-        console.log(serviceAccount);
+        serviceAccount.ownerOrgId = $("#originatorOwnerOrgName").attr("data-ownerorgid");
+
+        if (serviceAccount.emailAddress != "" && !validateEmail(serviceAccount.emailAddress)) {
+            gritter.show($('#invalidEmail_text').text(), false);
+            error = true;
+        }
+
+        if (error) {
+            return;
+        }
+
         serviceAccount.enabled = false;
         var orgId = $("#serviceOrgId").val();
 
@@ -521,6 +532,11 @@
                 // $('#adminUser').parent().removeClass('disabled');
             }
         }
+    }
+
+    function validateEmail($email) {
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        return emailReg.test($email);
     }
 
     setAdminButton($('#whatAmI').text());
