@@ -485,6 +485,57 @@ class serviceAccount
     }
 
     /**
+     * Search accounts for a privilege
+     *
+     * @param  string $serviceUri Privilege service uri
+     *
+     * @return array  $accounts  Array of service accounts with same privilege
+     */
+    public function getAccountsByPrivilege($serviceUri)
+    {
+        $queryAssert = null;
+
+        if ($this->hasSecurityLevel) {
+            $accountId = \laabs::getToken("AUTH")->accountId;
+            $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+            switch ($account->getSecurityLevel()) {
+                case $account::SECLEVEL_GENADMIN:
+                    $queryAssert = " AND (isAdmin='TRUE' AND ownerOrgId!=null)";
+                    break;
+
+                case $account::SECLEVEL_FUNCADMIN:
+                    $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                    $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+                    $organizations[] = $organization;
+                    $organizationsIds = [];
+                    foreach ($organizations as $key => $organization) {
+                        $organizationsIds[] = (string) $organization->orgId;
+                    }
+
+                    $queryAssert = " AND ((ownerOrgId= ['" .
+                        implode("', '", $organizationsIds) .
+                        "']) OR (isAdmin!=TRUE AND ownerOrgId=null))
+                        ";
+                    break;
+
+                case $account::SECLEVEL_USER:
+                    $queryAssert = " AND ((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                    break;
+            }
+        }
+
+        $accounts = $this->sdoFactory->index(
+            "auth/account",
+            ["accountId", "accountName", "displayName"],
+            "accountId = [READ auth/servicePrivilege  [accountId] (serviceURI='".$serviceUri."' OR serviceURI = :aster)] . $queryAssert",
+            ['aster' => "*"]
+        );
+
+        return $accounts;
+    }
+
+
+    /**
      * create the service privileges
      * @param array  $servicesURI The service privilege
      * @param string $accountId   The service account identifier

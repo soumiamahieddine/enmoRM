@@ -80,6 +80,16 @@ interface batchSchedulingInterface
      */
     public function updateBatchprocessingChangestatus($schedulingId, $status);
 
+    /**
+     * List service accounts available by scheduling
+     *
+     * @param  string $serviceUri url route to check right for
+     *
+     * @uses auth/serviceAccount/readByRoute
+     * @return batchProcessing/scheduling/listServiceAccounts
+     */
+    public function readServiceaccountsbyroute($serviceUri);
+
     /*******************LOG**********************/
 
     /**
