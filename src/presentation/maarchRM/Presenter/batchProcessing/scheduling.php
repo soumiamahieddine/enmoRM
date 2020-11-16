@@ -233,4 +233,19 @@ class scheduling
 
         return $this->json->save();
     }
+
+    /**
+     * List of service accounts available to select for user
+     *
+     * @param  array $serviceAccounts array of serviceAccounts
+     *
+     * @return object JSON object
+     */
+    public function listServiceAccounts($serviceAccounts)
+    {
+        $this->json->status = true;
+        $this->json->serviceAccounts = $serviceAccounts;
+
+        return $this->json->save();
+    }
 }

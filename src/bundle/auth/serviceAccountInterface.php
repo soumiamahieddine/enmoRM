@@ -134,4 +134,12 @@ interface serviceAccountInterface
      * @return boolean        Import with reset of table data or not
      */
     public function createImport($data, $isReset);
+
+    /**
+     * @param string $serviceUri Uri to check privileges
+     *
+     * @action auth/serviceAccount/getAccountsByPrivilege
+     *
+     */
+    public function readByRoute($serviceUri);
 }
