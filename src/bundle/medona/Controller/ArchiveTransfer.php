@@ -1248,7 +1248,7 @@ class ArchiveTransfer extends abstractMessage
     {
         $this->changeStatus($messageId, "rejected", $comment);
         $archiveTransferReplyController = \laabs::newController('medona/ArchiveTransferReply');
-        $archiveTransferReplyController->send($messageId, "rejected", $comment);
+        $archiveTransferReplyController->send($messageId, null, "rejected", $comment);
 
         $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
 
