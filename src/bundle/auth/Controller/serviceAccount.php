@@ -76,9 +76,26 @@ class serviceAccount
     /**
      * List all service to display
      *
+     * @param string    $accountName    Name of account
+     * @param integer   $maxResults     Max result number to return
+     *
      * @return array The array of stdClass with dislpay name and service identifier
      */
-    public function search()
+    public function search($accountName = null, $maxResults = null)
+    {
+        $serviceAccounts = $this->sdoFactory->find('auth/account', $this->getSearchQuery($accountName), null, false, false, $maxResults);
+
+        return $serviceAccounts;
+    }
+
+    /**
+     * Query builder for search and count function
+     *
+     * @param  string $accountName Account Name
+     *
+     * @return string PDO query
+     */
+    public function getSearchQuery($accountName = null)
     {
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
@@ -87,6 +104,10 @@ class serviceAccount
 
         $queryAssert = [];
         $queryAssert[] = "accountType='service'";
+
+        if (!is_null($accountName) && $accountName != "null") {
+            $queryAssert[] = "accountName~'*$accountName*'";
+        }
 
         if ($this->hasSecurityLevel) {
             switch ($account->getSecurityLevel()) {
@@ -115,11 +136,22 @@ class serviceAccount
             }
         }
 
-        $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
-
-        return $serviceAccounts;
+        return \laabs\implode(" AND ", $queryAssert);
     }
 
+    /**
+     * Count service Accounts
+     *
+     * @param  string $accountName
+     *
+     * @return integer $count Number of service accounts
+     */
+    public function searchCount($accountName = null)
+    {
+        $count = $this->sdoFactory->count('auth/account', $this->getSearchQuery($accountName));
+
+        return $count;
+    }
     /**
      *  Prepare an empty service object
      *
