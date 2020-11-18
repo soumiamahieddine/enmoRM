@@ -621,5 +621,5 @@ msgstr "Une erreur est survenue. Si le problème persiste, veuillez recharger la
 msgid "Your query returns too much results, only first results are displayed."
 msgstr "Le nombre de résultats retournés est trop important. Veuillez affiner votre recherche."
 
-msgid "Name of message file does not exists"
-msgstr "Le nom du fichier de bordereau renseigné n'existe pas"
+msgid "The specified message file can not be found"
+msgstr "Le fichier de bordereau renseigné n'a pas été trouvé"
