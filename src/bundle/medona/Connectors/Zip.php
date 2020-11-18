@@ -77,6 +77,10 @@ class Zip
             $manifestName = $params['manifest'];
         }
 
+        if (!in_array($manifestName, scandir($messageDirectory))) {
+            throw new \core\Exception\BadRequestException("Name of message file does not exists", 400);
+        }
+
         return $this->messageDirectory . DIRECTORY_SEPARATOR . $manifestName;
     }
 
