@@ -11,7 +11,7 @@ use core\Type\ArrayObject;
  *  Symbolic links creation for Windows systems
  *  @param string $target The path to target file/dir
  *  @param string $link   The path of the symlink to create
- * 
+ *
  *  @return bool True if creation of link succeeded
  */
 function symlink($target, $link)
@@ -26,7 +26,7 @@ function symlink($target, $link)
         $output = array();
         $return = false;
         $cmd = 'mklink ' . $param . ' "' . $link . '" "' . $target . '"';
-        
+
         exec($cmd, $output, $return);
 
         if ($return > 0) {
@@ -44,23 +44,24 @@ function symlink($target, $link)
  * Improvements : the use of base conversion to get short ids with good entropy
  * @param string $prefix      A prefix for the generated id, if a specific class of characters is needed (XML ids must start with alpha)
  * @param bool   $moreEntropy Use more entropy
- * 
+ *
  * @return string The unique id
  */
 function uniqid($prefix = "", $moreEntropy = true)
 {
-    $parts = \explode('.', microtime(true));
-    $sec = $parts[0];
-    if (!isset($parts[1])) {
+    $parts = \explode(' ', microtime());
+    $sec = $parts[1];
+    if (!isset($parts[0])) {
         $msec = 0;
     } else {
-        $msec = $parts[1];
+        // Only using decimal part of microsecond 0.12345600 => 123456
+        $msec = substr($parts[0], 2, 6);
     }
 
-    $uniqid = str_pad(base_convert($sec, 10, 36), 6, '0', STR_PAD_LEFT) . '-' . str_pad(base_convert($msec, 10, 16), 4, '0', STR_PAD_LEFT);
+    $uniqid = str_pad(base_convert($sec, 10, 36), 6, '0', STR_PAD_LEFT) . '-' . str_pad(base_convert($msec, 10, 36), 4, '0', STR_PAD_LEFT);
 
     if ($moreEntropy) {
-        $uniqid .= '-' . str_pad(base_convert(mt_rand(), 10, 36), 6, '0', STR_PAD_LEFT); 
+        $uniqid .= '-' . str_pad(base_convert(mt_rand(), 10, 36), 6, '0', STR_PAD_LEFT);
     }
 
     return $prefix . $uniqid;
@@ -72,7 +73,7 @@ function uniqid($prefix = "", $moreEntropy = true)
  * @param string $delimiter The delimiter string
  * @param string $string    The string to explode
  * @param bool   $noEmpty   If true, empty strings will not be included
- * 
+ *
  * @return array The array of exploded values, empty array if empty string
  */
 function explode($delimiter, $string, $noEmpty = true)
@@ -82,7 +83,7 @@ function explode($delimiter, $string, $noEmpty = true)
     if (!$array) {
         return array();
     }
-    
+
     if ($noEmpty) {
         $array = array_map("trim", $array);
         foreach ($array as $index => $value) {
@@ -91,7 +92,7 @@ function explode($delimiter, $string, $noEmpty = true)
             }
         }
     }
-    
+
     return array_values($array);
 }
 
@@ -101,13 +102,13 @@ function explode($delimiter, $string, $noEmpty = true)
  * @param string $glue    The glue string
  * @param array  $array   The array to implode
  * @param bool   $noEmpty If true, empty items will not be included into string
- * 
+ *
  * @return string The string of imploded values, empty string if empty array
  */
 function implode($glue, array $array, $noEmpty = true)
 {
     $arrayValues = array_values($array);
-    
+
     if ($noEmpty) {
         foreach ($arrayValues as $index => $value) {
             if (trim($value) == "") {
@@ -115,7 +116,7 @@ function implode($glue, array $array, $noEmpty = true)
             }
         }
     }
-            
+
     return \implode($glue, $arrayValues);
 }
 
@@ -137,7 +138,7 @@ function basename($name, $suffix = null)
     }
 
     $filename = str_replace(LAABS_NS_SEPARATOR, DIRECTORY_SEPARATOR, $name);
-    
+
     return \basename($filename, $suffix);
 }
 
@@ -145,7 +146,7 @@ function basename($name, $suffix = null)
  * Returns the dirname of a path including class names and namespaces
  * Improvements : works on file system path and php namespaces
  * @param string $name
- * 
+ *
  * @return string the directory or namespace
  */
 function dirname($name)
@@ -171,7 +172,7 @@ function dirname($name)
  * Tokenizes a string
  * Improvements : tokenizes all strings even non php (no open tag), removes open tag
  * @param string $string The string to tokenize
- * 
+ *
  * @return array The tokens
  */
 function token_get_all($string)
@@ -204,7 +205,7 @@ function token_get_all($string)
  * @param string $class    The class to list traits of
  * @param bool   $autoload Use autoload or not
  * @param bool   $deep     List traits of traits and traits of ancestors
- * 
+ *
  * @return array An array of the unique traits used by the class
  */
 function class_uses($class, $autoload = true, $deep = true)
@@ -243,7 +244,7 @@ function class_uses($class, $autoload = true, $deep = true)
  * Improvements : Returns the class of var is an object and $class set true
  * @param mixed  $var   The variable to type check
  * @param string $class Return the class of object instead of php base type 'object'
- * 
+ *
  * @return string The type of the variable
  * Possible values are
  *  * "boolean"
@@ -291,7 +292,7 @@ function gettype($var, $class = true)
 /**
  * Checks if an array is associative
  * @param array $array The array to check
- * 
+ *
  * @return bool
  */
 function is_assoc($array)
@@ -303,7 +304,7 @@ function is_assoc($array)
  * Get constans value from its name
  * Improvements : Checks constant is defined before returning value. If not, return constant name
  * @param string $name The name of the constant
- * 
+ *
  * @return mixed The value of the defined constant or the name if not defined
  */
 function constant($name)
@@ -311,7 +312,7 @@ function constant($name)
     if (defined($name)) {
         return \constant($name);
     }
-        
+
     return $name;
 }
 
@@ -321,7 +322,7 @@ function constant($name)
  * @param string $str       The string to hash
  * @param bool   $rawOutput Return as raw string
  * @param bool   $short     Return short 25 MD5 instead of 32
- * 
+ *
  * @return $string The MD5
  */
 function md5($str, $rawOutput=false, $short=true)
@@ -365,7 +366,7 @@ function base_convert($number, $frombase, $tobase)
     }
 
     $base64 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
-    
+
     if ($tobase == 64) {
         $b64 = "";
 
@@ -383,7 +384,7 @@ function base_convert($number, $frombase, $tobase)
         }
 
         return $b64;
-    } 
+    }
 
     if ($frombase == 64) {
         $dec = "";
@@ -411,7 +412,7 @@ function base_convert($number, $frombase, $tobase)
  * Improvements: supports microseconds
  * @param string  $format    The format for the date/time. See php.net . Default is ISO format
  * @param integer $timestamp The timestamp to format, if null the current timestamp is used
- * 
+ *
  * @return string
  */
 function date($format="Y-m-d\TH:i:s.uP", $timestamp=false)
@@ -419,9 +420,9 @@ function date($format="Y-m-d\TH:i:s.uP", $timestamp=false)
     if (!$timestamp) {
         $timestamp = \date('Y-m-d\TH:i:s') . substr(microtime(), 1, 9);
     }
-    
+
     $datetime = new \DateTime($timestamp);
-    
+
     return $datetime->format($format);
 }
 
@@ -430,7 +431,7 @@ function date($format="Y-m-d\TH:i:s.uP", $timestamp=false)
  * Improvements: supports microseconds
  * @param string  $format    The format for the date/time. See php.net . Default is ISO format
  * @param integer $timestamp The timestamp to format, if null the current timestamp is used
- * 
+ *
  * @return string
  */
 function gmdate($format="Y-m-d\TH:i:s.u\Z", $timestamp=false)
@@ -438,9 +439,9 @@ function gmdate($format="Y-m-d\TH:i:s.u\Z", $timestamp=false)
     if (!$timestamp) {
         $timestamp = \gmdate('Y-m-d\TH:i:s') . substr(microtime(), 1, 9);
     }
-    
+
     $datetime = new \DateTime($timestamp);
-    
+
     return $datetime->format($format);
 }
 
@@ -448,7 +449,7 @@ function gmdate($format="Y-m-d\TH:i:s.u\Z", $timestamp=false)
  * Coalesce empty values
  * @param mixed $value       The input value
  * @param mixed $replacement The value to return if value is empty
- * 
+ *
  * @return mixed
  */
 function coalesce($value, $replacement)
@@ -463,7 +464,7 @@ function coalesce($value, $replacement)
 /**
  * Create a new tmp file opened in w+ (read+write) and return handler
  * Improvements : creates directory, uses laabs tmp directory
- * 
+ *
  * @return resource
  */
  function tmpfile()
@@ -485,7 +486,7 @@ function coalesce($value, $replacement)
  * Improvements : creates directory, uses laabs tmp directory
  * @param string $dir
  * @param string $prefix
- * 
+ *
  * @return string
  */
 function tempnam($dir=false, $prefix=false)
@@ -505,7 +506,7 @@ function tempnam($dir=false, $prefix=false)
  * Create a new tmp dir and return path
  * Improvements : Not a php function
  * @param string $prefix
- * 
+ *
  * @return string
  */
 function tempdir($prefix="")
@@ -513,7 +514,7 @@ function tempdir($prefix="")
     $dir = \laabs::getTmpDir();
 
     $dirname = $dir . DIRECTORY_SEPARATOR . \laabs\uniqid($prefix);
-    
+
     while (is_dir($dirname)) {
         $dirname = $dir . DIRECTORY_SEPARATOR . \laabs\uniqid($prefix);
     }
@@ -527,11 +528,11 @@ function tempdir($prefix="")
  * Checks if a file or directory exists on the file system
  * Improvements : accepts a case-insensitive match
  * @param string  $filename
- * @param boolean $matchcase 
- * 
+ * @param boolean $matchcase
+ *
  * @return boolean
  */
-function file_exists($filename, $matchcase=false) 
+function file_exists($filename, $matchcase=false)
 {
     if (\file_exists($filename)) {
         return true;
@@ -542,7 +543,7 @@ function file_exists($filename, $matchcase=false)
     }
 
     $dir = dirname($filename);
-    
+
     $files = glob($dir . '/*');
 
     $lcaseFilename = strtolower($filename);
@@ -559,7 +560,7 @@ function file_exists($filename, $matchcase=false)
  * Get the real canonical path of a file
  * Improvements : Case insensitive
  * @param string $filename
- * 
+ *
  * @return string
  */
 function realpath($filename)
@@ -644,6 +645,6 @@ function hash_stream($algo, $handler)
         $hash = strtolower(hash_file($algo, $tmpfile));
         unlink($tmpfile);
     }
-    
+
     return $hash;
 }

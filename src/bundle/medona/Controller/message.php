@@ -43,6 +43,8 @@ class message
 
     protected $archivalAgreementController;
 
+    protected $archivalProfileController;
+
     protected $sdoFactory;
 
     protected $messageTypeController;
@@ -80,6 +82,7 @@ class message
     protected $finfo;
 
     protected $packageSchemas = [];
+    protected $packageConnectors = [];
 
     /**
      * Constructor
@@ -97,7 +100,8 @@ class message
         $removeMessageTask = null,
         $autoValidateSize = 0,
         $autoProcessSize = 0,
-        $packageSchemas = []
+        $packageSchemas = [],
+        $packageConnectors = []
     ) {
         $this->orgController = \laabs::newController('organization/organization');
         $this->archiveController = \laabs::newController('recordsManagement/archive');
@@ -105,6 +109,7 @@ class message
         $this->lifeCycleJournalController = \laabs::newController('lifeCycle/journal');
         $this->digitalResourceController = \laabs::newController('digitalResource/digitalResource');
         $this->archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+        $this->archivalProfileController = \laabs::newController('recordsManagement/archivalProfile');
 
         $this->profilesDirectory = \laabs::configuration('recordsManagement')['profilesDirectory'];
 
@@ -127,6 +132,7 @@ class message
         $this->finfo = new \finfo(\FILEINFO_MIME_TYPE);
 
         $this->packageSchemas = $packageSchemas;
+        $this->packageConnectors = $packageConnectors;
     }
 
     /**
@@ -241,6 +247,13 @@ class message
     ) {
         $queryParts = array();
         $currentService = \laabs::getToken("ORGANIZATION");
+        if (!isset($currentService) || is_null($currentService)) {
+            throw \laabs::newException(
+                "medona/noOrganizationException",
+                "User has no organization. Please contact your administrator",
+                409
+            );
+        }
         $currentService->orgRoleCodes = (array) $currentService->orgRoleCodes;
 
         $isOriginator = in_array('originator', $currentService->orgRoleCodes);
@@ -759,15 +772,24 @@ class message
         $message = $message = $this->sdoFactory->read('medona/message', $messageId);
         $message->object = json_decode($message->data);
 
-        $fromStatus = ['error','processing','toBeModified'];
+        $fromStatus = ['error','processError', 'validationError', 'processing','toBeModified'];
         if (!in_array($message->status, $fromStatus)) {
             $this->sendError("101", "Le statut du message est incorrect.");
         }
 
-        if ($message->status == 'toBeModified') {
-            $this->changeStatus($messageId, 'Modified');
-        } else {
-            $this->changeStatus($messageId, 'accepted');
+        switch ($message->status) {
+            case 'toBeModified':
+                $this->changeStatus($messageId, 'modified');
+                break;
+            case 'validationError':
+                $this->changeStatus($messageId, 'received');
+                break;
+            case 'processError':
+                $this->changeStatus($messageId, 'accepted');
+                break;
+            default:
+                $this->changeStatus($messageId, 'received');
+                break;
         }
 
         $this->lifeCycleJournalController->logEvent(
@@ -793,7 +815,8 @@ class message
         $message->object = json_decode($message->data);
 
         if ($message->schema != 'medona') {
-            $messageController = \laabs::newController($message->schema.'/'.$message->type);
+            $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+            $messageController = \laabs::newController("$namespace/".$message->type);
 
             $resource = $messageController->getAttachment($message, $attachmentId);
 
@@ -895,7 +918,8 @@ class message
             $message->schema = $messageSchema;
         }
 
-        $this->messageTypeParser = \laabs::newParser($message->schema.LAABS_URI_SEPARATOR.$message->type, $format);
+        $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+        $this->messageTypeParser = \laabs::newParser($namespace.LAABS_URI_SEPARATOR.$message->type, $format);
 
         return $this->messageTypeParser;
     }
@@ -920,8 +944,9 @@ class message
             }
             $message->schema = $messageSchema;
         }
+        $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
         $this->messageTypeSerializer = \laabs::newSerializer(
-            $message->schema. LAABS_URI_SEPARATOR. $message->type,
+            $namespace. LAABS_URI_SEPARATOR. $message->type,
             $format
         );
 
@@ -1205,5 +1230,141 @@ class message
         $count = $this->sdoFactory->count("medona/message", \laabs\implode(" OR ", $queryString));
 
         return $count;
+    }
+
+    protected function sendError($code, $message = false, $variable = null)
+    {
+        if ($message) {
+            array_push($this->errors, new \core\Error($message, $variable, $code));
+        } else {
+            array_push($this->errors, new \core\Error($this->getReplyMessage($code), $variable, $code));
+        }
+
+        if ($this->replyCode == null) {
+            $this->replyCode = $code;
+        }
+    }
+
+    protected function getReplyMessage($code)
+    {
+        switch ((string) $code) {
+            case "000":
+                $name = "OK";
+                break;
+            case "001":
+                $name = "OK (consulter les commentaires pour information)";
+                break;
+            case "002":
+                $name = "OK (Demande aux autorités de contrôle effectuée)";
+                break;
+
+            case "101":
+                $name = "Message mal formé.";
+                break;
+            case "102":
+                $name = "Système momentanément indisponible.";
+                break;
+            case "103":
+                $name = "Message déjà reçu.";
+                break;
+            case "104":
+                $name = "Message en erreur.";
+                break;
+
+            case "200":
+                $name = "Service producteur non reconnu.";
+                break;
+            case "201":
+                $name = "Service d'archive non reconnu.";
+                break;
+            case "202":
+                $name = "Service versant non reconnu.";
+                break;
+            case "203":
+                $name = "Dépôt non conforme au profil de données.";
+                break;
+            case "204":
+                $name = "Format de document non géré.";
+                break;
+            case "205":
+                $name = "Format de document non conforme au format déclaré.";
+                break;
+            case "206":
+                $name = "Signature du message invalide.";
+                break;
+            case "207":
+                $name = "Empreinte(s) invalide(s).";
+                break;
+            case "208":
+                $name = "Archive indisponible. Délai de communication non écoulé.";
+                break;
+            case "209":
+                $name = "Archive absente (élimination, restitution, transfert)";
+                break;
+            case "210":
+                $name = "Archive inconnue";
+                break;
+            case "211":
+                $name = "Pièce attachée absente.";
+                break;
+            case "212":
+                $name = "Dérogation refusée.";
+                break;
+            case "213":
+                $name = "Identifiant de document incorrect";
+                break;
+
+            case "300":
+                $name = "Convention invalide.";
+                break;
+            case "301":
+                $name = "Dépôt non conforme à la convention. Quota des versements dépassé.";
+                break;
+            case "302":
+                $name = "Dépôt non conforme à la convention. Identifiant du producteur non conforme.";
+                break;
+            case "303":
+                $name = "Dépôt non conforme à la convention. Identifiant du service versant non conforme.";
+                break;
+            case "304":
+                $name = "Dépôt non conforme à la convention. Identifiant du service d'archives non conforme.";
+                break;
+            case "305":
+                $name = "Dépôt non conforme à la convention. Signature(s) de document(s) absente(s).";
+                break;
+            case "306":
+                $name = "Dépôt non conforme à la convention. Volume non conforme.";
+                break;
+            case "307":
+                $name = "Dépôt non conforme à la convention. Format non conforme.";
+                break;
+            case "308":
+                $name = "Dépôt non conforme à la convention. Empreinte(s) non transmise(s).";
+                break;
+            case "309":
+                $name = "Dépôt non conforme à la convention. Absence de signature du message.";
+                break;
+            case "310":
+                $name = "Dépôt non conforme à la convention. Signature(s) de document(s) non valide(s).";
+                break;
+            case "311":
+                $name = "Dépôt non conforme à la convention. Signature(s) de document(s) non vérifiée(s).";
+                break;
+            case "312":
+                $name = "Dépôt non conforme à la convention. Dates de début ou de fin non respectées.";
+                break;
+
+            case "400":
+                $name = "Demande rejetée.";
+                break;
+            case "404":
+                $name = "Message non trouvé.";
+                break;
+
+            default:
+                $name = null;
+        }
+
+        return $name;
     }
 }

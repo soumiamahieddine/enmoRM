@@ -237,8 +237,8 @@
     });
 
     $('#document_filesBrowser').on('change', function() {
-        for (var i = 0; i < $(this).context.files.length; i++) {
-            DocumentForm.upload($(this).context.files[i]);
+        for (var i = 0; i < $(this).get(0).files.length; i++) {
+            DocumentForm.upload($(this).get(0).files[i]);
         }
         DocumentForm.reset();
     });

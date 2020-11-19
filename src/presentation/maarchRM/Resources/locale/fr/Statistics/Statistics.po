@@ -1,0 +1,87 @@
+# Statistics/Statistics
+# Language: fr
+# Content-Type: text/plain; charset=UTF-8
+
+msgid "Statistics"
+msgstr "Statistiques"
+
+msgid "Select an operation"
+msgstr "Sélectionner une opération"
+
+msgid "Select a filter"
+msgstr "Sélectionner un critère"
+
+msgid "Deposit"
+msgstr "Versement"
+
+msgid "Deletion"
+msgstr "Élimination"
+
+msgid "Outgoing transfer"
+msgstr "Transfert sortant"
+
+msgid "Growth"
+msgstr "Accroissement net"
+
+msgid "Archival profile"
+msgstr "Profil d'archive"
+
+msgid "Originating agency"
+msgstr "Service producteur"
+
+msgid "From"
+msgstr "Du"
+
+msgid "To"
+msgstr "Jusqu'au"
+
+msgid "originatingOrg"
+msgstr "Service producteur"
+
+msgid "archivalProfile"
+msgstr "Profil d'archive"
+
+msgid "Unit"
+msgstr "Unité"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Archives number"
+msgstr "Nombre d'archives"
+
+msgid "Unknown"
+msgstr "Inconnu"
+
+msgid "End Date is mandatory if start date is filled"
+msgstr "La date de fin est obligatoire si la date de début est remplie"
+
+msgid "Start Date is mandatory if end date is filled"
+msgstr "La date de début est obligatoire si la date de fin est remplie"
+
+msgid "Operation type not supported"
+msgstr "Le type d'opération n'est pas supporté"
+
+msgid "Filter cannot be null if an operation is selected"
+msgstr "Le filtre ne peut être vide si une opération est sélectionnée"
+
+msgid "Start Date cannot be past end date"
+msgstr "La date de début ne peut pas être après la date de fin"
+
+msgid "The sizeFilter parameter must be between 0 and 3 included"
+msgstr "Le paramètre sizeFilter doit être compris entre 0 et 3 inclus"
+
+msgid "Byte"
+msgstr "Octet"
+
+msgid "Operation"
+msgstr "Type de rapport"
+
+msgid "Filter by"
+msgstr "Ventiler par"
+
+msgid "If you choose an operation, you have to choose a filter and reciprocally"
+msgstr "Si vous choisissez une opération, vous devez choisir un critère et réciproquement"
+
+msgid "Generate"
+msgstr "Générer"

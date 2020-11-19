@@ -34,7 +34,7 @@ class csrf
     protected $accountId;
     protected $account;
     protected $accountAuth;
-    
+
     protected $requestToken;
     protected $requestTokenTime;
 
@@ -48,8 +48,8 @@ class csrf
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
-        $this->config = \laabs::configuration("auth")["csrfConfig"];
-        $this->whiteList = \laabs::configuration("auth")["csrfWhiteList"];
+        $this->config = \laabs::configuration("auth")['csrfConfig'];
+        $this->whiteList = \laabs::configuration("auth")['csrfWhiteList'];
     }
 
     /**
@@ -70,16 +70,16 @@ class csrf
         if (!$this->getAccountId()) {
             return;
         }
-        
+
         // Get account
         $this->getAccount();
 
         // Get auth object from json, init data structures if necessary
         $this->getAccountAuth();
-        
+
         // Remove expired csrf tokens from security object
         $this->discardExpiredTokens();
-        
+
         if (in_array($userCommand->method, ["create", "update", "delete"])) {
             $this->checkRequestToken();
         }
@@ -119,7 +119,6 @@ class csrf
             $this->discardUsedTokens();
         }
 
-        
         if (empty($this->accountAuth->csrf)) {
             // Generate a new one for next write operations
             $responseToken = $this->addToken();
@@ -129,8 +128,9 @@ class csrf
         }
 
         // Save auth information to user account
-        $this->updateAccount(); 
-        \laabs::setToken($this->config["cookieName"], $responseToken, null, false);
+        $this->updateAccount();
+            
+        \laabs::setToken(strtoupper($this->config["cookieName"]), $responseToken, null, false);
     }
 
     /**
@@ -145,7 +145,7 @@ class csrf
         if (is_null($authToken)) {
             $authToken = \laabs::getToken('TEMP-AUTH');
 
-            if (!is_null($authToken)) {
+            if (is_null($authToken)) {
                 return false;
             }
         }
@@ -179,14 +179,14 @@ class csrf
         }
 
         // Create CSRF token list if not set
-        if (!is_object($this->accountAuth->csrf)) {
+        if (!isset($this->accountAuth->csrf)) {
             $this->accountAuth->csrf = [];
-            
+
             return;
         }
 
         // Convert object to array of timestamp => token
-        $this->accountAuth->csrf = get_object_vars($this->accountAuth->csrf);
+        $this->accountAuth->csrf = (array) $this->accountAuth->csrf;
     }
 
     /**
@@ -200,7 +200,7 @@ class csrf
             $lifetime = $this->config['lifetime'];
         }
         $duration = \laabs::newDuration('PT'.$lifetime.'S');
-        
+
         // Current timestamp
         $now = \laabs::newTimestamp();
 
@@ -252,14 +252,16 @@ class csrf
     }
 
     /**
-     * Checks wthat a token has been sent with request
+     * Checks that a token has been sent with request
      * and that it can be found on account auth object
      *
-     * @throws Exception If no token or not found
+     * @throws Exception If no token or not found or token limit reached
      */
     private function checkRequestToken()
     {
-        $this->requestToken = \laabs::getToken("Csrf", LAABS_IN_HEADER);
+        // getToken's param must be in Camelcase
+        $this->requestToken = \laabs::getToken($this->config["cookieName"], LAABS_IN_HEADER);
+
         if (empty($this->requestToken)) {
             throw new \core\Exception('Attempt to access without a valid token', 412);
         }

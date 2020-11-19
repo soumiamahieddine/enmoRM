@@ -87,6 +87,9 @@ msgstr "Forme juridique"
 msgid "Business type"
 msgstr "Nature de l'activité"
 
+msgid "History"
+msgstr "Historique du service"
+
 msgid "Position set to default"
 msgstr "Position mise par défaut"
 
@@ -201,8 +204,8 @@ msgstr "Comptes de service"
 msgid "Submit"
 msgstr "Valider"
 
-msgid "You must use only letters and the special character '_'"
-msgstr "Vous devez utiliser uniquement les lettres et le caractère spécial '_'"
+msgid "You must use only letters, numbers and the special character '_'"
+msgstr "Vous devez utiliser uniquement les lettres, les chiffres et le caractère spécial '_'"
 
 msgid "The first and last character must be a letter. You must use only letters and the special character '_'"
 msgstr "Les premier et dernier caractères doivent être des lettres. Vous devez utiliser uniquement les lettres et le caractère spécial '_'"

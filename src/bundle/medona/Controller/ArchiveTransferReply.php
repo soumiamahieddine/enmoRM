@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -38,7 +38,7 @@ class ArchiveTransferReply extends abstractMessage
      *
      * @return The reply message generated
      */
-    public function send($transferMessage, $replyCode = "OK", $comment = null)
+    public function send($transferMessage, $archives = null, $replyCode = "OK", $comment = null)
     {
         if (is_scalar($transferMessage)) {
             $messageId = $transferMessage;
@@ -82,7 +82,7 @@ class ArchiveTransferReply extends abstractMessage
             $message->senderOrg = $recipientOrg;
         }
 
-        /*if ($archives) {
+        if (!is_null($archives)) {
             foreach ($archives as $archive) {
                 $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
                 $unitIdentifier->messageId = $message->messageId;
@@ -93,7 +93,7 @@ class ArchiveTransferReply extends abstractMessage
             }
         }
 
-        $message->archive = $archives;*/
+        $message->archive = $archives;
 
         /*$message->lifeCycleEventId = \laabs::newTokenList();
         foreach ($archives as $archive) {
@@ -108,7 +108,8 @@ class ArchiveTransferReply extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $archiveTransferReplyController = \laabs::newController($message->schema.'/ArchiveTransferReply');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveTransferReplyController = \laabs::newController("$namespace/ArchiveTransferReply");
                 $archiveTransferReplyController->send($message);
             } else {
                 $archiveTransferReply = $this->sendMessage($message);

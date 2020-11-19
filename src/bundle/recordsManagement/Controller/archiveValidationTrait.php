@@ -92,10 +92,8 @@ trait archiveValidationTrait
 
             $archivalProfileFields[$archiveDescription->fieldName] = $archiveDescription;
         }
-
         foreach ($object as $name => $value) {
             if (!isset($archivalProfileFields[$name]) && !$archivalProfile->acceptUserIndex) {
-
                 throw new \core\Exception\BadRequestException('Metadata %1$s is not allowed', 400, null, [$name]);
             }
 
@@ -149,6 +147,14 @@ trait archiveValidationTrait
     {
         if (!empty($descriptionField->enumeration) && !in_array($value, $descriptionField->enumeration) && $value != '') {
             throw new \core\Exception\BadRequestException('Forbidden value for metadata %1$s', 400, null, [$descriptionField->name]);
+        }
+        if (!empty($descriptionField->ref) && $descriptionField->ref) {
+            $descriptionRefController = \laabs::newController('recordsManagement/descriptionRef');
+            if (empty($descriptionRefController->get($descriptionField->name, $value))) {
+                throw new \core\Exception\BadRequestException("Invalid value %s supplied for referentiel %s", 404, null, [$value, $descriptionField->label]);
+            }
+
+            return true;
         }
     }
 
@@ -228,7 +234,6 @@ trait archiveValidationTrait
             } else {
                 $descriptionField = $descriptionField->itemType;
             }
-
             foreach ($array as $name => $value) {
                 $this->validateDescriptionField($value, $descriptionField);
             }
@@ -407,12 +412,9 @@ trait archiveValidationTrait
             throw new \bundle\recordsManagement\Exception\invalidArchiveException('Resource size is null', 400);
         }
 
-        if (!isset($digitalResource->mimetype)) {
-            $finfo = new \finfo();
-            $mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
-            $digitalResource->mimetype = $mimetype;
-        }
-        
+        $finfo = new \finfo();
+        $digitalResource->mimetype = $finfo->file($filename, FILEINFO_MIME_TYPE);
+
         $formatDetection = strrpos($this->currentServiceLevel->control, "formatDetection") === false ? false : true;
         if ($formatDetection) {
             $format = $this->formatController->identifyFormat($filename);

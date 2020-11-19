@@ -68,7 +68,8 @@ class AuthorizationOriginatingAgencyRequest extends AuthorizationRequest
 
         try {
             if ($message->schema != 'medona') {
-                $authorizationOriginatingAgencyRequestController = \laabs::newController($message->schema.'/AuthorizationOriginatingAgencyRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $authorizationOriginatingAgencyRequestController = \laabs::newController("$namespace/AuthorizationOriginatingAgencyRequest");
                 $authorizationOriginatingAgencyRequestController->send($message);
             } else {
                 $authorizationOriginatingAgencyRequest = $this->sendMessage($message);

@@ -90,6 +90,7 @@
             if (transaction) {
                 parameter.identifier = this.modal.find('[name="identifier"]').val();
                 parameter.comment = this.modal.find('[name="comment"]').val();
+                parameter.format = this.modal.find('[name="format"]').val()
 
                 if (parameter!=-1 && !parameter.comment) {
                     gritter.show($('#empty_text').html(), false);

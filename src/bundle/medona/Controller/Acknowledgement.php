@@ -72,10 +72,10 @@ class Acknowledgement
 
         try {
             if ($message->schema != 'medona') {
-                $archiveTransferReplyController = \laabs::newController($message->schema.'/Acknowledgement');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveTransferReplyController = \laabs::newController("$namespace/Acknowledgement");
                 
                 $archiveTransferReplyController->send($message);
-
             } else {
                 /*$archiveTransferReply = $this->sendMessage($message);
                 $message->object = $archiveTransferReply;

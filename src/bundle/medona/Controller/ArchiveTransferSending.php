@@ -109,10 +109,11 @@ class ArchiveTransferSending extends abstractMessage
      * @param string $archiverOrgRegNumber      The archival agency
      * @param string $comment                   The message comment
      * @param string $identifier                The medona message reference
+     * @param string $format                    The message format
      *
      * @return array The result of the operation
      */
-    public function setForTransfer($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null)
+    public function setForTransfer($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null, $format = null)
     {
         $senderOrg = \laabs::getToken('ORGANIZATION');
         if (!$senderOrg) {
@@ -174,19 +175,23 @@ class ArchiveTransferSending extends abstractMessage
             
             $recipientOrgReqNumber = $archiverOrgRegNumber;
 
-            $this->send($reference, $archives, $senderOrgRegNumber, $recipientOrgReqNumber, $comment);
+            $this->send($reference, $archives, $senderOrgRegNumber, $recipientOrgReqNumber, $comment, $format);
         }
         return $result;
     }
 
 
-    public function send($reference, $archives, $senderOrg, $recipientOrg, $comment = null)
+    public function send($reference, $archives, $senderOrg, $recipientOrg, $comment = null, $format = null)
     {
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
 
         $message->schema = "medona";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $message->schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $message->schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $message->schema = "seda";
         }
 
@@ -221,7 +226,8 @@ class ArchiveTransferSending extends abstractMessage
             $message->dataObjectCount = count($archives);
 
             if ($message->schema != 'medona') {
-                $archiveTransferController = \laabs::newController($message->schema.'/ArchiveTransfer');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveTransferController = \laabs::newController("$namespace/ArchiveTransfer");
                 $archiveTransferController->send($message);
             } else {
                 $archiveTransfer = $this->sendMessage($message);

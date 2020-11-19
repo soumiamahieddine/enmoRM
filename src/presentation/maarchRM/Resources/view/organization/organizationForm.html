@@ -33,7 +33,7 @@
             <div class="form-group">
                 <label>Registration number <span style="color: red">*</span></label>
                 <input type="text" class="form-control" name="registrationNumber" placeholder="Registration number">
-                <small class="help-block">You must use only letters and the special character '_'</small>
+                <small class="help-block">You must use only letters, numbers and the special character '_'</small>
             </div>
             <div class="form-group" id="orgForm_enabled" style="display: none">
                 <label>Enabled</label>
@@ -89,6 +89,10 @@
                         <label>Business type</label>
                         <input type="text" class="form-control" name="businessType" placeholder="Business type">
                     </div>
+                    <div class="form-group">
+                        <label>History</label>
+                        <textarea class="form-control" name="history" placeholder="History" rows="3"></textarea>
+                    </div>
                 </div>
             </div>
         </form>
@@ -113,7 +117,7 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" title="Close">No</button>
+                    <button type="button" class="btn btn-default" id="organization_refuseClosing" data-dismiss="modal" title="Close">No</button>
                     <button type="button" class="btn btn-primary" id="organization_confirmClosing" title="Yes">Yes</button>
                 </div>
             </div>
@@ -176,6 +180,10 @@
 
     })
 
+    $('#organization_refuseClosing').on('click', function() {
+        $('#organization_organizationInfo').css('display', 'none');
+    });
+
     $('#organization_confirmClosing').on('click', function() {
         $('#organization_closingConfimationForModification').modal('hide');
         OrganizationForm.closeForm();
@@ -210,14 +218,14 @@
 
         load: function(organization) {
             var orgForm = $('#organization_organizationForm');
-            orgForm.find('[name="registrationNumber"]').removeProp('readonly', false); 
+            orgForm.find('[name="registrationNumber"]').removeProp('readonly', false);
 
             orgForm.find('small.displayName').text(organization.displayName);
             $.each(organization, function(key, value) {
                 orgForm.find('[name="'+ key +'"]').val(value);
             })
             if (organization.isOrgUnit) {
-                orgForm.find('[name="isOrgUnit"]').prop('checked', true); 
+                orgForm.find('[name="isOrgUnit"]').prop('checked', true);
                 orgForm.find('.orgFormTitle').text($('#orgUnit_text').html());
             } else {
                 $('#organization_orgUnitInfo').css('display', 'none');
@@ -244,7 +252,7 @@
             if (organization.orgRoleCodes) {
                 $.each(organization.orgRoleCodes, function() {
                     OrganizationForm.addRole(this);
-                })    
+                })
             }
 
             orgForm.css('display','');
@@ -256,7 +264,8 @@
 
             var organization = OrganizationForm.serialize();
 
-            var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9]$");
+
+            var pattern = new RegExp("^[A-Za-z0-9_]*[A-Za-z0-9_]$");
 
             if(!pattern.test(organization.registrationNumber)) {
                 return;
@@ -366,7 +375,7 @@
 
         closeForm: function() {
             this.hasModification = false;
-            var form = $('#organization_organizationForm'); 
+            var form = $('#organization_organizationForm');
             form.find('input, select, textarea').val('');
             form.find('small.displayName').html('');
             form.find('[name="isOrgUnit"]').prop('checked', false);

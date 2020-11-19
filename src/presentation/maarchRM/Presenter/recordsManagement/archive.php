@@ -246,6 +246,8 @@ class archive
 
         $this->readPrivilegesOnArchives();
 
+        $packageSchemas = \laabs::configuration("medona")["packageSchemas"];
+
         $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
         $this->view->setSource('maxResults', \laabs::configuration('presentation.maarchRM')['maxResults']);
         $this->view->setSource('totalResultsWithoutLimit', $count);
@@ -253,6 +255,7 @@ class archive
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource('archive', $archives);
         $this->view->setSource('transaction', $this->transaction);
+        $this->view->setSource('packageSchemas', $packageSchemas);
         $this->view->merge();
 
         return $this->view->saveHtml();
@@ -415,71 +418,11 @@ class archive
      *
      * @return string
      */
-    public function getEditMetadata($archive)
+    public function edit($archive)
     {
-        $languageCodes = \laabs::callService("seda/archiveTransferComposition/readLanguageCodes");
-
-        foreach ($languageCodes as $languageCode) {
-            $languageCode->title =  ucfirst($languageCode->French);
-
-            if ($languageCode->alpha3t) {
-                $languageCode->value = $languageCode->alpha3t;
-            } else {
-                $languageCode->value = $languageCode->alpha3b;
-            }
-        }
-
         if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
-            $archive = $presenter->getEditMetadata($archive, $languageCodes);
+            return $presenter->edit($archive);
         }
-
-        if ($archive->descriptionClass != "archivesPubliques/content") {
-            $this->view->addContentFile($archive->descriptionClass . "/metadata.html");
-        } else {
-            $this->view->addContentFile("archivesPubliques/contentDescription/metadata.html");
-        }
-
-        if ($archive->descriptionObject) {
-            $archive->descriptionObject = $archive->descriptionObject[0];
-        }
-
-        $thesaurusNames = [
-            "corpname",
-            "famname",
-            "geogname",
-            "name",
-            "occupation",
-            "persname",
-            "subject",
-            "genreform",
-            "function"
-            ];
-
-        $thesaurusList = new \stdClass();
-        // Set default thesaurus
-        $thesaurusList->subject = "T1";
-        $thesaurusList->genreform = "T3";
-        $thesaurusList->function = "T2";
-
-        $conf = \laabs::Configuration()['recordsManagement'];
-        
-        if (isset($conf['refDirectory']) || is_dir($conf['refDirectory'])) {
-            $refDirectory = $conf['refDirectory'];
-            foreach ($thesaurusNames as $thesaurusName) {
-                if (glob($conf['refDirectory'].'/'.$thesaurusName.'.*')) {
-                    $thesaurusList->$thesaurusName = $thesaurusName;
-                }
-            }
-        }
-
-        $this->view->setSource('thesaurus', $thesaurusList);
-        $this->view->setSource('languageCodes', $languageCodes);
-        $this->view->setSource("archive", $archive);
-
-        $this->view->merge();
-        $this->view->translate();
-
-        return $this->view->saveHtml();
     }
 
     /**
@@ -1265,13 +1208,15 @@ class archive
         } elseif (isset($archive->digitalResources)) {
             foreach ($archive->digitalResources as $key => $digitalResource) {
 
-                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource);
+                $digitalResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $digitalResource)
+                    && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/migration");
 
                 if (!isset($digitalResource->relatedResource)) {
                     $digitalResource->relatedResource = [];
                 } else {
                     foreach ($digitalResource->relatedResource as $relatedResource) {
-                        $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource);
+                        $relatedResource->isConvertible = \laabs::callService("digitalResource/digitalResource/updateIsconvertible", $relatedResource)
+                            && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/migration");
                         $relatedResource->relationshipType = $this->view->translator->getText($relatedResource->relationshipType, "relationship", "recordsManagement/messages");
                     }
                 }
@@ -1417,5 +1362,20 @@ class archive
         }
 
         return $ownerOriginatorOrgs;
+    }
+
+    /**
+     * Export method
+     * @param resource $file The file
+     *
+     * @return resource
+     */
+    public function export($file)
+    {
+        \laabs::setResponseType("application/zip");
+        $response = \laabs::kernel()->response;
+        $response->setHeader('Content-Disposition', 'attachment; filename="'.\laabs::newId(). '.zip"');
+
+        return $file;
     }
 }

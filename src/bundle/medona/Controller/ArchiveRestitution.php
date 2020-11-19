@@ -221,7 +221,8 @@ class ArchiveRestitution extends abstractMessage
             mkdir($this->messageDirectory.DIRECTORY_SEPARATOR.(string) $message->messageId, 0777, true);
 
             if ($message->schema != 'medona') {
-                $archiveRestitutionController = \laabs::newController($message->schema.'/ArchiveRestitution');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveRestitutionController = \laabs::newController("$namespace/ArchiveRestitution");
                 $archiveRestitutionController->send($message);
             } else {
                 $archiveRestitution = $this->sendMessage($message);
@@ -264,10 +265,11 @@ class ArchiveRestitution extends abstractMessage
      * @param array  $archiveIds Array of archive identifier
      * @param string $identifier The medona message reference
      * @param string $comment    The message comment
+     * @param string $format     The message format
      *
      * @return array The result of the operation
      */
-    public function setForRestitution($archiveIds, $identifier = null, $comment = null)
+    public function setForRestitution($archiveIds, $identifier = null, $comment = null, $format = null)
     {
         $senderOrg = \laabs::getToken('ORGANIZATION');
         if (!$senderOrg) {
@@ -341,7 +343,8 @@ class ArchiveRestitution extends abstractMessage
                 $comment,
                 $senderOrgRegNumber,
                 $recipientOrgRegNumber,
-                $userName
+                $userName,
+                $format
             );
         }
 

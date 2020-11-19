@@ -173,10 +173,13 @@ msgid "Life cycle events"
 msgstr "Évènements du cycle de vie"
 
 msgid "Archive identifier"
-msgstr "Cote"
+msgstr "Identifiant de l'archive"
 
 msgid "Originator archive identifier"
 msgstr "Identifiant"
+
+msgid "Archiver archive identifier"
+msgstr "Cote du Service d'Archives"
 
 msgid "Archive name"
 msgstr "Nom"
@@ -419,6 +422,9 @@ msgstr "DUA"
 
 msgid "result(s)"
 msgstr "résultat(s)"
+
+msgid "archive(s) on"
+msgstr "archive(s) sur"
 
 msgid "Search"
 msgstr "Rechercher"
@@ -950,6 +956,9 @@ msgstr "Aucun résultat"
 msgid "Sub-archive of"
 msgstr "Sous-archive de"
 
+msgid "Sub-archive"
+msgstr "Sous-archive"
+
 msgid "Zip container"
 msgstr "Fichier conteneur"
 
@@ -975,7 +984,7 @@ msgid "To be defined later"
 msgstr "À définir plus tard"
 
 msgid "Producer"
-msgstr "Producteur"
+msgstr "Service producteur"
 
 msgid "Organization"
 msgstr "Organisation"
@@ -1107,15 +1116,206 @@ msgstr "Cliquer pour modifier '%1$s'"
 msgid "* At least one field must be filled in."
 msgstr "* Au moins un champ doit être renseigné."
 
-msgid "Your query returns too much results, only first results are displayed."
-msgstr "Le nombre de résultats retournés est trop important. Veuillez affiner votre recherche."
-
+msgid "You must fill all required fields (*)"
+msgstr "Vous devez remplir tous les champs requis (*)"
 
 msgid "Export to "
 msgstr "Exporter en "
 
-msgid "Your query returns too much results, only first"
-msgstr "Votre recherche a retourné trop de résultats, seulement les"
+msgid "Full name"
+msgstr "Nom Complet"
 
-msgid "results are displayed"
-msgstr "premiers sont affichés"
+msgid "First Name"
+msgstr "Prénom"
+
+msgid "Birth Name"
+msgstr "Nom de jeune fille"
+
+msgid "Given Name"
+msgstr "Nom usuel"
+
+msgid "Gender"
+msgstr "Genre"
+
+msgid "Birth date"
+msgstr "Date de naissance"
+
+msgid "Birth place"
+msgstr "Lieu de naissance"
+
+msgid "Death date"
+msgstr "Date de décès"
+
+msgid "Death place"
+msgstr "Lieu du décès"
+
+msgid "Nationality"
+msgstr "Nationalité(s)"
+
+msgid "Identifier"
+msgstr "Identifiant"
+
+msgid "Corporation name"
+msgstr "Nom de l'entreprise"
+
+msgid "Mandate"
+msgstr "Mandat"
+
+msgid "Function"
+msgstr "Fonction"
+
+msgid "Geographic name"
+msgstr "Nom du lieu"
+
+msgid "Address"
+msgstr "Adresse"
+
+msgid "Postal Code"
+msgstr "Code postal"
+
+msgid "City"
+msgstr "Ville"
+
+msgid "Region"
+msgstr "Région"
+
+msgid "Country"
+msgstr "Pays"
+
+msgid "Activity"
+msgstr "Activité"
+
+msgid "Archival Agency ArchiveUnit Identifier"
+msgstr "Identifiant d'archive"
+
+msgid "Originating Agency ArchiveUnit Identifier"
+msgstr "Identifiant métier"
+
+msgid "Transferring Agency ArchiveUnit Identifier"
+msgstr "Identifiant de versement"
+
+msgid "Custodial History"
+msgstr "Historique de conservation"
+
+msgid "OAIS Type"
+msgstr "Type OAIS"
+
+msgid "Document Type"
+msgstr "Type de document"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Keyword"
+msgstr "Mots-clés"
+
+msgid "Tag"
+msgstr "Tags"
+
+msgid "Coverage"
+msgstr "Couverture"
+
+msgid "OriginatingAgency"
+msgstr "Service producteur"
+
+msgid "SubmissionAgency"
+msgstr "Service versant"
+
+msgid "Authorized Agent"
+msgstr "Services autorisés"
+
+msgid "Writer"
+msgstr "Auteur(s)"
+
+msgid "Addressee"
+msgstr "Destinataire(s)"
+
+msgid "Recipient"
+msgstr "En copie"
+
+msgid "Transmitter"
+msgstr "Émetteur"
+
+msgid "Sender"
+msgstr "Expéditeur"
+
+msgid "Created date"
+msgstr "Date de création"
+
+msgid "Transacted date"
+msgstr "Date de transaction"
+
+msgid "Acquired date"
+msgstr "Date d'acquisition"
+
+msgid "Sent date"
+msgstr "Date d'envoi"
+
+msgid "Received date"
+msgstr "Date de réception"
+
+msgid "Registered date"
+msgstr "Date d'enregistrement"
+
+msgid "Start date"
+msgstr "Date de début"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "Event"
+msgstr "Événements de traitement"
+
+msgid "Fileplan position"
+msgstr "Position dans le plan de classement"
+
+msgid "Title"
+msgstr "Intitulé"
+
+msgid "Description Level"
+msgstr "Niveau de description"
+
+msgid "Originating System Id"
+msgstr "Identifiant d'origine"
+
+msgid "Gps Version"
+msgstr "Version du GPS"
+
+msgid "Altitude reference"
+msgstr "Référentiel d'altitude"
+
+msgid "Latitude Reference"
+msgstr "Référentiel de latitude"
+
+msgid "Longitude Reference"
+msgstr "Référentiel de longitude"
+
+msgid "DateStamp"
+msgstr "Heure et date de la position gps"
+
+msgid "Signer"
+msgstr "Signataire(s)"
+
+msgid "Validator"
+msgstr "Validateur(s)"
+
+msgid "ReferencedObject"
+msgstr "Référence à l'objet signé"
+
+msgid "Signing time"
+msgstr "Date et heure de la signature"
+
+msgid "Validation time"
+msgstr "Date et heure de la validation"
+
+msgid "Masterdata"
+msgstr "Référentiel des personnes et organisations"
+
+msgid "Object"
+msgstr "Objet"

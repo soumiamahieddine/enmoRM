@@ -28,6 +28,7 @@ INSERT INTO "auth"."privilege"("roleId", "userStory") VALUES
 
 -- LIFECYCLE
 INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALUES
+('digitalResource/integrityCheck', 'repositoryReference addressesToCheck checkedAddresses failed', 'Contrôle d''intégrité des ressources présentes dans %6$s', false),
 ('recordsManagement/accessRuleModification', 'resId hashAlgorithm hash address accessRuleStartDate accessRuleDuration previousAccessRuleStartDate previousAccessRuleDuration originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Modification de la règle de communicabilité de l''archive %6$s', false),
 ('recordsManagement/addRelationship', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber relatedArchiveId originatorArchiveId', 'Relation ajoutée avec l''archive %6$s', false),
 ('recordsManagement/archivalProfileModification', 'archivalProfileReference', 'Modification du profil %6$s.', false),
@@ -51,7 +52,7 @@ INSERT INTO "lifeCycle"."eventFormat" (type, format, message, notification) VALU
 ('recordsManagement/unfreeze', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Dégel de l''archive %6$s', false),
 ('recordsManagement/resourceDestruction', 'resId hashAlgorithm hash address originatorOrgRegNumber archiverOrgRegNumber originatorArchiveId', 'Destruction de la ressource %9$s', FALSE),
 ('recordsManagement/depositNewResource', 'resId hashAlgorithm hash address originatorOrgRegNumber depositorOrgRegNumber archiverOrgRegNumber format size originatorArchiveId', 'Dépôt d''une ressource dans l''archive', FALSE),
-('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)', false),
+('medona/sending', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Envoi du message %14$s de type %9$s de %11$s (%10$s) à %13$s (%12$s)', false),
 ('medona/reception', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Réception du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false),
 ('medona/validation', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Validation du message %14$s : %16$s (%15$s)', false),
 ('medona/acknowledgement', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference code info', 'Acquittement du message %14$s : %16$s (%15$s)', false),

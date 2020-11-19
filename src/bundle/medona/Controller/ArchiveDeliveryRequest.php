@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -127,12 +127,13 @@ class ArchiveDeliveryRequest extends abstractMessage
      * @param string $identifier    The medona message reference
      * @param boolean $derogation   Ask for an authorization
      * @param string $comment       The message comment
+     * @param string $format        The message format
      *
      * @return array Array of message
      *
      * @throws \bundle\recordsManagement\Exception\notCommunicableException
      */
-    public function requestDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null)
+    public function requestDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null, $format = null)
     {
         $requesterOrg = \laabs::getToken('ORGANIZATION');
         if (!$requesterOrg) {
@@ -154,7 +155,7 @@ class ArchiveDeliveryRequest extends abstractMessage
                 $checkAccess = true,
                 $isCommunication = true
             );
-            
+
             if (!isset($archivesByOriginator[$archive->originatorOrgRegNumber])) {
                 $archivesByOriginator[$archive->originatorOrgRegNumber] = array();
             }
@@ -169,33 +170,64 @@ class ArchiveDeliveryRequest extends abstractMessage
         $reference = $identifier;
         foreach ($archivesByOriginator as $originatorOrgRegNumber => $archives) {
             $i = 1;
-            
+
             $unique = array(
                 'type' => 'ArchiveDeliveryRequest',
                 'senderOrgRegNumber' => $requesterOrgRegNumber,
                 'reference' => $reference,
             );
 
-            while ($this->sdoFactory->exists("medona/message", $unique)) {
-                $i++;
-                $unique['reference'] = $reference = $identifier.'_'.$i;
-            }
 
             $archiverOrgRegNumber = $archives[0]->archiverOrgRegNumber;
 
-            $message = $this->send(
-                $reference,
-                $archives,
-                $derogation,
-                $comment,
-                $requesterOrgRegNumber,
-                $archiverOrgRegNumber
-            );
+            $communicableArchives = [];
+            foreach ($archives as $archive) {
+                if ($this->isCommunicable($archive)) {
+                    $communicableArchives['communicable'] = $archive;
+                } else {
+                    $communicableArchives['notCommunicable'] = $archive;
+                }
+            }
 
-            $messages[] = $message;
+            foreach ($communicableArchives as $key => $archives) {
+                while ($this->sdoFactory->exists("medona/message", $unique)) {
+                    $i++;
+                    $unique['reference'] = $reference = $identifier.'_'.$i;
+                }
+                $message = $this->send(
+                    $reference,
+                    $archives,
+                    $derogation,
+                    $comment,
+                    $requesterOrgRegNumber,
+                    $archiverOrgRegNumber,
+                    null,
+                    $format
+                );
+                $messages[] = $message;
+            }
         }
 
         return $messages;
+    }
+
+    /**
+     * Chexk wether an archive is communicable or not
+     *
+     * @param recordsManagement/archive $archive object archive
+     *
+     * @return boolean
+     */
+    protected function isCommunicable($archive)
+    {
+        if ($archive->accessRuleComDate) {
+            $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
+            if ($communicationDelay->invert != 0) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -207,6 +239,7 @@ class ArchiveDeliveryRequest extends abstractMessage
      * @param object  $requesterOrgRegNumber The requesting org reg number
      * @param string  $archiverOrgRegNumber  The archiver org registration number
      * @param string  $userName              The requester user name
+     * @param string  $format                The message format
      *
      * @return The reply message generated
      */
@@ -217,7 +250,8 @@ class ArchiveDeliveryRequest extends abstractMessage
         $comment = false,
         $requesterOrgRegNumber = false,
         $archiverOrgRegNumber = false,
-        $userName = false
+        $userName = false,
+        $format = null
     ) {
         if (!is_array($archives)) {
             $archives = array($archives);
@@ -227,7 +261,11 @@ class ArchiveDeliveryRequest extends abstractMessage
         $message->messageId = \laabs::newId();
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $schema = "seda2";
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
         $message->schema = $schema;
@@ -264,7 +302,8 @@ class ArchiveDeliveryRequest extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $archiveDeliveryRequestController = \laabs::newController($message->schema.'/ArchiveDeliveryRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveDeliveryRequestController = \laabs::newController("$namespace/ArchiveDeliveryRequest");
                 $archiveDeliveryRequestController->send($message);
             } else {
                 $archiveDeliveryRequest = $this->sendMessage($message);
@@ -274,7 +313,7 @@ class ArchiveDeliveryRequest extends abstractMessage
                 if ($userName) {
                     $archiveDeliveryRequest->requester->userName = $userName;
                 }
-                
+
                 $archiveDeliveryRequest->archivalAgency = $this->sendOrganization($message->recipientOrg);
 
                 $message->object->unitIdentifier = $message->unitIdentifier;
@@ -286,7 +325,7 @@ class ArchiveDeliveryRequest extends abstractMessage
             $message->status = "invalid";
             $this->create($message);
             $this->logValidationErrors($message, $e);
-            
+
             throw $e;
         }
 
@@ -510,5 +549,31 @@ class ArchiveDeliveryRequest extends abstractMessage
         $this->changeStatus($messageId, "received");
 
         return $exportResult;
+    }
+
+    /**
+     * Get process delivery message
+     *
+     * @return array Array of medona/message object
+     */
+    public function processList()
+    {
+        $registrationNumber = $this->getCurrentRegistrationNumber();
+
+        $queryParts = [];
+        $queryParts[] = "type='ArchiveDeliveryRequest'";
+        $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
+        $queryParts[] = "status='accepted'";
+        $queryParts[] = "active=true";
+
+        $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        return $this->sdoFactory->find(
+            'medona/message',
+            implode(' and ', $queryParts),
+            null,
+            false,
+            false,
+            $maxResults
+        );
     }
 }

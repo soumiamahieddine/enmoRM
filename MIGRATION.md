@@ -1,9 +1,126 @@
-# Migration 2.6.x vers 2.6.5
-## Configuration virtual host
+# Migration 2.6 vers 2.7
+## Configuration
 
-Ajout de 2 directives concernant la sécurité dans le fichier vhost.conf.default :  
-*LAABS_SESSION_START* --> "Off" par défaut. Permet de ne pas créer de fichier de session inutile sur le serveur.  
-*LAABS_SECURE_COOKIE* --> désactivé par défaut. Permet d'ajouter l'attribut "secure" sur les cookies dans le cas d'une instance publiée en HTTPS.
+## Ajout dans la configuration
+
+Dans la section [recordsManagement], ajout dee la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
+
+Dans la section [medona], ajout de la directive `packageConnectors` qui permet la configuration de connecteurs pour faciliter le versement de paquets externes au format incomplet.
+
+Dans la section nouvellement créee [dependency.timestamp], la directive `pathToOpenSSL` a été ajoutée pour faciliter la prise en charge sur Windows :
+
+```
+pathToOpenSSL="C:\Program Files\OpenSSL-Win64\bin\openssl"
+```
+
+### Ajout d'un droit utilisateur
+
+Si le mode transactionnel est activé, ajout du droit de traiter manuellement les communications.
+Pour l'ajouter :
+
+```
+        {
+            'serviceURI' : 'medona/ArchiveDelivery/updateProcessBatch',
+            'description' : 'Traiter les communications'
+        },
+```
+
+dans la directive `servicePrivileges` présente dans la section [auth] de votre fichier de configuration.
+
+De fait, un point de menu a été ajouté sur l'écran d'Echange pour traiter manuellement les communication, il faut ajouter dans la directive `menu` :
+
+```
+        {
+            'label' : 'Communications à finaliser',
+            'href'  : '/delivery/Process'
+        },
+```
+
+c'est un `submenu` présent sous le label `Communication` de la section [medona] de votre fichier de configuration.
+
+### Ajout du bundle Statistiques et configuration de session dans virtual host
+
+Afin d'accéder aux fonctionnalités relatives aux statistiques, le bundle `Statistics` doit être ajoutée à l'instance dans le fichier vhost.conf :
+
+```
+SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics
+```
+
+Modifications liées à la configuration de la session :
+```
+SetEnv LAABS_SESSION_START Off
+#SetEnv LAABS_SECURE_COOKIE On
+```
+
+## Ajout d'un droit de compte de Service
+
+Ajout d'une fonctionnalité permettant de récupérer directement le contenu d'une ressource d'archive, il faut ajouter :
+
+```
+    {
+        'serviceURI' : 'recordsManagement/archive/read_archiveId_Digitalresource_resId_Contents',
+        'description' : 'Récupérer directement le contenu d\'une ressource d\'archive'
+    }
+```
+
+dans la directive `servicePrivileges` présente dans la section [auth] de votre fichier de configuration.
+
+### Modification de configuration
+
+Dans la section [presentation.maarchRM], la directive `maxResults` livrée par défaut est désormais à 500.
+Dans la section [auth], modification de la configuration du CSRF :
+
+```
+csrfConfig = '{
+    "cookieName" : "Csrf",
+    "tokenLength" : 32
+}'
+```
+
+Dans la section [recordsManagement], modification de la configuration des schémas de description :
+
+```
+descriptionSchemes = "{
+    'extension' : {
+        'label' : 'extension',
+        'type' : 'json',
+        'uri' : '%laabsDirectory%/data/maarchRM/samples/sample.json'
+    },
+    'log' : {
+        'label' : 'log',
+        'type' : 'php',
+        'uri' : 'recordsManagement/log',
+        'search': 'recordsManagement/log'
+    }
+}"
+```
+
+## Service horodatage tiers de test
+
+Dans la section [lifeCycle] du fichier de configuration, si la directive `chainWithTimestamp` est activé, vous pouvez choisir votre service d'horodatage tiers dans la section nouvellement crée [dependency.timestamp] parmis les 3 suivants :
+
+```
+; The URL of the TSA provider
+; Somme open and free TSA test services :
+; tsaUrl=http://zeitstempel.dfn.de
+; tsaUrl=http://timestamp.entrust.net/TSS/RFC3161sha2TS
+; tsaUrl=http://time.certum.pl
+```
+
+### Mise à jour des fichiers de signature DROID
+
+Mise à jour des fichiers signature et container permettant la détection du format des fichiers
+
+```
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V97.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20201001.xml"
+```
+
+## Schéma SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.6_V2.7.sql
 
 
 # Migration 2.5 vers 2.6

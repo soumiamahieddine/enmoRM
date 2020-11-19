@@ -49,7 +49,7 @@ interface auditInterface
      *
      * @return audit/event/search
      */
-    public function readEvents($eventType = null, $fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null);
+    public function readEvents($fromDate = null, $toDate = null, $accountId = null, $event = null, $status = null, $term = null, $maxResults = null);
 
     /**
      * Get event
@@ -65,5 +65,12 @@ interface auditInterface
      * @uses auth/userAccount/readUserlist
      */
     public function readUserTodisplay();
+
+    /**
+     * List all services to display
+     *
+     * @uses auth/serviceAccount/readIndex
+     */
+    public function readServiceTodisplay();
 
 }

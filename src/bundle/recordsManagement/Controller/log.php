@@ -182,20 +182,53 @@ class log implements archiveDescriptionInterface
 
     /**
      * Search the description objects
-     * @param string $description The search args on description object
-     * @param string $text        The search args on text
-     * @param array  $args        The search args on archive std properties
+     *
+     * @param string  $description The search args on description object
+     * @param string  $text        The search args on text
+     * @param array   $args        The search args on archive std properties
+     * @param bool    $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param integer $maxResults  Max results to display
      *
      * @return object Array of description objects
      */
     public function search($description = null, $text = null, array $args = [], $checkAccess = null, $maxResults = null)
     {
+        $queryParams = $queryParts = [];
+        $queryString = "";
+        if ($text) {
+            $text = preg_replace('/[^\w\-\_]+/', ' ', $text);
+            $tokens = \laabs\explode(' ', $text);
+
+            $queryLogs = [];
+            foreach ($tokens as $i => $token) {
+                $queryTerm = [];
+                $queryTerm[] = "archiveId = '*$token*'";
+                $queryTerm[] = "processName = '*$token*'";
+                $queryTerm[] = "type = '*$token*'";
+                $queryTerm[] = "ownerOrgRegNumber = '*$token*'";
+
+                try {
+                    $date = new \DateTime($token);
+                    $date = $date->format("Y-m-d");
+                } catch (\Exception $e) {
+                    $date = null;
+                }
+
+                if ($date) {
+                    $queryLogs[] = "(fromDate <= $date T00:00:00 AND toDate >= $date T23:59:59)";
+                }
+
+                $queryString = \laabs\implode(' OR ', $queryTerm);
+            }
+        }
+
         $archiveController = \laabs::newController('recordsManagement/archive');
         $archives = [];
 
         $sortBy = ">fromDate";
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $description, [], $sortBy, 0, $maxResults);
+        $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, [], $sortBy, 0, $maxResults);
+
         foreach ($logs as $log) {
             try {
                 $archive = $archiveController->read($log->archiveId);
@@ -535,9 +568,12 @@ class log implements archiveDescriptionInterface
         $archiveController = \laabs::newController('recordsManagement/archive');
 
         $res = $archiveController->consultation($archiveId, $resourceId);
-
-        $stream = (stream_get_contents($res->attachment->data));
-
+        $maxResult = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        $stream = stream_get_line($res->attachment->data, 1 >> 15, "\n") . "\n";
+        for ($i = 0; $i < $maxResult; $i++) {
+            $stream .= stream_get_line($res->attachment->data, 1 >> 15, "\n") . "\n";
+        }
+        rewind($res->attachment->data);
         $journal = $type . PHP_EOL;
         $journal .= $archiveId . ',' . $resourceId . PHP_EOL;
         $journal .= $stream;

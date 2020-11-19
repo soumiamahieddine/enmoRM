@@ -29,12 +29,14 @@ interface deliveryRequestInterface
     /**
      * Deliver an archive
      *
-     * @param mixed  $archiveIds The archive identifier or a list of identifier
-     * @param string $comment    A comment
-     * @param string $identifier The reference for message
+     * @param mixed  $archiveIds    The identifier of archive or a list of identifiers
+     * @param string $identifier    The medona message reference
+     * @param boolean $derogation   Ask for an authorization
+     * @param string $comment       The message comment
+     * @param string $format        The message format
      *
      * @uses medona/archiveDelivery/createDelivery
      * @return medona/archiveModification/deliver
      */
-    public function createArchivedelivery($archiveIds, $comment, $identifier = null);
+    public function createArchivedelivery($archiveIds, $identifier = null, $derogation = false, $comment = null, $format = null);
 }

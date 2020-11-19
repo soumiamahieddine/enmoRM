@@ -30,8 +30,8 @@
             </tr>
         </table>
         <div id="metadata" data-descriptionclass="[?merge archive.descriptionClass ?]">
-        <!-- 
-            Presentation of profile specific descriptive metadata 
+        <!--
+            Presentation of profile specific descriptive metadata
         -->
         </div>
         <?merge acceptUserIndex ?>
@@ -63,8 +63,12 @@
                         <td title='[?merge archive.originatorOrgName ?]'><?merge archive.originatorOrgName ?></td>
                     </tr>
                     <tr class="archiveId">
-                        <th title="Identifier">Identifier</th>
+                        <th title="Identifier">Archive identifier</th>
                         <td title='[?merge archive.archiveId ?]'><?merge archive.archiveId ?></td>
+                    </tr>
+                    <tr>
+                        <th title="archiverArchiveId">Archiver archive identifier</th>
+                        <td title='[?merge archive.archiverArchiveId ?]'><?merge archive.archiverArchiveId ?></td>
                     </tr>
                     <tr>
                         <th title="Deposit date">Deposit date</th>
@@ -160,7 +164,7 @@
     <input id="inputOriginatingDate" name="originatingDate" type="text" class="col-xs-12 datePicker"/>
 
     <input id="inputLabel" placeholder="Label" type="text" class="col-xs-12" style="text-align: right"/>
-    
+
     <input id="inputHidden" type="hidden"/>
     <input id="inputText" type="text" class="col-xs-12"/>
     <input id="inputNumericField" type="number" class="col-xs-12"/>
@@ -202,7 +206,7 @@
 
     }
     #archiveInformation .infoIcon {
-        font-size: 80px; 
+        font-size: 80px;
         margin-bottom: 10px;
     }
     #metadataTitle {
@@ -220,7 +224,7 @@
             var parameters = {
                 archiveIds : ArchiveInformation.archiveId
             };
-            
+
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsManagement/archive/freeze",
@@ -244,7 +248,7 @@
             var parameters = {
                 archiveIds : ArchiveInformation.archiveId
             };
-            
+
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsManagement/archive/unfreeze",
@@ -272,30 +276,30 @@
             if(!$('#managementInfo').hasClass('in')) {
                 $('#managementInfo').addClass('in');
             }
-            
+
             $('#retentionRuleSelect').show();
             $('#startDate').show();
-            
+
             $("#retentionRuleCode").val($('#inputRetentionRuleCode').val());
-            
+
             $('#finalDisposition').hide();
             $('#disposalDate').hide();
         },
 
         saveManagementMetadata: function() {
             var startDate = $('#archiveInformation').find('.startDate').val();
-            
+
             var retentionRule = {
                 retentionStartDate : startDate,
                 retentionDuration : $('#retentionRuleCode option:selected').data('duration'),
                 finalDisposition : $('#retentionRuleCode option:selected').data('finaldisposition')
             };
-            
+
             var parameters = {
                 retentionRule : retentionRule,
                 archiveIds: ArchiveInformation.archiveId
             };
-            
+
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsmanagement/archive/retentionrule",
@@ -328,12 +332,12 @@
             $('#archiveCustomFieldAddBtn').show();
             //$('#archiveInformation').find('.originatorArchiveId').hide();
             //$('#archiveInformation').find('.archiveName').hide();
-            
+
             archiveInformation.find('.archiveName')
                               .children('td')
                               .html('')
                               .append($('#inputArchiveName').val($('#archiveInformation').find('.archiveName').val()));
-            
+
             archiveInformation.find('.originatorArchiveId')
                               .children('td')
                               .html('')
@@ -369,11 +373,11 @@
                     inputLabel.attr('type', 'hidden');
                     th.append(inputLabel);
                 }
-                
+
                 switch(type) {
                     case 'boolean' :
                         input = $("#inputBooleanField").clone().removeAttr('id');
-                        var intValue = td.find('i').data('value');                       
+                        var intValue = td.find('i').data('value');
                         td.html('').append(input);
                         // Click on radio value
                         input.find('input[value="'+intValue+'"]').click();
@@ -390,7 +394,7 @@
                     case 'date':
                         input = $("#inputText").clone().removeAttr('id');
                         input.datepicker(DatePickerParams).datepicker('setDate', td.html());
-                        
+
                         input.datepicker({
                             language:$('#wrapper').attr('lang'),
                             autoclose:true
@@ -415,9 +419,9 @@
 
                     default :
                         input = $("#inputText").clone().removeAttr('id');
-                        input.val(td.text());   
+                        input.val(td.text());
                         td.html('').append(input);
-                         
+
                 }
 
                 if (th.data('readonly')) {
@@ -436,10 +440,10 @@
                 var inputLabel = th.children('input');
                 var label = inputLabel.val();
                 var name = inputLabel.attr('name');
-                
+
                 var td = $(e).children('td');
                 var inputValue = td.children('input');
-                
+
                 var value = null;
 
                 switch (type) {
@@ -490,10 +494,10 @@
                 archiveId           : ArchiveInformation.archiveId,
                 originatorArchiveId : $('#inputOriginatorArchiveId').val(),
                 archiveName         : $('#inputArchiveName').val(),
-                originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'), 
+                originatingDate     : $('#inputOriginatingDate').data('datepicker').getFormattedDate('yyyy-mm-dd'),
                 description         : description
             };
-            
+
             $.ajax({
                 type        : 'PUT',
                 url         : "/recordsmanagement/archive/metadata",
@@ -549,31 +553,31 @@
             $('#rightColumn').empty();
         }
     }
-    
+
     $('#archiveInformation').on('click','.freeze', function(){
         ArchiveInformation.freeze();
     });
-    
+
     $('#archiveInformation').on('click','.unfreeze', function(){
         ArchiveInformation.unfreeze();
     });
-    
+
     $('#editManagementMetadata').on('click', function(){
          ArchiveInformation.editManagementMetadata();
     });
-    
+
     $('#cancelManagementEdition, #cancelMetadataEdition').on('click', function(){
          ArchiveInformation.cancelMetadataEdition();
     });
-    
+
     $('#saveManagementMetadata').on('click', function(){
          ArchiveInformation.saveManagementMetadata();
     });
-    
+
     $('#archiveInformation').on('click','.addCustomField',function(){
        ArchiveInformation.addField($(this).data('type'));
     });
-    
+
     $('#saveMetadata').on('click', function(){
         ArchiveInformation.saveMetadata();
     });
@@ -586,17 +590,14 @@
     $('#editMetadata').on('click', function(){
         $("#documentForm").hide();
         var profile = $(this).parent().text().trim();
-        var profileMetadata = $("#folderToolbarBtn").find(".newArchive").filter(function() {
-            if ($(this).text().trim() === profile) {
-                return $(this);
-            }
-        })
+        var profileMetadata = FulltextSearchForm.loadArchivalProfile(profile);
+
         originatingDateField = $("#archiveForm").find('[name="originatingDate"]');
         originatingDateField.datepicker('setDate', $('#archiveInformation').find('.originatingDate').val());
         archiveId = $(".archiveInformationId").val();
         Metadata.isModification = true;
-        NewArchive.loadImportForm(profileMetadata);
+        NewArchive.loadImportForm($(this), profileMetadata);
         Metadata.fillInMetadata(archiveId);
     });
-        
+
 </script>

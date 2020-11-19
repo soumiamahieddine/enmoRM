@@ -37,9 +37,21 @@ interface serviceAccountInterface
     /**
      * List the service account detail
      *
+     * @param string    $accountName    Name of account
+     * @param integer   $maxResults     Limit of result display
+     *
      * @action auth/serviceAccount/search
      */
-    public function readSearch();
+    public function readSearch($accountName = null, $maxResults = null);
+
+    /**
+     * Count service account
+     *
+     * @param string $accountName Name of account
+     *
+     * @action auth/serviceAccount/searchCount
+     */
+    public function readSearchCount($accountName = null);
 
     /**
      * Prepare an empty service Account object
@@ -134,4 +146,12 @@ interface serviceAccountInterface
      * @return boolean        Import with reset of table data or not
      */
     public function createImport($data, $isReset);
+
+    /**
+     * @param string $serviceUri Uri to check privileges
+     *
+     * @action auth/serviceAccount/getAccountsByPrivilege
+     *
+     */
+    public function readByRoute($serviceUri);
 }

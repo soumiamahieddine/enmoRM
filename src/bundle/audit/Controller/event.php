@@ -212,7 +212,7 @@ class event
      * @param string    $event
      * @param string    $accountId
      * @param string    $status
-     * @param string    $term      Term to search
+     * @param string    $term       Term to search
      * @param integer   $maxResults Max results to display
      *
      * @return audit/event[] Array of audit/event object
@@ -287,8 +287,9 @@ class event
      */
     private function queryBuilder($fromDate = null, $toDate = null, $event = null, $accountId = null, $status = null, $term = null, $wording = null)
     {
-        $queryParts = array();
-        $queryParams = array();
+        $queryParts = [];
+        $queryParams = [];
+
         if ($fromDate) {
             $queryParams['fromDate'] = $fromDate;
             $queryParts['fromDate'] = "eventDate >= :fromDate";

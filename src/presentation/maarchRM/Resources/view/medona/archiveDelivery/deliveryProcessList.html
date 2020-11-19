@@ -1,0 +1,46 @@
+<!--#
+    This file is part of the medona package.
+    (c) Maarch Prosper DE LAURE <prosper.delaure@maarch.org>
+
+    For the full copyright and license information, please view the LICENSE
+    file that was distributed with this source code.
+#-->
+<div id="contain" >
+    <div class="container-fluid" lang="en" data-translate-catalog="medona/messages">
+        <div class="page-header">
+            <h1>
+                <i class="fa fa-hourglass-half"></i>
+                Delivery process list
+            </h1>
+        </div>
+        <?hinclude medona/message/list.html ?>
+    </div>
+</div>
+
+<div data-translate-catalog="medona/messages">
+    <div class="modal fade" id="confirmationModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" title="Close">No</button>
+                    <button type="button" class="btn btn-danger" id="confirmDelete" data-action="" data-dismiss="modal" title="Yes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none">
+        <span id="restitutionTitle_text">Restitution</span>
+        <span id="destructionTitle_text">Destruction</span>
+        <span id="transferTitle_text">Transfer</span>
+        <span id="validation_text">validation warning</span>
+        <span id="acknowledge_text">acknowledge warning</span>
+        <span id="destroy_text">destroy elimination warning</span>
+        <span id="transfer_text">destroy transfer warning</span>
+    </div>
+</div>

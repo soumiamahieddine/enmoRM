@@ -1,10 +1,17 @@
-<div id="archiveContentTemplate" class="hide">
+<div id="archiveContentTemplate" class="hide" data-translate-catalog="recordsManagement/message">
     <li>
         <span>
             <span class="archive-bg">
                 <i class='fa'/>
                 <span name="archiveOrDocument">&nbsp;</span>
-                <div class="dropdown pull-right addChildrenArchive addingNew hide childrenArchiveSelector">
+                <?merge exportPrivilege.bool() ?>
+                <div class="pull-right addChildrenArchive addingNew childrenArchiveSelector exportArchive hide">
+                    <button class="btn btn-xs btn-default" title="Export">
+                        <span class="fa fa-download"></span>
+                    </button>
+                </div>
+                <?merge depositPrivilege.bool() ?>
+                <div class="pull-right dropdown addChildrenArchive addingNew childrenArchiveSelector hide">
                     <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="fa fa-plus"></span>
                     </button>
@@ -96,12 +103,18 @@
     .childrenArchiveSelector {
         z-index: 8;
         padding-top: 0px;
-        right: 5px ;
+        right: -15px ;
         position: relative;
         bottom: 4px;
     }
     .childrenArchiveSelector > .btn > .fa-plus {
         padding : 0px 0px ;
+    }
+    .childrenArchiveSelector > .btn > .fa-download {
+        padding : 0px 0px ;
+    }
+    .exportArchive {
+        right: 35px;
     }
 </style>
 
@@ -193,7 +206,7 @@
             if (childrenArchives) {
                 for(var j=0; j < childrenArchives.length && count>0; j++) {
                     count--;
-                    Archive.mergeRow(parent, childrenArchives[j])
+                    Archive.mergeArchiveRow(parent, childrenArchives[j])
                     Archive.showArchiveContent(template, childrenArchives[j].digitalResources, childrenArchives[j].contents, false);
                 }
             }
@@ -230,7 +243,7 @@
             }
         },
 
-        mergeRow: function(parent, archive) {
+        mergeArchiveRow: function(parent, archive) {
             template = this.archiveContentTemplate.clone();
             var smalls = template.find('small');
 
@@ -254,6 +267,7 @@
                     .data('opened-icon', 'fa-caret-down')
                     .siblings('span')
                     .addClass('childrenArchive')
+                    .addClass('archiveItem')
                     .attr('id', archive.archiveId)
                     .append(icon)
                     .append($('<span>').text(archive.archiveName))
@@ -271,12 +285,12 @@
                 $(smalls[2]).text(' ' + archive.originatingDate);
             }
 
-            BootstrapTree.addNode(parent, template, false);    
+            BootstrapTree.addNode(parent, template, false);
         },
 
         sortArchives: function(parent){
             var list = parent.find("ul").children('.child');
-            if (list.size() > 1){
+            if (list.length > 1){
                 list.sort(function(a, b){
                     return  $(a).data("depositdate") > $(b).data("depositdate");
                 }).each(function(){
@@ -291,23 +305,39 @@
         checkRights: function (archivalProfiles, withoutProfile, fileplanLevel) {
           var button = this.selected.closest('.archive').find('.addChildrenArchive');
           var archiveStatus = button.closest('.archive').find('.status').text();
-          if (archiveStatus == 'disposed' || fileplanLevel == 'item' || (!archivalProfiles.length && withoutProfile !== 1)) {
+          if (archiveStatus == 'disposed' || (!archivalProfiles.length && withoutProfile !== 1)) {
               return false;
           }
           return true
         },
 
-        loadChildrenArchiveButton: function(archivalProfiles, withoutProfile) {
+        loadChildrenArchiveButton: function(archivalProfiles, withoutProfile, filePlanLevel) {
             var button = this.selected.find('.addingNew');
             var list =  button.find('ul');
 
             if (Archive.selected.find(".selectedChild").attr("id")) {
                 var archiveId = Archive.selected.find(".selectedChild").attr("id");
-                Archive.selected.find(".selectedChild").siblings('.addingNew').removeClass("hide");
+                var archive = Archive.selected.find(".selectedChild");
+                if (filePlanLevel == "item") {
+                    archive.siblings('.exportArchive').removeClass("hide");
+                } else {
+                    archive.siblings('.addingNew').removeClass("hide");
+                }
             } else {
                 var archiveId = button.closest('.archive').attr('id');
-                button.closest('.archive').children('.addingNew').removeClass("hide");
+                var archive = button.closest('.archive');
+                if (filePlanLevel == "item") {
+                    archive.children('.exportArchive').removeClass("hide")
+                } else {
+                    archive.children('.addingNew').removeClass("hide");
+                }
             }
+
+            if (filePlanLevel == "item") {
+                return;
+            }
+
+            var list =  button.find('ul');
 
             var archiveName = button.closest('.archive').find('.archiveName').text();
 
@@ -394,6 +424,15 @@
 
     $('#middleColumn').onEvent('showDetails.archive', function(e, archiveId) {
          Archive.getInfo(archiveId);
+    })
+
+    $('#middleColumn').on('click', '.exportArchive', function() {
+        var archive = $(this).siblings('.archiveItem');
+        if (!archive.length) {
+            archive = $(this).closest('.archiveItem');;
+        }
+        var archiveId = archive.attr('id');
+        window.open('/recordsManagement/export/'+ archiveId);
     })
 
 </script>

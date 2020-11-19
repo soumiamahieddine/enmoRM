@@ -46,8 +46,8 @@ class Repository implements \dependency\repository\RepositoryInterface
     {
         $root = str_replace("/", DIRECTORY_SEPARATOR, $name);
 
-        if (!is_dir($root)) {
-            throw new \Exception("Repository $name doesn't exist");
+        if (!is_dir($root) || !is_writable($root)) {
+            throw new \Exception("Repository $name doesn't exist or is not writable");
         }
 
         $this->name = $name;
@@ -94,7 +94,7 @@ class Repository implements \dependency\repository\RepositoryInterface
      * @return bool
      */
     public function updateContainer($name, $metadata)
-    {   
+    {
     }
 
     /**
@@ -104,7 +104,7 @@ class Repository implements \dependency\repository\RepositoryInterface
      * @return mixed The object or array of metadata if available
      */
     public function readContainer($name)
-    { 
+    {
     }
 
     /**
@@ -182,7 +182,7 @@ class Repository implements \dependency\repository\RepositoryInterface
         if (!is_null($data)) {
             $this->updateFile($path, $data);
         }
-        
+
         if (!is_null($metadata)) {
             if ($this->checkFile($path . ".metadata")) {
                 $this->updateFile($path . '.metadata', json_encode($metadata, \JSON_PRETTY_PRINT));
@@ -203,11 +203,11 @@ class Repository implements \dependency\repository\RepositoryInterface
     public function deleteObject($path)
     {
         $this->deleteFile($path);
-        
+
         if ($this->checkFile($path . ".metadata")) {
             $this->deleteFile($path. ".metadata");
         }
-        
+
         return true;
     }
 
@@ -231,7 +231,7 @@ class Repository implements \dependency\repository\RepositoryInterface
 
             $dir .= DIRECTORY_SEPARATOR . $step;
         }
-        
+
         if (!is_dir($this->root . DIRECTORY_SEPARATOR . $dir)) {
             mkdir($this->root . DIRECTORY_SEPARATOR . $dir, 0775, true);
         }
@@ -318,7 +318,7 @@ class Repository implements \dependency\repository\RepositoryInterface
         // Sanitize name
         $name = basename($path);
         $name = $this->getName($name, $dir);
-        
+
         $filename = $this->root . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $name;
 
         if (!$fp = fopen($filename, 'x')) {
@@ -351,7 +351,7 @@ class Repository implements \dependency\repository\RepositoryInterface
         }
 
         fclose($fp);
-        
+
         return $dir . DIRECTORY_SEPARATOR . $name;
     }
 
@@ -414,7 +414,7 @@ class Repository implements \dependency\repository\RepositoryInterface
             if (!unlink($filename)) {
                 throw new \Exception("Error in writing the file $path and it's impossible to delete but a backup " . $path . ".save" . " is available");
             }
-            
+
             rename($backup, $filename);
             throw new \Exception("Error in writing the file. The file doesn't have a modification");
         }
@@ -467,7 +467,7 @@ class Repository implements \dependency\repository\RepositoryInterface
                 $compContents = str_repeat(chr($compNum), $fileSize);
                 fseek($fp, 0);
                 fwrite($fp, $compContents);
-                
+
 
                 // Third pass with a new random num
                 $lastContents = str_repeat(chr($lastNum), $fileSize);
@@ -479,7 +479,7 @@ class Repository implements \dependency\repository\RepositoryInterface
 
             fclose($fp);
         }
-        
+
 
         if (!unlink($filename)) {
             throw new \Exception("Can not delete at path $path");
@@ -553,7 +553,7 @@ class Repository implements \dependency\repository\RepositoryInterface
         }
 
         $jsonMetadata = $path . '=' . json_encode($metadata, \JSON_PRETTY_PRINT) . "\n";
-        
+
         $mdh = fopen($mdf, "r+");
 
         $mdl = false;

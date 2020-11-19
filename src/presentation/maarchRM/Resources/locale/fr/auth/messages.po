@@ -129,6 +129,14 @@ msgid "modificationRequestProcess"
 msgstr "Traiter les demandes de modification"
 msgctxt "userStory"
 
+msgid "Statistics"
+msgstr "Accéder aux statistiques"
+msgctxt "userStory"
+
+msgid "export"
+msgstr "Exporter une archive"
+msgctxt "userStory"
+
 
 # ---------------------------------------------------------
 # Journal
@@ -206,6 +214,10 @@ msgid "deliveryAuthorizationRequest"
 msgstr "Traiter les demandes d'autorisation"
 msgctxt "userStory"
 
+msgid "deliveryProcess"
+msgstr "Traiter les communications"
+msgctxt "userStory"
+
 # ---------------------------------------------------------
 # Destruction
 # ---------------------------------------------------------
@@ -227,7 +239,7 @@ msgstr "Annuler les demandes l'élimination"
 msgctxt "userStory"
 
 msgid "destructionAuthorizationRequest"
-msgstr "Traiter les demandes d'autorisation"
+msgstr "Traiter les demandes d'élimination"
 msgctxt "userStory"
 
 msgid "destructionProcess"
@@ -261,7 +273,7 @@ msgstr "Traiter les demandes de restitution"
 msgctxt "userStory"
 
 msgid "restitutionValidation"
-msgstr "Récupérer les restitutions"
+msgstr "Réceptionner les restitutions"
 msgctxt "userStory"
 
 #
@@ -497,6 +509,9 @@ msgstr "Ajouter un utilisateur"
 msgid "User modification"
 msgstr "Modification"
 
+msgid "Service account search"
+msgstr "Rechercher un compte de service"
+
 msgid "User name"
 msgstr "Identifiant"
 
@@ -730,6 +745,12 @@ msgstr "Jeton généré"
 msgid "Service account(s)"
 msgstr "Compte(s) de service"
 
+msgid "result(s) displayed on"
+msgstr "résulat(s) affiché(s) sur"
+
+msgid "total"
+msgstr "au total"
+
 msgid "Manage service account"
 msgstr "Comptes de service"
 
@@ -759,6 +780,9 @@ msgstr "Compte de service activé"
 
 msgid "Service account updated"
 msgstr "Compte de service modifié"
+
+msgid "Your query returns too much results, only first results are displayed."
+msgstr "Le nombre de résultats retournés est trop important. Veuillez affiner votre recherche."
 
 msgid "The fields contain white spaces."
 msgstr "Le champ contient des espaces"

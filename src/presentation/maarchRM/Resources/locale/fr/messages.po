@@ -158,6 +158,10 @@ msgid "Storage management"
 msgstr "Gestion du stockage"
 msgctxt "layout"
 
+msgid "Statistics"
+msgstr "Statistiques"
+msgctxt "layout"
+
 msgid "Repositories"
 msgstr "Supports de stockage"
 msgctxt "layout"
@@ -300,7 +304,7 @@ msgid "Apply"
 msgstr "Appliquer"
 
 msgid "Search"
-msgstr "Recherche"
+msgstr "Rechercher"
 
 msgid "Reset"
 msgstr "Réinitialiser"
@@ -613,3 +617,9 @@ msgstr "La taille de la ressource est nulle"
 
 msgid "Attempt to access without a valid token"
 msgstr "Une erreur est survenue. Si le problème persiste, veuillez recharger la page."
+
+msgid "Your query returns too much results, only first results are displayed."
+msgstr "Le nombre de résultats retournés est trop important. Veuillez affiner votre recherche."
+
+msgid "The specified message file can not be found"
+msgstr "Le fichier de bordereau renseigné n'a pas été trouvé"

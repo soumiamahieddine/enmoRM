@@ -146,6 +146,7 @@ class ArchiveRestitutionRequest extends abstractMessage
      * @param string $senderOrg    The requesting org
      * @param string $recipientOrg The requesting org
      * @param string $userName     The requester user name
+     * @param string $format       The message format
      *
      * @return The reply message generated
      */
@@ -155,7 +156,8 @@ class ArchiveRestitutionRequest extends abstractMessage
         $comment = false,
         $senderOrg = false,
         $recipientOrg = false,
-        $userName = false
+        $userName = false,
+        $format = null
     ) {
         if (!is_array($archives)) {
             $archives = array($archives);
@@ -165,7 +167,11 @@ class ArchiveRestitutionRequest extends abstractMessage
         $message->messageId = \laabs::newId();
 
         $message->schema = "medona";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $message->schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $message->schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $message->schema = "seda";
         }
 
@@ -193,7 +199,8 @@ class ArchiveRestitutionRequest extends abstractMessage
             }
 
             if ($message->schema != 'medona') {
-                $archiveRestitutionRequestController = \laabs::newController($message->schema.'/ArchiveRestitutionRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveRestitutionRequestController = \laabs::newController("$namespace/ArchiveRestitutionRequest");
                 $archiveRestitutionRequestController->send($message);
             } else {
                 $archiveRestitutionRequest = $this->sendMessage($message);
@@ -257,7 +264,8 @@ class ArchiveRestitutionRequest extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $archiveRestitutionRequestController = \laabs::newController($message->schema.'/ArchiveRestitutionRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveRestitutionRequestController = \laabs::newController("$namespace/ArchiveRestitutionRequest");
                 $archiveRestitutionRequestController->send($message);
             } else {
                 $archiveRestitutionRequest = $this->sendMessage($message);

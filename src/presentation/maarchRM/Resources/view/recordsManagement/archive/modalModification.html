@@ -128,6 +128,10 @@
                 $('#derogationInputTr').hide();
             }
 
+            if (type === 'requestModification') {
+                $('#messageFormatTr').hide();
+            }
+
             if (!transaction) {
                 $('#message').hide();
             }
@@ -234,7 +238,21 @@
                 console.log(err);
                 $('#archiveModificationForm').css('display', 'none');
             }
-                
+
+            if (type === 'requestCommunication') {
+                var isNotCommunicable = ids.some((id) => $('#' +id).data('iscommunicable') === 1);
+                if (isNotCommunicable) {
+                    $('#derogationTr').show();
+                    $('#derogationInputTr').show();
+                    $("#derogationTr .toggle").removeClass('btn-default off');
+                    $("#derogationTr .toggle").addClass('btn-info');
+                }
+                 else {
+                    $('#derogationTr').hide();
+                    $('#derogationInputTr').hide();
+                }
+            }
+
             $('#save').data("archiveids", ids);
             $('#modal_multipleSelection').css('display', '');
             $('#modal_selected').html(selected);
@@ -272,6 +290,8 @@
             } else {
                 type = 'PUT';
             }
+
+            console.log(this.actionsList[this.modalType]);
             
             $.ajax({
                 url         : this.actionsList[this.modalType],
@@ -439,5 +459,13 @@
             $('#modificationModal').find('[name="comment"]').val("");
         }
     };
+
+    $("#modificationModal").on("shown.bs.modal", function() {
+        isModalOpen = true;
+    });
+
+    $("#modificationModal").on("hidden.bs.modal", function() {
+        isModalOpen = false;
+    });
 
 </script>

@@ -57,6 +57,7 @@ interface retrieveInterface
 
     /**
      * Search archives by profile / dates / agreement
+     *
      * @param string  $archiveId
      * @param string  $profileReference
      * @param string  $status
@@ -67,6 +68,7 @@ interface retrieveInterface
      * @param string  $originatorOrgRegNumber
      * @param string  $description
      * @param string  $text
+     * @param string  $archiverArchiveId
      * @param integer $maxResults
      *
      * @uses recordsManagement/archives/read
@@ -85,13 +87,14 @@ interface retrieveInterface
         $originatorOrgRegNumber = null,
         $description = null,
         $text = null,
+        $archiverArchiveId = null,
         $maxResults = null
     );
 
     /**
      * Get metadata to edit
      *
-     * @return recordsManagement/archive/getEditMetadata The recordsManagement/archive object
+     * @return recordsManagement/archive/edit The recordsManagement/archive object
      * @uses  recordsManagement/archiveDescription/read_archiveId_
      */
     public function readRecordsmanagementArchivedescription_archiveId_Geteditmetadata();
@@ -114,4 +117,12 @@ interface retrieveInterface
      * @uses recordsManagement/archive/read_archiveId_Exists
      */
     public function readRecordsmanagementArchive_archiveId_Exists($archiveId);
+
+    /**
+     * Export archive and children
+     *
+     * @uses recordsManagement/archive/readExport_archiveId_
+     * @return recordsManagement/archive/export
+     */
+    public function readRecordsmanagementExport_archiveId_();
 }

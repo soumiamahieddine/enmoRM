@@ -83,6 +83,14 @@ class message
      */
     public function index()
     {
+        $currentService = \laabs::getToken("ORGANIZATION");
+        if (!$currentService) {
+            $this->view->addContentFile("recordsManagement/welcome/noWorkingOrg.html");
+            $this->view->translate();
+
+
+            return $this->view->saveHtml();
+        }
         $this->view->addContentFile("medona/message/menu.html");
 
         $menu = $this->dashboardPresenter->filterMenuAuth($this->menu);
@@ -235,7 +243,7 @@ class message
                 $this->setMessageActions($message, $messages, $registrationNumber);
             }
 
-            if ($message->status === 'error') {
+            if (in_array($message->status, ['error', 'processError', 'validationError'])) {
                 $message->retryButton = "/medona/message/". $message->messageId . "/retry";
             }
 
@@ -723,7 +731,6 @@ class message
      */
     protected function setMessageActions($message, $messages, $registrationNumber)
     {
-
         if (in_array($message->recipientOrgRegNumber, $registrationNumber)) {
             $messageId = (string) $message->messageId;
 
@@ -769,6 +776,9 @@ class message
                             $message->rejectButton = "/delivery/".$messageId."/Reject";
                             $message->derogationButton = "/delivery/".$messageId."/Derogation";
                         }
+                    }
+                    if ($message->status == "accepted") {
+                        $message->processButton = "/delivery/".$messageId."/process";
                     }
                     break;
 
@@ -940,7 +950,8 @@ class message
             $message->schema = $messageSchema;
         }
 
-        $this->messageTypeSerializer = \laabs::newSerializer($message->schema.LAABS_URI_SEPARATOR.$message->type, $format);
+        $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+        $this->messageTypeSerializer = \laabs::newSerializer($namespace.LAABS_URI_SEPARATOR.$message->type, $format);
 
         return $this->messageTypeSerializer;
     }

@@ -110,16 +110,35 @@ class welcome
             }
         }
 
+        $archivalProfiles = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+        foreach ($archivalProfiles as $key => $archivalProfile) {
+            $archiveDescriptions = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archivalProfile->reference)->archiveDescription;
+            $archivalProfiles[$key]->archiveDescription = $archiveDescriptions;
+            $archivalProfiles[$key]->searchFields = [];
+            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+                switch ($archiveDescription->descriptionField->type) {
+                    case 'text':
+                    case 'name':
+                    case 'date':
+                    case 'number':
+                    case 'boolean':
+                        $archivalProfiles[$key]->searchFields[] = $archiveDescription->descriptionField;
+                }
+            }
+        }
+
         $depositPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveDeposit/deposit");
+        $exportPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/export");
 
         $maxResults = null;
         if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
             $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
         }
 
-
+        $this->view->setSource("archivalProfiles", $archivalProfiles);
         $this->view->setSource("userArchivalProfiles", $this->userArchivalProfiles);
         $this->view->setSource("depositPrivilege", $depositPrivilege);
+        $this->view->setSource("exportPrivilege", $exportPrivilege);
         $this->view->setSource("syncImportPrivilege", $syncImportPrivilege);
         $this->view->setSource("asyncImportPrivilege", $asyncImportPrivilege);
         $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
@@ -191,6 +210,7 @@ class welcome
 
     /**
      * Show a folder content
+     *
      * @param array   $archives
      * @param integer $count    Archives count without limit
      *

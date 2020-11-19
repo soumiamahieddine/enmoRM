@@ -186,7 +186,7 @@ class format
      *
      * @return digitalResource/fileInformation The file information object
      */
-    public function getFileInformation($contents)
+    public function getFileInformation($contents, $extension)
     {
         if (is_resource($contents)) {
             $contents = base64_decode(stream_get_contents($contents));

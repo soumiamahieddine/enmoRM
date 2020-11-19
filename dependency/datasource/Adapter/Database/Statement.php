@@ -25,10 +25,10 @@ class Statement
                \IteratorAggregate
 {
     /* Constants */
-    
-    /* Properties */    
+
+    /* Properties */
     protected $pdoStatement;
-    
+
     /* Methods */
     /**
      * Constructor
@@ -38,7 +38,7 @@ class Statement
     {
         $this->pdoStatement = $pdoStatement;
     }
-    
+
     /* Statement methods */
     /**
      * Bind a parameter
@@ -48,7 +48,7 @@ class Statement
      * @param integer $length
      * @param array   $driver_options
      * @param string  $ref
-     * 
+     *
      * @return bool
      */
     public function bindParam($name, &$variable, $type=\PDO::PARAM_STR, $length=null, $driver_options=array(), $ref=false)
@@ -58,38 +58,38 @@ class Statement
 
         return $this->pdoStatement->bindParam(':' . $name, $variable, $type, $length);
     }
-    
+
     /**
      * Bind a value
      * @param string $name
      * @param string $value
      * @param string $type
-     * 
+     *
      * @return bool
      */
     public function bindValue($name, $value, $type=\PDO::PARAM_STR)
     {
         $this->params[$name] = $value;
-        
+
         return $this->pdoStatement->bindValue(':' . $name, $value, $type);
     }
-    
+
     /**
      * Return error
-     * 
+     *
      * @return \core\Error
      */
     public function getError()
     {
         $errInfo = $this->pdoStatement->errorInfo();
-        
+
         return new \core\Error($errInfo[2], null, $errInfo[0], null, null, $errInfo);
     }
-    
+
     /**
      * execute
      * @param string $inputParameters
-     * 
+     *
      * @return bool
      */
     public function execute($inputParameters=null)
@@ -97,6 +97,7 @@ class Statement
         if (!empty($inputParameters) && \laabs\is_assoc($inputParameters)) {
             foreach ($inputParameters as $name => $value) {
                 $inputParameters[":" . $name] = str_replace("*", "%", $value);
+                $inputParameters[":" . $name] = $value;
                 unset($inputParameters[$name]);
             }
         } else {
@@ -105,7 +106,7 @@ class Statement
 
         return $this->pdoStatement->execute($inputParameters);
     }
-    
+
     /**
      * Get params
      * @return string
@@ -114,7 +115,7 @@ class Statement
     {
         return $this->params;
     }
-    
+
     /**
      * Debug params
      * @return string
@@ -126,10 +127,10 @@ class Statement
 
     /**
      * ResultSet methods
-     * 
+     *
      * @param string $class
      * @param array $ctor_args
-     * 
+     *
      * @return object
      */
     public function fetch($class="\stdClass", array $ctor_args=array())
@@ -143,16 +144,16 @@ class Statement
                 }
             }
         }
-        
+
         return $object;
     }
-    
+
     /**
      * ResultSet all methods
-     * 
+     *
      * @param string $class
      * @param array $ctor_args
-     * 
+     *
      * @return object
      */
     public function fetchAll($class="\stdClass", array $ctor_args=array())
@@ -171,61 +172,61 @@ class Statement
 
         return $resultSet;
     }
-    
+
     /**
      * Fetch item
      * @param integer $cursor_offset
      * @param string $class
-     * 
+     *
      * @return string
      */
     public function fetchItem($cursor_offset=0, $class="\stdClass")
     {
         $this->setFetchMode(\PDO::FETCH_CLASS, $class);
-        
+
         return $this->pdoStatement->fetch(\PDO::FETCH_CLASS, \PDO::FETCH_ORI_ABS, $cursor_offset);
     }
-    
+
     /**
      * Fetch column
      * @param integer $offset
-     * 
+     *
      * @return string
      */
     public function fetchColumn($offset=0)
     {
         return $this->pdoStatement->fetchColumn($offset);
     }
-    
+
     /**
      * Row count
-     * 
+     *
      * @return integer
      */
     public function rowCount()
     {
         return $this->pdoStatement->rowCount();
     }
-    
+
     /**
      * Get query string
-     * 
+     *
      * @return string
      */
     public function getQueryString()
     {
         return $this->pdoStatement->queryString;
     }
-    
+
     /**
      * Get iterator
-     * 
+     *
      * @return \dependency\datasource\Adapter\Database\ArrayIterator
      */
     public function getIterator()
     {
         $DataSet = $this->fetchAll();
-        
+
         return new ArrayIterator($DataSet);
     }
 

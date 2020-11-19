@@ -151,7 +151,7 @@ class cluster
         try {
             $this->sdoFactory->update($cluster, "digitalResource/cluster");
             $this->sdoFactory->deleteChildren("digitalResource/clusterRepository", $cluster, "digitalResource/cluster");
-            if (is_array($cluster->clusterRepository) && !empty($cluster->clusterRepository)) {
+            if (is_array($resource->address) && !empty($resource->address)) {
                 $this->sdoFactory->createCollection($cluster->clusterRepository, "digitalResource/clusterRepository");
             }
         } catch (\core\Route\Exception $e) {
@@ -183,7 +183,7 @@ class cluster
             try {
                 $clusterRepository->repository = $this->repositoryController->openRepository($clusterRepository->repositoryId);
             } catch (\Exception $e) {
-                if ($mode == Cluster::MODE_WRITE) {
+                if ($mode != Cluster::MODE_READ) {
                     throw \laabs::newException("digitalResource/clusterException", "Repository '%s' must be accessible", 404, $e, [$clusterRepository->repositoryId]);
                 } else {
                     $clusterRepository->repository = null;
@@ -405,8 +405,6 @@ class cluster
             $address->integrityCheckResult = true;
         }
         $this->sdoFactory->update($address);
-
-
 
         return $address->integrityCheckResult;
     }

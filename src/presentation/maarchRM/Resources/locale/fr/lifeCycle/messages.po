@@ -436,6 +436,9 @@ msgstr "Aucune organisation ou service correspondant"
 # Event types
 # ---------------------------------------------------------
 
+msgid "digitalResource/integrityCheck"
+msgstr "Contrôle d'intégrité du support de stockage"
+
 msgid "recordsManagement/deposit"
 msgstr "Dépôt"
 
@@ -730,6 +733,9 @@ msgstr "Données d'Archive"
 
 msgid "Service level"
 msgstr "Niveau de service"
+
+msgid "Repository"
+msgstr "Support de stockage"
 
 # ---------------------------------------------------------
 # deposit certificate

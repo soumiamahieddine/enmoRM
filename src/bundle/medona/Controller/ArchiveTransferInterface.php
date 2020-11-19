@@ -30,9 +30,9 @@ interface ArchiveTransferInterface
     /**
      * Receive message with all contents embedded
      *
-     * @param string $message The message object  
-     * 
-     * @return medona/message The acknowledgement
+     * @param string $message The message object
+     *
+     * @return mixed medona/message The acknowledgement
      */
     public function receive($message);
 

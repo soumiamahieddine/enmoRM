@@ -25,7 +25,7 @@ namespace bundle\medona;
  * @package Medona
  * @author  Alexis Ragot <alexis.ragot@maarch.org>
  */
-interface archiveTransferInterface 
+interface archiveTransferInterface
     extends messageInterface
 {
     /**
@@ -60,14 +60,14 @@ interface archiveTransferInterface
 
     /**
      * Count transfer messages
-     * 
+     *
      * @action medona/ArchiveTransfer/count
      */
     public function readCount();
 
     /**
      * Receive message with all contents embedded
-     * @param string $messageFile The message binary contents OR a filename
+     * @param mixed  $messageFile The message binary contents or a filename
      * @param array  $attachments An array of filenames for attachments
      * @param string $schema      The schema of the message file
      * @param string $filename    The message file name
@@ -75,6 +75,17 @@ interface archiveTransferInterface
      * @action medona/ArchiveTransfer/receive
      */
     public function create($messageFile, $attachments = array(), $schema = null, $filename = null);
+
+    /**
+     * Receive message with all contents embedded
+     *
+     * @param mixed  $package  Message binary contents or a filename
+     * @param string $connector    Connector to use
+     * @param array  $params       Parameters to adapt message
+     *
+     * @action medona/ArchiveTransfer/receiveSource
+     */
+    public function createSource($package, $connector, $params = []);
 
     /**
      * Validate messages against schema and rules
@@ -138,14 +149,15 @@ interface archiveTransferInterface
 
     /**
      * Create outgoing transfer
-     * @param array $archiveIds            List of archives
+     * @param array $archiveIds             List of archives
      * @param string $archiverOrgRegNumber  An Archiver
      * @param string $comment               A comment
      * @param string $identifier            An identifier
+     * @param string $format                The message format
      *
      * @action medona/ArchiveTransferSending/setForTransfer
      */
-    public function updateOutgoingtransferSending($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null);
+    public function updateOutgoingtransferSending($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null, $format = null);
 
     /**
      * Get ingoing transfer messages
