@@ -225,7 +225,7 @@ file that was distributed with this source code.
     })
 
     $('#inputFormatFile').on('change', function() {
-        uploadMessage($(this).context.files[0]);
+        uploadMessage($(this).get(0).files[0]);
     })
 
     // Cancel
@@ -238,7 +238,7 @@ file that was distributed with this source code.
     // Submit
     $('#fileCheckFormat_submit').on('click', function() {
         var file = serialize();
-        $('.btn').prop('disabled', 'true');
+        $('#fileCheckFormat_submit').prop('disabled', 'true');
         ajax($(this), {
             type        : 'POST',
             url         : '/digitalResource/format/fileformatinformation',
@@ -253,6 +253,7 @@ file that was distributed with this source code.
                 if(!response.status) {
                     gritter.show(response.message, response.status, response.errors);
                 } else {
+                    $('#fileCheckFormat_submit').prop('disabled', false);
                     $('#formatFileCancel').click();
                     $('#format-mimetype').val(response.mimetype);
                     $('#format-puid').val(response.puid);
@@ -266,7 +267,6 @@ file that was distributed with this source code.
                 gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
             }
         });
-        $('.btn').removeProp('disabled');
     })
 
 

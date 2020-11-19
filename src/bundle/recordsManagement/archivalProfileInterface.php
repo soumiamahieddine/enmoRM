@@ -27,13 +27,14 @@ namespace bundle\recordsManagement;
 interface archivalProfileInterface
 {
     /**
-     *  List the profiles
-     * @param boolean $withRightsChecking
+     * List the profiles
+     * @param integer $limit Maximal number of results to dispay
+     * @param string  $query The query filter
      *
      * @action recordsManagement/archivalProfile/index The list of profile
      *
      */
-    public function readIndex($withRightsChecking = false);
+    public function readIndex($limit = null, $query = null);
 
     /**
      *  New profile

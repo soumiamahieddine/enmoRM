@@ -21,6 +21,8 @@
 
 namespace bundle\lifeCycle\Controller;
 
+use function laabs\hash_stream;
+
 /**
  * Class of archives life cycle journal
  *
@@ -34,11 +36,12 @@ class journal
     protected $currentOffset;
 
     // Journal files reading
-    protected $currentJournalFile;
+    protected $currentJournalFilePath;
     protected $currentJournalId;
     protected $currentEvent;
     protected $journalCursor;
     protected $eventFormats;
+    protected $journalHandler;
 
     protected $journals;
 
@@ -54,7 +57,7 @@ class journal
         $this->interval = $interval;
         $this->sdoFactory = $sdoFactory;
 
-        $this->currentJournalFile = null;
+        $this->currentJournalFilePath = null;
         $this->currentJournalId = null;
         $this->currentOffset = 0;
 
@@ -102,7 +105,6 @@ class journal
 
         if ($accountToken = \laabs::getToken('AUTH')) {
             $event->accountId = $accountToken->accountId;
-
         } else {
             $event->accountId = '__system__';
         }
@@ -194,7 +196,6 @@ class journal
             if (!file_put_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId, $journalContents)) {
                 throw \laabs::newException("lifeCycle/journalException", "Journal file cannot be written");
             }
-
         } else {
             $journalContents = file_get_contents($tmpDir . DIRECTORY_SEPARATOR . $journal->archiveId);
         }
@@ -274,14 +275,15 @@ class journal
             $this->openJournal($journalReference->archiveId);
 
             // Get the eventId position on the journal file
-            $this->currentOffset = strpos($this->currentJournalFile, (string) $eventFromBase->eventId);
+            while ($row = fgetcsv($this->journalHandler)) {
+                if ($row[0] == (string) $eventFromBase->eventId) {
+                    $eventLine = '"' . implode('","', $row);
+                    break;
+                }
+            }
 
             // Place cursor to the begin of line
-            if ($this->currentOffset) {
-                $endOffset = strpos($this->currentJournalFile, "\n", $this->currentOffset);
-                $eventLine = substr($this->currentJournalFile, $this->currentOffset, $endOffset - $this->currentOffset);
-                $this->currentOffset = $this->currentOffset + strlen($eventLine) + 1;
-
+            if ($this->journalHandler) {
                 // Get the event
                 $event = $this->getEventFromLine($eventLine);
 
@@ -289,7 +291,6 @@ class journal
                 $event->instanceName = $eventFromBase->instanceName;
                 $event->orgRegNumber = $eventFromBase->orgRegNumber;
                 $event->orgUnitRegNumber = $eventFromBase->orgUnitRegNumber;
-
             } else {
                 $event = $eventFromBase;
                 return $event;
@@ -309,14 +310,14 @@ class journal
     /**
      * Search a journal event
      *
-     * @param string    $eventType      The type of the event
-     * @param string    $objectClass    The object class
-     * @param string    $objectId       The identifier of the object
-     * @param timestamp $minDate        The minimum date of the event
-     * @param timestamp $maxDate        The maximum date of the event
-     * @param string    $org            An org reg number on one of the event header or info
-     * @param string    $sortBy         The event sorting request
-     * @param integer   $maxResults The number of result
+     * @param string    $eventType   The type of the event
+     * @param string    $objectClass The object class
+     * @param string    $objectId    The identifier of the object
+     * @param timestamp $minDate     The minimum date of the event
+     * @param timestamp $maxDate     The maximum date of the event
+     * @param string    $org         An org reg number on one of the event header or info
+     * @param string    $sortBy      The event sorting request
+     * @param integer   $maxResults  The number of result
      *
      * @throws \Exception
      *
@@ -370,7 +371,7 @@ class journal
         return $events;
     }
 
-     /**
+    /**
      * Count journal events
      *
      * @param string    $eventType      The type of the event
@@ -594,14 +595,18 @@ class journal
             $resources = $archiveController->getDigitalResources($journalReference->archiveId, $checkAccess = false);
             $journalResource = $digitalResourceController->retrieve($resources[0]->resId);
 
-            $journalFile = $journalResource->getContents();
+            // $journalFile = $journalResource->getContents();
+            // $journalFile = $journalFile->getHandler();
+            // $journalFilePath = $this->copyJournalIntoCsv($journalResource);
+            $journalHandler = $journalResource->getHandler();
+
             $this->journalCursor = 0;
 
-            if ($journalFile == null) {
+            if ($journalHandler == null) {
                 throw \laabs::newException("lifeCycle/journalException", "The journal file can't be opened");
             } else {
+                $this->journalHandler = $journalHandler;
                 $this->checkIntegrity($journalReference);
-                $this->currentJournalFile = $journalFile;
                 $this->currentJournalId = $journalReference->archiveId;
             }
         }
@@ -611,96 +616,21 @@ class journal
         return true;
     }
 
-    /**
-     * Get the next event or get the next event which contain a given item
-     * @param string  $eventType The event type
-     * @param boolean $chain     Chain to the next journal
-     *
-     * @throws \Exception
-     *
-     * @return string The event
-     */
-    public function getNextEvent($eventType = null, $chain = true)
+    public function copyJournalIntoCsv($journalFile)
     {
-        $nextEvent = null;
-
-        if (!$this->currentJournalFile) {
-            $queryString = [];
-            if ($eventType) {
-                $queryString['eventType'] = "eventType='$eventType'";
-            }
-            $timestamp = $this->currentEvent->timestamp;
-
-            if ($this->separateInstance) {
-                $queryString['instanceName'] = "instanceName = '".\laabs::getInstanceName()."'";
-            }
-
-            $queryString['timestamp'] = "timestamp>'$timestamp'";
-
-            $nextEvent = $this->sdoFactory->find(
-                "lifeCycle/event",
-                implode(' and ', $queryString),
-                [],
-                "<timestamp",
-                0,
-                1
-            );
-
-            if (count($nextEvent)) {
-                $nextEvent = $nextEvent[0];
-                $nextEvent = $this->decodeEventFormat($nextEvent);
-            } else {
-                $logController = \laabs::newController('recordsManagement/log');
-                $journal = $logController->getFirstJournal('lifeCycle');
-                if ($journal) {
-                    $this->openJournal($journal->archiveId);
-                    $this->getNextEvent($eventType, $chain);
-
-                } else {
-                    $nextEvent = false;
-                }
-
-            }
-
-        } else {
-            // Place the cursor to the first event if it not positioned yet
-            if ($this->currentOffset == 0) {
-                $this->currentOffset = strpos($this->currentJournalFile, "\n") + 1;
-            }
-
-            // Search the event
-            if ($eventType) {
-                $offset = strpos($this->currentJournalFile, $eventType, $this->currentOffset);
-            } else {
-                $offset = $this->currentOffset;
-            }
-
-            // Read the event
-            if ($offset != false) {
-                $journalLength = strlen($this->currentJournalFile);
-
-                $startOffset = strrpos($this->currentJournalFile, "\n", -$journalLength + $offset) + 1;
-                $endOffset = strpos($this->currentJournalFile, "\n", $startOffset);
-                $eventLine = substr($this->currentJournalFile, $startOffset, $endOffset - $startOffset);
-
-                $this->currentOffset = $startOffset + strlen($eventLine) + 1;
-
-                $nextEvent = $this->getEventFromLine($eventLine);
-            }
-
-            // Search on the next journal
-            if ($chain && $nextEvent == null) {
-                if ($this->openNextJournal()) {
-                    $nextEvent = $this->getNextEvent($eventType);
-                }
-            }
+        $tmpdir = \laabs::getTmpDir();
+        $fileName = $tmpdir.DIRECTORY_SEPARATOR. 'Journal' . \laabs::newId() .".csv";
+        $file = fopen($fileName, "w");
+        $value = $journalFile->getHandler();
+        while (!feof($value)) {
+            $chunk = fread($value, 2654208);
+            fwrite($file, $chunk);
         }
+        rewind($value);
+        rewind($file);
+        fclose($file);
 
-        if ($nextEvent) {
-            $this->currentEvent = $nextEvent;
-        }
-
-        return $nextEvent;
+        return $fileName;
     }
 
     /**
@@ -740,97 +670,16 @@ class journal
         }
 
         // Searching for related events
-        $offset = 0;
-        $nextEvent = 0;
-        $lastJournal = false;
-
-        while ($lastJournal == false) {
-            if ($nextEvent != null) {
-                $offset = strpos($this->currentJournalFile, "\n", $offset);
-            }
-
-            if ($this->currentJournalId) {
-                $offset = strpos($this->currentJournalFile, (string) $archiveId, $offset);
-            }
-
-            // Read the event in the file
-            if ($offset != false) {
-                $journalLength = strlen($this->currentJournalFile);
-
-                $startOffset = strrpos($this->currentJournalFile, "\n", -$journalLength + $offset) + 1;
-                $endOffset = strpos($this->currentJournalFile, "\n", $startOffset);
-                $eventLine = substr($this->currentJournalFile, $startOffset, $endOffset - $startOffset);
-
-                $this->currentOffset = $startOffset + strlen($eventLine) + 1;
-                $nextEvent = $this->getEventFromLine($eventLine);
-                $events[] = $nextEvent;
-            } else {
-                if (!$this->openNextJournal()) {
-                    $lastJournal = true;
-                } else {
-                    $offset = 0;
-                }
+        $events = [];
+        while ($row = fgetcsv($this->journalHandler)) {
+            if ($row[0] == (string) $archiveId) {
+                $eventLine = '"' . implode('","', $row);
+                $events[] = $this->getEventFromLine($eventLine);
+                break;
             }
         }
 
         return $events;
-    }
-
-    /**
-     * Get the previous event or get the previous event whitch contain a givven item
-     * @param string  $eventItem The event item to search
-     * @param boolean $chain     Chain to the previous journal
-     *
-     * @throws \Exception
-     *
-     * @return mixed The event or null
-     */
-    public function getPreviousEvent($eventItem = null, $chain = true)
-    {
-        $event = null;
-
-        // Open a journal if there is not any
-        if (!$this->currentJournalFile) {
-            return false;
-        }
-
-        // Place the cursor to the first event if it not positioned yet
-        if ($this->currentOffset == 0) {
-            if ($this->openPreviousJournal()) {
-                return $event = $this->getPreviousEvent($eventItem);
-            } else {
-                return null;
-            }
-        }
-
-        $journalLength = strlen($this->currentJournalFile);
-
-        // Search the event
-        if ($eventItem) {
-            $offset = strrpos($this->currentJournalFile, $eventItem, $this->currentOffset - $journalLength);
-        } else {
-            $offset = $this->currentOffset - 2;
-        }
-
-        // Read the event
-        if ($offset != false) {
-            $startOffset = strrpos($this->currentJournalFile, "\n", $offset - $journalLength) + 1;
-            $endOffset = strpos($this->currentJournalFile, "\n", $startOffset);
-            $eventLine = substr($this->currentJournalFile, $startOffset, $endOffset - $startOffset);
-
-            $this->currentOffset = $startOffset - 1;
-
-            $this->getEventFromLine($eventLine);
-        }
-
-        // Search on the next journal
-        if ($chain && $event == null) {
-            if ($this->openPreviousJournal()) {
-                $event = $this->getPreviousEvent($eventItem);
-            }
-        }
-
-        return $event;
     }
 
 
@@ -854,86 +703,6 @@ class journal
     }
 
     /**
-     * Load the previous journal
-     *
-     * @throws \Exception
-     *
-     * @return string The opened journal identifier
-     */
-    public function openPreviousJournal()
-    {
-        $journalId = null;
-
-        if ($this->currentJournalFile) {
-            $this->currentOffset = strpos($this->currentJournalFile, "\n");
-            $eventLine = substr($this->currentJournalFile, 0, -2);
-
-            $journalArray = str_getcsv($eventLine);
-
-            if (count($journalArray) < 7) {
-                if (count($journalArray)) {
-                    $journalId = $journalArray[3];
-                    $hashAlgorithm = $journalArray[4];
-                    $hash = $journalArray[5];
-                    $this->openJournal($journalId);
-
-                    $currentHash = hash($hashAlgorithm, $this->currentJournalFile);
-                    if ($currentHash != $hash) {
-                        throw \laabs::newException("lifeCycle/journalException", "Journal hash is incorrect.");
-                    }
-
-                    $this->currentOffset = strrpos($this->currentJournalFile, "\n", -2);
-                }
-
-            } else {
-                if (count($journalArray)) {
-                    $journalId = $journalArray[8];
-                    $hashAlgorithm = $journalArray[9];
-                    $hash = $journalArray[10];
-                    $this->openJournal($journalId);
-
-                    $currentHash = hash($hashAlgorithm, $this->currentJournalFile);
-                    if ($currentHash != $hash) {
-                        throw \laabs::newException("lifeCycle/journalException", "Journal hash is incorrect.");
-                    }
-
-                    $this->currentOffset = strrpos($this->currentJournalFile, "\n", -2);
-                }
-            }
-
-        }
-
-        return $journalId;
-    }
-
-    /**
-     * Load the next journal
-     *
-     * @throws \Exception
-     *
-     * @return string The opened journal identifier
-     */
-    public function openNextJournal()
-    {
-        $journalId = null;
-
-        if ($this->currentJournalId) {
-            $this->currentOffset = strpos($this->currentJournalFile, "\n");
-
-            $logController = \laabs::newController('recordsManagement/log');
-
-            $nextJournal = $logController->getNextJournal($this->currentJournalId);
-
-            if (isset($nextJournal)) {
-                $this->openJournal($nextJournal->archiveId);
-                $journalId = $nextJournal->archiveId;
-            }
-        }
-
-        return $journalId;
-    }
-
-    /**
      * Get the current journal
      * @param string  $journalId The journal identifier
      * @param integer $offset    The reading offset
@@ -953,9 +722,14 @@ class journal
             $limit = \laabs::configuration('presentation.maarchRM')['maxResults'];
         }
 
-        while ($limit > 0 && $event = $this->getNextEvent(null, false)) {
-            $events[] = $event;
-            $limit--;
+        // Get the eventId position on the journal file
+        while ($row = fgetcsv($this->journalHandler)) {
+            if ($row[0] == (string) $journalId) {
+                $eventLine = '"' . implode('","', $row);
+                $event = $this->getEventFromLine($eventLine);
+                $events[] = $event;
+                break;
+            }
         }
 
         return $events;
@@ -1014,10 +788,8 @@ class journal
 
         $resources = $archiveController->getDigitalResources($nextJournal->archiveId, $checkAccess = false);
         $nextJournalResource = $digitalResourceController->retrieve($resources[0]->resId);
-        $nextJournalContents = $nextJournalResource->getContents();
-
-        $chainEvent = str_getcsv(strtok($nextJournalContents, "\n"));
-
+        $nextJournalContents = $nextJournalResource->getHandler();
+        $chainEvent = fgetcsv($nextJournalContents);
         // For older version compatibility
         if (count($chainEvent) < 7) {
             if (empty($chainEvent[3]) || empty($chainEvent[4]) || empty($chainEvent[5])) {
@@ -1038,15 +810,14 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[4];
             $chainedJournalHash = $chainEvent[5];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
-
+            $calcJournalHash = hash_stream($chainedJournalHashAlgo, $journalResource->getHandler());
             if ($calcJournalHash != $chainedJournalHash) {
+                unlink($journalFilename);
                 throw \laabs::newException(
                     'recordsManagement/journalException',
                     "Invalid journal: Chaining event has a different hash."
                 );
             }
-
         } else {
             if (empty($chainEvent[8]) || empty($chainEvent[9]) || empty($chainEvent[10])) {
                 throw \laabs::newException(
@@ -1066,8 +837,7 @@ class journal
             $chainedJournalHashAlgo = $chainEvent[9];
             $chainedJournalHash = $chainEvent[10];
 
-            $calcJournalHash = hash($chainedJournalHashAlgo, $journalResource->getContents());
-
+            $calcJournalHash = hash_stream($chainedJournalHashAlgo, $journalResource->getHandler());
             if ($calcJournalHash != $chainedJournalHash) {
                 throw \laabs::newException(
                     'recordsManagement/journalException',
@@ -1075,7 +845,6 @@ class journal
                 );
             }
         }
-
         return $chainEvent;
     }
 
@@ -1144,7 +913,6 @@ class journal
             }
 
             $events = $this->sdoFactory->find('lifeCycle/event', $queryString, [], "<timestamp");
-
         } else {
             // No previous journal, select all events
             $queryString = "timestamp <= '$newJournal->toDate'";
@@ -1222,7 +990,6 @@ class journal
                 $timestampServiceUri = \laabs::configuration('lifeCycle')['timestampService'];
                 $timestampService = \laabs::newService($timestampServiceUri);
                 $timestampFileName = $timestampService->getTimestamp($journalFilename);
-
             } catch (\Exception $e) {
                 throw $e;
             }

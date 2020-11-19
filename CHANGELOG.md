@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## Version 2.7
+
+- `Added` Gestion du comportement des demandes de communications multiples.
+- `Added` Ajout d'un système de cotation automatique des unités d'archive.
+- `Added` Choix de format d'échange lors des transaction de ressortie.
+- `Added` Contrôle d'empreinte lors des versements.
+- `Added` Statistiques de volume et nombre de Versement, Elimination, Communication, Conservation
+- `Added` Ajout d'un champ 'historique du service' pour chaque service de l'organigramme.
+- `Added` Conservation et journalisation de la taille des données lors des ressorties.
+- `Added` Ajout de l'évènement "Contrôle d'intégrité du support de stockage" dans le journal du cycle de vie.
+- `Added` Bouton d'export des métadonnées et des pièces sur l'écran principal du référent métier.
+- `Added` Possibilité pour l'archiviste de traiter manuellement les communications.
+- `Added` Possibilité pour le service producteur de rechercher les journaux depuis l'écran principal.
+- `Changed` Suppression du choix de format de sortie lors d'une demande de modificaton.
+- `Changed` Refonte du formulaire de recherche de l'écran de gestion
+- `Changed` Une erreur de traitement dans le planificateur de tâche n'entraine plus une désactivation automatique de la tâche.
+- `Changed` Nettoyage du stockage local des données du navigateur lors de la déconnexion.
+- `Changed` Amélioration du chiffrement du mot de passe utilisateur.
+- `Changed` Amélioration des performances dans le cas d'une recherche dans les journaux volumineux.
+- `Fixed` Suppression des fichiers temporaires extraits lors du versement d'un zip.
+- `Fixed` Suppression des fichiers temporaires extraits lors de la détection de format.
+- `Fixed` Correction de la recherche des journaux du cycle de vie.
+- `Fixed` Gestion des erreurs lors d'un import de zip.
+- `Fixed` Gestion des erreurs lors d'un import sans archive.
+- `Fixed` Filtrage des comptes de service disponibles dans le planificateur de tâche.
+- `Fixed` Gestion d'erreur lors des ressorties medona.
+- `Fixed` Gestion des erreurs lors des accès à la page Echanges.
+- `Fixed` Formulaire de modification persistant lors d'une modification de service dans l'organigramme.
+- `Fixed` Gestion du caractère spécial * dans le nom de dossier virtuel.
+- `Fixed` Correction decodage du jeton utilisateur lors des requêtes AJAX.
+- `Fixed` Gestion des formats inconnus du système lors d'un versement.
+- `Fixed` Les exceptions liées à la base de données renvoient désormais une erreur 500.
+
 ## Version 2.6.7
 
 - `Fixed` Gestion de l'affichage des ressources et pièces dans l'écran principal.
@@ -53,8 +86,8 @@
 - `Changed` Le bundle `digitalSafe` a été déplacé vers la nouvelle extension éponyme, disponible dans le ![projet GitLab](https://labs.maarch.org/maarch/digitalSafe)
 
 ### Sécurité
-- `Fixed` Erreur courante `Attemp to access without a valid token` du module de protection CSRF, et traduction du message en français
-- `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur Fonctionnel à une organisation (au lieu d'un service) 
+- `Fixed` Erreur courante `Attempt to access without a valid token` du module de protection CSRF, et traduction du message en français
+- `Fixed` Impossibilité de rattacher un compte de service de niveau Administrateur Fonctionnel à une organisation (au lieu d'un service)
 - `Fixed` Faille XSS en faux positif sur la modale 404 "La page demandée n'existe pas"
 - `Added` Gestion renforcée de la sécurité (option de configuration) : gestion de niveaux de sécurité sur les rôles et privilèges, en lien avec les niveaux d'utilisateur
 - `Changed` Filtrage des comptes d'utilisateurs et comptes de service en fonction du niveau de sécurité, notamment pour le compte utilisé dans le planificateur de tâches (si activé)

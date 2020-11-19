@@ -121,12 +121,28 @@ interface archiveDeliveryInterface extends messageInterface
     public function updateProcessBatch();
 
     /**
+     * Process archive delivery message
+     *
+     * @action medona/ArchiveDeliveryRequest/process
+     */
+    public function updateDelivery_message_process();
+
+    /**
      * Deliver an archive
-     * @param mixed  $archiveIds The identifier of archive or a list of identifiers
-     * @param string $identifier The medona message reference
-     * @param string $comment    The message comment
+     * @param mixed  $archiveIds    The identifier of archive or a list of identifiers
+     * @param string $identifier    The medona message reference
+     * @param boolean $derogation   Ask for an authorization
+     * @param string $comment       The message comment
+     * @param string $format        The message format
      *
      * @action medona/ArchiveDeliveryRequest/requestDelivery
      */
-    public function createDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null);
+    public function createDelivery($archiveIds, $identifier = null, $derogation = false, $comment = null, $format = null);
+
+    /**
+     * Get process delivery messages
+     *
+     * @action medona/ArchiveDeliveryRequest/processList
+     */
+    public function readDeliveryProcessList();
 }

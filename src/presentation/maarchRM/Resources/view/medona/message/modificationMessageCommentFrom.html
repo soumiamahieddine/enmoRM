@@ -22,6 +22,15 @@
                             <td><strong>Message identifier</strong></td>
                             <td><input class="form-control" name="identifier" id="identifier" placeholder="Identifier"></td> 
                         <tr>
+                        <tr id="messageFormatTr">
+                            <td><strong>Message format</strong></td>
+                            <td>
+                                <select class="form-control" name="format" id="format">
+                                    <?merge packageSchemas ?>
+                                    <option value="[?merge packageSchemas.key() ?]"><?merge .["label"] ?></option>
+                                </select>
+                            </td> 
+                        <tr>
                         <tr>
                             <td><strong>Comment <span style="color:red">*</span></strong></td>
                             <td><div>

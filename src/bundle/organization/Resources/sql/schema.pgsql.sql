@@ -40,10 +40,11 @@ CREATE TABLE "organization"."organization"
   "taxIdentifier" text,
   "parentOrgId" text,
   "ownerOrgId" text,
+  "history" text,
 
   "isOrgUnit" boolean,
   "enabled" boolean,
-  
+
   PRIMARY KEY ("orgId"),
   UNIQUE ("registrationNumber"),
   UNIQUE ("taxIdentifier"),

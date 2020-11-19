@@ -74,10 +74,12 @@ trait archiveModificationTrait
      * @param mixed                                  $archiveIds    The archives ids
      * @param null $comment
      * @param null $identifier
+     * @param string $format
+     *
      * @return array
      * @throws \Exception
      */
-    public function modifyRetentionRule($retentionRule, $archiveIds, $comment = null, $identifier = null)
+    public function modifyRetentionRule($retentionRule, $archiveIds, $comment = null, $identifier = null, $format = null)
     {
         // #10629 Get finalDisposition and duration from ref when empty and code is received
         if ((empty($retentionRule->finalDisposition)
@@ -94,6 +96,7 @@ trait archiveModificationTrait
                 $retentionRule->retentionDuration = $refRetentionRule->duration;
             }
         }
+        
 
         $retentionRuleReceived = $retentionRule;
 
@@ -180,7 +183,7 @@ trait archiveModificationTrait
         }
 
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
-            $this->sendModificationNotification($archives, $comment, $identifier);
+            $this->sendModificationNotification($archives, $comment, $identifier, $format);
         }
 
         return $res;
@@ -193,9 +196,11 @@ trait archiveModificationTrait
      * @param array                               $archiveIds The archives ids
      * @param null $comment
      * @param null $identifier
+     * @param string $format
+     *
      * @return array
      */
-    public function modifyAccessRule($accessRule, $archiveIds, $comment = null, $identifier = null)
+    public function modifyAccessRule($accessRule, $archiveIds, $comment = null, $identifier = null, $format = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -271,7 +276,7 @@ trait archiveModificationTrait
         }
 
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
-            $this->sendModificationNotification($archives, $comment, $identifier);
+            $this->sendModificationNotification($archives, $comment, $identifier, $format);
         }
 
         return $res;
@@ -282,10 +287,11 @@ trait archiveModificationTrait
      * @param mixed $archiveIds Array of archive identifier
      * @param null $comment
      * @param null $identifier
+     * @param string $format
      *
      * @return array
      */
-    public function freeze($archiveIds, $comment = null, $identifier = null)
+    public function freeze($archiveIds, $comment = null, $identifier = null, $format = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -319,7 +325,7 @@ trait archiveModificationTrait
         }
 
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
-            $this->sendModificationNotification($archives, $comment, $identifier);
+            $this->sendModificationNotification($archives, $comment, $identifier, $format);
         }
 
         return $res;
@@ -330,10 +336,11 @@ trait archiveModificationTrait
      * @param mixed $archiveIds Array of archive identifier
      * @param null $comment
      * @param null $identifier
+     * @param string $format
      *
      * @return array
      */
-    public function unfreeze($archiveIds, $comment = null, $identifier = null)
+    public function unfreeze($archiveIds, $comment = null, $identifier = null, $format = null)
     {
         if (!is_array($archiveIds)) {
             $archiveIds = array($archiveIds);
@@ -366,7 +373,7 @@ trait archiveModificationTrait
         }
 
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
-            $this->sendModificationNotification($archives, $comment, $identifier);
+            $this->sendModificationNotification($archives, $comment, $identifier, $format);
         }
 
         return $res;
@@ -762,7 +769,7 @@ trait archiveModificationTrait
         $this->sdoFactory->update($archiveUserOrgRegNumbers);
     }
 
-    protected function sendModificationNotification($archives, $comment = null, $identifier = null)
+    protected function sendModificationNotification($archives, $comment = null, $identifier = null, $format = null)
     {
         $currentOrg = \laabs::getToken("ORGANIZATION");
 
@@ -804,7 +811,8 @@ trait archiveModificationTrait
                 $archives,
                 $senderOrg,
                 $recipientOrg,
-                $comment
+                $comment,
+                $format
             );
         }
     }

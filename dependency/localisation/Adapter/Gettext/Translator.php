@@ -138,8 +138,9 @@ class Translator implements \dependency\localisation\TranslatorInterface
 
         if (isset($useCatalog->messages[$qmsgid])) {
             $msg = $useCatalog->messages[$qmsgid];
-
-            return $msg->msgstr[0];
+            if (!empty($msg->msgstr)) {
+                return $msg->msgstr[0];
+            }
         }
 
         return $msgid;

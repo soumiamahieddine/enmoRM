@@ -77,6 +77,16 @@ class archivalProfile
     }
 
     /**
+     * Get archival profiles list
+     *
+     * @return string
+     */
+    public function archivalProfileList($archivalProfiles)
+    {
+        return json_encode($archivalProfiles, JSON_UNESCAPED_UNICODE);
+    }
+
+    /**
      * The view to create or edit a archival profile
      * @param string $archivalProfile The archival profile identifier
      *

@@ -183,3 +183,6 @@ msgstr "Fermer la recherche"
 
 msgid "Your ressource is empty"
 msgstr "La taille de la ressource est nulle"
+
+msgid "Export"
+msgstr "Exporter"

@@ -32,35 +32,34 @@ interface eventInterface
      *
      * @param string    $eventType   The type of the event
      * @param string    $objectClass The class of the object
-     * @param string    $objectId      The identifier of the object (event.objectId) OR on eventInfo (archive.originatorArchiveId, archivalProfile.reference, message.reference)
-     * @param timestamp $minDate       The minimum date of the event
-     * @param timestamp $maxDate       The maximum date of the event
-     * @param string    $org           The org or org unit on event (event.orgRegNumber, event.orgUnitRegNumber) OR on eventInfo (archive.archiverOrgRegNumber, archive.originatorOrgRegNumber, message.senderOrgRegNumber, message.recipientOrgRegNumber)
-     * @param string    $maxResults    Limit numbr of results to return
+     * @param string    $objectId    The identifier of the object (event.objectId) OR on eventInfo (archive.originatorArchiveId, archivalProfile.reference, message.reference)
+     * @param timestamp $minDate     The minimum date of the event
+     * @param timestamp $maxDate     The maximum date of the event
+     * @param string    $org         The org or org unit on event (event.orgRegNumber, event.orgUnitRegNumber) OR on eventInfo (archive.archiverOrgRegNumber, archive.originatorOrgRegNumber, message.senderOrgRegNumber, message.recipientOrgRegNumber)
+     * @param integer   $maxResults  Limit numbr of results to return
      *
      * @action lifeCycle/journal/searchEvent
      */
     public function readSearch(
-        $eventType = null,
-        $objectClass = null,
-        $objectId = null,
-        $minDate = null,
-        $maxDate = null,
-        $org = null,
-        $sortBy = ">timestamp",
+        $eventType = false,
+        $objectClass = false,
+        $objectId = false,
+        $minDate = false,
+        $maxDate = false,
+        $org = false,
         $maxResults = null
     );
 
     /**
-     * Search a journal event
+     * Count a journal event
      *
      * @param string    $eventType   The type of the event
      * @param string    $objectClass The class of the object
-     * @param string    $objectId      The identifier of the object (event.objectId) OR on eventInfo (archive.originatorArchiveId, archivalProfile.reference, message.reference)
-     * @param timestamp $minDate       The minimum date of the event
-     * @param timestamp $maxDate       The maximum date of the event
-     * @param string    $org           The org or org unit on event (event.orgRegNumber, event.orgUnitRegNumber) OR on eventInfo (archive.archiverOrgRegNumber, archive.originatorOrgRegNumber, message.senderOrgRegNumber, message.recipientOrgRegNumber)
-     * @param string    $maxResults    Limit numbr of results to return
+     * @param string    $objectId    The identifier of the object (event.objectId) OR on eventInfo (archive.originatorArchiveId, archivalProfile.reference, message.reference)
+     * @param timestamp $minDate     The minimum date of the event
+     * @param timestamp $maxDate     The maximum date of the event
+     * @param string    $org         The org or org unit on event (event.orgRegNumber, event.orgUnitRegNumber) OR on eventInfo (archive.archiverOrgRegNumber, archive.originatorOrgRegNumber, message.senderOrgRegNumber, message.recipientOrgRegNumber)
+     * @param integer   $maxResults  Limit numbr of results to return
      *
      * @action lifeCycle/journal/searchCount
      */

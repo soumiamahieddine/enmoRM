@@ -36,17 +36,22 @@ class ArchiveModificationNotification extends ArchiveNotification
      * @param string $senderOrg    The identifier of sender
      * @param string $recipientOrg The identifier of recipient
      * @param string $comment      The comment of modification
+     * @param string $format       The message format
      *
      * @return The message generated
      */
-    public function send($reference, $archives = array(), $senderOrg, $recipientOrg, $comment = false)
+    public function send($reference, $archives = array(), $senderOrg, $recipientOrg, $comment = false, $format = null)
     {
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
         $message->type = "ArchiveModificationNotification";
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
 
@@ -80,7 +85,8 @@ class ArchiveModificationNotification extends ArchiveNotification
 
         try {
             if ($message->schema) {
-                $archiveModificationNotificationController = \laabs::newController($message->schema.'/ArchiveModificationNotification');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $archiveModificationNotificationController = \laabs::newController("$namespace/ArchiveModificationNotification");
                 $archiveModificationNotificationController->send($message);
             }
             $operationResult = true;

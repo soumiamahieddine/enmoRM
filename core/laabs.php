@@ -979,7 +979,7 @@ class laabs
 
         $GLOBALS["TOKEN"][$name] = json_decode($jsonToken);
 
-        return true;
+        return $cookieToken;
     }
 
     /**
@@ -1024,17 +1024,16 @@ class laabs
 
         if (extension_loaded('openssl')) {
             foreach (openssl_get_cipher_methods() as $method) {
+
                 if (strtolower($cipher) == strtolower($method)) {
                     $message_padded = $string;
                     if (strlen($message_padded) % 8) {
                         $message_padded = str_pad($message_padded, strlen($message_padded) + 8 - strlen($message_padded) % 8, "\0");
                     }
-
                     return openssl_encrypt($message_padded, $method, $key, OPENSSL_RAW_DATA | OPENSSL_NO_PADDING, "12345678");
                 }
             }
         }
-        
         return static::RC4($string, $key);
     }
 

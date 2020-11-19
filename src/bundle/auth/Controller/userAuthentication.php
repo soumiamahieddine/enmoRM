@@ -81,12 +81,6 @@ class userAuthentication
         $userLogin->accountId = $userAccount->accountId;
         $userLogin->lastIp = $_SERVER["REMOTE_ADDR"];
 
-        // Hash password
-        $encryptedPassword = $password;
-        if ($this->passwordEncryption != null) {
-            $encryptedPassword = hash($this->passwordEncryption, $password);
-        }
-
         // Check enabled
         if ($userAccount->enabled != true) {
             $e = \laabs::newException(
@@ -100,7 +94,7 @@ class userAuthentication
         }
 
         // Check password
-        if ($userAccount->password !== $encryptedPassword) {
+        if (!password_verify($password, $userAccount->password) && hash($this->passwordEncryption, $password) != $userAccount->password) {
             // Update bad password count
             $userLogin->badPasswordCount = $userAccount->badPasswordCount + 1;
             $this->sdoFactory->update($userLogin, 'auth/account');
@@ -143,6 +137,10 @@ class userAuthentication
         $userLogin->tokenDate = null;
         $userLogin->lastLogin = $currentDate;
 
+        if (password_needs_rehash($userAccount->password, PASSWORD_DEFAULT)) {
+            $userLogin->password = password_hash($password, PASSWORD_DEFAULT);
+        }
+
         $this->sdoFactory->update($userLogin, 'auth/account');
 
         if (isset($this->securityPolicy['sessionTimeout'])) {
@@ -153,7 +151,7 @@ class userAuthentication
 
         $accountToken = new \StdClass();
         $accountToken->accountId = $userAccount->accountId;
-        \laabs::setToken('AUTH', $accountToken, $tokenDuration);
+        $userToken = \laabs::setToken('AUTH', $accountToken, $tokenDuration);
 
         if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
             $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
@@ -183,28 +181,19 @@ class userAuthentication
     public function definePassword($userName, $oldPassword, $newPassword, $requestPath)
     {
         $tempToken = \laabs::getToken('TEMP-AUTH');
-
-        if ($this->sdoFactory->exists('auth/account', array('accountName' => $userName))) {
-            $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
-        } else {
+        if (!$this->sdoFactory->exists('auth/account', array('accountName' => $userName))) {
             return false;
         }
+        $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
 
-        if ($this->sdoFactory->exists('auth/account', array('accountName' => $userName))
-            && !is_null($tempToken)
-            && $tempToken->accountId == $userAccount->accountId) {
-
+        if (!is_null($tempToken) && $tempToken->accountId == $userAccount->accountId) {
             $this->checkPasswordPolicies($newPassword);
 
-            $encryptedPassword = $newPassword;
-            if ($this->passwordEncryption != null) {
-                $encryptedPassword = hash($this->passwordEncryption, $newPassword);
-            }
-            if ($userAccount->password == $encryptedPassword) {
+            if (password_verify($newPassword, $userAccount->password)) {
                 throw new \core\Exception\ForbiddenException("The password is the same as the precedent.", 403);
             }
 
-            $userAccount->password = $encryptedPassword;
+            $userAccount->password = password_hash($newPassword, PASSWORD_DEFAULT);
             $userAccount->passwordLastChange = \laabs::newTimestamp();
             $userAccount->passwordChangeRequired = false;
             $this->sdoFactory->update($userAccount, 'auth/account');
@@ -222,7 +211,8 @@ class userAuthentication
      * Validate the new password
      * @param string $newPassword The user's new password
      */
-    public function checkPasswordPolicies($newPassword) {
+    public function checkPasswordPolicies($newPassword)
+    {
         if ($this->securityPolicy['passwordMinLength'] && strlen($newPassword) < $this->securityPolicy['passwordMinLength']) {
             throw new \core\Exception\ForbiddenException("The password is too short.", 403);
         }
@@ -245,6 +235,13 @@ class userAuthentication
      */
     public function logout()
     {
+        $userAccount = $this->sdoFactory->read('auth/account', \laabs::getToken('AUTH'));
+        $authentication = json_decode($userAccount->authentication);
+        $authentication->token = null;
+        $userAccount->authentication = json_encode($authentication);
+
+        $this->sdoFactory->update($userAccount, "auth/account");
+
         \laabs::unsetToken("AUTH");
         \laabs::unsetToken("ORGANIZATION");
     }

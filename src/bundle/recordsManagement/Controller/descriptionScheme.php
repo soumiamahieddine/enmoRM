@@ -132,6 +132,9 @@ class descriptionScheme
         $fields = [];
 
         foreach ($descriptionClass->getProperties() as $descriptionProperty) {
+            if (!$descriptionProperty->isPublic()) {
+                continue;
+            }
             $fields[$descriptionProperty->name] = $this->getDescriptionFieldFromPhpClass($descriptionProperty);
         }
 

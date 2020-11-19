@@ -31,10 +31,22 @@ interface adminServiceaccountInterface
     /**
      * List all service account
      *
-     * @uses auth/serviceAccount/readSearch
      * @return auth/serviceAccount/indexHtml
      */
     public function readServiceaccounts();
+
+    /**
+     * List service accounts list with max results
+     *
+     * @param string    $accountName    Name of account
+     * @param integer   $maxResult      Limit of result display
+     *
+     * @uses auth/serviceAccount/readSearch
+     * @uses auth/serviceAccount/readSearchCount
+     *
+     * @return auth/serviceAccount/accountList
+     */
+    public function readServiceaccountslist($accountName = null, $maxResults = null);
 
     /**
      * Get a service account
@@ -68,7 +80,7 @@ interface adminServiceaccountInterface
      * @param string $serviceName The service name
      *
      * @uses auth/serviceAccount/updateServicetoken_serviceAccountId_
-     * 
+     *
      * @return auth/serviceAccount/serviceToken
      */
     public function updateServiceaccount_serviceAccountId_Token();
@@ -90,7 +102,7 @@ interface adminServiceaccountInterface
      * @return auth/serviceAccount/enable
      */
     public function updateServiceaccount_serviceAccountId_Enable();
-    
+
     /**
      * Disable service account
      *

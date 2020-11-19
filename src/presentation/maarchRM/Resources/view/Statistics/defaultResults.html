@@ -1,0 +1,50 @@
+<table class="table defaultStatistics dataTable" data-translate-catalog="Statistics/Statistics">
+    <thead>
+        <tr>
+            <th>Operation</th>
+            <th>Size<span> (<?merge statistics['unit'] ?>)</span></th>
+            <th>Archives number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Deposit</td>
+            <td><?merge statistics['depositMemorySize'] ?></td>
+            <td><?merge statistics['depositMemoryCount'] ?></td>
+        </tr>
+        <tr>
+            <td>Deletion</td>
+            <td><?merge statistics['deletedMemorySize'] ?></td>
+            <td><?merge statistics['deletedMemoryCount'] ?></td>
+        </tr>
+        <?merge isTransactionnal.bool() ?>
+        <tr>
+            <td>Restitution</td>
+            <td><?merge statistics['restitutionMemorySize'] ?></td>
+            <td><?merge statistics['restitutionMemoryCount'] ?></td>
+        </tr>
+        <?merge isTransactionnal.bool() ?>
+        <tr>
+            <td>Outgoing transfer</td>
+            <td><?merge statistics['transferedMemorySize'] ?></td>
+            <td><?merge statistics['transferedMemoryCount'] ?></td>
+        </tr>
+        <?merge isTransactionnal.bool() ?>
+        <tr>
+            <td>Communication</td>
+            <td><?merge statistics['communicatedMemorySize'] ?></td>
+            <td><?merge statistics['communicatedMemoryCount'] ?></td>
+        </tr>
+        <tr>
+            <td>Conservation</td>
+            <td><?merge statistics['currentMemorySize'] ?></td>
+            <td><?merge statistics['currentMemoryCount'] ?></td>
+        </tr>
+        <?merge statistics['evolutionSize'].bool() ?>
+        <tr>
+            <td>Evolution</td>
+            <td><?merge statistics['evolutionSize'] ?></td>
+            <td><?merge statistics['evolutionCount'] ?></td>
+        </tr>
+    </tbody>
+</table>

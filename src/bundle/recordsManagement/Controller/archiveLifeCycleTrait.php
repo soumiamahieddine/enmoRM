@@ -43,7 +43,8 @@ trait archiveLifeCycleTrait
         $operationResult = true,
         $digitalResource = null,
         $eventInfo = null,
-        $logDigitalResources = null
+        $logDigitalResources = null,
+        $logChildren = false
     ) {
         $eventItems = !empty($eventInfo) ? $eventInfo : [];
         $res = null;
@@ -92,6 +93,12 @@ trait archiveLifeCycleTrait
                 $eventItems,
                 $operationResult
             );
+        }
+
+        if ($logChildren && isset($archive->contents) && !empty($archive->contents)) {
+            foreach ($archive->contents as $childArchive) {
+                $this->logLifeCycleEvent($type, $childArchive, $operationResult, null, null, $logDigitalResources, true);
+            }
         }
 
         return $res;
@@ -218,7 +225,7 @@ trait archiveLifeCycleTrait
      */
     public function logElimination($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/elimination', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/elimination', $archive, $operationResult, false, false, true, true);
     }
 
     /**
@@ -257,7 +264,11 @@ trait archiveLifeCycleTrait
         return $this->logLifeCycleEvent(
             $type = 'recordsManagement/destruction',
             $archive,
-            $operationResult
+            $operationResult,
+            false,
+            false,
+            true,
+            true
         );
     }
 
@@ -320,7 +331,8 @@ trait archiveLifeCycleTrait
             $operationResult,
             $digitalResource = false,
             $eventInfo = false,
-            $logDigitalResources = true
+            $logDigitalResources = true,
+            $logChildren = true
         );
     }
 
@@ -333,7 +345,7 @@ trait archiveLifeCycleTrait
      */
     public function logOutgoingTransfer($archive, $operationResult = true)
     {
-        return $this->logLifeCycleEvent('recordsManagement/outgoingTransfer', $archive, $operationResult);
+        return $this->logLifeCycleEvent('recordsManagement/outgoingTransfer', $archive, $operationResult, false, false, true, true);
     }
 
     /**

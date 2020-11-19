@@ -30,7 +30,7 @@ class journal
     use \presentation\maarchRM\Presenter\exceptions\exceptionTrait;
 
     public $view;
-    
+
     private $sdoFactory;
 
     private $eventsFormat;
@@ -55,7 +55,7 @@ class journal
         $this->view = $view;
         $this->sdoFactory = $sdoFactory;
         $this->eventsFormat = $eventsFormat;
-        
+
         $this->json = $json;
         $this->json->status = true;
 
@@ -75,7 +75,7 @@ class journal
         $eventTypes = \laabs::callService('lifeCycle/event/readEventtypelist');
 
         $this->view->translator->setCatalog("lifeCycle/messages");
-        
+
         $eventDomains = [];
         foreach ($eventTypes as $eventType) {
             $bundle = strtok($eventType, '/');
@@ -107,6 +107,10 @@ class journal
                 case 'organization':
                     $objectType = 'organization/organization';
                     $domainLabel = 'Organization';
+                    break;
+                case 'digitalResource':
+                    $objectType = 'digitalResource/repository';
+                    $domainLabel = 'Repository';
                     break;
             }
 
@@ -162,7 +166,7 @@ class journal
 
         $this->view->setSource('journals', $journals);
         $this->view->merge();
-        
+
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
         $dataTable->setUnsortableColumns(2);
@@ -242,7 +246,7 @@ class journal
         }
         return $this->view->saveHtml();
     }
-    
+
     //JSON
     /**
      * Serializer JSON for create method
@@ -282,7 +286,7 @@ class journal
         $eventObject->accountDisplayName = $user->displayName.' ('.$user->accountName.')';
 
         $this->translator->setCatalog('lifeCycle/messages');
-        
+
         $eventObject->description = $this->translator->getText($event->description);
         $eventObject->objectClass = $this->translator->getText($event->objectClass);
         $eventObject->eventType = $this->translator->getText($event->eventType);
@@ -290,22 +294,22 @@ class journal
         // check event type to add button "download certificate"
         $hasCertificatePrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "journal/certificate");
         $eventsToCertificate = ['recordsManagement/deposit', 'recordsManagement/integrityCheck', 'recordsManagement/destruction'];
-        
+
         if ($hasCertificatePrivilege && in_array($event->eventType, $eventsToCertificate)) {
             $eventObject->hasCertificate = true;
         }
-   
+
         $this->json->load($eventObject);
 
         $this->json->formatDateTimes();
 
         return $this->json->save();
     }
-    
+
     /**
      * Exception
      * @param lifeCycle/Exception/journalException $journalException
-     * 
+     *
      * @return string
      */
     public function journalException($journalException)

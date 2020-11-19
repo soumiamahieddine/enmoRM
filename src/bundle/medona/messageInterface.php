@@ -28,6 +28,23 @@ namespace bundle\medona;
 interface messageInterface
 {
     /**
+     * Search message by sender / recipient / reference / date
+     *
+     * @param string $type              Type
+     * @param string $reference         Reference
+     * @param string $archiver          Archiver
+     * @param string $originator        Originator
+     * @param string $depositor         Depositor
+     * @param string $archivalAgreement Archival agreement
+     * @param date   $fromDate          From date
+     * @param date   $toDate            To date
+     * @param string $status            Status
+     *
+     * @action medona/message/search
+     */
+    public function readSearch($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null);
+    
+    /**
      * Get outgoing transfer messages
      *
      * @action medona/message/getByReference
@@ -92,23 +109,6 @@ interface messageInterface
      * @action medona/message/countActiveMessages
      */
     public function readCount();
-
-    /**
-     * Search message by sender / recipient / reference / date
-     *
-     * @param string $type              Type
-     * @param string $reference         Reference
-     * @param string $archiver          Archiver
-     * @param string $originator        Originator
-     * @param string $depositor         Depositor
-     * @param string $archivalAgreement Archival agreement
-     * @param date   $fromDate          From date
-     * @param date   $toDate            To date
-     * @param string $status            Status
-     *
-     * @action medona/message/search
-     */
-    public function readSearch($type, $reference = null, $archiver = null, $originator = null, $depositor = null, $archivalAgreement = null, $fromDate = null, $toDate = null, $status = null);
 
     /**
      * Archive messages

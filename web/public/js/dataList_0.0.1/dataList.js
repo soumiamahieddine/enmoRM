@@ -9,7 +9,7 @@
                         buttons : button with page number
     emptyMessage    -> html to show when the list is empty
     sorting         -> array of object that define wich properties of datas can be sorted
-                       object have four properties : the name (fieldName), the label (label), the type (type with 'num' or 'txt' value) of the sortable property, and a "default" (with 'ASC' or 'DESC') property to sort by default 
+                       object have four properties : the name (fieldName), the label (label), the type (type with 'num' or 'txt' value) of the sortable property, and a "default" (with 'ASC' or 'DESC') property to sort by default
     unsearchable    -> array of unserchable property
     itemsName       -> item name to display in result number as an array. The first element is the singular form the second is the plural form
     translation     -> array with key with translation
@@ -242,7 +242,7 @@ var DataList = {
             var pageLi = [];
             var pageNumber = Math.floor(datas.length / this.dataList[id].rowMaxNumber);
 
-            if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }  
+            if (datas.length % this.dataList[id].rowMaxNumber != 0) { pageNumber++ }
             this.dataList[id].pageNumber = pageNumber;
 
             filterInput.find('input').off().on('keyup', DataList.bind_filterList);

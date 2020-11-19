@@ -1,113 +1,57 @@
-<div id="contain" >
+<div id="contain">
+    <input type="hidden" id="maxResults" name="maxResults" value="[?merge maxResults ?]">
     <div class="container-fluid" data-translate-catalog="auth/messages">
         <div class="page-header">
             <h1>
                 <i class="fa fa-laptop"></i>
                 Manage service account
             </h1>
-        </div>
-    </div>
-    <div class="container-fluid" data-translate-catalog="auth/messages">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading clearfix">
-                        <div class="pull-left">
-                            <h4><?merge serviceAccounts.count() ?> Service account(s)</h4>
-                        </div>
-                        <div class="pull-right">
-                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
-                            <button type="button" class="btn btn-default btn-sm" id="addServiceAccount" title="Add"><i class="fa fa-plus">&nbsp;</i>Add</button>
-                        </div>
+            <div class="form-group">
+                <div class="col-sm-6" style="padding-left: 0px; padding-top:30px;margin-bottom:10px;">
+                    <div class="col-md-9" style="padding-left: 0px;">
+                        <input type="text" class="form-control" id="serviceAccountSearch" name="serviceAccountSearch" placeholder="Service account search"/>
                     </div>
-                    <div class="panel-body" style="padding: 0;">
-                        <table class="table table-condensed dataTable" style="margin: 0;" id="list-serviceAccount">
-                            <thead>
-                                <tr>
-                                    <th>Service name</th>
-                                    <th>Enabled</th>
-                                    <th>Token date</th>
-                                    <th style="min-width:160px"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?merge serviceAccounts ?>
-                                <tr id ="[?merge .accountId ?]">
-                                    <td><?merge .accountName ?></td>
-                                    <td>
-                                        <?merge .enabled.not() ?><i class="fa fa-ban"></i>
-                                        <?merge .enabled.ifne(false) ?><i class="fa fa-check"></i>
-                                    </td>
-                                    <td><?merge .tokenDate ?></td>
-                                    <td>
-                                        <div class="btn-group pull-right">
-                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
-                                            <button type="button" class="btn btn-info edit" title="Edit">
-                                                <span class="fa fa-fw fa-edit"></span>
-                                            </button>
-                                            <?merge .enabled.not() ?>
-                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
-                                            <button type="button" class="btn btn-danger enable" title="Enable">
-                                                <span class="fa fa-fw fa-check"></span>
-                                            </button>
-                                            <?merge .enabled.ifne(false) ?>
-                                            <?merge manageUserRights.bool().not().then('disabled') @disabled ?>
-                                            <button type="button" class="btn btn-danger disable" title="Disable">
-                                                <span class="fa fa-fw fa-times"></span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <button type="button" class="btn btn-primary" id="searchServiceAccount" title="Search"><i class="fa fa-search">&nbsp;</i>Search</button>
                 </div>
             </div>
         </div>
     </div>
+    <div id="listServiceAccounts"></div>
 </div>
+
 <script type="application/javascript">
-    //add
-    $("#addServiceAccount").on("click", function(){
-        load("/serviceAccount");
-    });
-    
-    //edit
-    $("#list-serviceAccount").on('click', '.edit', function() {
-        var serviceAccountId = $(this).closest('tr').attr('id');
-        load("/serviceAccount/"+serviceAccountId);
-    });
-    
-    //enable
-    $("#list-serviceAccount").on('click', '.enable', function() {
-        $.ajax({
-            url         : "/serviceAccount/" + $(this).closest('tr').attr("id")+ '/enable',
-            type        : "PUT",
-            dataType    : "json",
-            success  : function(response){
-                gritter.show(response.message, response.status, response.errors);
-                load("/serviceAccounts");
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
+    //search
+    var serviceAccounts = {
+        "search" : function(accountName = null) {
+            var params;
+            var accountName = "accountName=" + accountName;
+            var maxResults = "maxResults=" + $("#maxResults").val();
+            params = "?" + accountName + "&" + maxResults;
+            $.ajax({
+                url         : "/serviceaccountslist" + params,
+                type        : "GET",
+                success  : function(response){
+                    $("#listServiceAccounts").empty().html(response);
+                },
+                error    : function(response) {
+                    console.log("error");
+                }
+            })
+        }
+    }
+
+    $("#serviceAccountSearch").val('');
+
+    $('#serviceAccountSearch').keyup(function(e){
+        if(e.keyCode == 13)
+        {
+            serviceAccounts.search(this.value);
+        }
     });
 
-    //disable
-    $("#list-serviceAccount").on('click', '.disable', function() {
-        $.ajax({
-            url         : "/serviceAccount/" + $(this).closest('tr').attr('id')+ "/disable",
-            type        : "PUT",
-            dataType    : "json",
-            success  : function(response){
-                gritter.show(response.message, response.status, response.errors);
-                load("/serviceAccounts");
-            },
-            error    : function(response) {
-                gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
-            }
-        });
+    serviceAccounts.search();
+
+    $("#searchServiceAccount").on("click", function() {
+        serviceAccounts.search($("#serviceAccountSearch").val());
     });
-    
 </script>

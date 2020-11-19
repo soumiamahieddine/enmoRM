@@ -38,9 +38,10 @@ interface restitutionRequestInterface
      * @param array  $archiveIds Array of archive idenfiers
      * @param string $comment    The request comment
      * @param string $identifier The request identifier
+     * @param string $format     The request format
      *
      * @uses medona/archiveRestitution/updateSetforrestitution
      * @return medona/archiveModification/setForRestitution
      */
-    public function updateRestitutionRequest($archiveIds, $comment = null, $identifier = null);
+    public function updateRestitutionRequest($archiveIds, $comment = null, $identifier = null, $format = null);
 }

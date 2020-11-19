@@ -249,7 +249,7 @@
     });
 
     $('#resource_filesBrowser').on('change', function() {
-        ResourceForm.upload($(this).context.files[0]);
+        ResourceForm.upload($(this).get(0).files[0]);
         ResourceForm.reset();
     });
 

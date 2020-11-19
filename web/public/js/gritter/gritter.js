@@ -1,4 +1,3 @@
-
 gritter = {
     show: function(message, status, errors) {
         var arg = "";

@@ -37,7 +37,7 @@
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <?merge ['submenu'] ?>
-                        <li class="dropdown-submenu pull-left" style="width: 100%">
+                        <li class="dropdown-submenu" style="width: 100%">
                             <!-- Sub-menu simple item -->
                             <?merge ['submenu'].count().bool().not() ?>
                             <a data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
@@ -52,7 +52,7 @@
                                 <?merge ['label'] ?>
                             </a>
                             <?merge ['submenu'].count().bool() ?>
-                            <ul class="dropdown-menu" style="width: inherit">
+                            <ul class="dropdown-menu sideList" style="width: max-content">
                                 <?merge ['submenu'] ?>
                                 <li class="dropdown-submenu">
                                     <a tabindex="-1" data-href="[?merge ['href'] ?]" onclick="load('[?merge ['href'] ?]');" translate="yes">
@@ -116,7 +116,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a onclick="load('/user/logout')" translate="yes" title="Ctrl + Alt + Q">
+                            <a onclick="localStorage.clear();load('/user/logout')" translate="yes" title="Ctrl + Alt + Q">
                                 <i class="fa fa-sign-out fa-fw"></i> Logout
                             </a>
                         </li>
@@ -465,6 +465,7 @@
         keys[e.keyCode] = e.type === 'keydown';
 
         if (keys[17] && keys[18] && keys[81]) {
+            localStorage.clear();
             load('/user/logout');
         }
     });
@@ -472,4 +473,13 @@
     function displayInformation(){
         $('#aboutModal').modal();
     }
+
+    const dropDownSize = $('.sideList').parents(".dropdown-menu").width();
+
+    $('.sideList').each(function() {
+        var tmp = $(this).clone().appendTo( "body" ).css({'display':'block', 'visibility': 'hidden'});
+        var width = tmp.width();
+        tmp.remove();
+        $(this).css("margin-left", "-=" + (dropDownSize + width) + "px");
+    });
 </script>

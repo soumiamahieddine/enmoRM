@@ -25,6 +25,7 @@ interface logInterface
 {
     /**
      * Get a  search result
+     *
      * @param string  $archiveId   The archive identifier
      * @param string  $type        The type
      * @param date    $fromDate    The date
@@ -33,7 +34,7 @@ interface logInterface
      * @param string  $processId   The process identifier
      * @param string  $sortBy      The process identifier
      * @param integer $maxResults  Max number of results to return
-
+     *
      * @action recordsManagement/log/find
      */
     public function readFind(

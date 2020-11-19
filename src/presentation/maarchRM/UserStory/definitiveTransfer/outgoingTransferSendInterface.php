@@ -27,13 +27,14 @@ interface outgoingTransferSendInterface
 {
     /**
      * Create transfer sending
-     * @param array $archiveIds            List of archives
+     * @param array $archiveIds             List of archives
      * @param string $archiverOrgRegNumber  An Archiver
      * @param string $comment               A comment
      * @param string $identifier            An identifier
+     * @param string $format                The message format
      *
      * @uses medona/archiveTransfer/updateOutgoingtransferSending
      * @return medona/archiveModification/transferSending
      */
-    public function updateOutgoingtransferSending($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null);
+    public function updateOutgoingtransferSending($archiveIds, $archiverOrgRegNumber, $comment, $identifier = null, $format = null);
 }

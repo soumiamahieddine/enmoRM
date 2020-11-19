@@ -65,7 +65,8 @@ class AuthorizationControlAuthorityRequestReply extends abstractMessage
 
         try {
             if ($message->schema != 'medona') {
-                $authorizationControlAuthorityRequestReplyController = \laabs::newController($message->schema.'/AuthorizationControlAuthorityRequestReply');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $authorizationControlAuthorityRequestReplyController = \laabs::newController("$namespace/AuthorizationControlAuthorityRequestReply");
                 $authorizationControlAuthorityRequestReplyController->send($message);
             } else {
                 $authorizationControlAuthorityRequestReply = $this->sendMessage($message);

@@ -29,13 +29,15 @@ trait archiveDestructionTrait
     /**
      * Flag for disposal
      *
-     * @param array $archiveIds The archives ids
+     * @param array $archiveIds  The archives ids
      * @param string $identifier
      * @param string $comment
+     * @param string $format    The message format
+     * 
      * @return mixed
      * @throws \bundle\recordsManagement\Exception\notDisposableArchiveException
      */
-    public function dispose($archiveIds, $identifier = null, $comment = null)
+    public function dispose($archiveIds, $identifier = null, $comment = null, $format = null)
     {
         $archives = [];
 
@@ -77,7 +79,7 @@ trait archiveDestructionTrait
         }
 
         if (isset(\laabs::configuration("medona")['transaction']) && \laabs::configuration("medona")['transaction']) {
-            $this->sendDestructionRequest($archives, $identifier, $comment);
+            $this->sendDestructionRequest($archives, $identifier, $comment, $format);
         }
 
         return $res;
@@ -90,10 +92,12 @@ trait archiveDestructionTrait
      * @param $archives
      * @param null $identifier
      * @param null $comment
+     * @param string $format
+     * 
      * @return mixed
      * @throws \Exception
      */
-    protected function sendDestructionRequest($archives, $identifier = null, $comment = null)
+    protected function sendDestructionRequest($archives, $identifier = null, $comment = null, $format = null)
     {
         $archiveDestructionRequestController = \laabs::newController("medona/ArchiveDestructionRequest");
 
@@ -140,7 +144,8 @@ trait archiveDestructionTrait
                 $comment,
                 $requesterOrgRegNumber,
                 $recipientOrgRegNumber,
-                $originatorOrgRegNumber
+                $originatorOrgRegNumber,
+                $format
             );
         }
 

@@ -174,7 +174,7 @@
 
 	$(document).off('click.bs.toggle').on('click.bs.toggle', 'div[data-toggle^=toggle]', function(e) {
 		var $checkbox = $(this).find('input[type=checkbox]')
-		$checkbox.click();
+		// $checkbox.click();
 		$checkbox.bootstrapToggle('toggle')
 		e.preventDefault()
 	})

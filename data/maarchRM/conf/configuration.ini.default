@@ -50,11 +50,44 @@ displayableFormat = "['application/pdf', 'image/jpeg', 'image/png', 'text/plain'
 profilesDirectory = "%laabsDirectory%/data/maarchRM/profiles"
 refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 
+; The hash algorithm used to generate the fingerprint of binary objects during the deposit.
+; If you want to use another hash algorithm, you can find every possibles values to https://www.php.net/manual/fr/function.hash-algos.php
+; hashAlgorithm=SHA1
+
 ; Type of archival profile
 ; 1 = file only
 ; 2 = descriptionClass/properties + management rules
 ; 3 = both
 archivalProfileType = 2
+
+; Automatic generation of archiverArchiveId on deposit
+; format   :              Format sequence to follow. Variables availables are sequence and date.
+;                         They must be followed by their name (for sequence) or type (like year, month, day, for date) between ().
+;                         Sequences configuration are as follow :
+;                              <sequence(sequenceName, paddingValue, paddingNumber).
+;                              paddingValue and paddingNumber are the maximum number of values to be added before sequence if needed
+;
+; isAutomaticallyForced : false : a value will be generated and set only if no value is provided on the submission
+;                         true  : a value will be generated and replace any incoming value on the submission
+; contentSuffix           Suffix, to add for children if isInheritedFromParent is selected
+;                         separator : string to add before suffix
+;                         value : value to padd suffix
+;                         length : padding length
+;
+archiveIdGenerator = "{
+    'service' : 'recordsManagement/Generator/Sequence',
+    'archiverArchiveIdRules' : {
+        'isAutomaticallyForced' : true,
+        'isInheritedFromParent' : true,
+        'format' : 'FR094080_<date(Y)>_AE<sequence(archiverArchiveIdSequence, 0, 4)>',
+        'contentSuffix' : {
+            'separator' : '_',
+            'value' : '0',
+            'length' : 3
+        }
+    }
+}"
+
 
 ; Default Retention Rule if any retention rule is set up ("dispose" or "preserve")
 actionWithoutRetentionRule = "dispose"
@@ -113,6 +146,12 @@ descriptionSchemes = "{
         'label' : 'extension',
         'type' : 'json',
         'uri' : '%laabsDirectory%/data/maarchRM/samples/sample.json'
+    },
+    'log' : {
+        'label' : 'log',
+        'type' : 'php',
+        'uri' : 'recordsManagement/log',
+        'search': 'recordsManagement/log'
     }
 }"
 
@@ -178,6 +217,41 @@ packageSchemas = "{
     }
 }"
 
+;if package are comming from an external source
+;connector params properties:
+;   label:      Display name of the property
+;   source:     'input' | 'param'
+;   required:   true or false (default: false)
+;   type:       'file' | 'text' | 'number' | 'boolean' | 'enum' | 'organization' | 'archivalProfile' (default: 'text')
+;   enumNames:  (only if type is 'enum'), array of texts or numbers
+packageConnectors = "{
+    'mades' : {
+        'label' : 'Mades message with attachment',
+        'service'  :'medona/Connectors/Multiparts',
+        'schema' : 'mades',
+        'params' : {
+            'attachments' : {
+                'label' : 'Pièces',
+                'source' : 'input',
+                'type' : 'file',
+                'multiple' : true
+            }
+        }
+    },
+    'madesZip' : {
+        'label' : 'Mades zip',
+        'service'  :'medona/Connectors/Zip',
+        'schema' : 'mades',
+        'params' : {
+            'manifest' : {
+                'label' : 'Message name',
+                'source' : 'input',
+                'required' : false
+            }
+        }
+    }
+}"
+
 ; Message exchange menu
 ; 'label' is the title of menu
 ; 'href'  is the path to the action
@@ -223,6 +297,10 @@ menu = "[
             {
                 'label' : 'Communications à récupérer',
                 'href'  : '/delivery/list'
+            },
+            {
+                'label' : 'Communications à finaliser',
+                'href'  : '/delivery/Process'
             },
             {
                 'label' : 'Historique de communication',
@@ -393,7 +471,7 @@ blacklistUserStories = "[
 ;   'lifeTime' Token validity in seconds (defaults 3600)
 csrfWhiteList = "['user/login', 'user/password', 'user/prompt', 'user/logout', 'user/generateResetToken']"
 csrfConfig = '{
-    "cookieName" : "CSRF",
+    "cookieName" : "Csrf",
     "tokenLength" : 32
 }'
 
@@ -432,10 +510,6 @@ servicePrivileges = "[
     {
         'serviceURI': 'recordsManagement/archive/createArchiveBatch',
         'description' : 'Création par batch d\'archive(s)'
-    },
-    {
-        'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
-        'description' : 'Mise à jour de la durée d\'utilité administrative'
     },
     {
         'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
@@ -516,10 +590,6 @@ servicePrivileges = "[
 ;        'description' : 'Purge des bordereaux'
 ;    },
 ;    {
-;        'serviceURI' : 'recordsManagement/archives/updateArchivesretentionrule',
-;        'description' : 'Mise à jour de la durée d\'utilité administrative'
-;    },
-;    {
 ;        'serviceURI': '*',
 ;        'description' : 'Tous les droits'
 ;    }
@@ -532,8 +602,8 @@ chainJournalByOrganization = false;
 
 ; Chain journal with timestamp file. The timestamp dependency must be configured.
 chainWithTimestamp = false;
-
 ; timestampService = dependency/timestamp/plugins/TsaClient
+
 
 [organization]
 
@@ -633,13 +703,13 @@ tasks = "[
 ;    },
 ;    {
 ;        'taskId': '04',
-;        'route' : 'medona/ArchiveDelivery/updateProcessBatch',
-;        'description' : 'Traiter les communications'
+;        'route' : 'medona/ArchiveDestruction/updateProcessAll',
+;        'description' : 'Traiter les destructions'
 ;    },
 ;    {
 ;        'taskId': '05',
-;        'route' : 'medona/ArchiveDestruction/updateProcessAll',
-;        'description' : 'Traiter les destructions'
+;        'route' : 'medona/message/deleteMessageDirectoryPurge',
+;        'description' : 'Purge des bordereaux'
 ;    },
 ;    {
 ;        'taskId': '06',
@@ -658,8 +728,8 @@ tasks = "[
 ;    },
 ;    {
 ;        'taskId': '09',
-;        'route' : 'medona/message/deleteMessageDirectoryPurge',
-;        'description' : 'Purge des bordereaux'
+;        'route' : 'medona/ArchiveDelivery/updateProcessBatch',
+;        'description' : 'Traiter les communications'
 ;    },
 ;    {
 ;        'taskId': '10',
@@ -694,8 +764,8 @@ Password                        = %password%
 
 ; Path to the UK National Archives DROID signature file for file format detection
 ; Droid signature files can be found at http://www.nationalarchives.gov.uk/aboutapps/pronom/droid-signature-files.htm
-signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V96.xml"
-containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20200121.xml"
+signatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/DROID_SignatureFile_V97.xml"
+containerSignatureFile = "%laabsDirectory%/data/maarchRM/droidSignatureFiles/container-signature-20201001.xml"
 
 ; Path to libreOffice executable
 ;libreOfficeExecutable = "c:\Program Files (x86)\LibreOffice 5\program\soffice"
@@ -852,5 +922,3 @@ trace = 1
 
 ; The path to openssl, if not in PHP path
 ; pathToOpenSSL="C:\Program Files\OpenSSL-Win64\bin\openssl"
-
-

@@ -32,6 +32,7 @@ interface archivesInterface
     */
     /**
      * Search archives by profile / dates / agreement
+     *
      * @param string  $archiveId
      * @param string  $profileReference
      * @param string  $status
@@ -202,7 +203,7 @@ interface archivesInterface
      */
     public function readList($originatorOrgRegNumber, $filePlanPosition = null, $archiveUnit = false);
 
-    /**
+     /**
      * Get archives Count without limit
      *
      * @param string  $originatorOrgRegNumber The organization registration number
@@ -221,21 +222,23 @@ interface archivesInterface
      * @param array  $archiveIds Array of archive identifier
      * @param string $comment    The comment of modification
      * @param string $identifier Message identifier
+     * @param string $format     Message format
      *
      * @action recordsManagement/archive/freeze
      *
      */
-    public function updateFreeze($archiveIds, $comment = null, $identifier = null);
+    public function updateFreeze($archiveIds, $comment = null, $identifier = null, $format = null);
 
     /**
      * Change the status of an archive
      * @param mixed  $archiveIds Array of archive identifier
      * @param string $comment    The comment of modification
      * @param string $identifier Message identifier
+     * @param string $format     Message format
      *
      * @action recordsManagement/archive/unfreeze
      */
-    public function updateUnfreeze($archiveIds, $comment = null, $identifier = null);
+    public function updateUnfreeze($archiveIds, $comment = null, $identifier = null, $format = null);
 
     /**
      * Read the retention rule of multiple archives
@@ -250,12 +253,15 @@ interface archivesInterface
      * Update a retention rule
      * @param recordsManagement/archiveRetentionRule $retentionRule The retention rule object
      * @param array                                  $archiveIds    The archives ids
+     * @param string                                 $comment       The comment of modification
+     * @param string                                 $identifier    Message identifier
+     * @param string                                 $format        Message format
      *
      * @action recordsManagement/archive/modifyRetentionRule
      * @example /public/tests/updateArchivesRetentionRule-standard.json example-standard
      *
      */
-    public function updateRetentionrule($retentionRule, $archiveIds, $comment = null, $identifier = null);
+    public function updateRetentionrule($retentionRule, $archiveIds, $comment = null, $identifier = null, $format = null);
 
     /**
      * Find archives
@@ -284,11 +290,12 @@ interface archivesInterface
      * @param array                               $archiveIds The archives ids
      * @param string                              $comment    The comment of modification
      * @param string                              $identifier Message identifier
+     * @param string                              $format     Message format
      *
      * @action recordsManagement/archive/modifyAccessRule
      *
      */
-    public function updateAccessrule($accessRule, $archiveIds = null, $comment = null, $identifier = null);
+    public function updateAccessrule($accessRule, $archiveIds = null, $comment = null, $identifier = null, $format = null);
 
     /*
         RESTITUTION
@@ -298,11 +305,12 @@ interface archivesInterface
      * @param array  $archiveIds Array of archive identifier
      * @param string $identifier The message reference
      * @param string $comment    A comment
+     * @param string $format     The message format
      *
      * @action recordsManagement/archive/setForRestitution
      *
      */
-    public function updateSetforrestitution($archiveIds, $identifier = null, $comment = null);
+    public function updateSetforrestitution($archiveIds, $identifier = null, $comment = null, $format = null);
 
     /*
         DESTRUCTION
@@ -312,6 +320,7 @@ interface archivesInterface
      * @param array  $archiveIds The archives ids
      * @param string $comment    The comment of modification
      * @param string $identifier Message identifier
+     * @param string $format     The message format
      *
      * @return boolean
      *
@@ -319,7 +328,7 @@ interface archivesInterface
      * @action recordsManagement/archive/dispose
      *
      */
-    public function updateDisposearchives($archiveIds, $comment = null, $identifier = null);
+    public function updateDisposearchives($archiveIds, $comment = null, $identifier = null, $format = null);
 
     /**
      * Delete disposable archives

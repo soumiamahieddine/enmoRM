@@ -97,7 +97,7 @@ class digitalResource
         // Basic path information
         $pathinfo = pathinfo($UTF8filename);
 
-        $resource->fileName = $pathinfo['filename'];
+        $resource->fileName = str_replace(["<", ">", ":", '"', "/", "\\", "|", "?", "*"], "-", $pathinfo['filename']);
 
         if ($withDateTime) {
             $resource->fileName .= "_".(string) \laabs::newDate(\laabs::newDatetime(null, "UTC"), "Y-m-d_H-i-s");

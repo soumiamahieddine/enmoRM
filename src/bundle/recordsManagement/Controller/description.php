@@ -126,10 +126,10 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
     /**
      * Search the description objects
-     * @param string  $description The search args on description object
-     * @param string  $text        The search args on text
-     * @param array   $archiveArgs The search args on archive std properties
-     * @param bool    $checkAccess Use access control. If not, called MUST control access before or after retrieving data
+     * @param string $description The search args on description object
+     * @param string $text        The search args on text
+     * @param array  $archiveArgs The search args on archive std properties
+     * @param bool   $checkAccess Use access control. If not, called MUST control access before or after retrieving data
      * @param integer $maxResults  Max results to display
      *
      * @return array The result of the research
@@ -211,7 +211,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             // If at least one TS token, add search expression
             if (!empty($tsQueryTokens)) {
                 $tsVectorExpression = "to_tsvector('french'::regconfig, ".$textPropertyExpr.")";
-                $textQueryParts[] = $tsVectorExpression." @@ plainto_tsquery('".implode (' ', $tsQueryTokens)."')";
+                $textQueryParts[] = $tsVectorExpression." @@ plainto_tsquery('". implode(' ', $tsQueryTokens)."')";
             }
 
             if (!empty($textQueryParts)) {

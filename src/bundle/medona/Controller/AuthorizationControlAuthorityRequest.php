@@ -79,7 +79,8 @@ class AuthorizationControlAuthorityRequest extends AuthorizationRequest
 
         try {
             if ($message->schema != 'medona') {
-                $authorizationControlAuthorityRequestController = \laabs::newController($message->schema.'/AuthorizationControlAuthorityRequest');
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                $authorizationControlAuthorityRequestController = \laabs::newController("$namespace/AuthorizationControlAuthorityRequest");
                 $authorizationControlAuthorityRequestController->send($message);
             } else {
                 $authorizationControlAuthorityRequest = $this->sendMessage($message);

@@ -120,11 +120,14 @@ class scheduling
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
         $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
-        if (is_null($account->securityLevel)
-            || !$account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
-            || !$hasSecurityLevel
-        ) {
-            $isUser = false;
+        if ($hasSecurityLevel) {
+            if (is_null($account->securityLevel)
+                || !$account->securityLevel === \bundle\auth\Model\account::SECLEVEL_USER
+            ) {
+                $isUser = false;
+            } else {
+                $isUser = true;
+            }
         } else {
             $isUser = true;
         }
@@ -227,6 +230,21 @@ class scheduling
         $this->json->message = "Status updated";
         $this->json->message = $this->translator->getText($this->json->message);
         $this->json->object = $result;
+
+        return $this->json->save();
+    }
+
+    /**
+     * List of service accounts available to select for user
+     *
+     * @param  array $serviceAccounts array of serviceAccounts
+     *
+     * @return object JSON object
+     */
+    public function listServiceAccounts($serviceAccounts)
+    {
+        $this->json->status = true;
+        $this->json->serviceAccounts = $serviceAccounts;
 
         return $this->json->save();
     }

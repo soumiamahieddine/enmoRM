@@ -41,10 +41,10 @@ class ArchiveDestructionRequest extends abstractMessage
         $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
         $queryParts[] = "type='ArchiveDestructionRequest'";
         $queryParts[] = "active=true";
-        $queryParts[] = "status != 'processed' 
-        AND status != 'error' 
-        AND status != 'sent' 
-        AND status != 'validated' 
+        $queryParts[] = "status != 'processed'
+        AND status != 'error'
+        AND status != 'sent'
+        AND status != 'validated'
         AND status != 'rejected'";
 
         $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
@@ -134,7 +134,8 @@ class ArchiveDestructionRequest extends abstractMessage
         $comment = null,
         $requesterOrgRegNumber = null,
         $archiverOrgRegNumber = null,
-        $originatorOrgRegNumber = null
+        $originatorOrgRegNumber = null,
+        $format = null
     ) {
         if (!is_array($archives)) {
             $archives = array($archives);
@@ -144,7 +145,11 @@ class ArchiveDestructionRequest extends abstractMessage
         $message->messageId = \laabs::newId();
 
         $schema = "mades";
-        if (\laabs::hasBundle('seda')) {
+        if ($format) {
+            $schema = $format;
+        } elseif ($archives[0]->descriptionClass === 'seda2') {
+            $schema = 'seda2';
+        } elseif (\laabs::hasBundle('seda')) {
             $schema = "seda";
         }
         $message->schema = $schema;
@@ -172,8 +177,9 @@ class ArchiveDestructionRequest extends abstractMessage
             }
 
             if ($message->schema != 'medona') {
+                $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
                 $archiveDestructionRequestController = \laabs::newController(
-                    $message->schema.'/ArchiveDestructionRequest'
+                    "$namespace/ArchiveDestructionRequest"
                 );
                 $archiveDestructionRequestController->send($message);
             } else {
@@ -345,7 +351,7 @@ class ArchiveDestructionRequest extends abstractMessage
     public function process($messageId)
     {
         if (is_scalar($messageId)) {
-            $message = $this->sdoFactory->read('medona/message', $messageId);
+            $message = $this->read($messageId);
         } else {
             $message = $messageId;
         }

@@ -36,8 +36,8 @@
     </div>
 </div>
 
-<div id="listTemplate" class="hide">
-    <div class="archive row" style="border-bottom: 1px solid #DDD">
+<div id="listTemplate" class="hide" data-translate-catalog="recordsManagement/message">
+    <div class="archive row archiveItem" style="border-bottom: 1px solid #DDD">
         <div class="archiveInfo pull-left">
             <h5>
                 <i class="archiveContentButton fa fa-caret-right">&nbsp;</i>
@@ -55,8 +55,14 @@
                 </small>
             </h5>
         </div>
+        <?merge exportPrivilege.bool() ?>
+        <div class="pull-right addChildrenArchive addingNew exportArchive hide">
+            <button class="btn btn-xs btn-default" title="Export">
+                <span class="fa fa-download"></span>
+            </button>
+        </div>
         <?merge depositPrivilege.bool() ?>
-        <div class="dropdown pull-right addChildrenArchive addingNew hide">
+        <div class="pull-right dropdown addChildrenArchive addingNew hide">
             <button class="btn btn-xs btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="fa fa-plus"></span>
             </button>
@@ -196,6 +202,7 @@
         folderId       : null,
         pathList       : [],
         showArchivePath: false,
+        totalArchives: null,
 
         getfolderContents: function(orgRegNumber, folderId, archivalProfiles, disabled, locked, acceptArchivesWithoutProfiles, pathList) {
             this.orgRegNumber = orgRegNumber;
@@ -444,16 +451,18 @@
     }
 
     NewArchive = {
-        loadImportForm: function(e) {
+        loadImportForm: function(e, profileMetadata) {
+            console.trace();
             $('#folderContents').addClass('hide');
-
-            trigger('newArchiveForm.recordsManagement', [e.data('json'), ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
+            trigger('newArchiveForm.recordsManagement', [profileMetadata, ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
     }
 
     $("#folderPanel").on('click', '.newArchive', function() {
         Metadata.isModification = false;
-        NewArchive.loadImportForm($(this));
+        var profile = $(this).parent().text().trim();
+        var profileMetadata = FulltextSearchForm.loadArchivalProfile(profile);
+        NewArchive.loadImportForm($(this), profileMetadata);
     });
 
     // Actions on list

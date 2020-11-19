@@ -1,0 +1,246 @@
+<div data-translate-catalog="recordsManagement/messages">
+    <div class="col-md-12">
+        <!-- FULL TEXT -->
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="padding-left: 15px; width: 11.56% !important;">Fulltext</label>
+                <div class="col-sm-10" style="padding-left: 8px; width:88.3333% !important;">
+                    <input type="text" class="form-control" name="text" placeholder="Fulltext" />
+                </div>
+            </div>
+        </div>
+        <!-- COTE -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Archive identifier</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" id="archive_archiveIdentifier" name="archiveIdentifier"
+                    placeholder="Archive identifier" />
+                </div>
+            </div>
+        </div>
+        <!-- RETENTION RULE -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Retention rule</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="retentionRuleCode">
+                        <option value="">All</option>
+                        <?merge retentionRules ?>
+                        <option value="[?merge .code ?]">
+                            <?merge .label ?>
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- PRODUCER -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Producer</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control orgHide" placeholder="Producer" name="orgTypeahead"
+                    id="orgTypeahead" />
+                    <select class="form-control hide" name="originatorOwnerOrgId" id="originatorOwnerOrgId">
+                        <option value="">All</option>
+                        <?merge organizationsOriginator ?>
+                        <option value="[?merge .orgId ?]">
+                            <?merge .displayName ?>
+                        </option>
+                    </select>
+                    <select class="form-control hide" name="originatorOrgRegNumber" id="originatorOrgRegNumber">
+                        <option value="">All</option>
+                        <?merge organizationsOriginator ?>
+                        <div>
+                            <?merge .originator.isset() then(.originator, .originators) ?>
+                            <option value="[?merge .registrationNumber ?]" orgId="[?merge .ownerOrgId ?]">
+                                <?merge .displayName ?>
+                            </option>
+                        </div>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <!-- ARCHIVAL PROFILE -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Archival profile</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="profileReference">
+                        <option value="">All</option>
+                        <?merge profiles ?>
+                        <option value="[?merge .reference ?]">
+                            <?merge .name ?>
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- FINAL DISPOSITION -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Final disposition</label>
+                <div class="btn-group col-sm-8" data-toggle="buttons">
+                    <label class="btn btn-info active finalDisposition col-sm-4" title="All">
+                        <input type="radio" name="finalDisposition" value="" checked /> All
+                    </label>
+                    <label class="btn btn-default finalDisposition col-sm-4" title="Not expired">
+                        <input type="radio" name="finalDisposition" value="preservation" />Preservation
+                    </label>
+                    <label class="btn btn-default finalDisposition col-sm-4" title="Expired">
+                        <input type="radio" name="finalDisposition" value="destruction" /> Destruction
+                    </label>
+                </div>
+                <!-- <div class="col-sm-8">
+                    <select class="form-control" name="finalDisposition">
+                        <option value="">All</option>
+                        <option value="preservation">Preservation</option>
+                        <option value="destruction">Destruction</option>
+                    </select>
+                </div> -->
+            </div>
+        </div>
+        <!-- PRODUCER ORGANIZATION -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Organisation</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="originatorOwnerOrgName"
+                    id="originatorOwnerOrgName" disabled />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <!-- DEPOSIT DATE -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Deposit date</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control datePicker" name="depositStartDate" placeholder="From date" />
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control datePicker" name="depositEndDate" placeholder="To date" />
+                </div>
+            </div>
+        </div>
+        <!-- DAU -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">DAU</label>
+                <div class="btn-group col-sm-8" data-toggle="buttons">
+                    <label class="btn btn-info active archiveExpired col-sm-4" title="All">
+                        <input type="radio" name="archiveExpired" value="" checked /> All
+                    </label>
+                    <label class="btn btn-default archiveExpired col-sm-4" title="Not expired">
+                        <input type="radio" name="archiveExpired" value="false" /> Not expired
+                    </label>
+                    <label class="btn btn-default archiveExpired col-sm-4" title="Expired">
+                        <input type="radio" name="archiveExpired" value="true" /> Expired
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <!-- ARCHIVAL AGREEMENT -->
+        <?merge isPublicArchive.bool() ?>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Accord de versement</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="archivalAgreementReference">
+                        <option value=""></option>
+                        <?merge archivalAgreements ?>
+                        <option value="[?merge .reference ?]"><?merge .reference ?></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- STATUS -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Status</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="status">
+                        <option value="">All</option>
+                        <option value="preserved">Preserved</option>
+                        <option value="frozen">Frozen</option>
+                        <option value="disposable">Waiting for destruction</option>
+                        <option value="error">Error</option>
+                        <?merge deleteDescription.bool().not() ?>
+                        <option value="disposed">Disposed</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- PARTIAL RETENTION RULE -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Partial retention rule</label>
+                <div class="col-sm-8 checkbox" id="partialRetentionRule">
+                    <input type="checkbox" name="partialRetentionRule" data-toggle="toggle" data-on="Oui" data-off="Non">
+                </div>
+            </div>
+        </div>
+        <!-- DEPOSITOR -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Service versant</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="depositorOrgRegNumber">
+                        <option value=""></option>
+                        <?merge ownerDepositorOrgs ?>
+                        <optgroup label="[?merge .displayName ?]">
+                            <?merge .depositor ?>
+                            <option value="[?merge .registrationNumber ?]"><?merge .displayName ?></option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!-- OBJECT TYPE -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Type <span style="color : red">*</span></label>
+                <div class="btn-group col-sm-8" data-toggle="buttons">
+                    <label class="btn btn-info active col-sm-[?merge isPublicArchive.bool().then(4, 6) ?]" title="Archive">
+                        <input type="checkbox" class="hasParent" name="hasParent" value="0" checked/> Archive
+                    </label>
+                    <label class="btn [?merge isPublicArchive.bool().then('btn-default', 'btn-info active') ?] col-sm-[?merge isPublicArchive.bool().then(4, 6) ?]" title="Sub-archive">
+                        <input type="checkbox" class="hasParent" name="hasParent" value="1"/> Sub-archive
+                    </label>
+                    <?merge isPublicArchive.bool() ?>
+                    <label class="btn btn-default col-sm-4" title="Document">
+                        <input type="checkbox" class="hasParent" name="hasParent" value="2"/> Document
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- COMMUNICABLE -->
+        <?merge isPublicArchive.bool() ?>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="col-sm-4 control-label">Communicable</label>
+                <div class="btn-group col-sm-8" data-toggle="buttons">
+                    <label class="btn btn-info active col-sm-4" title="Tout">
+                        <input type="radio" name="isCommunicable" value="" checked> Tout
+                    </label>
+                    <label class="btn btn-default col-sm-4" title="Non">
+                        <input type="radio" name="isCommunicable" value="0"> Non
+                    </label>
+                    <label class="btn btn-default col-sm-4" title="Oui">
+                        <input type="radio" name="isCommunicable" value="1"/> Oui
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?merge isPublicArchive.bool() ?>
+    <div class="col-md-12">
+        <hr style="height:1px;border:none;color:gray;background-color:gray;">
+    </div>
+    <span class="hide" id="required_fields">You must fill all required fields (*)</span>
+</div>

@@ -29,9 +29,16 @@ interface adminUseraccountInterface
      * List all users for administration
      *
      * @return auth/user/indexHtml
-     * @uses auth/userAccount/readUserlist
      */
-    public function readUseraccounts($query = null);
+    public function readUseraccounts();
+
+    /**
+     * List all users for administration
+     *
+     * @uses auth/userAccount/readUserlist
+     * @return auth/user/indexDatatable
+     */
+    public function readUseraccountsList($query = null);
 
     /**
      * Prepare an empty user object

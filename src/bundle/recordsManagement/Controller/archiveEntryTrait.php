@@ -20,6 +20,8 @@
 
 namespace bundle\recordsManagement\Controller;
 
+use function laabs\hash_stream;
+
 /**
  * Archive entry controller
  *
@@ -78,6 +80,7 @@ trait archiveEntryTrait
     {
         if ($zipContainer) {
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
+            $zipResource = $archive->digitalResources[0];
             $archive = $this->processZipContainer($archive);
         } else {
             $this->receiveAttachments($archive);
@@ -93,29 +96,44 @@ trait archiveEntryTrait
         $archive->depositDate = \laabs::newTimestamp();
 
 
-        // Load archival profile, service level if specified
-        // Instantiate description controller
-        $this->useReferences($archive, 'deposit');
+        try {
+            // Verify if deposit archive has proper hash
+            $this->checkintegrity($archive);
 
-        // Complete management metadata from profile and service level
-        $this->completeMetadata($archive);
+            // Load archival profile, service level if specified
+            // Instantiate description controller
+            $this->useReferences($archive, 'deposit');
 
-        $this->useReferences($archive, 'deposit');
+            // Complete management metadata from profile and service level
+            $this->completeMetadata($archive);
 
-        // Validate archive metadata and resources
-        $this->validateCompliance($archive);
+            $this->useReferences($archive, 'deposit');
 
-        // Check format conversion
-        $this->convertArchive($archive);
+            // Validate archive metadata and resources
+            $this->validateCompliance($archive);
 
-        // Generate PDI + package
-        $this->generateAIP($archive);
+            // Check format conversion
+            $this->convertArchive($archive);
 
-        // Deposit
-        $this->deposit($archive);
+            // Generate PDI + package
+            $this->generateAIP($archive);
 
-        // Send certificate
-        $this->sendResponse($archive);
+            // Deposit
+            $this->deposit($archive);
+
+            // Send certificate
+            $this->sendResponse($archive);
+        } catch (\Exception $exception) {
+            if ($zipContainer) {
+                $this->deleteZipContainer($archive, $zipResource);
+            }
+
+            throw $exception;
+        }
+
+        if ($zipContainer) {
+            $this->deleteZipContainer($archive, $zipResource);
+        }
 
         return $archive->archiveId;
     }
@@ -129,7 +147,6 @@ trait archiveEntryTrait
         if (is_array($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
                 $receivedHandler = $digitalResource->getHandler();
-
                 switch (true) {
                     case is_string($receivedHandler)
                         && (filter_var(substr($receivedHandler, 0, 10), FILTER_VALIDATE_URL) || is_file($receivedHandler)):
@@ -167,21 +184,39 @@ trait archiveEntryTrait
      */
     public function processZipContainer($archive)
     {
-        $zip = $archive->digitalResources[0];
+        $zipResource = $archive->digitalResources[0];
 
-        $zipDirectory = $this->extractZip($zip);
+        $zipDirectory = $this->extractZip($zipResource);
+        $zipResource->tmpdir = $zipDirectory;
 
         $archive->digitalResources = [];
-        $cleanZipDirectory = array_diff(scandir($zipDirectory), array('..', '.'));
-        $directory = $zipDirectory.DIRECTORY_SEPARATOR.reset($cleanZipDirectory);
+        $cleanZipDirectory = array_diff(scandir($zipDirectory.DIRECTORY_SEPARATOR.'contents'), array('..', '.'));
+        // Root must be a directory
+        $archiveDirectory = realpath($zipDirectory.DIRECTORY_SEPARATOR.'contents'.DIRECTORY_SEPARATOR.reset($cleanZipDirectory));
+        if (!is_dir($archiveDirectory)) {
+            $this->deleteZipContainer($archive, $zipResource);
 
-        if (!is_dir($directory)) {
             throw new \core\Exception("The container file is non-compliant");
         }
 
-        $this->extractDir($directory, $archive);
+        try {
+            $this->extractDir($archiveDirectory, $archive);
+        } catch (\Exception $exception) {
+            $this->deleteZipContainer($archive, $zipResource);
+
+            throw $exception;
+        }
 
         return $archive;
+    }
+
+    protected function deleteZipContainer($archive, $zipResource)
+    {
+        unset($archive->contents);
+        unset($archive->digitalResources);
+
+        gc_collect_cycles();
+        \laabs\rmdir($zipResource->tmpdir, true);
     }
 
     /**
@@ -193,26 +228,23 @@ trait archiveEntryTrait
      */
     private function extractZip($zip)
     {
-        $packageDir = \laabs\tempdir().DIRECTORY_SEPARATOR."MaarchRM".DIRECTORY_SEPARATOR;
+        $packageDir = \laabs\tempdir();
 
         if (!is_dir($packageDir)) {
             mkdir($packageDir, 0777, true);
         }
 
-        $name = \laabs::newId();
-        $zipfile = $packageDir.$name.".zip";
-
-        if (!is_dir($packageDir.$name)) {
-            mkdir($packageDir.$name, 0777, true);
+        $zipfile = $packageDir.DIRECTORY_SEPARATOR."container.zip";
+        $zipdir = $packageDir.DIRECTORY_SEPARATOR."contents";
+        if (!is_dir($zipdir)) {
+            mkdir($zipdir, 0777, true);
         }
 
         file_put_contents($zipfile, base64_decode($zip->getContents()));
 
-        $this->zip->extract($zipfile, $packageDir. $name, false, null, "x");
+        $this->zip->extract($zipfile, $zipdir, false, null, "x");
 
-        unset($zipfile);
-
-        return $packageDir.$name;
+        return $packageDir;
     }
 
     /**
@@ -332,6 +364,7 @@ trait archiveEntryTrait
         }
 
         foreach ($archives as $archive) {
+            $archive = \laabs::castMessage($archive, 'recordsManagement/archive');
             foreach ($archive->digitalResources as $digitalResource) {
                 $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
 
@@ -344,6 +377,41 @@ trait archiveEntryTrait
         }
 
         return true;
+    }
+
+    protected function checkintegrity($archive)
+    {
+        if (!isset($archive->digitalResources)) {
+            return;
+        }
+        foreach ($archive->digitalResources as $resource) {
+            //Hash verification
+            if ((isset($resource->hash) && !is_null($resource->hash))
+                && (isset($resource->hashAlgorithm) && !is_null($resource->hashAlgorithm))
+            ) {
+                $hashCalculated = hash_stream($resource->hashAlgorithm, $resource->gethandler());
+
+                if ($hashCalculated !== strtolower($resource->hash)) {
+                    throw \laabs::newException("recordsManagement/invalidHashException", "Invalid hash.");
+                }
+            } elseif (!isset($resource->hash) && !isset($resource->hashAlgorithm)) {
+                continue;
+            } else {
+                throw \laabs::newException("recordsManagement/missingHashException", "Missing hash.");
+            }
+
+            //hash modification if hash algorithm different from² conf value
+            $confHashAlgorithm = 'sha256';
+            if (isset(\laabs::configuration('recordsManagement')['hashAlgorithm']) && !is_null(\laabs::configuration('recordsManagement')['hashAlgorithm'])) {
+                $confHashAlgorithm = \laabs::configuration('recordsManagement')['hashAlgorithm'];
+            }
+
+            if ($resource->hashAlgorithm != $confHashAlgorithm) {
+                $newHash= hash_stream($confHashAlgorithm, $resource->gethandler());
+                $resource->hash = $newHash;
+                $resource->hashAlgorithm = $confHashAlgorithm;
+            }
+        }
     }
 
     /**
@@ -388,6 +456,12 @@ trait archiveEntryTrait
         $this->completeProcessingStatus($archive);
 
         $this->manageFileplanPosition($archive);
+
+        if (isset(\laabs::configuration('recordsManagement')['archiveIdGenerator']) && !empty(\laabs::configuration('recordsManagement')['archiveIdGenerator'])) {
+            $generator = \laabs::configuration('recordsManagement')['archiveIdGenerator'];
+            $generatorService = \laabs::newService($generator['service']);
+            $generatorService->generate($archive);
+        }
 
         if (empty($archive->descriptionClass) && isset($this->currentArchivalProfile->descriptionClass)) {
             $archive->descriptionClass = $this->currentArchivalProfile->descriptionClass;

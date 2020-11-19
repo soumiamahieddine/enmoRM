@@ -6,7 +6,7 @@ msgid "Archival profile"
 msgstr "Profil d'archive"
 
 msgid "Archive identifier"
-msgstr "Cote"
+msgstr "Identifiant de l 'archive"
 
 msgid "Identifier"
 msgstr "Identifiant"

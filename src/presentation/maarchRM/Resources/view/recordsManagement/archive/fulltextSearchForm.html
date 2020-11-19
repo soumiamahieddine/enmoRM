@@ -11,7 +11,7 @@
     <div class="form-group">
         <div class="input-group">
             <div id="profileSelection" class="input-group-btn">
-                <button id="searchByProfile" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button id="searchByProfile" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-archivalProfiles="[?merge archivalProfiles.json() ?]">
                     <span>All</span> <i class="fa fa-caret-down"/>
                 </button>
                 <ul class="dropdown-menu">
@@ -381,6 +381,23 @@ FulltextSearchForm = {
     clearForm : function() {
         this.form.find('input[type=search], input[type=text], input[type=number], input[type=date], select').val('');
         this.advancedSearchForm.find('input[type=text], input[type=number], input[type=date], select').val('');
+    },
+
+    loadArchivalProfile : function(profile) {
+        var archivalProfiles = JSON.parse($('#searchByProfile').attr('data-archivalProfiles'));
+        var profileMetadata = "";
+        for (key in archivalProfiles) {
+            if (!archivalProfiles.hasOwnProperty(key)) continue;
+            var obj = archivalProfiles[key];
+            for (var prop in obj) {
+                if (!obj.hasOwnProperty(prop)) continue;
+                if ((prop === 'name') && (obj[prop] === profile)) {
+                    profileMetadata = obj;
+                }
+            }
+        };
+
+        return profileMetadata;
     }
 }
 

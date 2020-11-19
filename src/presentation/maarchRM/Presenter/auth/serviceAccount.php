@@ -59,10 +59,33 @@ class serviceAccount
      *
      * @return string
      */
-    public function indexHtml(array $serviceAccounts)
+    public function indexHtml()
     {
+        $maxResults = null;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
+            $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
+        }
         $this->view->addContentFile("auth/serviceAccount/index.html");
+
+        $this->view->setSource("maxResults", $maxResults);
+
+
+        $this->view->translate();
+        $this->view->merge();
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     * @param array     $serviceAccounts    Array of service accounts
+     * @param integer   $count              Count of service accounts without limits
+     *
+     */
+    public function accountList(array $serviceAccounts, $count)
+    {
         $this->view->setSource("serviceAccounts", $serviceAccounts);
+        $this->view->setSource("totalResultsWithoutLimit", $count);
+        $this->view->addContentFile("auth/serviceAccount/serviceAccountsList.html");
         $hasSecurityLevel = isset(\laabs::configuration('auth')['useSecurityLevel']) ? (bool) \laabs::configuration('auth')['useSecurityLevel'] : false;
 
         $accountId = \laabs::getToken("AUTH")->accountId;
@@ -75,6 +98,13 @@ class serviceAccount
             $manageUserRights = false;
         }
 
+        $hasReachMaxResults = false;
+        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && count($serviceAccounts) >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+            $hasReachMaxResults = true;
+        }
+
+        $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
         $this->view->setSource('manageUserRights', $manageUserRights);
 
         $table = $this->view->getElementById("list-serviceAccount");

@@ -100,7 +100,8 @@ class ArchiveModificationRequest extends abstractMessage
 
             try {
                 if ($message->schema) {
-                    $archiveModificationRequestController = \laabs::newController($message->schema.'/ArchiveModificationRequest');
+                    $namespace = \laabs::configuration("medona")["packageSchemas"][$message->schema]["phpNamespace"];
+                    $archiveModificationRequestController = \laabs::newController("$namespace/ArchiveModificationRequest");
                     $archiveModificationRequestController->send($message);
                 }
                 $operationResult = true;

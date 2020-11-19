@@ -446,6 +446,9 @@ msgstr "L'identifiant d'archive %s n'existe pas."
 msgid "Invalid format attachments for %s"
 msgstr "Format invalide pour '%s'"
 
+msgid "Invalid value %s supplied for referentiel %s"
+msgstr "Valeur %s non valide pour référentiel %s"
+
 msgid "The archive %1$s is not from the folder %2$s."
 msgstr "L'archive %1$s n'est pas dans le dossier %2$s."
 
