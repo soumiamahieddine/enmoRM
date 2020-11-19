@@ -76,9 +76,26 @@ class serviceAccount
     /**
      * List all service to display
      *
+     * @param string    $accountName    Name of account
+     * @param integer   $maxResults     Max result number to return
+     *
      * @return array The array of stdClass with dislpay name and service identifier
      */
-    public function search()
+    public function search($accountName = null, $maxResults = null)
+    {
+        $serviceAccounts = $this->sdoFactory->find('auth/account', $this->getSearchQuery($accountName), null, false, false, $maxResults);
+
+        return $serviceAccounts;
+    }
+
+    /**
+     * Query builder for search and count function
+     *
+     * @param  string $accountName Account Name
+     *
+     * @return string PDO query
+     */
+    public function getSearchQuery($accountName = null)
     {
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
@@ -87,6 +104,10 @@ class serviceAccount
 
         $queryAssert = [];
         $queryAssert[] = "accountType='service'";
+
+        if (!is_null($accountName) && $accountName != "null") {
+            $queryAssert[] = "accountName~'*$accountName*'";
+        }
 
         if ($this->hasSecurityLevel) {
             switch ($account->getSecurityLevel()) {
@@ -115,11 +136,22 @@ class serviceAccount
             }
         }
 
-        $serviceAccounts = $this->sdoFactory->find('auth/account', \laabs\implode(" AND ", $queryAssert));
-
-        return $serviceAccounts;
+        return \laabs\implode(" AND ", $queryAssert);
     }
 
+    /**
+     * Count service Accounts
+     *
+     * @param  string $accountName
+     *
+     * @return integer $count Number of service accounts
+     */
+    public function searchCount($accountName = null)
+    {
+        $count = $this->sdoFactory->count('auth/account', $this->getSearchQuery($accountName));
+
+        return $count;
+    }
     /**
      *  Prepare an empty service object
      *
@@ -217,7 +249,7 @@ class serviceAccount
         }
 
         if ($this->hasSecurityLevel) {
-            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($organization->orgName, array_column($this->organizationController->readDescendantServices($account->ownerOrgId), 'orgName')) === false){
+            if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN && array_search($account->ownerOrgId, array_column($this->organizationController->readParentOrg($orgId), 'orgId')) === false){
                 throw new \core\Exception\ForbiddenException("You are not allowed to add user in this organization");
             }
             $this->checkPrivilegesAccess($account, $serviceAccount);
@@ -415,7 +447,10 @@ class serviceAccount
         $ownAccount = $this->read($accountToken->accountId);
 
         if ($accountToken->accountId != $serviceAccountId && $this->hasSecurityLevel) {
-            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
+            $organization = $this->sdoFactory->read('organization/organization', $serviceAccount->ownerOrgId);
+            $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+            $organizations[] = $organization;
+            if (array_search($serviceAccount->ownerOrgId, array_column($organizations, 'orgId')) === false){
                 throw new \core\Exception\ForbiddenException("You are not allowed to modify this service account");
             }
             $this->checkPrivilegesAccess($ownAccount, $serviceAccount);
@@ -480,6 +515,57 @@ class serviceAccount
     {
         return $this->sdoFactory->find("auth/servicePrivilege", "accountId='".$serviceAccountId."'");
     }
+
+    /**
+     * Search accounts for a privilege
+     *
+     * @param  string $serviceUri Privilege service uri
+     *
+     * @return array  $accounts  Array of service accounts with same privilege
+     */
+    public function getAccountsByPrivilege($serviceUri)
+    {
+        $queryAssert = null;
+
+        if ($this->hasSecurityLevel) {
+            $accountId = \laabs::getToken("AUTH")->accountId;
+            $account = $this->sdoFactory->read("auth/account", array("accountId" => $accountId));
+            switch ($account->getSecurityLevel()) {
+                case $account::SECLEVEL_GENADMIN:
+                    $queryAssert = " AND (isAdmin='TRUE' AND ownerOrgId!=null)";
+                    break;
+
+                case $account::SECLEVEL_FUNCADMIN:
+                    $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                    $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+                    $organizations[] = $organization;
+                    $organizationsIds = [];
+                    foreach ($organizations as $key => $organization) {
+                        $organizationsIds[] = (string) $organization->orgId;
+                    }
+
+                    $queryAssert = " AND ((ownerOrgId= ['" .
+                        implode("', '", $organizationsIds) .
+                        "']) OR (isAdmin!=TRUE AND ownerOrgId=null))
+                        ";
+                    break;
+
+                case $account::SECLEVEL_USER:
+                    $queryAssert = " AND ((isAdmin!='TRUE' AND ownerOrgId='". $account->ownerOrgId."')";
+                    break;
+            }
+        }
+
+        $accounts = $this->sdoFactory->index(
+            "auth/account",
+            ["accountId", "accountName", "displayName"],
+            "accountId = [READ auth/servicePrivilege  [accountId] (serviceURI='".$serviceUri."' OR serviceURI = :aster)] . $queryAssert",
+            ['aster' => "*"]
+        );
+
+        return $accounts;
+    }
+
 
     /**
      * create the service privileges

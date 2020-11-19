@@ -20,15 +20,13 @@
                     </select>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-lg-3 control-label">Executed by<span style="color:red">&nbsp;*</span></label>
                 <div class="col-lg-7">
                     <?merge isUser.bool().not().then('disabled') @disabled ?>
                     <select class="form-control" id="serviceAccountId" name="serviceAccountId" title="Executed by">
                         <option value="" disabled selected>Select a service account</option>
-                        <?merge serviceAccount ?>
-                        <option value="[?merge .accountId ?]" data-privilege="[?merge .privileges ?]"><?merge .displayName ?></option>
                     </select>
                 </div>
             </div>
@@ -238,7 +236,7 @@
                         <input type="number" min="1" class="form-control" name="frequencyNumber" value="1">
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span id="frequencyUnit" data-value="M">minute(s)</span> 
+                                <span id="frequencyUnit" data-value="M">minute(s)</span>
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
@@ -374,7 +372,8 @@
 
     $('#taskId').on('change', function () {
         $('#serviceAccountId').val('');
-        TaskSchedulingForm.checkServiceAccount();
+        var route = $('#taskId').find('option:selected').data('route');
+        TaskSchedulingForm.loadServiceAccounts(route);
     });
 
     // Week day selection color
@@ -394,7 +393,7 @@
 
             } else {
                 $('#lastDayInfo').addClass('hide');
-            }            
+            }
         }
     });
 
@@ -428,7 +427,7 @@
     $("#addParameters").on("click", function() {
         TaskSchedulingForm.addParameters();
     });
-    
+
     // Save task
     $('#addTask, #modifyTask').on('click', function() {
         TaskSchedulingForm.saveTask($(this));
@@ -438,7 +437,7 @@
     $("#schedulingForm").on('click', '.removeParameters', function() {
         $(this).closest('li').remove();
     });
-    
+
     // Cancel form
     $('#cancelSchedule').on('click', function(event) {
         event.preventDefault();
@@ -469,8 +468,7 @@
             this.form.find('[name="taskId"]').val(scheduling.taskId);
             this.form.find('[name="name"]').val(scheduling.name);
             this.form.find('[name="serviceAccountId"]').val(scheduling.executedBy);
-
-            TaskSchedulingForm.checkServiceAccount();
+            this.loadServiceAccounts($('#taskId').find('option:selected').data('route'));
 
             // Freqency selector
             if (scheduling.monthDays.length) {
@@ -548,7 +546,7 @@
             let scheduling = this.serialize();
             let type = 'POST';
             let url = '/batchProcessing/scheduling';
-            
+
             if( !this.checkSchedulingValues(scheduling)) {
                gritter.show($('#empty_text').html(),false);
                return;
@@ -574,7 +572,7 @@
                         } else {
                             TaskList.update(scheduling);
                         }
-                        
+
                         TaskSchedulingForm.clear();
                     }
                 },
@@ -608,30 +606,10 @@
             return valid;
         },
 
-        checkServiceAccount: function() {
-            var route = $('#taskId').find('option:selected').data('route').toLowerCase();
-
-            $('#serviceAccountId option').each(function() {
-                var privileges = $(this).data('privilege');
-
-                if (privileges) {
-                    for (var i = 0; i < privileges.length; i++) {
-                        privileges[i] = privileges[i].toLowerCase();
-                    }
-                }
-
-                if (!privileges || ($.inArray(route, privileges) === -1 && $.inArray("*", privileges) === -1)) {
-                    $(this).addClass('hide');
-                } else {
-                    $(this).removeClass('hide');
-                }
-            });
-        },
-
         addParameters: function() {
             let parameterInput = this.form.find('[name="parameters"]');
             let parameters = parameterInput.val();
-            
+
             if( parameters == "") {
                 return;
             }
@@ -658,7 +636,7 @@
                 .addClass('fa fa-times fa-fw')
                 .html("&nbsp;")
                 .appendTo(a);
-                
+
             parameterInput.val('');
         },
 
@@ -672,15 +650,15 @@
             scheduling.taskName = this.form.find('[name="taskId"] option:selected').text();
             scheduling.startMinutes = this.form.find('[name="startMinutes"]').val();
             scheduling.startHours = this.form.find('[name="startHours"]').val();
-            
+
             if (this.form.find('.parametersList').find('li').length != 0) {
                 scheduling.parameters = [];
-                
+
                 this.form.find('.parametersList').find('li').each(function() {
                     scheduling.parameters.push($(this).attr('parameters'));
                 });
             }
-            
+
             if ($(".active").find(".statusSpan").find(".toggle").hasClass("off")) {
                 scheduling.status = "paused";
             } else {
@@ -731,6 +709,7 @@
 
         clear: function() {
             this.form.addClass('hide');
+            this.form.find('[name="serviceAccountId"]').attr('disabled', 'disabled');
             this.form.find('[name="frequencyType"][value="daily"]').parent().click().addClass('btn-info').addClass('btn-default');
             this.form.find('[name="taskId"], [name="serviceAccountId"], [name="name"]').val('');
             this.form.find('[name="startHours"], [name="startMinutes"]').val('00');
@@ -774,6 +753,33 @@
             TaskList.unselect();
         },
 
-    }
+        loadServiceAccounts: function(route) {
+            var serviceAccountSelect = $('#serviceAccountId');
+            serviceAccountSelect.empty();
 
+            if ($('#taskId').length == 0 || $('#taskId') == '') {
+                serviceAccountSelect.attr('disabled', 'disabled');
+                return;
+            }
+            serviceAccountSelect.removeAttr('disabled');
+            $.ajax({
+                type        : "GET",
+                url         : "/serviceaccountsbyroute",
+                data        : {'serviceUri' : route},
+                dataType    : 'json',
+                contentType : 'application/json',
+                success     : function (response) {
+                    $.each(response.serviceAccounts, function() {
+                        serviceAccountSelect.append($('<option/>', {
+                            value : this.accountId,
+                            text : this.displayName
+                        }));
+                    })
+                },
+                error       : function(response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        }
+    }
 </script>

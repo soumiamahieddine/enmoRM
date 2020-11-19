@@ -183,7 +183,7 @@ class cluster
             try {
                 $clusterRepository->repository = $this->repositoryController->openRepository($clusterRepository->repositoryId);
             } catch (\Exception $e) {
-                if ($mode == Cluster::MODE_WRITE) {
+                if ($mode != Cluster::MODE_READ) {
                     throw \laabs::newException("digitalResource/clusterException", "Repository '%s' must be accessible", 404, $e, [$clusterRepository->repositoryId]);
                 } else {
                     $clusterRepository->repository = null;

@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * Copyright (C) 2015 Maarch
  *
  * This file is part of bundle medona
@@ -38,7 +38,7 @@ class ArchiveTransferReply extends abstractMessage
      *
      * @return The reply message generated
      */
-    public function send($transferMessage, $archives, $replyCode = "OK", $comment = null)
+    public function send($transferMessage, $archives = null, $replyCode = "OK", $comment = null)
     {
         if (is_scalar($transferMessage)) {
             $messageId = $transferMessage;
@@ -82,7 +82,7 @@ class ArchiveTransferReply extends abstractMessage
             $message->senderOrg = $recipientOrg;
         }
 
-        if ($archives) {
+        if (!is_null($archives)) {
             foreach ($archives as $archive) {
                 $unitIdentifier = \laabs::newInstance("medona/unitIdentifier");
                 $unitIdentifier->messageId = $message->messageId;
