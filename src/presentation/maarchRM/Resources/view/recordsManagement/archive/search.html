@@ -214,16 +214,6 @@
     window.localStorage.clear();
     organizations.initialize();
 
-    $("#orgTypeahead").keydown(function(event) {
-        // reinit typeahead and hidden input when suppr or backspace keys are pressed
-        if (event.which == 46 || event.which == 8) {
-            $("#originatorOrgRegNumber").val('');
-            $("#originatorOwnerOrgId").val('');
-            $('#orgTypeahead').val('');
-        }
-    });
-
-
     // initialize typeahead
     $('#orgTypeahead').typeahead(
         {
@@ -285,6 +275,19 @@
         if(!$(this).val()) {
             $("#originatorOrgInfo").hide();
         }
+    });
+
+    $("#orgTypeahead").keydown(function(event) {
+        // reinit typeahead and hidden input when suppr or backspace keys are pressed
+        if (event.which == 46 || event.which == 8) {
+            $("#originatorOrgRegNumber").val('');
+            $("#originatorOwnerOrgId").val('');
+        }
+    });
+
+    $("#orgTypeahead").click(function() {
+        $("#originatorOrgRegNumber").val('');
+        $("#originatorOwnerOrgId").val('');
     });
 
 
