@@ -257,8 +257,7 @@
             skipCache: true
         }
     ).on('typeahead:selected', function($event, suggestion, source) {
-
-        if(suggestion.ownerOrgId) {
+        if(suggestion.orgId) {
             $("#originatorOrgRegNumber").val(suggestion.registrationNumber);
             $("#originatorOrgInfo").show();
             $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
