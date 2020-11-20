@@ -310,6 +310,7 @@ var DataList = {
     buildList: function(id, range, filteredDatas) {
         var totalResult = this.dataList[id].total;
         var datas = this.dataList[id].datas;
+
         if(filteredDatas != undefined){
             datas = filteredDatas;
         } else {

@@ -1006,7 +1006,7 @@ class journal
      *
      * @return object The life cycle event object
      */
-    protected function decodeEventFormat($event)
+    public function decodeEventFormat($event)
     {
         if (isset($event->eventInfo)) {
             if (!isset($this->eventFormats[$event->eventType])) {

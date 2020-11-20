@@ -618,6 +618,9 @@ msgstr "archive(s) sélectionnée(s)"
 msgid "Result"
 msgstr "Résultat"
 
+msgid "archive(s) on"
+msgstr "archive(s) sur"
+
 msgid "Select all"
 msgstr "Tous"
 

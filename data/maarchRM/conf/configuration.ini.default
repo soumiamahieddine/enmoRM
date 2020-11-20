@@ -439,6 +439,8 @@ blacklistUserStories = "[
     'adminArchive/controlAuthority',
     'archiveDeposit/processTransfer',
     'archiveDeposit/transfer*',
+    'archiveManagement/modificationRequestProcess',
+    'archiveManagement/modificationRequestSend',
     'definitiveTransfer/*',
     'delivery/*',
     'destruction/destructionAuthorizationRequest',

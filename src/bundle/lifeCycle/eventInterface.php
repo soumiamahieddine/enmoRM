@@ -29,6 +29,7 @@ interface eventInterface
 
     /**
      * Search a journal event
+     *
      * @param string    $eventType   The type of the event
      * @param string    $objectClass The class of the object
      * @param string    $objectId    The identifier of the object (event.objectId) OR on eventInfo (archive.originatorArchiveId, archivalProfile.reference, message.reference)

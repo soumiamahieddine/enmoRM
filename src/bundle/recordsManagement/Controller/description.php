@@ -120,7 +120,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
             return json_decode($descriptionObject->description);
         } catch (\Exception $e) {
-            
+
         }
     }
 

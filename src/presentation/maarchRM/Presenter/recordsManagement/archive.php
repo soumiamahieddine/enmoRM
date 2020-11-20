@@ -359,7 +359,6 @@ class archive
         $this->view->setSource("acceptArchiveWithoutProfile", $archive->acceptArchiveWithoutProfile);
         $this->view->setSource("acceptUserIndex", $archive->acceptUserIndex);
 
-
         $this->view->translate();
         $this->view->merge();
         return $this->view->saveHtml();
@@ -1361,6 +1360,7 @@ class archive
                 }
             }
         }
+
         return $ownerOriginatorOrgs;
     }
 

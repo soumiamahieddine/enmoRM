@@ -87,6 +87,7 @@ trait archiveEntryTrait
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
         }
 
+
         if (!isset($archive->archiveId)) {
             $archive->archiveId = \laabs::newId();
         }
