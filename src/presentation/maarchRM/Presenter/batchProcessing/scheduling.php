@@ -61,21 +61,6 @@ class scheduling
 
         $tasks = \laabs::callService('batchProcessing/scheduling/readTasks');
 
-        $serviceAccounts = \laabs::callService('auth/serviceAccount/readSearch');
-
-        foreach ($serviceAccounts as $key => $serviceAccount) {
-            $serviceURI = [];
-            $privileges = \laabs::callService('auth/serviceAccount/readPrivilege_serviceAccountId_', $serviceAccount->accountId);
-            if (!$serviceAccount->enabled) {
-                unset($serviceAccounts[$key]);
-                continue;
-            }
-            foreach ($privileges as $privilege) {
-                $serviceURI[] = $privilege->serviceURI;
-            }
-            $serviceAccount->privileges = json_encode($serviceURI);
-        }
-
         foreach ($scheduledTasks as $scheduledTask) {
             $scheduledTask->taskName = $tasks[$scheduledTask->taskId]->description;
             $frequency = explode(';', $scheduledTask->frequency);
@@ -133,7 +118,6 @@ class scheduling
         }
 
         $this->view->translate();
-        $this->view->setSource("serviceAccount", $serviceAccounts);
         $this->view->setSource("tasks", $tasks);
         $this->view->setSource("scheduledTasks", $scheduledTasks);
         $this->view->setSource("timezone", date_default_timezone_get());
