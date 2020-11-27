@@ -310,7 +310,7 @@ interface organizationInterface
      *
      * @action organization/organization/todisplay
      */
-    public function readTodisplay($ownerOrg = false, $orgUnit = false);
+    public function readTodisplay($ownerOrg = false, $orgUnit = false, $term = "");
 
     /**
      * Get originator

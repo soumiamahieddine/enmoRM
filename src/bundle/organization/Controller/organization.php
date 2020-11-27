@@ -67,10 +67,11 @@ class organization
      *
      * @param bool $ownerOrg
      * @param bool $orgUnit
+     * @param string $term The term to search in database
      *
      * @return organization/organization[] An array of organization whith service
      */
-    public function todisplay($ownerOrg, $orgUnit)
+    public function todisplay($ownerOrg, $orgUnit, $term)
     {
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);
@@ -79,9 +80,9 @@ class organization
         $orgList = [];
 
         if (!$currentOrg || (!empty($currentOrg->orgRoleCodes) && in_array('owner', $currentOrg->orgRoleCodes))) {
-            $orgUnitList = $this->getOwnerOriginatorsOrgs();
+            $orgUnitList = $this->getOwnerOriginatorsOrgs(null, $term);
         } else {
-            $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg);
+            $orgUnitList = $this->getOwnerOriginatorsOrgs($currentOrg, $term);
         }
 
         foreach ($orgUnitList as $org) {
@@ -1472,7 +1473,7 @@ class organization
         return $count > 0 ? true : false;
     }
 
-    protected function getOwnerOriginatorsOrgs($currentService = null)
+    protected function getOwnerOriginatorsOrgs($currentService = null, $term = null)
     {
         $userPositionController = \laabs::newController('organization/userPosition');
         $owner = false;
@@ -1495,9 +1496,17 @@ class organization
             $userOrgs[] = $currentService;
         }
 
+        $filter = "";
+        if ($term) {
+            $filter = "(registrationNumber ~ '*".$term."*'
+            OR orgName ~ '*".$term."*'
+            OR displayName ~ '*".$term."*'
+            OR parentOrgId ~ '*".$term."*')";
+        }
+
         $organizationController = \laabs::newController('organization/organization');
         if ($securityLevel == $user::SECLEVEL_GENADMIN || is_null($securityLevel)) {
-            $originators = $organizationController->index();
+            $originators = $organizationController->index(null, $filter);
         } else {
             foreach ($userOrgs as $userPosition) {
                 if (!in_array($userPosition->ownerOrgId, $userOwnerOrgs)) {
@@ -1515,13 +1524,20 @@ class organization
             }
 
             if ($owner) {
-                $originators = $organizationController->index();
+                $originators = $organizationController->index(null, $filter);
             } else {
+                $query = "isOrgUnit=true";
+                if (!empty($userOwnerOrgs)) {
+                    $query .= " AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']";
+                }
+                if ($term) {
+                    $query .= " AND $filter";
+                }
+                
                 $originators = $organizationController->index(
                     null,
-                    "isOrgUnit=true AND ownerOrgId=['" . \laabs\implode("','", $userOwnerOrgs) . "']"
+                    $query
                 );
-                $originators = array_merge($originators, $this->readDescendantServices($user->ownerOrgId));
             }
         }
 
