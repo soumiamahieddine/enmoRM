@@ -755,6 +755,7 @@
 
         loadServiceAccounts: function(route) {
             var serviceAccountSelect = $('#serviceAccountId');
+            var executedBy = $('#taskList a.active').data('json').executedBy;
             serviceAccountSelect.empty();
 
             if ($('#taskId').length == 0 || $('#taskId') == '') {
@@ -770,10 +771,18 @@
                 contentType : 'application/json',
                 success     : function (response) {
                     $.each(response.serviceAccounts, function() {
-                        serviceAccountSelect.append($('<option/>', {
-                            value : this.accountId,
-                            text : this.displayName
-                        }));
+                        if (this.accountId == executedBy) {
+                          serviceAccountSelect.append($('<option/>', {
+                                value : this.accountId,
+                                text : this.displayName,
+                                selected :'selected'
+                            }));
+                          } else {
+                            serviceAccountSelect.append($('<option/>', {
+                                value : this.accountId,
+                                text : this.displayName
+                            }));
+                        }
                     })
                 },
                 error       : function(response) {
