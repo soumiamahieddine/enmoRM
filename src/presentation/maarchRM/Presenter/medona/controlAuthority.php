@@ -38,20 +38,20 @@ class controlAuthority
      * @param \dependency\sdo\Factory     $sdoFactory The Sdo Factory for data access
      */
     public function __construct(
-        \dependency\html\Document $view, 
-        \dependency\json\JsonObject $jsonObject, 
+        \dependency\html\Document $view,
+        \dependency\json\JsonObject $jsonObject,
         \dependency\sdo\Factory $sdoFactory)
     {
         $this->view = $view;
-        
+
         $this->json = $jsonObject;
         $this->json->status = true;
 
         $this->sdoFactory = $sdoFactory;
-        
+
         $this->translator = $this->view->translator;
         $this->translator->setCatalog('medona/messages');
-        
+
     }
 
     /**
@@ -133,7 +133,7 @@ class controlAuthority
         $dataTable->setUnsortableColumns(2);
 
         $this->view->translate();
-        $organizationsOriginator = \laabs::callService('organization/organization/readTodisplay', true, true);
+        $organizationsOriginator = \laabs::callService('organization/organization/readTodisplay', true, true, "");
 
         foreach ($organizationsOriginator as $orgOrignator) {
             if (!$orgOrignator->isOrgUnit) {
@@ -154,11 +154,11 @@ class controlAuthority
 
         return $this->view->saveHtml();
     }
-    
+
     // JSON
     /*
      * Serializer JSON for seting create method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function create()
@@ -171,7 +171,7 @@ class controlAuthority
 
     /*
      * Serializer JSON for seting update method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function update()
@@ -181,10 +181,10 @@ class controlAuthority
 
         return $this->json->save();
     }
-    
+
     /*
      * Serializer JSON for seting update method
-     * 
+     *
      * @return object JSON object with a status and message parameters
      */
     public function delete()
