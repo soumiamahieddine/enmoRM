@@ -188,6 +188,11 @@ class authentication
 
         // Check request session Id equals persisted session token id
         if ($this->accountAuth->sessionId != $this->requestToken->sessionId) {
+            $this->accountAuth->sessionId = null;
+
+            $this->account->authentication = json_encode($this->accountAuth);
+            $this->sdoFactory->update($this->account, "auth/account");
+
             $this->redirectToLogin();
         }
 
