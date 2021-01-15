@@ -755,7 +755,11 @@
 
         loadServiceAccounts: function(route) {
             var serviceAccountSelect = $('#serviceAccountId');
-            var executedBy = $('#taskList a.active').data('json').executedBy;
+            var executedBy;
+            
+            if ($("#taskList a.active")[0]){
+                var executedBy = $('#taskList a.active').data('json').executedBy;
+            }
             serviceAccountSelect.empty();
 
             if ($('#taskId').length == 0 || $('#taskId') == '') {
