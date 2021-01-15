@@ -42,6 +42,7 @@ class StreamReader
     public static function createByFile($filename)
     {
         $h = fopen($filename, 'rb');
+
         return new self($h, true);
     }
 
@@ -114,7 +115,6 @@ class StreamReader
                 'Given stream is not seekable!'
             );
         }
-
         $this->stream = $stream;
         $this->closeStream = $closeStream;
         $this->reset();
@@ -288,7 +288,7 @@ class StreamReader
         fseek($this->buffer, $offset);
         $bytes = fread($this->buffer, $length);
         fseek($this->buffer, $end);
-        
+
         $this->offset = $offset + $length;
 
         return $bytes;
@@ -432,13 +432,16 @@ class StreamReader
         $this->position = $pos;
         //$this->buffer = $length > 0 ? fread($this->stream, $length) : '';
         //$this->bufferLength = strlen($this->buffer);
-        fclose($this->buffer);
+        if (is_resource($this->buffer)) {
+            fclose($this->buffer);
+        }
+
         $this->buffer = fopen('php://temp', 'w+');
         if ($length > 0) {
             $string = fread($this->stream, $length);
             $this->bufferLength = fwrite($this->buffer, $string);
         }
-        
+
         $this->offset = 0;
 
         // If a stream wrapper is in use it is possible that
