@@ -151,7 +151,7 @@ class cluster
         try {
             $this->sdoFactory->update($cluster, "digitalResource/cluster");
             $this->sdoFactory->deleteChildren("digitalResource/clusterRepository", $cluster, "digitalResource/cluster");
-            if (is_array($resource->address) && !empty($resource->address)) {
+            if (is_array($cluster->clusterRepository) && !empty($cluster->clusterRepository)) {
                 $this->sdoFactory->createCollection($cluster->clusterRepository, "digitalResource/clusterRepository");
             }
         } catch (\core\Route\Exception $e) {
