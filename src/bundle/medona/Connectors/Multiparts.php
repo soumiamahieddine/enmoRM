@@ -61,18 +61,14 @@ class Multiparts
             $this->messageDirectory = $messageDirectory;
         }
 
-        $modele = new \stdClass();
-        $modele->xml = \laabs::newService('dependency/xml/Document');
-
         if (is_resource($package->data)) {
-            $modele->xml->loadXML(stream_get_contents(\core\Encoding\Base64::decode($package->data)));
+            $data = stream_get_contents(\core\Encoding\Base64::decode($package->data));
         } elseif (filter_var($package->data, FILTER_VALIDATE_URL)) {
             // TODO verify
-            // $modele->xml->load(stream_get_contents($attachment->data));
         } elseif (preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $package->data)) {
-            $modele->xml->loadXML(\core\Encoding\Base64::decode($package->data));
+            $data = \core\Encoding\Base64::decode($package->data);
         } elseif (is_file($package->data)) {
-            $modele->xml->load($package->data);
+            $data = file_get_contents($package->data);
         }
 
         // to use to modify xml, replace namespace for seda2
@@ -88,7 +84,7 @@ class Multiparts
         // }
 
         $modelName = $package->name ?? (string) \laabs::newId();
-        file_put_contents($messageDirectory.DIRECTORY_SEPARATOR.$modelName, $modele->xml->saveXml());
+        file_put_contents($messageDirectory.DIRECTORY_SEPARATOR.$modelName, $data);
 
         if (!empty($params['attachments'])) {
             foreach ($params['attachments'] as $key => $attachment) {

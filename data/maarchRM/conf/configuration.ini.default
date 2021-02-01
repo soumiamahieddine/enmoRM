@@ -226,7 +226,7 @@ packageSchemas = "{
 ;   enumNames:  (only if type is 'enum'), array of texts or numbers
 packageConnectors = "{
     'mades' : {
-        'label' : 'Mades message with attachment',
+        'label' : 'Schéma Mades avec pièces jointes',
         'service'  :'medona/Connectors/Multiparts',
         'schema' : 'mades',
         'params' : {
@@ -239,14 +239,15 @@ packageConnectors = "{
         }
     },
     'madesZip' : {
-        'label' : 'Mades zip',
+        'label' : 'Packet Compressé Mades',
         'service'  :'medona/Connectors/Zip',
         'schema' : 'mades',
         'params' : {
             'manifest' : {
                 'label' : 'Message name',
                 'source' : 'input',
-                'required' : false
+                'required' : true,
+                'default': 'manifest.xml'
             }
         }
     }

@@ -127,16 +127,9 @@ class serviceAccount
      */
     public function edit($serviceAccount)
     {
-        $tabOrganizations = \laabs::callService('organization/organization/readIndex');
-        $ownerOrganizations = [];
-        $organizations = [];
-
-        foreach ($tabOrganizations as $org) {
-            if ($org->isOrgUnit) {
-                $organizations[] = $org;
-            } else {
-                $ownerOrganizations []= $org;
-            }
+        if (isset($serviceAccount->orgId)) {
+            $serviceAccount->orgName = \laabs::callService('organization/organization/read_orgId_', (string) $serviceAccount->orgId)->displayName;
+            $serviceAccount->ownerOrgName = \laabs::callService('organization/organization/read_orgId_', (string) $serviceAccount->ownerOrgId)->displayName;
         }
 
         if ($serviceAccount->servicePrivilege) {
@@ -155,18 +148,6 @@ class serviceAccount
             }
         }
 
-        foreach ($organizations as $org) {
-            if (isset($serviceAccount->orgId) && $org->orgId == $serviceAccount->orgId) {
-                $serviceAccount->orgName = $org->displayName;
-                $ownerOrgid = $org->ownerOrgId;
-            }
-        }
-        foreach ($ownerOrganizations as $org) {
-            if (isset($ownerOrgid) && $ownerOrgid == $org->orgId) {
-                $serviceAccount->ownerOrgName = $org->displayName;
-            }
-        }
-
         $accountId = \laabs::getToken("AUTH")->accountId;
         $account = \laabs::callService("auth/userAccount/read_userAccountId_", $accountId);
 
@@ -177,8 +158,6 @@ class serviceAccount
         }
 
         $this->view->addContentFile("auth/serviceAccount/edit.html");
-        $this->view->setSource("organizations", $organizations);
-        $this->view->merge($this->view->getElementById("serviceOrgId"));
         $this->view->setSource("serviceAccount", $serviceAccount);
         $this->view->setSource('whatAmI', $whatAmI);
 
