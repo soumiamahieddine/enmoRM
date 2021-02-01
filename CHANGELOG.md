@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 2.7.1
+- `Fixed` Affichage du compte de service en charge d'exécuter la tâche dans le planificateur de tâche.
+- `Fixed` Restauration du fichier permettant la génération de la doc OPENAPI.
+- `Fixed` Correction du bug de déconnexion intempestive lors du changement d'organisation d'appartenance. 
+- `Fixed` Amélioration de la détection de l'algorithme de hash sur les bordereaux externes.
+- `Fixed` Correction du bug lors de la modification des paramètres d'un cluster de stockage.
+- `Fixed` Correction de l'affichage de la prévisualisation de certains PDF.
 ## Version 2.7
 
 - `Added` Gestion du comportement des demandes de communications multiples.
