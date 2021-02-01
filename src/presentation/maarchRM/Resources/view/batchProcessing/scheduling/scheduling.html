@@ -88,7 +88,8 @@
                             </p>
                         </span>
                         <span class="col-xs-2 text-right statusSpan">
-                            <input type="checkbox" class="status" name="status" data-toggle="toggle" checked="[?merge .status.ifeq('scheduled').then('checked') ?]">
+                            <?merge .status.ifeq('scheduled').then('On') @checked ?>
+                            <input type="checkbox" class="status" name="status" data-toggle="toggle">
                         </span>
                         <span class="col-xs-1 text-right">
                             <div class="deleteTask" title="Remove"><i class="fa fa-times"></i></div>
@@ -236,7 +237,6 @@
     </div>
 
 </div>
-<script type="text/javascript" src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 
 <script type="text/javascript">
 
@@ -338,13 +338,14 @@
     });
 
     // play task
-    $('#taskList').on('click', "[name=status]", function(e) {
+    $('#taskList').on('click', ".toggle", function(e) {
+        var input = $(this).find('.status');
         var task = $(this).closest('a');
 
-        if ($(this).prop('checked')) {
-            TaskList.enable(task);
-        } else {
+        if (input.prop('checked')) {
             TaskList.disable(task);
+        } else {
+            TaskList.enable(task);
         }
     });
 
