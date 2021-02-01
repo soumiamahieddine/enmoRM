@@ -161,7 +161,7 @@ class scheduling
      */
     public function execute($schedulingId)
     {
-        $status = true;
+        $success = true;
         $info = null;
 
         $scheduling = $this->sdoFactory->read("batchProcessing/scheduling", $schedulingId);
@@ -191,19 +191,19 @@ class scheduling
             }
         } catch (\Exception $info) {
             $this->changeStatus($schedulingId, "error");
-            $status = false;
+            $success = false;
             
             \laabs::notify(LAABS_BUSINESS_EXCEPTION, $info);
         }
 
         $this->removeServiceTokens();
 
-        if ($status) {
-            $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
+        $scheduling->lastExecution = \laabs::newDateTime(null, 'UTC');
+        $frequency = explode(";", $scheduling->frequency);
+        $scheduling->nextExecution = $this->nextExecution($frequency);
+        
+        if ($success) {
             $scheduling->status = "scheduled";
-
-            $frequency = explode(";", $scheduling->frequency);
-            $scheduling->nextExecution = $this->nextExecution($frequency);
         } else {
             $scheduling->status = "error";
         }
@@ -218,7 +218,7 @@ class scheduling
             }
         }
 
-        $this->logSchedulingController->add($schedulingId, $scheduling->executedBy, $launchedBy, $status, $info);
+        $this->logSchedulingController->add($schedulingId, $scheduling->executedBy, $launchedBy, $success, $info);
 
         return $scheduling;
     }

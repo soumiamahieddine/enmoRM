@@ -88,7 +88,7 @@
                             </p>
                         </span>
                         <span class="col-xs-2 text-right statusSpan">
-                            <?merge .status.ifeq('scheduled').then('On') @checked ?>
+                            <?merge .status.ifne('paused').then('On') @checked ?>
                             <input type="checkbox" class="status" name="status" data-toggle="toggle">
                         </span>
                         <span class="col-xs-1 text-right">
