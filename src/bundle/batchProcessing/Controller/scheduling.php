@@ -568,7 +568,7 @@ class scheduling
 
         $cryptedToken = base64_decode($account->password);
         $jsonToken = \laabs::decrypt($cryptedToken, \laabs::getCryptKey());
-        $authToken= \json_decode($jsonToken);
+        $authToken= json_decode(trim($jsonToken));
         $GLOBALS["TOKEN"]['AUTH'] = $authToken;
 
         if ($account->accountType == "service") {
