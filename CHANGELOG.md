@@ -1,8 +1,9 @@
 # CHANGELOG
 
 ## Version 2.7.1
-- `Fixed` Activation et désactivation des tâches le planificateur de tâche.
-- `Fixed` Affichage du compte de service en charge d'exécuter la tâche dans le planificateur de tâche.
+- `Fixed` Activation et désactivation des tâches dans le planificateur de tâches.
+- `Fixed` Calcul de la prochaine exécution mêmeen cas d'erreur dans le planificateur de tâches.
+- `Fixed` Affichage du compte de service en charge d'exécuter la tâche dans le planificateur de tâches.
 - `Fixed` Restauration du fichier permettant la génération de la doc OPENAPI.
 - `Fixed` Correction du bug de déconnexion intempestive lors du changement d'organisation d'appartenance. 
 - `Fixed` Amélioration de la détection de l'algorithme de hash sur les bordereaux externes.
