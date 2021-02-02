@@ -9,6 +9,7 @@
 - `Fixed` Amélioration de la détection de l'algorithme de hash sur les bordereaux externes.
 - `Fixed` Correction du bug lors de la modification des paramètres d'un cluster de stockage.
 - `Fixed` Correction de l'affichage de la prévisualisation de certains PDF.
+- `Fixed` Correction de la fonction de réception des imports d'archive via batch.
 
 ## Version 2.7
 
