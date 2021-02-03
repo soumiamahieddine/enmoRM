@@ -368,8 +368,22 @@ class serviceAccount
         $account = $this->read($accountToken->accountId);
 
         if ($account->accountId != $serviceAccount->accountId && $this->hasSecurityLevel) {
-            if (array_search($serviceAccount->accountName, array_column($this->search(), 'accountName')) === false){
-                throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+            if ($account->getSecurityLevel() == $account::SECLEVEL_GENADMIN) {
+                if (!$serviceAccount->isAdmin) {
+                    throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+                }
+            }
+            else if ($account->getSecurityLevel() == $account::SECLEVEL_FUNCADMIN) {
+                $organization = $this->sdoFactory->read('organization/organization', $account->ownerOrgId);
+                $organizations = $this->organizationController->readDescendantOrg($organization->orgId);
+                $organizations[] = $organization;
+                $organizationsIds = [];
+                foreach ($organizations as $key => $organization) {
+                    $organizationsIds[] = (string) $organization->orgId;
+                }
+                if ($serviceAccount->isAdmin || !in_array($serviceAccount->ownerOrgId, $organizationsIds)){
+                    throw new \core\Exception\UnauthorizedException("You are not allowed to modify this service account");
+                }
             }
             $this->checkPrivilegesAccess($account, $serviceAccount);
         }

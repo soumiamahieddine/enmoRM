@@ -365,18 +365,30 @@ trait archiveEntryTrait
 
         foreach ($archives as $archive) {
             $archive = \laabs::castMessage($archive, 'recordsManagement/archive');
-            foreach ($archive->digitalResources as $digitalResource) {
-                $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
-
-                $fileContent = file_get_contents($filePath);
-                $digitalResource->handler = base64_encode($fileContent);
-                $digitalResource->size = filesize($filePath);
-            }
+            
+            $this->loadDigitalResourcesBatch($archive, $batchDirectory);
 
             $this->receive($archive);
         }
 
         return true;
+    }
+
+    protected function loadDigitalResourcesBatch($archive, $batchDirectory) {
+        if (isset($archive->digitalResources) && !empty($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
+    
+                $fileContent = file_get_contents($filePath);
+                $digitalResource->handler = base64_encode($fileContent);
+                $digitalResource->size = filesize($filePath);
+            }
+        }
+        if (isset($archive->contents) && !empty($archive->contents)) {
+            foreach ($archive->contents as $content) {
+                $this->loadDigitalResourcesBatch($content, $batchDirectory);
+            }
+        }
     }
 
     protected function checkintegrity($archive)
@@ -385,6 +397,9 @@ trait archiveEntryTrait
             return;
         }
         foreach ($archive->digitalResources as $resource) {
+            if (!in_array($resource->hashAlgorithm, ['sha3-224', 'sha3-256', 'sha3-384', 'sha3-512'])) {
+                $resource->hashAlgorithm = str_replace('-', '', $resource->hashAlgorithm);
+            }
             //Hash verification
             if ((isset($resource->hash) && !is_null($resource->hash))
                 && (isset($resource->hashAlgorithm) && !is_null($resource->hashAlgorithm))
@@ -394,13 +409,13 @@ trait archiveEntryTrait
                 if ($hashCalculated !== strtolower($resource->hash)) {
                     throw \laabs::newException("recordsManagement/invalidHashException", "Invalid hash.");
                 }
-            } elseif (!isset($resource->hash) && !isset($resource->hashAlgorithm)) {
+            } elseif (!isset($resource->hash) && (!isset($resource->hashAlgorithm) || empty($resource->hashAlgorithm))) {
                 continue;
             } else {
                 throw \laabs::newException("recordsManagement/missingHashException", "Missing hash.");
             }
 
-            //hash modification if hash algorithm different from² conf value
+            //hash modification if hash algorithm different from conf value
             $confHashAlgorithm = 'sha256';
             if (isset(\laabs::configuration('recordsManagement')['hashAlgorithm']) && !is_null(\laabs::configuration('recordsManagement')['hashAlgorithm'])) {
                 $confHashAlgorithm = \laabs::configuration('recordsManagement')['hashAlgorithm'];

@@ -438,6 +438,9 @@ class digitalResource
 
     public function checkHash($handler, $hash, $hashAlgorithm)
     {
+        if (!in_array($hashAlgorithm, ['sha3-224', 'sha3-256', 'sha3-384', 'sha3-512'])) {
+            $hashAlgorithm = str_replace('-', '', $hashAlgorithm);
+        }
         $hash_calculated = \laabs\hash_stream($hashAlgorithm, $handler);
 
         if ($hash_calculated !== strtolower($hash)) {
