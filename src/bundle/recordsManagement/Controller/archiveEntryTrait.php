@@ -365,18 +365,30 @@ trait archiveEntryTrait
 
         foreach ($archives as $archive) {
             $archive = \laabs::castMessage($archive, 'recordsManagement/archive');
-            foreach ($archive->digitalResources as $digitalResource) {
-                $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
-
-                $fileContent = file_get_contents($filePath);
-                $digitalResource->handler = base64_encode($fileContent);
-                $digitalResource->size = filesize($filePath);
-            }
+            
+            $this->loadDigitalResourcesBatch($archive, $batchDirectory);
 
             $this->receive($archive);
         }
 
         return true;
+    }
+
+    protected function loadDigitalResourcesBatch($archive, $batchDirectory) {
+        if (isset($archive->digitalResources) && !empty($archive->digitalResources)) {
+            foreach ($archive->digitalResources as $digitalResource) {
+                $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
+    
+                $fileContent = file_get_contents($filePath);
+                $digitalResource->handler = base64_encode($fileContent);
+                $digitalResource->size = filesize($filePath);
+            }
+        }
+        if (isset($archive->contents) && !empty($archive->contents)) {
+            foreach ($archive->contents as $content) {
+                $this->loadDigitalResourcesBatch($content, $batchDirectory);
+            }
+        }
     }
 
     protected function checkintegrity($archive)
