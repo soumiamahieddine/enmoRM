@@ -7,7 +7,7 @@ namespace core\Reflection;
 
 /**
  * Class Laabs Command
- * 
+ *
  * @extends \core\Reflection\Method
  */
 class UserCommand
@@ -131,7 +131,7 @@ class UserCommand
         if (isset($this->tags['return'])) {
             $this->view = strtok($this->tags['return'][0], " ");
         }
-        
+
         if (isset($this->tags['uses'])) {
             foreach ($this->tags['uses'] as $uses) {
                 preg_match('#(?<path>[^\s]+)\s*(?<name>\w+)?#', $uses, $service);
@@ -141,7 +141,7 @@ class UserCommand
                 } else {
                     $this->services[] = trim($service['path']);
                 }
-                
+
             }
         }
 
@@ -166,7 +166,7 @@ class UserCommand
             }
 
             $this->pattern = "#^" . str_replace("/", "\\/", implode('/', $parts)) . "$#i";
-        }   
+        }
 
     }
 
@@ -174,7 +174,7 @@ class UserCommand
      * Match a command with method and uri
      * @param string $method
      * @param string $uri
-     * 
+     *
      * @return object The command with variables
      */
     public function match($method='read', $uri='')
@@ -188,7 +188,7 @@ class UserCommand
         // Check empty uri
         if (!isset($this->pattern) && !empty($uri)) {
             return;
-        } 
+        }
 
         // Check uri VS path pattern
         if (isset($this->pattern) && !preg_match($this->pattern, $uri, $args)) {
@@ -202,7 +202,7 @@ class UserCommand
             array_shift($args);
 
             foreach ($args as $name => $value) {
-                if (!empty($name) && ctype_alpha($name[0])) {
+                if (!empty($name) && ctype_alpha($name)) {
                     $matched->variables[$name] = $value;
                 }
             }
@@ -213,17 +213,17 @@ class UserCommand
 
     /**
      * Get path
-     * 
+     *
      * @return string
      */
     public function getName()
     {
         return $this->userStory . LAABS_URI_SEPARATOR . $this->name;
-    } 
+    }
 
     /**
      * Get the declaring userStory, that can be a parent of the interface
-     * 
+     *
      * @return UserStory
      */
     public function getDeclaringUserStory()
@@ -233,12 +233,12 @@ class UserCommand
         $name = str_replace(LAABS_NS_SEPARATOR, LAABS_URI_SEPARATOR, substr($interface->name, strpos($interface->name, 'UserStory') + 10, -strlen(LAABS_INTERFACE)));
 
         return new \core\Reflection\UserStory($name, $interface, \laabs::presentation());
-    } 
+    }
 
     /**
      * Re route
      * @param string $qname
-     * 
+     *
      * @return command
      */
     public function reRoute($qname)
@@ -247,19 +247,19 @@ class UserCommand
         $userStory = \laabs\dirname($qname);
 
         $this->__construct(
-            $name, 
-            str_replace(LAABS_URI_SEPARATOR, LAABS_NS_SEPARATOR, $this->domain . LAABS_NS_SEPARATOR . LAABS_USER_STORY . LAABS_NS_SEPARATOR . $userStory) . LAABS_INTERFACE, 
+            $name,
+            str_replace(LAABS_URI_SEPARATOR, LAABS_NS_SEPARATOR, $this->domain . LAABS_NS_SEPARATOR . LAABS_USER_STORY . LAABS_NS_SEPARATOR . $userStory) . LAABS_INTERFACE,
             $userStory,
             $this->domain
         );
 
         return $this;
-    } 
+    }
 
     /**
      * Compose internal message from parsed request
      * @param array $requestArgs The request arguments
-     * 
+     *
      * @return array The user Story command arguments
      */
     public function getMessage(array $requestArgs = array())
@@ -293,7 +293,7 @@ class UserCommand
 
             $messageParts[$parameter->name] = $value;
         }
-       
+
         // Backward remove null values from array
         do {
             $arg = end($messageParts);

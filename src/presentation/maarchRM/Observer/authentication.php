@@ -186,9 +186,13 @@ class authentication
         // Get auth object from json, init data structures if necessary
         $this->getAccountAuth();
 
-        // Check request token equals persisted session token
-        $encryptedToken = $this->getEncryptedToken();
-        if (empty($encryptedToken) || $encryptedToken !== $this->accountAuth->token) {
+        // Check request session Id equals persisted session token id
+        if ($this->accountAuth->sessionId != $this->requestToken->sessionId) {
+            $this->accountAuth->sessionId = null;
+
+            $this->account->authentication = json_encode($this->accountAuth);
+            $this->sdoFactory->update($this->account, "auth/account");
+
             $this->redirectToLogin();
         }
 
@@ -239,6 +243,16 @@ class authentication
 
         $this->account = $this->sdoFactory->read('auth/account', $this->accountId);
 
+        $this->getAccountAuth();
+
+        // Generate new session id if not set, and store in user account
+        if (is_null($this->accountAuth->sessionId)) {
+            $this->accountAuth->sessionId = \laabs\uniqid();
+
+            $this->account->authentication = json_encode($this->accountAuth);
+            $this->sdoFactory->update($this->account, "auth/account");
+        }
+
         // Reset auth token to update expiration
         $authConfig = \laabs::configuration("auth");
         if (isset($authConfig['securityPolicy']['sessionTimeout'])) {
@@ -249,14 +263,8 @@ class authentication
 
         $responseToken = new \StdClass();
         $responseToken->accountId = $this->accountId;
-        $encodedToken = \laabs::setToken('AUTH', $responseToken, $sessionTimeout, false);
-
-        $this->getAccountAuth();
-
-        $this->accountAuth->token = $encodedToken;
-        $this->account->authentication = json_encode($this->accountAuth);
-
-        $this->sdoFactory->update($this->account, "auth/account");
+        $responseToken->sessionId = $this->accountAuth->sessionId;
+        \laabs::setToken('AUTH', $responseToken, $sessionTimeout, false);
     }
 
     /**
@@ -274,8 +282,8 @@ class authentication
         }
 
         // Create authentication object if not set
-        if (!isset($this->accountAuth->token) || !is_scalar($this->accountAuth->token)) {
-            $this->accountAuth->token = null;
+        if (!isset($this->accountAuth->sessionId) || !is_scalar($this->accountAuth->sessionId)) {
+            $this->accountAuth->sessionId = null;
         }
     }
 }
