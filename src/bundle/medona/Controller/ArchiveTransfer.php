@@ -1135,7 +1135,7 @@ class ArchiveTransfer extends abstractMessage
             'medona/message',
             implode(' and ', $queryParts),
             null,
-            false,
+            ">receptionDate",
             false,
             $maxResults
         );

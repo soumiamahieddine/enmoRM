@@ -212,7 +212,7 @@ class message
         );
 
         $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
-        return $this->sdoFactory->find('medona/message', $queryString, $queryParams, false, false, $maxResults);
+        return $this->sdoFactory->find('medona/message', $queryString, $queryParams, ">receptionDate", false, $maxResults);
     }
 
     /**
