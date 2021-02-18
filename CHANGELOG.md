@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Version 2.7.1
+- `Fixed` Récupération des derniers bordereaux importés dans la liste des transferts à traiter.
+
+## Version 2.7.1
 - `Fixed` Activation et désactivation des tâches dans le planificateur de tâches.
 - `Fixed` Calcul de la prochaine exécution mêmeen cas d'erreur dans le planificateur de tâches.
 - `Fixed` Affichage du compte de service en charge d'exécuter la tâche dans le planificateur de tâches.
