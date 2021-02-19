@@ -132,8 +132,7 @@
         var icon = $('<i/>').addClass('fa fa-spinner fa-spin');
         var submitButton = $('#messageImport_submit');
         var reference = $('#archivalProfile_form').find('input[name="reference"]').val();
-        var format = $('#archivalProfile_filesBrowser').val().split('.').pop();
-
+        var format = $('#archivalProfile_fileName').val().split('.').pop();
         submitButton.find('i').removeClass('fa-level-down').addClass('fa-spin fa-spinner');
 
         if (!reference) {
@@ -214,9 +213,10 @@
 
             $('#archivalProfile_fileFormat').html(format);
             $('#archivalProfile_fileName').html(file.name);
+            $('#archivalProfile_fileName').val(file.name);
 
             $('#archivalProfile_fileDate').addClass('hide');
-                
+
             $('#archivalProfile_XMLDropZone').addClass('hide');
             $('#archivalProfile_fileInfo').removeClass('hide');
 

@@ -425,6 +425,10 @@ class archivalProfile
      */
     public function uploadArchivalProfile($profileReference, $archivalProfile, $content, $format = 'rng')
     {
+        if (empty($format)) {
+            $format = 'rng';
+        }
+
         $profilesDirectory = $this->profilesDirectory;
         $profilesDirectory .= DIRECTORY_SEPARATOR.$profileReference.'.'.$format ;
         $content = base64_decode($content);
