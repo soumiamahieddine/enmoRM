@@ -32,6 +32,12 @@ msgstr "Date"
 msgid "With time"
 msgstr "Avec heure"
 
+msgid "array"
+msgstr "Tableau"
+
+msgid "object"
+msgstr "Objet"
+
 msgid "Today's date by default"
 msgstr "Date du jour par défaut"
 
@@ -139,3 +145,6 @@ msgstr "Non"
 
 msgid "Yes"
 msgstr "Oui"
+
+msgid "This field is defined on an extension and can not be managed in this panel. Contact the system operator to know more."
+msgstr "Ce champ est défini dans une configuration d'extension et ne peut être géré à partir de cet écran. Contactez l'opérateur du système pour en savoir plus."
