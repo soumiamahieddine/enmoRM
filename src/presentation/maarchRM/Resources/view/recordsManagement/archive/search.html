@@ -31,7 +31,6 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-
                                 <label class="col-sm-2 control-label" style="padding-top: 15px;">Add filter</label>
                                 <div class="col-sm-4">
                                     <table id="helperFilter" class="table table-condensed">
@@ -47,6 +46,10 @@
                                                 <td>
                                                     <button type="button" helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
                                                 </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-success" id="addHelper" title="Add"
+                                                        ><span class="fa fa-plus"></span></button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -55,7 +58,7 @@
                                     <li id="helperList" style="list-style: none">
                                         <label id="selectedHelper" class="hide control-label"></label>
                                         <input id="helperValueMin" type="hidden" class="form-control"/>
-                                        <input id="helperValueMax" type="hidden" class="form-control"/> 
+                                        <input id="helperValueMax" type="hidden" class="form-control"/>
                                         <select id="helperDropdown" name="service" class="hide form-control"></select>
                                         <input id="helperToggle" type="hidden" checked data-style="quick"/>
                                     </li>
@@ -109,9 +112,9 @@
     .padding-5 {
         padding-left: 5px;
     }
-    .quick .toggle-group { 
-        transition: none; 
-        -webkit-transition: none; 
+    .quick .toggle-group {
+        transition: none;
+        -webkit-transition: none;
     }
     .btn-toggleOn {
         color:#ffffff;
@@ -166,12 +169,12 @@
         if (helperToggle == 'checkbox') {
             helperType = 'boolean';
         }
-        
+
         $(this).closest('.helper').remove();
         $("#helperSelect").append($("<option></option>")
                     .attr("value", helperValue)
                     .attr("type", helperType)
-                    .text(helperValue)); 
+                    .text(helperValue));
     });
 
     $('#addHelper').on('click', function () {
@@ -179,7 +182,7 @@
         var helperText = $("#helperSelect :selected").text();
         var helperName = helper.attr("helperName");
         var helperType = helper.attr('type');
-     
+
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
             var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
@@ -204,7 +207,7 @@
 
                 if (dropdownList) {
                     var enumNames = helper.attr("data-enumName");
-                    // test = JSON.parse(enumNames); 
+                    // test = JSON.parse(enumNames);
                     var dropdownValues = [];
 
                     $.each(dropdownList, function(key, value)
@@ -273,8 +276,42 @@
 
             $("#helperSelect :selected").text();
             $("#helperSelect :selected").remove();
-        }     
+        }
         $('#helperSelect').prop('selectedIndex',0);
+    });
+
+    $("#helperList").on('click', ".deleteHelper", function() {
+            $(this).closest('tr').remove();
+    });
+
+    $('#addHelper').on('click', function () {
+
+        var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
+
+        var type = $('<td/>')
+            .text($("#helperType :selected").text())
+            .appendTo(tr);
+
+        var value = $('<td/>')
+            .addClass('helperContent')
+            .text($('#helperValue').val())
+            .appendTo(tr);
+
+        var buttonColumn = $('<td/>').appendTo(tr);
+
+        var button = $('<button/>')
+            .attr('title', 'supprimer')
+            .attr('type', 'button')
+            .addClass("btn btn-danger deleteHelper")
+            .appendTo(buttonColumn);
+
+        var icon = $('<i/>')
+            .addClass('fa fa-trash')
+            .appendTo(button);
+
+        $('#helperValue').val("");
+       // $('#addHelper').prop('disabled', true);
+        $('#helperType').prop('selectedIndex',0);
     });
 
     $('#archive_searchByIdentifier').on('click', function () {
@@ -387,7 +424,7 @@
             return field;
         });
     }
-    
+
     function searchFormSerialize() {
         var parameters = new Object();
 
@@ -488,7 +525,7 @@
                         parameters.description[name] = val1;
                     } else {
                         parameters.description[name] = parameters.description[name] +'&&' + val1;
-                    }   
+                    }
                 }
 
                 if (val2 !== '') {
