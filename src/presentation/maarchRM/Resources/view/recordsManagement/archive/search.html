@@ -1,10 +1,3 @@
-<!--#
-    This file is part of the registeredMail package.
-    (c) Maarch Alexis Ragot <alexis.ragot@maarch.org>
-
-    For the full copyright and license information, please view the LICENSE
-    file that was distributed with this source code.
-#-->
 <div id="contain" >
     <div class="container-fluid" data-translate-catalog="recordsManagement/messages">
         <div class="page-header">
@@ -32,6 +25,49 @@
                     <form class="form-horizontal" id="archive_searchForm">
                         <input type="hidden" name="maxResults" id="maxResults" value="[?merge maxResults ?]"/>
                         <?hinclude recordsManagement/archive/searchform.html ?>
+                    <!-- Helpers // Request constructor-->
+                        <div class="col-md-12">
+                            <hr style="height:1px;border:none;color:gray;background-color:gray;">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="col-sm-4 control-label" style="margin-top: 2%;">Constructeur de Requête</label>
+                                <div class="col-sm-4">
+                                    <table class="table table-condensed">
+                                        <thead>
+                                            <th>Helper Name</th>
+                                            <th>Valeur</th>
+                                        </thead>
+                                        <tbody id="helperList">
+                                            <tr>
+                                                <td>
+                                                    <select class="form-control" name="type" id="helperType"> <!-- TODO bind to descriptionScheme fields-->
+                                                        <option value=""></option>
+                                                        <option value="[?merge thesaurus.corpname ?]">Collectivité</option>
+                                                        <option value="[?merge thesaurus.famname ?]">Nom de famille</option>
+                                                        <option value="[?merge thesaurus.geogname ?]">Nom géographique</option>
+                                                        <option value="[?merge thesaurus.name ?]">Nom</option>
+                                                        <option value="[?merge thesaurus.occupation ?]">Fonction</option>
+                                                        <option value="[?merge thesaurus.persname ?]">Nom de personne</option>
+                                                        <option value="[?merge thesaurus.subject ?]">Mot-matière</option>
+                                                        <option value="[?merge thesaurus.genreform ?]">Type de document</option>
+                                                        <option value="[?merge thesaurus.function ?]">Activité</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <input type="text" id="helperValue" class="form-control"
+                                                        placeholder="Valeur" />
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-success" id="addHelper" title="Add"
+                                                        ><span class="fa fa-plus"></span></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         <br />
                         <div class="clearfix">
                             <div class="col-md-12">
@@ -95,6 +131,40 @@
         $(this).parent().find(".btn-info").removeClass('btn-info').addClass('btn-default').removeClass("active");
         $(this).removeClass("btn-default").addClass('btn-info');
     })
+
+    $("#helperList").on('click', ".deleteHelper", function() {
+            $(this).closest('tr').remove();
+    });
+
+    $('#addHelper').on('click', function () {
+
+        var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
+
+        var type = $('<td/>')
+            .text($("#helperType :selected").text())
+            .appendTo(tr);
+
+        var value = $('<td/>')
+            .addClass('helperContent')
+            .text($('#helperValue').val())
+            .appendTo(tr);
+
+        var buttonColumn = $('<td/>').appendTo(tr);
+
+        var button = $('<button/>')
+            .attr('title', 'supprimer')
+            .attr('type', 'button')
+            .addClass("btn btn-danger deleteHelper")
+            .appendTo(buttonColumn);
+
+        var icon = $('<i/>')
+            .addClass('fa fa-trash')
+            .appendTo(button);
+
+        $('#helperValue').val("");
+       // $('#addHelper').prop('disabled', true);
+        $('#helperType').prop('selectedIndex',0);
+    });
 
     $('#archive_searchByIdentifier').on('click', function () {
         if ($('#archive_archiveIdentifier').val().trim() == "") {
