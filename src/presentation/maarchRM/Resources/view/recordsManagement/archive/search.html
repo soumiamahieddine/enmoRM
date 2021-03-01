@@ -35,13 +35,13 @@
                                 <div class="col-sm-4">
                                     <table class="table table-condensed">
                                         <thead>
-                                            <th>Helper Name</th>
+                                            <th>Intitulé du champ</th>
                                             <th>Valeur</th>
                                         </thead>
                                         <tbody id="helperList">
                                             <tr>
                                                 <td>
-                                                    <select class="form-control" name="type" id="helperType"> <!-- TODO bind to descriptionScheme fields-->
+                                                    <select class="form-control" name="type" id="helperType"> <!-- TODO bind descriptionSchemes from config-->
                                                         <option value=""></option>
                                                         <option value="[?merge thesaurus.corpname ?]">Collectivité</option>
                                                         <option value="[?merge thesaurus.famname ?]">Nom de famille</option>
@@ -130,7 +130,48 @@
         }
         $(this).parent().find(".btn-info").removeClass('btn-info').addClass('btn-default').removeClass("active");
         $(this).removeClass("btn-default").addClass('btn-info');
-    })
+    });
+
+    $("#helperList").on('change' , function() {
+
+       var test = $('#helperValue').attr('type');
+       console.log(test);
+
+        switch ($('#helperValue').attr('type')) {
+            case 'array':
+                $('#helperValue').clone().attr('type','array').insertAfter('#helperValue').prev().remove();
+                break;
+
+            case 'object':
+                $('#helperValue').clone().attr('type','object').insertAfter('#helperValue').prev().remove();
+                break;
+
+            case 'text':
+            case 'string':
+                $('#helperValue').clone().attr('type','text').insertAfter('#helperValue').prev().remove();
+                break;
+
+            case 'name':
+                $('#helperValue').clone().attr('type','name').insertAfter('#helperValue').prev().remove();
+                break;
+
+            case 'number':
+                $('#helperValue').clone().attr('type','number').insertAfter('#helperValue').prev().remove();
+                break;
+
+            case 'date':
+                $('#helperValue').clone().attr('type','date').insertAfter('#helperValue').prev().remove();
+                break;
+
+            case 'boolean':
+                $('#helperValue').clone().attr('type','boolean').insertAfter('#helperValue').prev().remove();
+                break;
+
+            default:
+                console.log("Type "+ test.type +" of field "+ test.name +" is not managed");
+                return;
+        }
+    });
 
     $("#helperList").on('click', ".deleteHelper", function() {
             $(this).closest('tr').remove();
@@ -162,7 +203,6 @@
             .appendTo(button);
 
         $('#helperValue').val("");
-       // $('#addHelper').prop('disabled', true);
         $('#helperType').prop('selectedIndex',0);
     });
 
