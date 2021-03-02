@@ -41,7 +41,6 @@ interface CollectionInterface
      * @param  Collection/Collection $collection Collection Object
      *
      * @uses   Collection/Collection/update
-     * @return Collection/Collection/update
      *
      */
     public function updateCollection(object $collection);

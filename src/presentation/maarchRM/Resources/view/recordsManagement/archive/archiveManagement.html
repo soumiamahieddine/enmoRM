@@ -28,6 +28,7 @@
         <span id="errorEmptyNode">No archives selected.</span>
         <span id="errorWrongNodesSelection">This action is not relevant for the selection.</span>
         <span id="errorWrongNode">This action is not relevant for this archive.</span>
+        <span id="addedToCollection">Archive added to collection.</span>
     </div>
 </div>
 
@@ -52,20 +53,26 @@ $('#archiveList').on('click', '.viewArchive', function () {
 /* -- LIST ACTIONS -- */
 $('.multipleActionMenu').on('click', 'li', function() {
     var button = $(this);
-    var type = button.data('type');    
+    var type = button.data('type');
     var selection = ArchivesAction.getSelectedArchives(type);
 
     if (selection === false) {
         return;
     }
+    switch (type) {
+        case "checkHash":
+            ArchivesAction.checkHash(selection['ids'].join("&archiveIds[]="));
+            break;
+        case "addToCollection":
+            console.log(selection);
+            ArchivesAction.addToCollection();
+            break;
+        default:
+            var transaction = false;
+            $("#transaction").val() ? transaction = true : transaction = false;
 
-    if(type == "checkHash") {
-        ArchivesAction.checkHash(selection['ids'].join("&archiveIds[]="));
-    } else {
-        var transaction = false;
-        $("#transaction").val() ? transaction = true : transaction = false;
-
-        ModificationModal.loadMultiple(selection.selected, selection.relevant, selection.ids, selection.names,type, transaction);
+            ModificationModal.loadMultiple(selection.selected, selection.relevant, selection.ids, selection.names,type, transaction);
+            break;
     }
 });
 
@@ -76,13 +83,19 @@ $('#archiveList').on('click', '.actionMenu li', function() {
     var id = tr.attr('id');
     var name = tr.attr('name');
 
-    if(type == "checkHash") {
-        ArchivesAction.checkHash(id);
-    } else {
-        var transaction = false;
-        $("#transaction").val() ? transaction = true : transaction = false;
+    switch (type) {
+        case "checkHash":
+            ArchivesAction.checkHash(id);
+            break;
+        case "addToCollection":
+            ArchivesAction.addToCollection(id);
+            break;
+        default:
+            var transaction = false;
+            $("#transaction").val() ? transaction = true : transaction = false;
 
-        ModificationModal.load(id, name, type, transaction);
+            ModificationModal.load(id, name, type, transaction);
+            break;
     }
 });
 
@@ -97,7 +110,8 @@ var ArchivesAction = {
         checkHash            : ['preserved', 'frozen', 'restituable', 'disposable'],
         requestCommunication : ['preserved', 'frozen'],
         flagForRestitution   : ['preserved'],
-        flagForTransfer      : ['preserved']
+        flagForTransfer      : ['preserved'],
+        addToCollection      : ['preserved', 'frozen', 'restituable', 'disposable', 'transferable']
     },
 
     getSelectedArchives : function(type) {
@@ -167,6 +181,24 @@ var ArchivesAction = {
             success: function (response) {
                 $("#container_corruptedModal").html(response);
                 $("#corruptedModal").modal();
+            }
+        });
+    },
+
+    addToCollection: function(archives) {
+        var collection = JSON.parse($('#collection').val());
+        collection.archiveIds.push(archives);
+        var data = {};
+        data.collection = collection;
+        console.log(data);
+        $.ajax({
+            url: "/collection",
+            type: "PUT",
+            dataType: 'json',
+            contentType : 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                gritter.show($('#addedToCollection').html(), true);
             }
         });
     }

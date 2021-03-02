@@ -156,6 +156,7 @@ class archive
         $orgsByRegNumber = $orgController->orgList();
 
         $currentDate = \laabs::newDate();
+        $collection = \laabs::callService('Collection/Collection/readByUser');
         foreach ($archives as $archive) {
             $archive->finalDispositionDesc = $this->view->translator->getText(
                 $archive->finalDisposition,
@@ -201,6 +202,13 @@ class archive
                 $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
                 if ($communicationDelay->invert != 0) {
                     $archive->isCommunicable = '1';
+                }
+            }
+
+            $archive->isInUserCollection = false;
+            foreach ($collection->archiveIds as $collectedArchiveId) {
+                if ($collectedArchiveId == $archive->archiveId) {
+                    $archive->isInUserCollection = true;
                 }
             }
         }
@@ -256,6 +264,8 @@ class archive
         $this->view->setSource('archive', $archives);
         $this->view->setSource('transaction', $this->transaction);
         $this->view->setSource('packageSchemas', $packageSchemas);
+        $this->view->setSource('collection', $collection);
+
         $this->view->merge();
 
         return $this->view->saveHtml();

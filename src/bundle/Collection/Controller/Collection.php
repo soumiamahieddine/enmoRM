@@ -64,17 +64,21 @@ class Collection
     /**
      * Update Collection
      *
-     * @param  collection/collection $collection Collection Identifier
+     * @param  Collection/Collection $collection Collection Identifier
      *
-     * @return collection/collection Updated collection object
+     * @return Collection/Collection Updated collection object
      */
-    public function update(object $collection = null)
+    public function update(object $collection)
     {
+
         try {
             $this->readByCollection($collection->collectionId);
         } catch (Exception $e) {
             throw new \core\Exception\NotFoundException("Collection not found");
         }
+
+        $collection = \laabs::cast($collection, 'Collection/Collection');
+
 
         return $this->sdoFactory->update($collection, 'Collection/Collection');
     }
