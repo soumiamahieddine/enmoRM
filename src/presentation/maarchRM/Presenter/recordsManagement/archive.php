@@ -79,7 +79,7 @@ class archive
             $emptyRole = false;
             $ownerOriginatorOrgs = $this->getOwnerOriginatorsOrgs($currentService);
         }
-        $descriptionSchemes = \laabs::newController('recordsManagement/retentionRule');
+        $descriptionSchemeNames = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields');
         $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $retentionRules = $retentionRuleController->index();
 
@@ -105,7 +105,7 @@ class archive
         $this->view->setSource("profiles", $profiles);
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
         $this->view->setSource("deleteDescription", $deleteDescription);
-        $this->view->setSource("descriptionSchemes", $descriptionSchemes);
+        $this->view->setSource("descriptionScheme", $descriptionSchemeNames);
 
         $this->view->merge();
 
