@@ -47,8 +47,7 @@
                                                     <button type="button" helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-success" id="addHelper" title="Add"
-                                                        ><span class="fa fa-plus"></span></button>
+                                                    <button type="button" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -285,29 +284,32 @@
     });
 
     $('#addHelper').on('click', function () {
+        // ask cva if we need regexp for each type of field
+        if ($('#helperValue').val())
+        {
+            var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
-        var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
+            var type = $('<td/>')
+                .text($("#helperType :selected").text())
+                .appendTo(tr);
 
-        var type = $('<td/>')
-            .text($("#helperType :selected").text())
-            .appendTo(tr);
-
-        var value = $('<td/>')
+            var value = $('<td/>')
             .addClass('helperContent')
             .text($('#helperValue').val())
             .appendTo(tr);
 
-        var buttonColumn = $('<td/>').appendTo(tr);
+            var buttonColumn = $('<td/>').appendTo(tr);
 
-        var button = $('<button/>')
-            .attr('title', 'supprimer')
-            .attr('type', 'button')
-            .addClass("btn btn-danger deleteHelper")
-            .appendTo(buttonColumn);
+            var button = $('<button/>')
+                .attr('title', 'supprimer')
+                .attr('type', 'button')
+                .addClass("btn btn-danger deleteHelper")
+                .appendTo(buttonColumn);
 
-        var icon = $('<i/>')
-            .addClass('fa fa-trash')
-            .appendTo(button);
+            var icon = $('<i/>')
+                .addClass('fa fa-trash')
+                .appendTo(button);
+        }       
 
         $('#helperValue').val("");
         $('#helperType').prop('selectedIndex',0);
