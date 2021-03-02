@@ -34,7 +34,7 @@ interface CollectionInterface
      *
      * @action Collection/Collection/update
      */
-    public function update(object $collection = null);
+    public function update(object $collection);
 
     /**
      * Read user collection (current user if null)

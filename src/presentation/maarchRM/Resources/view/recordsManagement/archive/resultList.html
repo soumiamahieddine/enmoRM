@@ -3,6 +3,7 @@
     <h4><span>Your query returns too much results, only first results are displayed.</span></h4>
     <div class="panel panel-primary">
         <input type="hidden" id="transaction" value="[?merge transaction ?]" />
+        <input type="hidden" id="collection" value="[?merge collection.json() ?]" />
         <div class="panel-heading clearfix">
             <div class="pull-left">
                 <?merge hasReachMaxResults.not() ?>
