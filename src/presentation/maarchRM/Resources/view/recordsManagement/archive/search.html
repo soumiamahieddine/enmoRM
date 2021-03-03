@@ -281,22 +281,25 @@
 
     $("#helperList").on('click', ".deleteHelper", function() {
             $(this).closest('tr').remove();
+            var typeRemoved = $(this).closest('tr').find('.helperType').text();
+            $("#helperType").append(new Option(typeRemoved,typeRemoved));
     });
 
     $('#addHelper').on('click', function () {
-        // ask cva if we need regexp for each type of field
+        
         if ($('#helperValue').val())
         {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
             var type = $('<td/>')
+                .addClass('helperType')
                 .text($("#helperType :selected").text())
                 .appendTo(tr);
 
             var value = $('<td/>')
-            .addClass('helperContent')
-            .text($('#helperValue').val())
-            .appendTo(tr);
+                .addClass('helperContent')
+                .text($('#helperValue').val())
+                .appendTo(tr);
 
             var buttonColumn = $('<td/>').appendTo(tr);
 
@@ -309,9 +312,17 @@
             var icon = $('<i/>')
                 .addClass('fa fa-trash')
                 .appendTo(button);
-        }       
+        }  
+        else      
+        {
+            console.log("KO on " + $("#helperType :selected").text());
+            $('#helperType').prop('selectedIndex',0);
+            return;
+        }     
 
+        $("#helperType :selected").remove();
         $('#helperValue').val("");
+        $('#helperValue').attr('type', null);
         $('#helperType').prop('selectedIndex',0);
     });
 
