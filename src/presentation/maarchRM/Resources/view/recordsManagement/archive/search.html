@@ -25,18 +25,17 @@
                     <form class="form-horizontal" id="archive_searchForm">
                         <input type="hidden" name="maxResults" id="maxResults" value="[?merge maxResults ?]"/>
                         <?hinclude recordsManagement/archive/searchform.html ?>
-                    <!-- Helpers // Request constructor-->
+                    <!-- Helpers -->
                         <div class="col-md-12">
                             <hr style="height:1px;border:none;color:gray;background-color:gray;">
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label" style="margin-top: 2%;">Constructeur de Requête</label>
+                                <label class="col-sm-4 control-label" style="margin-top: 2%;">Critères supplémentaires</label>
                                 <div class="col-sm-4">
                                     <table class="table table-condensed">
                                         <thead>
                                             <th>Intitulé du champ</th>
-                                            <th>Valeur</th>
                                         </thead>
                                         <tbody id="helperList">
                                             <tr>
@@ -124,6 +123,7 @@
     });
 
     $("#helperList").on('change' , function() {
+
        var helper = $('#helperType').find("option:selected");
        var helperType = helper.attr('type');
 
@@ -158,29 +158,32 @@
                 break;
 
             default:
-                console.log("Type "+ helperType +" of field "+ helper.name +" is not managed");
+                console.log("Le type  "+ helperType +" du champ "+ helper.name +" n\'est pas géré");
                 return;
         }
     });
 
     $("#helperList").on('click', ".deleteHelper", function() {
             $(this).closest('tr').remove();
+            var typeRemoved = $(this).closest('tr').find('.helperType').text();
+            $("#helperType").append(new Option(typeRemoved,typeRemoved));
     });
 
     $('#addHelper').on('click', function () {
-        // ask cva if we need regexp for each type of field
+        
         if ($('#helperValue').val())
         {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
             var type = $('<td/>')
+                .addClass('helperType')
                 .text($("#helperType :selected").text())
                 .appendTo(tr);
 
             var value = $('<td/>')
-            .addClass('helperContent')
-            .text($('#helperValue').val())
-            .appendTo(tr);
+                .addClass('helperContent')
+                .text($('#helperValue').val())
+                .appendTo(tr);
 
             var buttonColumn = $('<td/>').appendTo(tr);
 
@@ -193,9 +196,17 @@
             var icon = $('<i/>')
                 .addClass('fa fa-trash')
                 .appendTo(button);
-        }       
+        }  
+        else      
+        {
+            console.log("KO on " + $("#helperType :selected").text());
+            $('#helperType').prop('selectedIndex',0);
+            return;
+        }     
 
+        $("#helperType :selected").remove();
         $('#helperValue').val("");
+        $('#helperValue').attr('type', null);
         $('#helperType').prop('selectedIndex',0);
     });
 
@@ -249,6 +260,7 @@
         $('#archive_searchForm').find('input[type="checkbox"][name!="hasParent"]').bootstrapToggle('off');
         $("#archive_searchForm").find('input.hasParent').parent().removeClass('btn-info').addClass('btn-default').removeClass("active");
         $("#archive_searchForm").find('input.hasParent[value!="2"]').click();
+        $('#archive_searchForm').find('.helper').empty();
         $('#originatorOrgInfo').hide();
 
         delete $("#archive_searchForm [name=depositStartDate]").data('datepicker').setDates();
