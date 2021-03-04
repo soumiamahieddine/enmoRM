@@ -1319,3 +1319,6 @@ msgstr "Référentiel des personnes et organisations"
 
 msgid "Object"
 msgstr "Objet"
+
+msgid "You must select a description field and set corresponding value."
+msgstr "Veuillez choisir un champ et renseigner une valeur associée."

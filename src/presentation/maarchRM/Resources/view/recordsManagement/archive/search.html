@@ -50,8 +50,8 @@
                                                     <input type="text" id="helperValueMin" class="form-control" placeholder="Valeur" />
 
                                                 </td>
-                                                <td>
-                                                    <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
+                                                <td class="hide">
+                                                    <input id="helperValueMax" class="form-control" placeholder="Valeur"/>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
@@ -59,6 +59,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <span id="helperError" class="hide alert-warning">You must select a description field and set corresponding value.</span>
                                 </div>
                             </div>
                         </div>
@@ -130,6 +131,7 @@
 
        var helper = $('#helperType').find("option:selected");
        var helperType = helper.attr('type');
+     
        // Some browser won't accept to change type of input so we clone / remove whole div as workaround
 
         switch (helperType) {
@@ -156,12 +158,13 @@
 
             case 'number':
                 $('#helperValueMin').clone().attr('type','number').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').parent().removeClass('hide');
                 $('#helperValueMax').clone().attr('type','number').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'date':
-                
                 $('#helperValueMin').clone().attr('type','date').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').parent().removeClass('hide');
                 $('#helperValueMax').clone().attr('type','date').insertAfter('#helperValueMax').prev().remove();
                 break;
 
@@ -172,7 +175,8 @@
 
             default:
                 console.log("Le type  "+ helperType +" du champ "+ helper.name +" n\'est pas géré");
-                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type',null).insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type',null).insertAfter('#helperValueMax').prev().remove();
                 return;
         }
     });
@@ -186,8 +190,10 @@
     $('#addHelper').on('click', function () {
         var minimum = $('#helperValueMin').val();
         var maximum = $('#helperValueMax').val();
+        var helper = $("#helperType :selected").text();
+        $('#helperError').addClass('hide');
 
-        if (minimum)
+        if (minimum && helper)
         {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
@@ -220,19 +226,17 @@
             var icon = $('<i/>')
                 .addClass('fa fa-trash')
                 .appendTo(button);
+
+            $("#helperType :selected").remove();
         }  
         else      
         {
-            console.log("KO on " + $("#helperType :selected").text());
-            $('#helperType').prop('selectedIndex',0);
-            return;
+            $('#helperError').removeClass('hide');
         }     
-
-        $("#helperType :selected").remove();
-        $('#helperValueMin').val("");
-        $('#helperValueMax').val("");
-        $('#helperValueMin').attr('type', null);
-        $('#helperValueMax').parent().remove();
+        // reset helper dropdown & values
+        $('#helperValueMin').val("").prop('type',null);
+        $('#helperValueMax').val("").prop('type',null);
+        $('#helperValueMax').parent().addClass('hide');
         $('#helperType').prop('selectedIndex',0);
     });
 
