@@ -286,8 +286,10 @@
     });
 
     $('#addHelper').on('click', function () {
-        
-        if ($('#helperValue').val())
+        var minimum = $('#helperValueMin').val();
+        var maximum = $('#helperValueMax').val();
+
+        if (minimum)
         {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
@@ -298,8 +300,16 @@
 
             var value = $('<td/>')
                 .addClass('helperContent')
-                .text($('#helperValue').val())
+                .text($('#helperValueMin').val())
                 .appendTo(tr);
+
+            if (maximum)
+            {
+                var value2 = $('<td/>')
+                .addClass('helperContent')
+                .text($('#helperValueMax').val())
+                .appendTo(tr);
+            }
 
             var buttonColumn = $('<td/>').appendTo(tr);
 
@@ -321,8 +331,10 @@
         }     
 
         $("#helperType :selected").remove();
-        $('#helperValue').val("");
-        $('#helperValue').attr('type', null);
+        $('#helperValueMin').val("");
+        $('#helperValueMax').val("");
+        $('#helperValueMin').attr('type', null);
+        $('#helperValueMax').parent().remove();
         $('#helperType').prop('selectedIndex',0);
     });
 
