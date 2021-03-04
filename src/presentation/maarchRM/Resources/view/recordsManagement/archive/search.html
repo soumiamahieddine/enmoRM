@@ -47,7 +47,11 @@
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <input type="text" id="helperValue" class="form-control" placeholder="Valeur" />
+                                                    <input type="text" id="helperValueMin" class="form-control" placeholder="Valeur" />
+
+                                                </td>
+                                                <td>
+                                                    <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
@@ -126,39 +130,49 @@
 
        var helper = $('#helperType').find("option:selected");
        var helperType = helper.attr('type');
+       // Some browser won't accept to change type of input so we clone / remove whole div as workaround
 
         switch (helperType) {
             case 'array':
-                $('#helperValue').clone().attr('type','array').insertAfter('#helperValue').prev().remove();
+                $('#helperValueMin').clone().attr('type','array').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'object':
-                $('#helperValue').clone().attr('type','object').insertAfter('#helperValue').prev().remove();
+                $('#helperValueMin').clone().attr('type','object').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'text':
             case 'string':
-                $('#helperValue').clone().attr('type','text').insertAfter('#helperValue').prev().remove();
+                $('#helperValueMin').clone().attr('type','text').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'name':
-                $('#helperValue').clone().attr('type','name').insertAfter('#helperValue').prev().remove();
+                $('#helperValueMin').clone().attr('type','name').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'number':
-                $('#helperValue').clone().attr('type','number').insertAfter('#helperValue').prev().remove();
+                $('#helperValueMin').clone().attr('type','number').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','number').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'date':
-                $('#helperValue').clone().attr('type','date').insertAfter('#helperValue').prev().remove();
+                
+                $('#helperValueMin').clone().attr('type','date').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','date').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             case 'boolean':
-                $('#helperValue').clone().attr('type','boolean').insertAfter('#helperValue').prev().remove();
+                $('#helperValueMin').clone().attr('type','boolean').insertAfter('#helperValueMin').prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
                 break;
 
             default:
                 console.log("Le type  "+ helperType +" du champ "+ helper.name +" n\'est pas géré");
+                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
                 return;
         }
     });
@@ -170,8 +184,10 @@
     });
 
     $('#addHelper').on('click', function () {
-        
-        if ($('#helperValue').val())
+        var minimum = $('#helperValueMin').val();
+        var maximum = $('#helperValueMax').val();
+
+        if (minimum)
         {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
@@ -182,8 +198,16 @@
 
             var value = $('<td/>')
                 .addClass('helperContent')
-                .text($('#helperValue').val())
+                .text($('#helperValueMin').val())
                 .appendTo(tr);
+
+            if (maximum)
+            {
+                var value2 = $('<td/>')
+                .addClass('helperContent')
+                .text($('#helperValueMax').val())
+                .appendTo(tr);
+            }
 
             var buttonColumn = $('<td/>').appendTo(tr);
 
@@ -205,8 +229,10 @@
         }     
 
         $("#helperType :selected").remove();
-        $('#helperValue').val("");
-        $('#helperValue').attr('type', null);
+        $('#helperValueMin').val("");
+        $('#helperValueMax').val("");
+        $('#helperValueMin').attr('type', null);
+        $('#helperValueMax').parent().remove();
         $('#helperType').prop('selectedIndex',0);
     });
 
