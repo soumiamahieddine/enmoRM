@@ -52,6 +52,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <span id="helperError" class="hide alert-warning">You must select a description field and set corresponding value.</span>
                                 </div>
                                 <ul class="col-sm-6">
                                     <li id="helperList" style="list-style: none">
@@ -288,8 +289,10 @@
     $('#addHelper').on('click', function () {
         var minimum = $('#helperValueMin').val();
         var maximum = $('#helperValueMax').val();
+        var helper = $("#helperType :selected").text();
+        $('#helperError').addClass('hide');
 
-        if (minimum)
+        if (minimum && helper)
         {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
@@ -322,19 +325,17 @@
             var icon = $('<i/>')
                 .addClass('fa fa-trash')
                 .appendTo(button);
+
+            $("#helperType :selected").remove();
         }  
         else      
         {
-            console.log("KO on " + $("#helperType :selected").text());
-            $('#helperType').prop('selectedIndex',0);
-            return;
+            $('#helperError').removeClass('hide');
         }     
-
-        $("#helperType :selected").remove();
-        $('#helperValueMin').val("");
-        $('#helperValueMax').val("");
-        $('#helperValueMin').attr('type', null);
-        $('#helperValueMax').parent().remove();
+        // reset helper dropdown & values
+        $('#helperValueMin').val("").prop('type',null);
+        $('#helperValueMax').val("").prop('type',null);
+        $('#helperValueMax').parent().addClass('hide');
         $('#helperType').prop('selectedIndex',0);
     });
 
