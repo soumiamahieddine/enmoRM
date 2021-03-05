@@ -1331,3 +1331,6 @@ msgstr "Supprimer tous les favoris"
 
 msgid "You must select a description field and set corresponding value."
 msgstr "Veuillez choisir un champ et renseigner une valeur associée."
+
+msgid "Additional fields"
+msgstr "Critères supplémentaires"
