@@ -287,12 +287,12 @@
     });
 
     $('#addHelper').on('click', function () {
-        var minimum = $('#helperValueMin').val();
-        var maximum = $('#helperValueMax').val();
-        var helper = $("#helperType :selected").text();
         $('#helperError').addClass('hide');
+        var min = $('#helperValueMin').val();
+        var max = $('#helperValueMax').val();
+        var helper = $("#helperType :selected").text();
 
-        if (minimum && helper) {
+        if (min && helper) {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
             var type = $('<td/>')
@@ -305,7 +305,7 @@
                 .text($('#helperValueMin').val())
                 .appendTo(tr);
 
-            if (maximum) {
+            if (max) {
                 var value2 = $('<td/>')
                 .addClass('helperContent')
                 .text($('#helperValueMax').val())
@@ -334,11 +334,11 @@
         }  
         else {
             $('#helperError').removeClass('hide');
+            return;
         }     
-        // reset helper dropdown & values
+
         $('#helperValueMin').val("").prop('type',null);
-        $('#helperValueMax').val("").prop('type',null);
-        $('#helperValueMax').parent().addClass('hide');
+        $('#helperValueMax').val("").prop('type','hidden');
         $('#helperType').prop('selectedIndex',0);
     });
 
