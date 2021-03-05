@@ -193,8 +193,7 @@
         var helper = $("#helperType :selected").text();
         $('#helperError').addClass('hide');
 
-        if (minimum && helper)
-        {
+        if (minimum && helper) {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
             var type = $('<td/>')
@@ -207,11 +206,16 @@
                 .text($('#helperValueMin').val())
                 .appendTo(tr);
 
-            if (maximum)
-            {
+            if (maximum) {
                 var value2 = $('<td/>')
                 .addClass('helperContent')
                 .text($('#helperValueMax').val())
+                .appendTo(tr);
+            }
+            else {
+                var value2 = $('<td/>')
+                .addClass('emptyContent')
+                .text('')
                 .appendTo(tr);
             }
 
@@ -229,8 +233,7 @@
 
             $("#helperType :selected").remove();
         }  
-        else      
-        {
+        else {
             $('#helperError').removeClass('hide');
         }     
         // reset helper dropdown & values
