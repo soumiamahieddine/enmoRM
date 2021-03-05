@@ -31,11 +31,11 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label" style="margin-top: 2%;">Critères supplémentaires</label>
+                                <label class="col-sm-4 control-label" style="margin-top: 2%;">Additional fields</label>
                                 <div class="col-sm-4">
                                     <table class="table table-condensed">
                                         <thead>
-                                            <th>Intitulé du champ</th>
+                                            <th>Title</th>
                                         </thead>
                                         <tbody id="helperList">
                                             <tr>
@@ -48,10 +48,9 @@
                                                 </td>
                                                 <td>
                                                     <input type="text" id="helperValueMin" class="form-control" placeholder="Valeur" />
-
                                                 </td>
-                                                <td class="hide">
-                                                    <input id="helperValueMax" class="form-control" placeholder="Valeur"/>
+                                                <td>
+                                                    <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
@@ -132,7 +131,7 @@
        var helper = $('#helperType').find("option:selected");
        var helperType = helper.attr('type');
      
-       // Some browser won't accept to change type of input so we clone / remove whole div as workaround
+       // Some browser won't allow to change input type
 
         switch (helperType) {
             case 'array':
@@ -188,12 +187,12 @@
     });
 
     $('#addHelper').on('click', function () {
-        var minimum = $('#helperValueMin').val();
-        var maximum = $('#helperValueMax').val();
-        var helper = $("#helperType :selected").text();
         $('#helperError').addClass('hide');
+        var min = $('#helperValueMin').val();
+        var max = $('#helperValueMax').val();
+        var helper = $("#helperType :selected").text();
 
-        if (minimum && helper) {
+        if (min && helper) {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
 
             var type = $('<td/>')
@@ -206,7 +205,7 @@
                 .text($('#helperValueMin').val())
                 .appendTo(tr);
 
-            if (maximum) {
+            if (max) {
                 var value2 = $('<td/>')
                 .addClass('helperContent')
                 .text($('#helperValueMax').val())
@@ -235,11 +234,11 @@
         }  
         else {
             $('#helperError').removeClass('hide');
+            return;
         }     
-        // reset helper dropdown & values
+
         $('#helperValueMin').val("").prop('type',null);
-        $('#helperValueMax').val("").prop('type',null);
-        $('#helperValueMax').parent().addClass('hide');
+        $('#helperValueMax').val("").prop('type','hidden');
         $('#helperType').prop('selectedIndex',0);
     });
 
