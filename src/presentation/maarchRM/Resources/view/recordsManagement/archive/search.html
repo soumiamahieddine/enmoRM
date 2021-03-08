@@ -52,7 +52,14 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <span id="helperError" class="hide alert-warning">You must select a description field and set corresponding value.</span>
+                                    <table class="table table-condensed">
+                                        <tbody id="helperList">
+                                            <input type="hidden" id="selectedHelper" class="form-control" disabled />
+                                            <input type="hidden" id="helperValueMin" class="form-control" placeholder="Valeur" />
+                                            <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
+                                        </tbody>
+                                    </table>
+                                    <span id="helperError" class="hide alert-warning">You must select the type of additional description field to add</span>
                                 </div>
                                 <ul class="col-sm-6">
                                     <li id="helperList" style="list-style: none">
@@ -330,16 +337,15 @@
                 .addClass('fa fa-trash')
                 .appendTo(button);
 
-            $("#helperType :selected").remove();
-        }  
+            $("#helperSelect :selected").text();
+            $("#helperSelect :selected").remove();
+
+        }     
         else {
             $('#helperError').removeClass('hide');
-            return;
-        }     
+        }
 
-        $('#helperValueMin').val("").prop('type',null);
-        $('#helperValueMax').val("").prop('type','hidden');
-        $('#helperType').prop('selectedIndex',0);
+        $('#helperSelect').prop('selectedIndex',0);
     });
 
     $('#archive_searchByIdentifier').on('click', function () {
@@ -481,101 +487,6 @@
         if (hasParent.length == 1)
                 parameters.hasParent = hasParent[0];
 
-        parameters.description = [];
-
-        $('#helperList').find('.helper').each(function() {
-            var val1 = $(this).find('#helperValueMin').val() ? $(this).find('#helperValueMin').val() : $(this).find('#helperToggle').val();
-            var val2 = $(this).find('#helperValueMax').val();
-            var type = $(this).find('#helperValueMin').attr('type') ? $(this).find('#helperValueMin').attr('type') : $(this).find('#helperToggle').attr('type');
-            var name = $(this).find('#helperValueMin').attr('name') ? $(this).find('#helperValueMin').attr('name') : $(this).find('#helperToggle').attr('name');
-
-            // if enumeration / dropdownlist is filled
-            if ($(this).find('#helperDropdown option:selected').text()) {
-                val1 = $(this).find('#helperDropdown option:selected').text();
-                type = 'select';
-                name = $(this).find('#helperDropdown').attr('name');
-            }
-
-            switch (type) {
-
-                case 'text' :
-                    if (val1 !== '') {
-                        parameters.description[name] = name+'="'+val1+'"';
-                    }
-                    break;
-
-                case 'select':
-                    // keyword enum
-                    if (val1 !== '') {
-                        parameters.description[name] = name+'="'+val1+'"';
-                    }
-                    break;
-
-                case 'checkbox':
-                case 'boolean' :
-                    // format boolean
-                    val1 = $(this).find('#helperToggle').val() == 'on' ? '1' : '0';
-                    parameters.description[name] = name+'='+ val1;
-                    break;
-
-                case 'date':
-                    // format dates
-                    if (val1 !== undefined) {
-                        var operation = ($(this).find('#helperValueMin').attr('data-range') == 'start') ? ">=" : "<=";
-                        val1 = name + operation + "'" + val1 + "'";
-
-                        // Fill start and end values
-                        if (parameters.description[name] == undefined) {
-                            parameters.description[name] = val1;
-                        } else {
-                            parameters.description[name] = parameters.description[name] +'&&'+val1;
-                        }
-                    }
-                    if (val2 !== '') {
-                        var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
-                        val2 = name + operation + "'" + val2 + "'";
-
-                        // Fill start and end values
-                        if (parameters.description[name] == undefined) {
-                            parameters.description[name] = val2;
-                        } else {
-                            parameters.description[name] = parameters.description[name] +'&&'+val2;
-                        }
-                    }
-                    break;
-
-                case 'number':
-                if (val1 !== '') {
-                    var operation = ($(this).find('#helperValueMin').attr('data-range') == 'start') ? ">=" : "<=";
-                    val1 = name + operation + "'" + val1 + "'";
-
-                    if (parameters.description[name] == undefined) {
-                        parameters.description[name] = val1;
-                    } else {
-                        parameters.description[name] = parameters.description[name] +'&&' + val1;
-                    }
-                }
-
-                if (val2 !== '') {
-                    var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
-                    val2 = name + operation + "'" + val2 + "'";
-
-                    if (parameters.description[name] == undefined) {
-                        parameters.description[name] = val2;
-                    } else {
-                        parameters.description[name] = parameters.description[name] +'&&'+val2;
-                    }
-                }
-                break;
-            }
-        });
-
-        var arr = [];
-        for (name in parameters.description) {
-            arr.push(parameters.description[name]);
-        }
-
-        parameters.description = arr.join(' && ');
         parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
