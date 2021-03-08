@@ -32,25 +32,19 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label class="col-sm-4 control-label" style="margin-top: 2%;">Additional fields</label>
-                                <div class="col-sm-4">
+                                <div class="col-md-4">
                                     <table class="table table-condensed">
                                         <thead>
                                             <th>Title</th>
                                         </thead>
-                                        <tbody id="helperList">
+                                        <tbody>
                                             <tr>
                                                 <td>
-                                                    <select class="form-control" name="type" id="helperType">
+                                                    <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
                                                         <?merge descriptionScheme ?>
                                                         <option type="[?merge .type ?]" value="[?merge .name ?]"><?merge .name ?></option>
                                                     </select>
-                                                </td>
-                                                <td>
-                                                    <input type="text" id="helperValueMin" class="form-control" placeholder="Valeur" />
-                                                </td>
-                                                <td>
-                                                    <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
@@ -58,7 +52,14 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <span id="helperError" class="hide alert-warning">You must select a description field and set corresponding value.</span>
+                                    <table class="table table-condensed">
+                                        <tbody id="helperList">
+                                            <input type="hidden" id="selectedHelper" class="form-control" disabled />
+                                            <input type="hidden" id="helperValueMin" class="form-control" placeholder="Valeur" />
+                                            <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
+                                        </tbody>
+                                    </table>
+                                    <span id="helperError" class="hide alert-warning">You must select the type of additional description field to add</span>
                                 </div>
                             </div>
                         </div>
@@ -126,97 +127,75 @@
         $(this).removeClass("btn-default").addClass('btn-info');
     });
 
-    $("#helperList").on('change' , function() {
+    $("#helperList").on('click', ".deleteHelper", function() {
+        var helperValue = $(this).closest('tr').find('#selectedHelper').val();
+        var helperType = $(this).closest('tr').find('#helperValueMin').attr('type');
+        console.log(helperType);
+        $(this).closest('tr').remove();
+        $("#helperSelect").append($("<option></option>")
+                    .attr("value", helperValue)
+                    .attr("type", helperType)
+                    .text(helperValue)); 
 
-       var helper = $('#helperType').find("option:selected");
-       var helperType = helper.attr('type');
+    });
+
+    $('#addHelper').on('click', function () {
+
+        var helperText = $("#helperSelect :selected").text();
+        var helper = $('#helperSelect').find("option:selected");
+        var helperType = helper.attr('type');
+        $('#helperError').addClass('hide');
      
-       // Some browser won't allow to change input type
+       // Some browser won't allow to change input type => workaround we clone input & change type + remove previous field
+        if (helperText) {
+            var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
+            var selectedHelperType = $('<td/>').appendTo(tr);
+            $('#selectedHelper').clone().attr('type','text').val(helperText).appendTo(selectedHelperType).prev().remove();
+            // Todo find attributes / class to display same td size
+            var helperMin = $('<td/>').addClass("col").appendTo(tr);
+            var helperMax = $('<td/>').addClass("col").appendTo(tr);
 
-        switch (helperType) {
+            switch (helperType) {
             case 'array':
-                $('#helperValueMin').clone().attr('type','array').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','array').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'object':
-                $('#helperValueMin').clone().attr('type','object').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','object').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'text':
             case 'string':
-                $('#helperValueMin').clone().attr('type','text').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'name':
-                $('#helperValueMin').clone().attr('type','name').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','name').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'number':
-                $('#helperValueMin').clone().attr('type','number').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').parent().removeClass('hide');
-                $('#helperValueMax').clone().attr('type','number').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','number').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','number').appendTo(helperMax).prev().remove();
                 break;
 
             case 'date':
-                $('#helperValueMin').clone().attr('type','date').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').parent().removeClass('hide');
-                $('#helperValueMax').clone().attr('type','date').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','date').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','date').appendTo(helperMax).prev().remove();
                 break;
 
             case 'boolean':
-                $('#helperValueMin').clone().attr('type','boolean').insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').insertAfter('#helperValueMax').prev().remove();
+                $('#helperValueMin').clone().attr('type','boolean').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             default:
-                console.log("Le type  "+ helperType +" du champ "+ helper.name +" n\'est pas géré");
-                $('#helperValueMin').clone().attr('type',null).insertAfter('#helperValueMin').prev().remove();
-                $('#helperValueMax').clone().attr('type',null).insertAfter('#helperValueMax').prev().remove();
+                $('#helperError').removeClass('hide');
                 return;
         }
-    });
-
-    $("#helperList").on('click', ".deleteHelper", function() {
-            $(this).closest('tr').remove();
-            var typeRemoved = $(this).closest('tr').find('.helperType').text();
-            $("#helperType").append(new Option(typeRemoved,typeRemoved));
-    });
-
-    $('#addHelper').on('click', function () {
-        $('#helperError').addClass('hide');
-        var min = $('#helperValueMin').val();
-        var max = $('#helperValueMax').val();
-        var helper = $("#helperType :selected").text();
-
-        if (min && helper) {
-            var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
-
-            var type = $('<td/>')
-                .addClass('helperType')
-                .text($("#helperType :selected").text())
-                .appendTo(tr);
-
-            var value = $('<td/>')
-                .addClass('helperContent')
-                .text($('#helperValueMin').val())
-                .appendTo(tr);
-
-            if (max) {
-                var value2 = $('<td/>')
-                .addClass('helperContent')
-                .text($('#helperValueMax').val())
-                .appendTo(tr);
-            }
-            else {
-                var value2 = $('<td/>')
-                .addClass('emptyContent')
-                .text('')
-                .appendTo(tr);
-            }
 
             var buttonColumn = $('<td/>').appendTo(tr);
 
@@ -230,16 +209,15 @@
                 .addClass('fa fa-trash')
                 .appendTo(button);
 
-            $("#helperType :selected").remove();
-        }  
+            $("#helperSelect :selected").text();
+            $("#helperSelect :selected").remove();
+
+        }     
         else {
             $('#helperError').removeClass('hide');
-            return;
-        }     
+        }
 
-        $('#helperValueMin').val("").prop('type',null);
-        $('#helperValueMax').val("").prop('type','hidden');
-        $('#helperType').prop('selectedIndex',0);
+        $('#helperSelect').prop('selectedIndex',0);
     });
 
     $('#archive_searchByIdentifier').on('click', function () {
@@ -331,6 +309,7 @@
         if (hasParent.length == 1)
                 parameters.hasParent = hasParent[0];
 
+     //   var helperCount = $('#archive_searchForm').find('.helperContent').length;
         parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
