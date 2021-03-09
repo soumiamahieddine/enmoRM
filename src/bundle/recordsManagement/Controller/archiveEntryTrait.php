@@ -20,7 +20,8 @@
 
 namespace bundle\recordsManagement\Controller;
 
-use function laabs\hash_stream;
+use function laabs\hash_stream,
+            archiveAccessTrait;
 
 /**
  * Archive entry controller
@@ -78,6 +79,7 @@ trait archiveEntryTrait
      */
     public function receive($archive, $zipContainer = false)
     {
+        
         if ($zipContainer) {
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
             $zipResource = $archive->digitalResources[0];
@@ -780,6 +782,18 @@ trait archiveEntryTrait
     }
 
     /**
+     * Check a parentArchive retention rule
+     *
+     * @param recordsManagement/archive $archive      The archive to receive
+     */
+    public function checkRetentionRule($archive) {
+        if($this->archivalProfileController->getByReference($archive->archivalProfileReference)) {
+            $archive->retentionStartDate = \laabs::newTimestamp();
+            $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
+        }
+    }
+
+    /**
      * Deposit a new archive
      *
      * @param recordsManagement/archive $archive The archive to deposit
@@ -850,6 +864,7 @@ trait archiveEntryTrait
             if (!empty($archive->parentArchiveId)) {
                 $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
                 $parentArchive->lastModificationDate = \laabs::newTimestamp();
+                $this->checkRetentionRule($parentArchive);
                 $this->sdoFactory->update($parentArchive, 'recordsManagement/archive');
             }
         }
