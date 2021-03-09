@@ -52,6 +52,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "descriptionSchema" text,
   "descriptionClass" text,
   "retentionStartDate" text,
+  "isRetentionLastDeposit" boolean,
   "retentionRuleCode" text ,
   "description" text,
   "accessRuleCode" text,

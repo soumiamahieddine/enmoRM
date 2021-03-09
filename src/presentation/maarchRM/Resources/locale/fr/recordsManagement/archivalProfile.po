@@ -274,3 +274,6 @@ msgstr "Lecture seule"
 
 msgid "View in the list"
 msgstr "Voir dans la liste"
+
+msgid "Update when an item is added"
+msgstr "Mettre à jour au versement d'une pièce"
