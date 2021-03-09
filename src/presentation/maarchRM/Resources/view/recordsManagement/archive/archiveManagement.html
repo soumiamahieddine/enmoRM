@@ -29,6 +29,7 @@
         <span id="errorWrongNodesSelection">This action is not relevant for the selection.</span>
         <span id="errorWrongNode">This action is not relevant for this archive.</span>
         <span id="addedToCollection">Archive added to collection.</span>
+        <span id="removedFromCollection">Archive removed from collection.</span>
     </div>
 </div>
 
@@ -185,12 +186,22 @@ var ArchivesAction = {
         });
     },
 
-    addToCollection: function(archives) {
+    updateCollection: function(archives, isInUserCollection, htmlElement, collectionHtmlElement) {
         var collection = JSON.parse($('#collection').val());
-        collection.archiveIds.push(archives);
+        if (collection.archiveIds === null) {
+            collection.archiveIds = [];
+        }
+
+        if (isInUserCollection) {
+            // remove archive from collection
+            // not supported for chrome < 47, firefox < 43, safari <9, edge < 14 (meaning before december 2015)
+            collection.archiveIds = collection.archiveIds.filter(item => !archives.includes(item));
+        } else {
+            collection.archiveIds.push(archives);
+        }
         var data = {};
         data.collection = collection;
-        console.log(data);
+
         $.ajax({
             url: "/collection",
             type: "PUT",
@@ -198,10 +209,30 @@ var ArchivesAction = {
             contentType : 'application/json',
             data: JSON.stringify(data),
             success: function (response) {
-                gritter.show($('#addedToCollection').html(), true);
+                if (isInUserCollection) {
+                    gritter.show($('#removedFromCollection').html(), true);
+                } else {
+                    gritter.show($('#addedToCollection').html(), true);
+                }
+                $('#collection').val($('#collection').val());
+                htmlElement.classList.toggle('fa-star-o');
+                htmlElement.classList.toggle('fa-star');
+                htmlElement.classList.toggle('yellow');
+                collectionHtmlElement.attr('data-isinusercollection', !isInUserCollection);
+            },
+            error: function (response) {
+                return false;
             }
         });
     }
 }
 
+    $('.collection').on('click', function() {
+        var td = $(this.closest('td'));
+        var tr = $(this.closest('tr'));
+        var archiveId = tr.attr('id');
+        //casting string to boolean
+        var isInUserCollection = (td.attr('data-isinusercollection') == 'true');
+        ArchivesAction.updateCollection(archiveId, isInUserCollection, this, td);
+    });
 </script>

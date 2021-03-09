@@ -27,38 +27,31 @@ namespace presentation\maarchRM\Presenter\Collection;
  * @package Collection
  * @author  Jérôme Boucher <jerome.boucher@maarch.com>
  */
-class Collection
+class Collection extends \presentation\maarchRM\Presenter\recordsManagement\archive
 {
-    public $view;
-
-    protected $json;
-
-    protected $translator;
 
     /**
-     * Constuctor
-     * @param \dependency\html\Document                    $view       The view
-     * @param \dependency\json\JsonObject                  $json       The json base object
-     * @param \dependency\localisation\TranslatorInterface $translator The translator object
+     * get a form to search resource
+     * @param Collection/Collection $collection Collection Object
+     *
+     * @return string
      */
-    public function __construct(
-        \dependency\html\Document $view,
-        \dependency\json\JsonObject $json,
-        \dependency\localisation\TranslatorInterface $translator
-    ) {
-
-        $this->view = $view;
-
-        $this->json = $json;
-        $this->json->status = true;
-
-        $this->translator = $translator;
-        $this->translator->setCatalog('Collection/Collection');
-    }
-
     public function index($collection)
     {
-        var_dump($collection);
-        exit;
+        $archives = \laabs::callService('recordsManagement/archives/readArchives', $collection->archiveIds);
+
+
+        $html = parent::search($archives, \laabs::configuration("presentation.maarchRM")["maxResults"]);
+
+        $this->view->addContentFile("Collection/Collection.html");
+        $collectionListHtmlHandler = $this->view->getElementById('collectionList');
+        $this->view->addContent($html, $collectionListHtmlHandler);
+        $this->view->merge();
+
+        $this->view->translate();
+
+        // var_dump($this->view->saveHtml());
+        // exit;
+        return $this->view->saveHtml();
     }
 }
