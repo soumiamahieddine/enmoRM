@@ -82,6 +82,13 @@ class archivalProfile
     public $retentionStartDate;
 
     /**
+     * The starting date of the retention rule calculation is from last deposit
+     *
+     * @var boolean
+     */
+    public $isRetentionLastDeposit;
+
+    /**
      * The retention rule code 
      *
      * @var string
