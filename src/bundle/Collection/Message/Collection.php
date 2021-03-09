@@ -52,4 +52,20 @@ class Collection
      *
      */
     public $archiveIds;
+
+    /**
+     * The account identifier
+     *
+     * @var id
+     *
+     */
+    public $accountId;
+
+    /**
+     * The organization identifier
+     *
+     * @var id
+     *
+     */
+    public $orgId;
 }

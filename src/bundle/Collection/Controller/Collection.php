@@ -29,7 +29,6 @@ namespace bundle\Collection\Controller;
 class Collection
 {
     public $sdoFactory;
-    public $userCollectionController;
 
     /**
      * Constructor of access control class
@@ -39,18 +38,38 @@ class Collection
     public function __construct(\dependency\sdo\Factory $sdoFactory)
     {
         $this->sdoFactory = $sdoFactory;
-        $this->userCollectionController = \laabs::newController('Collection/UserCollection');
     }
 
-    public function create()
+    /**
+     * Create a new Collection
+     *
+     * @param  string|null $accountId UserAccount Identifier
+     * @param  string|null $orgId     Organization Identifier
+     *
+     * @return Collection/Collection
+     */
+    public function create(string $accountId = null, string $orgId = null)
     {
-        $collection = \laabs::cast('Collection/Collection');
+        $collection = \laabs::newInstance('Collection/Collection');
         $uniqId = \laabs\uniqid();
         $collection->collectionId = $uniqId;
         $collection->name = $uniqId;
 
-        $this->sdoFactory->create($collection, 'Collection/Collection');
-        $this->userCollectionController->createByUser($collection->collectionId);
+        if (!is_null($accountId) && !$this->sdoFactory->exists('user/account', ['accountId', $accountId])) {
+            throw new \core\Exception\NotFoundException("User not found");
+        }
+        $collection->accountId = $accountId;
+
+        if (!is_null($orgId) && !$this->sdoFactory->exists('organization/organization', ['orgId', $orgId])) {
+            throw new \core\Exception\NotFoundException("Organization not found");
+        }
+        $collection->orgId = $orgId;
+
+        if (is_null($accountId) && is_null($orgId)) {
+            $collection->accountId = \laabs::getToken("AUTH")->accountId;
+        }
+
+        $test = $this->sdoFactory->create($collection, 'Collection/Collection');
 
         return $collection;
     }
@@ -70,7 +89,6 @@ class Collection
      */
     public function update(object $collection)
     {
-
         try {
             $this->readByCollection($collection->collectionId);
         } catch (Exception $e) {
@@ -108,9 +126,18 @@ class Collection
      */
     public function readByUser(string $accountId = null)
     {
-        $userCollection = $this->userCollectionController->readByUser($accountId);
+        if (is_null($accountId)) {
+            $accountId = \laabs::getToken("AUTH")->accountId;
+        }
 
-        return $this->readByCollection($userCollection->collectionId);
+        if (!$this->sdoFactory->exists('Collection/Collection', ['accountId' => $accountId])) {
+            $this->create();
+        }
+
+        $collection = $this->sdoFactory->read('Collection/Collection', ['accountId' => $accountId]);
+        $collection->archiveIds = json_decode($collection->archiveIds);
+
+        return $collection;
     }
 
     public function delete(string $collectionId)
@@ -119,12 +146,6 @@ class Collection
             $collection = $this->read($collectionId);
         } catch (Exception $e) {
             throw new \core\Exception\NotFoundException("Collection not found");
-        }
-
-        try {
-            $this->userCollectionController->delete($collection->collectionId);
-        } catch (Exception $e) {
-            throw new Exception("Error Processing Request");
         }
 
         return $this->sdoFactory->delete($collection, 'Collection/Collection');

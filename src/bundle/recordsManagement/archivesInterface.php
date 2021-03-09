@@ -442,5 +442,14 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/updateArchiveRetentionRule
      */
-    public function updateArchivesretentionrule($limit=500);
+    public function updateArchivesretentionrule($limit = 500);
+
+    /**
+     * Retieve multiple archive from an array of archive Ids
+     *
+     * @param  array $archiveIds Array of archive Identifiers
+     *
+     * @action recordsManagement/archive/readFromIdentifiers
+     */
+    public function readArchives(array $archiveIds);
 }

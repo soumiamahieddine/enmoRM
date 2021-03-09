@@ -27,6 +27,10 @@ namespace bundle\Collection\Model;
  * @package Collection
  *
  * @pkey [collectionId]
+ * @key [accountId]
+ * @key [orgId]
+ * @fkey [orgId] organization/organization [orgId]
+ * @fkey [accountId] auth/account [accountId]
  *
  */
 class Collection
@@ -55,4 +59,20 @@ class Collection
      *
      */
     public $archiveIds;
+
+    /**
+     * The account identifier
+     *
+     * @var id
+     *
+     */
+    public $accountId;
+
+    /**
+     * The organization identifier
+     *
+     * @var id
+     *
+     */
+    public $orgId;
 }

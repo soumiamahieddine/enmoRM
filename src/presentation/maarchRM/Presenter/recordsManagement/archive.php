@@ -157,6 +157,7 @@ class archive
 
         $currentDate = \laabs::newDate();
         $collection = \laabs::callService('Collection/Collection/readByUser');
+
         foreach ($archives as $archive) {
             $archive->finalDispositionDesc = $this->view->translator->getText(
                 $archive->finalDisposition,
@@ -206,9 +207,11 @@ class archive
             }
 
             $archive->isInUserCollection = false;
-            foreach ($collection->archiveIds as $collectedArchiveId) {
-                if ($collectedArchiveId == $archive->archiveId) {
-                    $archive->isInUserCollection = true;
+            if (!is_null($collection->archiveIds) && !empty($collection->archiveIds)) {
+                foreach ($collection->archiveIds as $collectedArchiveId) {
+                    if ($collectedArchiveId == $archive->archiveId) {
+                        $archive->isInUserCollection = true;
+                    }
                 }
             }
         }
