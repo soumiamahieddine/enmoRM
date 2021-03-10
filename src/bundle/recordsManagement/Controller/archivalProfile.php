@@ -295,9 +295,6 @@ class archivalProfile
             $this->sdoFactory->commit();
         }
 
-        var_dump($archivalProfile);
-        exit;
-
         return true;
     }
  
