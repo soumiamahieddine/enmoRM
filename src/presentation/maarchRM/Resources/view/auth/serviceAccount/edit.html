@@ -1,9 +1,15 @@
 <div id="contain" >
     <div class="container-fluid" data-translate-catalog="auth/messages">
         <div class="page-header">
+            <?merge serviceAccount.accountId.bool() ?>
             <h1>
                 <i class="fa fa-laptop"></i>
                 Edit service account
+            </h1>
+            <?merge serviceAccount.accountId.bool().not() ?>
+            <h1>
+                <i class="fa fa-laptop"></i>
+                Add a service account
             </h1>
         </div>
     </div>
