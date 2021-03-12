@@ -39,7 +39,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>
+                                                <td class="col-sm-11">
                                                     <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
                                                         <?merge descriptionScheme ?>
@@ -130,7 +130,9 @@
     $("#helperList").on('click', ".deleteHelper", function() {
         var helperValue = $(this).closest('tr').find('#selectedHelper').val();
         var helperType = $(this).closest('tr').find('#helperValueMin').attr('type');
-        console.log(helperType);
+        if (helperType == 'checkbox') {
+            helperType = 'boolean';
+        }
         $(this).closest('tr').remove();
         $("#helperSelect").append($("<option></option>")
                     .attr("value", helperValue)
@@ -149,11 +151,11 @@
        // Some browser won't allow to change input type => workaround we clone input & change type + remove previous field
         if (helperText) {
             var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
-            var selectedHelperType = $('<td/>').appendTo(tr);
+            var selectedHelperType = $('<td/>').addClass("col-sm-3").appendTo(tr);
             $('#selectedHelper').clone().attr('type','text').val(helperText).appendTo(selectedHelperType).prev().remove();
-            // Todo find attributes / class to display same td size
-            var helperMin = $('<td/>').addClass("col").appendTo(tr);
-            var helperMax = $('<td/>').addClass("col").appendTo(tr);
+
+            var helperMin = $('<td/>').addClass("col-sm-4").appendTo(tr);
+            var helperMax = $('<td/>').addClass("col-sm-4").appendTo(tr);
 
             switch (helperType) {
             case 'array':
@@ -161,18 +163,15 @@
                 $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
-            case 'object':
-                $('#helperValueMin').clone().attr('type','object').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
-                break;
-
             case 'text':
             case 'string':
+
                 $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'name':
+   
                 $('#helperValueMin').clone().attr('type','name').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
@@ -188,7 +187,8 @@
                 break;
 
             case 'boolean':
-                $('#helperValueMin').clone().attr('type','boolean').appendTo(helperMin).prev().remove();
+
+                $('#helperValueMin').clone().attr('type','checkbox').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
