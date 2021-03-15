@@ -338,9 +338,11 @@ file that was distributed with this source code.
             $("#fileplanLevel").val('item');
             $("#contentsTabBtn").addClass('hide');
             $("#archivalProfileNavControl").find('a').first().click();
+            $('#updateRetentionRuleOnDeposit').addClass('hide');
         } else {
             $("#fileplanLevel").val('file');
             $("#contentsTabBtn").removeClass('hide');
+            $('#updateRetentionRuleOnDeposit').removeClass('hide');
         }
     });
 </script>
