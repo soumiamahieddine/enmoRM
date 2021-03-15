@@ -43,11 +43,14 @@
                                                     <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
                                                         <?merge descriptionScheme ?>
-                                                        <option type="[?merge .type ?]" value="[?merge .name ?]"><?merge .name ?></option>
+                                                        <?merge .translateType.bool() ?>
+                                                        <option type="[?merge .type ?]" data-helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?>&nbsp;<?merge .translateType ?></option>
+                                                        <?merge .translateType.bool().not() ?>
+                                                        <option type="[?merge .type ?]" value="[?merge .label ?]"><?merge .label ?></option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
+                                                    <button type="button" data-helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -145,6 +148,8 @@
 
         var helperText = $("#helperSelect :selected").text();
         var helper = $('#helperSelect').find("option:selected");
+        var helperName = helper.attr("data-helperName");
+        //console.log(helperName);
         var helperType = helper.attr('type');
         $('#helperError').addClass('hide');
      
@@ -165,15 +170,15 @@
 
             case 'text':
             case 'string':
-
                 $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'name':
-   
-                $('#helperValueMin').clone().attr('type','name').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
+                // todo handle keyword list 
+                console.log('keyword');
+                // $('#helperValueMin').clone().attr('type','name').appendTo(helperMin).prev().remove();
+                // $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'number':

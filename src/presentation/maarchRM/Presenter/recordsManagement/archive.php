@@ -98,6 +98,10 @@ class archive
         if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
             $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
         }
+        $this->translator->setCatalog('recordsManagement/descriptionField');
+        foreach ($descriptionSchemeNames as $descriptionSchemeName) {
+            $descriptionSchemeName->translateType = $this->translator->getText($descriptionSchemeName->type);
+        }
 
         $this->view->setSource("maxResults", $maxResults);
         $this->view->setSource("retentionRules", $retentionRules);
