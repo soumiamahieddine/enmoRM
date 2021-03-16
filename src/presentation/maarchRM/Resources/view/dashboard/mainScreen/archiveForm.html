@@ -261,7 +261,9 @@
                 || selectedProfile.retentionStartDate == ''
                 || selectedProfile.retentionStartDate == null) {
                 var retentionStartDate = $("#managementMetadataForm").find("[name=retentionStartDate]");
-                retentionStartDate.data("datepicker").setDate(new Date());
+                if (retentionStartDate.data("datepicker")) {
+                    retentionStartDate.data("datepicker").setDate(new Date());
+                }
                 retentionStartDate.closest(".form-group").removeClass("hide");
 
             } else {
