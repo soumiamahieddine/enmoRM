@@ -414,12 +414,13 @@
             $.ajax({
                 type: "PUT",
                 url: "/currentPosition/"+ orgId,
-                async: false
+                async: false,
+                success : function() {
+                    var location = window.location.pathname.split('/');
+                    location.splice(0, 1);
+                    load("/"+location.join("/"));
+                }
             });
-
-            var location = window.location.pathname.split('/');
-            location.splice(0, 1);
-            load("/"+location.join("/"));
         });
 
         $('[data-currentuserid]').on('click', function () {
