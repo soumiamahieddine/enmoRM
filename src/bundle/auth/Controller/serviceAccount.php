@@ -159,8 +159,8 @@ class serviceAccount
      */
     public function newService()
     {
-        $account = \laabs::newInstance('auth/account');
-        $account->accountType = 'service';
+        $serviceAccount = \laabs::newInstance('auth/account');
+        $serviceAccount->accountType = 'service';
         $servicePrivilegesTmp= \laabs::configuration('auth')['servicePrivileges'];
 
         foreach ($servicePrivilegesTmp as $value) {
