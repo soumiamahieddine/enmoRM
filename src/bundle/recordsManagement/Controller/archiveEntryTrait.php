@@ -20,8 +20,7 @@
 
 namespace bundle\recordsManagement\Controller;
 
-use function laabs\hash_stream,
-            archiveAccessTrait;
+use function laabs\hash_stream;
 
 /**
  * Archive entry controller
@@ -79,7 +78,6 @@ trait archiveEntryTrait
      */
     public function receive($archive, $zipContainer = false)
     {
-        
         if ($zipContainer) {
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
             $zipResource = $archive->digitalResources[0];
