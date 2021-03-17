@@ -1129,7 +1129,7 @@ msgid "First Name"
 msgstr "Prénom"
 
 msgid "Birth Name"
-msgstr "Nom de jeune fille"
+msgstr "Nom de naissance"
 
 msgid "Given Name"
 msgstr "Nom usuel"
