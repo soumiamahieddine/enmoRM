@@ -52,14 +52,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="table table-condensed">
-                                        <tbody id="helperList">
-                                            <input type="hidden" id="selectedHelper" class="form-control" disabled />
-                                            <input type="hidden" id="helperValueMin" class="form-control" placeholder="Valeur" />
-                                            <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
-                                        </tbody>
-                                    </table>
-                                    <span id="helperError" class="hide alert-warning">You must select the type of additional description field to add</span>
                                 </div>
                                 <ul class="col-sm-6">
                                     <li id="helperList" style="list-style: none">
@@ -270,62 +262,6 @@
         }
 
             var buttonColumn = $('<li/>').appendTo(row);
-
-            var button = $('<button/>')
-                .attr('title', 'supprimer')
-                .attr('type', 'button')
-                .addClass("btn btn-danger deleteHelper")
-                .appendTo(buttonColumn);
-
-            var icon = $('<i/>')
-                .addClass('fa fa-trash')
-                .appendTo(button);
-
-            $("#helperSelect :selected").text();
-            $("#helperSelect :selected").remove();
-        }
-        $('#helperSelect').prop('selectedIndex',0);
-    });
-
-    $("#helperList").on('click', ".deleteHelper", function() {
-            $(this).closest('tr').remove();
-            var typeRemoved = $(this).closest('tr').find('.helperType').text();
-            $("#helperType").append(new Option(typeRemoved,typeRemoved));
-    });
-
-    $('#addHelper').on('click', function () {
-        $('#helperError').addClass('hide');
-        var min = $('#helperValueMin').val();
-        var max = $('#helperValueMax').val();
-        var helper = $("#helperType :selected").text();
-
-        if (min && helper) {
-            var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
-
-            var type = $('<td/>')
-                .addClass('helperType')
-                .text($("#helperType :selected").text())
-                .appendTo(tr);
-
-            var value = $('<td/>')
-                .addClass('helperContent')
-                .text($('#helperValueMin').val())
-                .appendTo(tr);
-
-            if (max) {
-                var value2 = $('<td/>')
-                .addClass('helperContent')
-                .text($('#helperValueMax').val())
-                .appendTo(tr);
-            }
-            else {
-                var value2 = $('<td/>')
-                .addClass('emptyContent')
-                .text('')
-                .appendTo(tr);
-            }
-
-            var buttonColumn = $('<td/>').appendTo(tr);
 
             var button = $('<button/>')
                 .attr('title', 'supprimer')
