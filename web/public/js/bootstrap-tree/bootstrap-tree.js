@@ -115,11 +115,11 @@ var BootstrapTree = {
         var openedIcon = i.data('opened-icon');
 
         if (i.hasClass(openedIcon)) {
-            children.hide('fast');
+            children.css({'display':'none'});
             i.addClass(closedIcon).removeClass(openedIcon);
         }
         else {
-            children.show('fast');
+            children.css({'display':'block'});
             i.addClass(openedIcon).removeClass(closedIcon);
         }
         event.stopPropagation();

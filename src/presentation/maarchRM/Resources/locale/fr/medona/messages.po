@@ -98,6 +98,9 @@ msgstr "Demandes de communication reçues"
 msgid "Delivery request history"
 msgstr "Historique de communication"
 
+msgid "Delivery process list"
+msgstr "Communications à finaliser"
+
 msgid "Communication authorization"
 msgstr "Autorisation de communication"
 

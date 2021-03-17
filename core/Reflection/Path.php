@@ -7,7 +7,7 @@ namespace core\Reflection;
 
 /**
  * Class Laabs service path
- * 
+ *
  * @extends \core\Reflection\Method
  */
 class Path
@@ -77,16 +77,16 @@ class Path
         $this->returnType = null;
         $this->parameters = null;
         $this->tags = null;
-        
+
         parent::__construct($class, $name);
 
         $this->domain = $domain;
-        
+
         $this->interface = substr($class, strrpos($class, LAABS_NS_SEPARATOR)+1, -9);
 
         $parts = preg_split("#([a-z]+|[A-Z][a-z0-9]+|_[A-Za-z][A-Za-z0-9]*_)#", $this->name, -1, PREG_SPLIT_DELIM_CAPTURE + PREG_SPLIT_NO_EMPTY);
         $this->method = array_shift($parts);
-        
+
         $patterns = array();
         if (isset($this->tags['var'])) {
         //if (preg_match_all("#@var (?<type>\w+)\s*(?<name>\w+).*#", $docComment, $patternMatches, PREG_SET_ORDER)) {
@@ -132,7 +132,7 @@ class Path
      * Match a path with method and uri
      * @param string $method
      * @param string $uri
-     * 
+     *
      * @return object The path with variables
      */
     public function match($method='read', $uri='')
@@ -147,7 +147,7 @@ class Path
         // Check empty uri
         if (!isset($this->path) && !empty($uri)) {
             return;
-        } 
+        }
 
         // Check uri VS path pattern
         if (isset($this->path) && !@preg_match("#^" . str_replace("/", "\\/", $this->pattern) . "$#i", $uri, $args)) {
@@ -161,7 +161,7 @@ class Path
             array_shift($args);
 
             foreach ($args as $name => $value) {
-                if (ctype_alpha($name[0])) {
+                if (!empty($name) && ctype_alpha($name)) {
                     $matched->variables[$name] = $value;
                 }
             }
@@ -172,18 +172,18 @@ class Path
 
     /**
      * Get path
-     * 
+     *
      * @return string
      */
     public function getName()
     {
         return $this->domain . LAABS_URI_SEPARATOR . $this->interface . LAABS_URI_SEPARATOR . $this->name;
-    } 
+    }
 
     /**
      * Reroute
      * @param \core\Reflection\Path $newPath
-     * 
+     *
      * @return Path
      */
     public function reroute($newPath)
