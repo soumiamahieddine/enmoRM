@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Version 2.7.2
+- `Added` Tri des dossiers virtuels par ordre alphabétique.
+- `Added` Affichage des champs de référence externe dans la liste des données descriptives.
+- `Fixed` Tri des résultats de recherche par date quand le nombre de résultats dépasse le nombre de résultats maximal.
+- `Fixed` Mauvaise interprétation HTML quand un symbole '&' était saisi dans un champ de type textarea.
+- `Fixed` Possibilité d'envoi de fichier profil rng sans extension.
+- `Fixed` Possibilité de création des relations récursives parents/enfants dans les profils d'archive.
+- `Fixed` Traductions.
+- `Fixed` Problème chargement plugin datePicker sur l'écran principal lors de l'affichage avec de nombreux dossiers virtuels.
+- `Fixed` Affichage d'erreur sur la page de création d'un nouveau compte de service.
+- `Fixed` Résultats du service précédent affiché lors de la sélection d'un nouveau service dans la barre de menu.
+- `Fixed` Amélioration de la vue mobile de la barre de navigation.
+- `Fixed` Amélioration des performances lors de l'affichage/masquage des dossiers virtuels.
+
 ## Version 2.7.1
 - `Fixed` Activation et désactivation des tâches dans le planificateur de tâches.
 - `Fixed` Calcul de la prochaine exécution mêmeen cas d'erreur dans le planificateur de tâches.
