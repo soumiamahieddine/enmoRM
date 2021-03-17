@@ -31,8 +31,8 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-4 control-label" style="margin-top: 2%;">Additional fields</label>
-                                <div class="col-md-4">
+                                <label class="col-sm-4 col-sm-offset-4 control-label" style="margin-top: 2%;">Additional fields</label>
+                                <div class="col-sm-4" style="float:right">
                                     <table class="table table-condensed">
                                         <thead>
                                             <th>Title</th>
@@ -42,11 +42,10 @@
                                                 <td class="col-sm-11">
                                                     <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
-                                                        <?merge descriptionScheme ?>
-                                                        <?merge .translateType.bool() ?>
-                                                        <option type="[?merge .type ?]" data-helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?>&nbsp;<?merge .translateType ?></option>
+                                                        <?merge descriptionScheme?>
+                                                        <option type="[?merge .type ?]" data-enumeration="[?merge .enumeration.json() ?]" data-helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?>&nbsp;<?merge .translateType ?></option>
                                                         <?merge .translateType.bool().not() ?>
-                                                        <option type="[?merge .type ?]" value="[?merge .label ?]"><?merge .label ?></option>
+                                                        <option type="[?merge .type ?]" data-enumeration="[?merge .enumeration.json() ?]" data-helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?></option>
                                                     </select>
                                                 </td>
                                                 <td>
@@ -55,15 +54,15 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <table class="table table-condensed">
-                                        <tbody id="helperList">
-                                            <input type="hidden" id="selectedHelper" class="form-control" disabled />
-                                            <input type="hidden" id="helperValueMin" class="form-control" placeholder="Valeur" />
-                                            <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
-                                        </tbody>
-                                    </table>
-                                    <span id="helperError" class="hide alert-warning">You must select the type of additional description field to add</span>
                                 </div>
+                                <ul class="col-sm-offset-3 col-sm-6">
+                                    <li id="helperList" style="list-style: none;">
+                                        <input type="hidden" id="selectedHelper" class="form-control" disabled />
+                                        <input type="hidden" id="helperValueMin" class="form-control" placeholder="Valeur" />
+                                        <input type="hidden" id="helperValueMax" class="form-control" placeholder="Valeur"/>
+                                    </li>
+                                </ul>
+                                <span id="helperError" class="hide alert-warning">You must select the type of additional description field to add</span>
                             </div>
                         </div>
                         <br />
@@ -96,6 +95,15 @@
         </div>
     </div>
 </div>
+<style>
+    .helper{
+        margin-bottom: 10px;
+    }
+    .no-padding {
+        padding-right:5px;
+        padding-left:5px;
+    }
+</style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
     $("#originatorOrgInfo").hide();
@@ -131,62 +139,62 @@
     });
 
     $("#helperList").on('click', ".deleteHelper", function() {
-        var helperValue = $(this).closest('tr').find('#selectedHelper').val();
-        var helperType = $(this).closest('tr').find('#helperValueMin').attr('type');
+        var helperValue = $(this).closest('.helper').find('#selectedHelper').val();
+        var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
+
         if (helperType == 'checkbox') {
             helperType = 'boolean';
         }
-        $(this).closest('tr').remove();
+        $(this).closest('.helper').remove();
         $("#helperSelect").append($("<option></option>")
                     .attr("value", helperValue)
                     .attr("type", helperType)
                     .text(helperValue)); 
-
     });
 
     $('#addHelper').on('click', function () {
-
         var helperText = $("#helperSelect :selected").text();
         var helper = $('#helperSelect').find("option:selected");
         var helperName = helper.attr("data-helperName");
-        //console.log(helperName);
         var helperType = helper.attr('type');
+        var enumeration = helper.attr("data-enumeration");
+        console.log('data-helperName = ' + helperName);
+        console.log("data-enum = " + JSON.parse(enumeration));
         $('#helperError').addClass('hide');
      
-       // Some browser won't allow to change input type => workaround we clone input & change type + remove previous field
         if (helperText) {
-            var tr = $('<tr/>').addClass('helper').appendTo($("#helperList"));
-            var selectedHelperType = $('<td/>').addClass("col-sm-3").appendTo(tr);
+            var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
+            var selectedHelperType = $('<li/>').addClass("col-sm-3 no-padding").appendTo(row);
             $('#selectedHelper').clone().attr('type','text').val(helperText).appendTo(selectedHelperType).prev().remove();
-
-            var helperMin = $('<td/>').addClass("col-sm-4").appendTo(tr);
-            var helperMax = $('<td/>').addClass("col-sm-4").appendTo(tr);
 
             switch (helperType) {
             case 'array':
+                var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','array').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'text':
             case 'string':
+                var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
                 break;
 
             case 'name':
                 // todo handle keyword list 
-                console.log('keyword');
-                // $('#helperValueMin').clone().attr('type','name').appendTo(helperMin).prev().remove();
-                // $('#helperValueMax').clone().attr('type','hidden').appendTo(helperMax).prev().remove();
+                var helperMin = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
+                var helperMax = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
                 break;
 
             case 'number':
+                var helperMin = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
+                var helperMax = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','number').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','number').appendTo(helperMax).prev().remove();
                 break;
 
             case 'date':
+                var helperMin = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
+                var helperMax = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','date').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','date').appendTo(helperMax).prev().remove();
                 break;
@@ -202,7 +210,7 @@
                 return;
         }
 
-            var buttonColumn = $('<td/>').appendTo(tr);
+            var buttonColumn = $('<li/>').appendTo(row);
 
             var button = $('<button/>')
                 .attr('title', 'supprimer')
