@@ -98,11 +98,18 @@ class archivalProfile
 
         $profilesDirectory = \laabs::configuration('recordsManagement')['profilesDirectory'];
         $profileList = \laabs::callService('recordsManagement/archivalProfile/readIndex');
+
         foreach ($profileList as $key => $profile) {
+            if (!empty($profile->containedProfiles)) {
+                foreach ($profile->containedProfiles as $containedProfile) {
+                    if ($containedProfile->archivalProfileId == $archivalProfile->archivalProfileId) {
+                        unset($profileList[$key]);
+                    }
+                }
+            }
             if ($profile->archivalProfileId == $archivalProfile->archivalProfileId) {
                 unset($profileList[$key]);
-                break;
-            }
+            } 
         }
 
         $archivalProfile->containedProfiles = json_encode($archivalProfile->containedProfiles);

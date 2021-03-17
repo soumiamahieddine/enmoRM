@@ -61,7 +61,16 @@ class descriptionField
      */
     public function index()
     {
-        $descriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
+        $baseDescriptionFields = \laabs::callService('recordsManagement/descriptionField/readIndex');
+        $extendedDescriptionFields = \laabs::callService('recordsManagement/descriptionScheme/read_name_descriptionFields');
+
+        $descriptionFields = array_map(
+            function ($field) use ($baseDescriptionFields) {
+                $field->extended = !isset($baseDescriptionFields[$field->name]);
+                return $field;
+            },
+            $extendedDescriptionFields
+        );
 
         $this->view->addContentFile('recordsManagement/descriptionField/index.html');
 

@@ -395,6 +395,14 @@ class archivalProfile
                 }
                 
                 $archivalProfileContents = \laabs::newInstance('recordsManagement/archivalProfileContents');
+                $contentProfiles = $this->getContentsProfiles($containedProfileId);
+                if (!empty($contentProfiles)) {
+                    foreach ($contentProfiles as $contentProfile) {
+                        if ($contentProfile->archivalProfileId == $archivalProfile->archivalProfileId) {
+                            throw new \core\Exception\BadRequestException("%s cannot be recursively called.", 404, null, [$contentProfile->name]);
+                        }
+                    }
+                }
                 $archivalProfileContents->parentProfileId = $archivalProfile->archivalProfileId;
                 $archivalProfileContents->containedProfileId = $containedProfileId;
 
@@ -425,6 +433,10 @@ class archivalProfile
      */
     public function uploadArchivalProfile($profileReference, $archivalProfile, $content, $format = 'rng')
     {
+        if (empty($format)) {
+            $format = 'rng';
+        }
+
         $profilesDirectory = $this->profilesDirectory;
         $profilesDirectory .= DIRECTORY_SEPARATOR.$profileReference.'.'.$format ;
         $content = base64_decode($content);

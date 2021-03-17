@@ -274,3 +274,6 @@ msgstr "Lecture seule"
 
 msgid "View in the list"
 msgstr "Voir dans la liste"
+
+msgid "cannot be recursively called"
+msgstr "ne peut pas être appelé récursivement"

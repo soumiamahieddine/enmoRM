@@ -43,6 +43,7 @@ file that was distributed with this source code.
                                     <?merge .translateType.bool().not() ?>
                                     <td><?merge .type ?></td>
                                     <td class="action_btn">
+                                        <?merge .extended.not() ?>
                                         <div class="btn-group pull-right">
                                             <button type="button" data-descriptionFieldName="[?merge .name ?]" class="editDescriptionField btn btn-warning" title="Edit">
                                                 <span class="fa fa-fw fa-edit"></span>
@@ -51,6 +52,10 @@ file that was distributed with this source code.
                                                 <span class="fa fa-fw fa-trash"></span>
                                             </button>
                                         </div>
+                                        <?merge .extended ?>
+                                        <button type="button" data-descriptionFieldName="[?merge .name ?]" class="extendedDescriptionField btn btn-info pull-right" title="This field is defined on an extension and can not be managed in this panel. Contact the system operator to know more.">
+                                            <span class="fa fa-fw fa-info"></span>
+                                        </button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -244,6 +249,10 @@ file that was distributed with this source code.
 <script type="text/javascript">
 
     $("#descriptionField_formBtn").on('click', "#descriptionField_formCancelBtn", function () {
+        clearForm();
+    });
+
+    $("#descriptionField_tableList").on('click', '.extendedDescriptionField', function () {
         clearForm();
     });
 

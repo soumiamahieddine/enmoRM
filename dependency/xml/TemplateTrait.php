@@ -437,7 +437,8 @@ trait TemplateTrait
 
                 // Textareas
                 case 'textarea':
-                    $element->nodeValue = $value;
+                    $element->nodeValue = '';
+                    $element->appendChild($this->createTextNode($value));
                     break;
             }
         }
