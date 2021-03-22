@@ -1321,7 +1321,7 @@ msgid "Object"
 msgstr "Objet"
 
 msgid "Archive added to collection."
-msgstr "Archive ajoutée à la collection."
+msgstr "Archive ajoutée aux favoris."
 
 msgid "Archive removed from collection."
-msgstr "Archive retirée de la collection."
+msgstr "Archive retirée des favoris."

@@ -64,10 +64,6 @@ $('.multipleActionMenu').on('click', 'li', function() {
         case "checkHash":
             ArchivesAction.checkHash(selection['ids'].join("&archiveIds[]="));
             break;
-        case "addToCollection":
-            console.log(selection);
-            ArchivesAction.addToCollection();
-            break;
         default:
             var transaction = false;
             $("#transaction").val() ? transaction = true : transaction = false;
@@ -87,9 +83,6 @@ $('#archiveList').on('click', '.actionMenu li', function() {
     switch (type) {
         case "checkHash":
             ArchivesAction.checkHash(id);
-            break;
-        case "addToCollection":
-            ArchivesAction.addToCollection(id);
             break;
         default:
             var transaction = false;
