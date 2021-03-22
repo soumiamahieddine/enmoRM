@@ -1319,3 +1319,9 @@ msgstr "Référentiel des personnes et organisations"
 
 msgid "Object"
 msgstr "Objet"
+
+msgid "Archive added to collection."
+msgstr "Archive ajoutée à la collection."
+
+msgid "Archive removed from collection."
+msgstr "Archive retirée de la collection."

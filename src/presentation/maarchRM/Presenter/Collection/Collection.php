@@ -40,18 +40,14 @@ class Collection extends \presentation\maarchRM\Presenter\recordsManagement\arch
     {
         $archives = \laabs::callService('recordsManagement/archives/readArchives', $collection->archiveIds);
 
-
-        $html = parent::search($archives, \laabs::configuration("presentation.maarchRM")["maxResults"]);
+        $resultListElement = parent::presentResultList($archives, \laabs::configuration("presentation.maarchRM")["maxResults"]);
 
         $this->view->addContentFile("Collection/Collection.html");
         $collectionListHtmlHandler = $this->view->getElementById('collectionList');
-        $this->view->addContent($html, $collectionListHtmlHandler);
-        $this->view->merge();
+        $collectionListHtmlHandler->appendChild($resultListElement);
 
         $this->view->translate();
 
-        // var_dump($this->view->saveHtml());
-        // exit;
         return $this->view->saveHtml();
     }
 }
