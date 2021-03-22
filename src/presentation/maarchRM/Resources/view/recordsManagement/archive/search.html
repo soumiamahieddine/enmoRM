@@ -59,7 +59,7 @@
                                         <input id="helperValueMin" type="hidden" class="form-control" placeholder="Valeur" />
                                         <input id="helperValueMax" type="hidden" class="form-control" placeholder="Valeur"/> 
                                         <select id="helperDropdown" class="hide form-control"></select>
-                                        <input  id="helperToggle" type="hidden" data-size="normal" data-on="Oui" data-off="Non" data-toggle="toggle"/>
+                                        <input id="helperToggle" type="hidden" checked data-style="quick"/>
                                     </li>
                                 </ul>
                                 <span id="helperError" class="col-sm-4 col-sm-offset-4 hide alert-warning">You must select the type of additional description field to add</span>
@@ -106,6 +106,10 @@
         padding-right:5px;
         padding-left:5px;
     }
+    .quick .toggle-group { 
+        transition: none; 
+        -webkit-transition: none; 
+    }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
@@ -144,10 +148,12 @@
     $("#helperList").on('click', ".deleteHelper", function() {
         var helperValue = $(this).closest('.helper').find('#selectedHelper').val();
         var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
+        var helperToggle = $(this).closest('.helper').find('#helperToggle').attr('type');
 
-        if (helperType == 'checkbox') {
+        if (helperToggle == 'checkbox') {
             helperType = 'boolean';
         }
+        
         $(this).closest('.helper').remove();
         $("#helperSelect").append($("<option></option>")
                     .attr("value", helperValue)
@@ -214,9 +220,19 @@
                 break;
 
             case 'boolean':
-                // todo display good data-toggle
                 var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
-                $('#helperToggle').clone().attr('type','checkbox').appendTo(helperMin).prev().remove();
+                var helperCheckbox = $('#helperToggle').clone().attr('type','checkbox');
+                $(function() {
+                    $(helperCheckbox).bootstrapToggle({
+                        on: 'Activé',
+                        off: 'Désactivé',
+                        width: '50%',
+                        size: 'normal',
+                        onstyle:'success',
+                        offstyle:'danger'
+                    });
+                })
+                helperCheckbox.appendTo(helperMin);
                 break;
 
             default:
