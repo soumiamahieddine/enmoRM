@@ -28,7 +28,7 @@
     # Set environment variables for the application instance
     SetEnv LAABS_INSTANCE_NAME maarchRM
     SetEnv LAABS_APP maarchRM
-    SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics
+    SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics;Collection
     SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf;timestamp;csv
     SetEnv LAABS_PRESENTATION maarchRM
     SetEnv SERVICE_CLIENT_TOKEN service
