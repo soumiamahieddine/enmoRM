@@ -31,9 +31,6 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label" style="padding-top: 15px;">Add filter</label>
-                                <div class="col-sm-4">
-                                    <table id="helperFilter" class="table table-condensed">
                                         <tbody>
                                             <tr>
                                                 <td class="col-sm-11">
@@ -181,7 +178,6 @@
         var helperText = $("#helperSelect :selected").text();
         var helperName = helper.attr("helperName");
         var helperType = helper.attr('type');
-
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
             var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
