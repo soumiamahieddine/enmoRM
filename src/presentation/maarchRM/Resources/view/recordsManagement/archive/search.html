@@ -122,6 +122,10 @@
         background-color:#e6e6e6;
         border-color:#adadad;
     }
+    .quick .toggle-group { 
+        transition: none; 
+        -webkit-transition: none; 
+    }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
 <script>
@@ -165,7 +169,6 @@
         if (helperToggle == 'checkbox') {
             helperType = 'boolean';
         }
-
         $(this).closest('.helper').remove();
         $("#helperSelect").append($("<option></option>")
                     .attr("value", helperValue)
