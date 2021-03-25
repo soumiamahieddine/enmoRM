@@ -56,8 +56,8 @@
                                 <ul class="col-sm-offset-3 col-sm-6">
                                     <li id="helperList" style="list-style: none;">
                                         <input id="selectedHelper" type="hidden" class="form-control" disabled />
-                                        <input id="helperValueMin" type="hidden" class="form-control" placeholder="Valeur" />
-                                        <input id="helperValueMax" type="hidden" class="form-control" placeholder="Valeur"/> 
+                                        <input id="helperValueMin" type="hidden" class="form-control"/>
+                                        <input id="helperValueMax" type="hidden" class="form-control"/> 
                                         <select id="helperDropdown" class="hide form-control"></select>
                                         <input id="helperToggle" type="hidden" checked data-style="quick"/>
                                     </li>
@@ -175,13 +175,13 @@
 
             switch (helperType) {
             case 'array':
-                var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','array').appendTo(helperMin).prev().remove();
                 break;
 
             case 'text':
             case 'string':
-                var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
                 break;
 
@@ -195,32 +195,32 @@
                     {
                         dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
                     });
-                    var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
-                    $('#helperDropdown').removeClass('hide').html(dropdownValues.join('')).appendTo(helperMin);
+                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
+                    $('#helperDropdown').clone().removeClass('hide').html(dropdownValues.join('')).appendTo(helperMin);
                 }
                 else {
-                    var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
+                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
                     $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
                 }
        
                 break;
 
             case 'number':
-                var helperMin = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
-                var helperMax = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
+                var helperMax = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','number').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','number').appendTo(helperMax).prev().remove();
                 break;
 
             case 'date':
-                var helperMin = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
-                var helperMax = $('<li/>').addClass("col-sm-4 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
+                var helperMax = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
                 $('#helperValueMin').clone().attr('type','date').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','date').appendTo(helperMax).prev().remove();
                 break;
 
             case 'boolean':
-                var helperMin = $('<li/>').addClass("col-sm-8 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
                 var helperCheckbox = $('#helperToggle').clone().attr('type','checkbox');
                 $(function() {
                     $(helperCheckbox).bootstrapToggle({
@@ -282,7 +282,7 @@
     });
 
     $('#archive_search').on('click', function () {
-
+        // todo handle helper
         var data = searchFormSerialize();
         if (data == -1)
             return;
@@ -353,7 +353,28 @@
         if (hasParent.length == 1)
                 parameters.hasParent = hasParent[0];
 
-     //   var helperCount = $('#archive_searchForm').find('.helperContent').length;
+    //   var helperCount = $('#archive_searchForm').find('.helperContent').length;
+        $('#helperList').find('.helper').each(function(){
+
+            console.log("Selected helperType :" + $(this).find('#selectedHelper').val());
+            
+            if ($(this).find('#helperValueMin').val()) {
+                console.log('Min : ' + $(this).find('#helperValueMin').val());
+            }
+            if ($(this).find('#helperValueMax').val()) {
+                console.log('Max : ' + $(this).find('#helperValueMax').val());
+            }
+            if ($(this).find('#helperDropdown option:selected').text()) {
+                console.log('Dropdown Value selected : ' + $(this).find('#helperDropdown option:selected').text());
+            }
+            if ($(this).find('#helperToggle').attr('type') == 'checkbox') {
+                console.log($(this).find('#helperToggle').attr('type'));
+                console.log('valueToggle : ' + $(this).find('#helperToggle').val());
+            }
+            console.log("========================================");
+        });
+
+
         parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
