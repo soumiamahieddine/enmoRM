@@ -931,11 +931,13 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to deposit
      */
-    protected function storeDescriptiveMetadata($archive)
+    protected function storeDescriptiveMetadata($archive, $fullText = false)
     {
+        var_dump($archive->digitalResources[0]);
+        exit;
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
-        $descriptionController->create($archive);
+        $descriptionController->create($archive,$fullText);
     }
 
     /**
