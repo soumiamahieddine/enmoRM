@@ -65,7 +65,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         $descriptionObject->text .= $this->getText($archive->descriptionObject);
         
         if ($fullText) {
-            $descriptionObject->text .= ' '.$fullText;
+            $descriptionObject->text .= ' <<<<<<<<<<<<<<<<<<<<'.$fullText;
         }
 
         $descriptionObject->description = json_encode($archive->descriptionObject);
@@ -258,6 +258,32 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         if ($archive->fullTextIndexation == "indexed") {
             $archive->fullTextIndexation == "requested";
         }
+
+        // get fileName
+        $dir = \laabs::getTmpDir();
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755);
+        }
+
+        $path = $archive->digitalResources;
+
+        $fileName = $dir . DIRECTORY_SEPARATOR . $path;
+
+        $fileName = fopen($fileName, "w+");
+
+        // extract content file
+        if (isset(\laabs::configuration('recordsManagement')['extractService'])) {
+            try {
+                $extractServiceUri = \laabs::configuration('recordsManagement')['extractService'];
+                $timestampService = \laabs::newService($extractServiceUri);
+                $descriptionObject->text .= $extractService->getText($fileName);
+            } catch (\Exception $e) {
+                throw $e;
+            }
+        }
+
+        var_dump($fileName);
+        exit;
         
         $this->create($archive);
     }

@@ -25,7 +25,7 @@ namespace dependency\fileSystem\plugins;
  * @author Prosper DE LAURE Maarch <prosper.delaure@maarch.org>
  */
 
-class tika {
+class tika implements \dependency\fileSystem\ExctractInterface {
 
     protected $tikaJarFile;
 
