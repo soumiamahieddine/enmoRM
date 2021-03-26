@@ -200,6 +200,7 @@
 
             // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
             case 'name':
+                // send data if enumeration is filled, simple input otherwise
                 var enumeration = helper.attr("data-enumeration");
                 dropdownList = JSON.parse(enumeration);
 
@@ -274,12 +275,10 @@
 
             $("#helperSelect :selected").text();
             $("#helperSelect :selected").remove();
-
         }     
         else {
             $('#helperError').removeClass('hide');
         }
-
         $('#helperSelect').prop('selectedIndex',0);
     });
 
@@ -303,6 +302,7 @@
 
     $('#archive_search').on('click', function () {
         var data = searchFormSerialize();
+        console.log(data);
         if (data == -1)
             return;
         $('#archive_search').prop('disabled', true);
