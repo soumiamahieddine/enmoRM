@@ -58,7 +58,7 @@
                                         <input id="selectedHelper" type="hidden" class="form-control" disabled />
                                         <input id="helperValueMin" type="hidden" class="form-control"/>
                                         <input id="helperValueMax" type="hidden" class="form-control"/> 
-                                        <select id="helperDropdown" class="hide form-control"></select>
+                                        <select id="helperDropdown" name="service" class="hide form-control"></select>
                                         <input id="helperToggle" type="hidden" checked data-style="quick"/>
                                     </li>
                                 </ul>
@@ -175,20 +175,21 @@
 
             switch (helperType) {
             case 'array':
-                var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','array').appendTo(helperMin).prev().remove();
+                var helperInput = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
+                $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperInput).prev().remove();
                 break;
 
             case 'text':
             case 'string':
-                var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
+                var helperInput = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
+                $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperInput).prev().remove();
                 break;
 
             case 'name':
+                // send data if enumeration is filled, simple input otherwise
                 var enumeration = helper.attr("data-enumeration");
                 dropdownList = JSON.parse(enumeration);
-                // send data if enumeration is filled, case text otherwise
+
                 if (dropdownList) {
                     var dropdownValues = [];
                     $.each(dropdownList, function(key, value)
@@ -196,32 +197,32 @@
                         dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
                     });
                     var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                    $('#helperDropdown').clone().removeClass('hide').html(dropdownValues.join('')).appendTo(helperMin);
+                    $('#helperDropdown').clone().attr('name', helperName).removeClass('hide').html(dropdownValues.join('')).appendTo(helperMin);
                 }
                 else {
                     var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                    $('#helperValueMin').clone().attr('type','text').appendTo(helperMin).prev().remove();
+                    $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperMin).prev().remove();
                 }
-       
                 break;
 
             case 'number':
                 var helperMin = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
-                var helperMax = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','number').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','number').appendTo(helperMax).prev().remove();
+                var helperMax = $('<li/>').addClass("numberMax helperContent col-sm-4 no-padding").appendTo(row);
+                $('#helperValueMin').clone().attr('type','number').attr('name', helperName).appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','number').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
             case 'date':
-                var helperMin = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
-                var helperMax = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','date').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','date').appendTo(helperMax).prev().remove();
+                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 no-padding").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 no-padding").appendTo(row);
+                $('#helperValueMin').clone().attr('type','date').attr('name', helperName).addClass('startDate').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','date').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
             case 'boolean':
+                console.log("boolean : " + helperName);
                 var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                var helperCheckbox = $('#helperToggle').clone().attr('type','checkbox');
+                var helperCheckbox = $('#helperToggle').clone().attr('type','checkbox').attr('name', helperName);
                 $(function() {
                     $(helperCheckbox).bootstrapToggle({
                         on: 'Activé',
@@ -254,12 +255,10 @@
 
             $("#helperSelect :selected").text();
             $("#helperSelect :selected").remove();
-
         }     
         else {
             $('#helperError').removeClass('hide');
         }
-
         $('#helperSelect').prop('selectedIndex',0);
     });
 
@@ -282,8 +281,8 @@
     });
 
     $('#archive_search').on('click', function () {
-        // todo handle helper
         var data = searchFormSerialize();
+        console.log(data);
         if (data == -1)
             return;
         $('#archive_search').prop('disabled', true);
@@ -353,28 +352,85 @@
         if (hasParent.length == 1)
                 parameters.hasParent = hasParent[0];
 
-    //   var helperCount = $('#archive_searchForm').find('.helperContent').length;
-        $('#helperList').find('.helper').each(function(){
+        parameters.description = [];
 
-            console.log("Selected helperType :" + $(this).find('#selectedHelper').val());
-            
-            if ($(this).find('#helperValueMin').val()) {
-                console.log('Min : ' + $(this).find('#helperValueMin').val());
-            }
-            if ($(this).find('#helperValueMax').val()) {
-                console.log('Max : ' + $(this).find('#helperValueMax').val());
-            }
+        $('#helperList').find('.helper').each(function(){
+            var val1 = $(this).find('#helperValueMin').val() ? $(this).find('#helperValueMin').val() : val1 = $(this).find('#helperToggle').val();
+            var val2 = $(this).find('#helperValueMax').val();
+            var type = $(this).find('#helperValueMin').attr('type') ? $(this).find('#helperValueMin').attr('type') : type = $(this).find('#helperToggle').attr('type');
+            var name = $(this).find('#helperValueMin').attr('name')? $(this).find('#helperValueMin').attr('name') : type = $(this).find('#helperToggle').attr('name');
+
+            // if enumeration filled
             if ($(this).find('#helperDropdown option:selected').text()) {
-                console.log('Dropdown Value selected : ' + $(this).find('#helperDropdown option:selected').text());
+                val1 = $(this).find('#helperDropdown option:selected').text();
+                type = 'select';
+                name = $(this).find('#helperDropdown').attr('name');
             }
-            if ($(this).find('#helperToggle').attr('type') == 'checkbox') {
-                console.log($(this).find('#helperToggle').attr('type'));
-                console.log('valueToggle : ' + $(this).find('#helperToggle').val());
+
+           /* console.log("Selected helperType :" + type);
+            console.log("Min : " + val1);
+            console.log("Max : " + val2);
+            console.log("Name : " + name);*/
+
+            switch (type) {
+
+                case 'text' :
+                    if (val1 !== '') {
+                        parameters.description[name] = name+'="'+val1+'"';
+                    }
+                    break;
+
+                case 'select':
+                    // keyword enum
+                    if (val1 !== '') {
+                        parameters.description[name] = name+'="'+val1+'"';
+                    }
+                    break;
+
+                case 'checkbox':
+                    // format boolean
+                    val1 = $(this).find('#helperToggle').val() == 'on' ? 'true' : 'false';
+                    parameters.description[name] = name+'='+ val1;
+                    break;
+
+                case 'date':
+                    // todo deal with valueMax
+                    // format dates
+                    if (val1 !== '') {
+                        var operation = ($(this).hasClass('startDate')) ? ">=" : "<=";
+                        val1 = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+
+                        // Fill start and end values
+                        if (parameters.description[name] == undefined) {
+                            parameters.description[name] = val1;
+                        } else {
+                            parameters.description[name] = parameters.description[name] +'&&'+val1;
+                        }
+                    }
+                    break;
+
+                case 'number':
+                    if (val1 !== '') {
+                        var operation = ($(this).hasClass('numberMin')) ? ">=" : "<=";
+                        val1 = name + operation + $(this).val();
+                        
+                        // Fill start and end values
+                        if (parameters.description[name] == undefined) {
+                            parameters.description[name] = val1;
+                        } else {
+                            parameters.description[name] = parameters.description[name] +'&&'+val1;
+                        }
+                    }
+                    break;
             }
-            console.log("========================================");
         });
 
+        var arr = [];
+        for (name in parameters.description) {
+            arr.push(parameters.description[name]);
+        }
 
+        parameters.description = arr.join(' && ');
         parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
         parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
