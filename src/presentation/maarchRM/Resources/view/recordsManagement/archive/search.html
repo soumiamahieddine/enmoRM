@@ -208,19 +208,18 @@
             case 'number':
                 var helperMin = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
                 var helperMax = $('<li/>').addClass("numberMax helperContent col-sm-4 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','number').attr('name', helperName).appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','number').attr('name', helperName).appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','number').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','number').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
             case 'date':
                 var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 no-padding").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','date').attr('name', helperName).addClass('startDate').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','date').attr('name', helperName).appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','date').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','date').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
             case 'boolean':
-                console.log("boolean : " + helperName);
                 var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
                 var helperCheckbox = $('#helperToggle').clone().attr('type','checkbox').attr('name', helperName);
                 $(function() {
@@ -282,7 +281,6 @@
 
     $('#archive_search').on('click', function () {
         var data = searchFormSerialize();
-        console.log(data);
         if (data == -1)
             return;
         $('#archive_search').prop('disabled', true);
@@ -358,19 +356,14 @@
             var val1 = $(this).find('#helperValueMin').val() ? $(this).find('#helperValueMin').val() : val1 = $(this).find('#helperToggle').val();
             var val2 = $(this).find('#helperValueMax').val();
             var type = $(this).find('#helperValueMin').attr('type') ? $(this).find('#helperValueMin').attr('type') : type = $(this).find('#helperToggle').attr('type');
-            var name = $(this).find('#helperValueMin').attr('name')? $(this).find('#helperValueMin').attr('name') : type = $(this).find('#helperToggle').attr('name');
+            var name = $(this).find('#helperValueMin').attr('name') ? $(this).find('#helperValueMin').attr('name') : type = $(this).find('#helperToggle').attr('name');
 
-            // if enumeration filled
+            // if enumeration / dropdownlist is filled
             if ($(this).find('#helperDropdown option:selected').text()) {
                 val1 = $(this).find('#helperDropdown option:selected').text();
                 type = 'select';
                 name = $(this).find('#helperDropdown').attr('name');
             }
-
-           /* console.log("Selected helperType :" + type);
-            console.log("Min : " + val1);
-            console.log("Max : " + val2);
-            console.log("Name : " + name);*/
 
             switch (type) {
 
@@ -394,11 +387,10 @@
                     break;
 
                 case 'date':
-                    // todo deal with valueMax
                     // format dates
-                    if (val1 !== '') {
-                        var operation = ($(this).hasClass('startDate')) ? ">=" : "<=";
-                        val1 = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+                    if (val1 !== undefined) {
+                        var operation = ($(this).find('#helperValueMin').attr('data-range') == 'start') ? ">=" : "<=";
+                        val1 = name + operation + "'" + val1 + "'";
 
                         // Fill start and end values
                         if (parameters.description[name] == undefined) {
@@ -407,18 +399,40 @@
                             parameters.description[name] = parameters.description[name] +'&&'+val1;
                         }
                     }
+                    if (val2 !== '') {
+                        var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
+                        val2 = name + operation + "'" + val2 + "'";
+
+                        // Fill start and end values
+                        if (parameters.description[name] == undefined) {
+                            parameters.description[name] = val2;
+                        } else {
+                            parameters.description[name] = parameters.description[name] +'&&'+val2;
+                        }
+                    }
                     break;
 
                 case 'number':
-                    if (val1 !== '') {
-                        var operation = ($(this).hasClass('numberMin')) ? ">=" : "<=";
-                        val1 = name + operation + $(this).val();
-                        
+                if (val1 !== '') {
+                    var operation = ($(this).find('#helperValueMin').attr('data-range') == 'start') ? ">=" : "<=";
+                        val1 = name + operation + "'" + val1 + "'";
+
                         // Fill start and end values
                         if (parameters.description[name] == undefined) {
                             parameters.description[name] = val1;
                         } else {
-                            parameters.description[name] = parameters.description[name] +'&&'+val1;
+                            parameters.description[name] = parameters.description[name] +'&&' + val1;
+                        }
+                    }
+                    if (val2 !== '') {
+                        var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
+                        val2 = name + operation + "'" + val2 + "'";
+
+                        // Fill start and end values
+                        if (parameters.description[name] == undefined) {
+                            parameters.description[name] = val2;
+                        } else {
+                            parameters.description[name] = parameters.description[name] +'&&'+val2;
                         }
                     }
                     break;
