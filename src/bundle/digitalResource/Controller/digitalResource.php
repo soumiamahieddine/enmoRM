@@ -785,7 +785,7 @@ class digitalResource
         $digitalResources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
         if (count($digitalResources)) {
-            $fullTextService = \laabs::newService('dependency/fileSystem/plugins/tika');
+            $fullTextService = \laabs::newService('dependency/fileSystem/plugins/Tika');
 
             foreach ($digitalResources as $digitalResource) {
                 $contents = $this->contents($digitalResource->resId);

@@ -78,6 +78,9 @@ trait archiveEntryTrait
      */
     public function receive($archive, $zipContainer = false)
     {
+        // var_dump($archive);
+        // exit;
+
         if ($zipContainer) {
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
             $zipResource = $archive->digitalResources[0];
@@ -86,6 +89,8 @@ trait archiveEntryTrait
             $this->receiveAttachments($archive);
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
         }
+
+        // var_dump($archive);
 
 
         if (!isset($archive->archiveId)) {
@@ -365,7 +370,7 @@ trait archiveEntryTrait
 
         foreach ($archives as $archive) {
             $archive = \laabs::castMessage($archive, 'recordsManagement/archive');
-            
+
             $this->loadDigitalResourcesBatch($archive, $batchDirectory);
 
             $this->receive($archive);
@@ -378,7 +383,7 @@ trait archiveEntryTrait
         if (isset($archive->digitalResources) && !empty($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
                 $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
-    
+
                 $fileContent = file_get_contents($filePath);
                 $digitalResource->handler = base64_encode($fileContent);
                 $digitalResource->size = filesize($filePath);
@@ -690,8 +695,7 @@ trait archiveEntryTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
-
-        if (strpos($this->currentServiceLevel->control, "fullTextIndexation")) {
+        if (strpos($this->currentServiceLevel->control, "fullTextIndexation") !== false) {
             $archive->fullTextIndexation = "requested";
         } else {
             $archive->fullTextIndexation = "none";
@@ -931,13 +935,11 @@ trait archiveEntryTrait
      *
      * @param recordsManagement/archive $archive The archive to deposit
      */
-    protected function storeDescriptiveMetadata($archive, $fullText = false)
+    protected function storeDescriptiveMetadata($archive)
     {
-        var_dump($archive->digitalResources[0]);
-        exit;
         $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
-        $descriptionController->create($archive,$fullText);
+        $descriptionController->create($archive);
     }
 
     /**
