@@ -382,7 +382,7 @@
 
                 case 'checkbox':
                     // format boolean
-                    val1 = $(this).find('#helperToggle').val() == 'on' ? 'true' : 'false';
+                    val1 = $(this).find('#helperToggle').val() == 'on' ? '1' : '0';
                     parameters.description[name] = name+'='+ val1;
                     break;
 
@@ -415,27 +415,26 @@
                 case 'number':
                 if (val1 !== '') {
                     var operation = ($(this).find('#helperValueMin').attr('data-range') == 'start') ? ">=" : "<=";
-                        val1 = name + operation + "'" + val1 + "'";
+                    val1 = name + operation + "'" + val1 + "'";
 
-                        // Fill start and end values
-                        if (parameters.description[name] == undefined) {
-                            parameters.description[name] = val1;
-                        } else {
-                            parameters.description[name] = parameters.description[name] +'&&' + val1;
-                        }
-                    }
-                    if (val2 !== '') {
-                        var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
-                        val2 = name + operation + "'" + val2 + "'";
+                    if (parameters.description[name] == undefined) {
+                        parameters.description[name] = val1;
+                    } else {
+                        parameters.description[name] = parameters.description[name] +'&&' + val1;
+                    }   
+                }
 
-                        // Fill start and end values
-                        if (parameters.description[name] == undefined) {
-                            parameters.description[name] = val2;
-                        } else {
-                            parameters.description[name] = parameters.description[name] +'&&'+val2;
-                        }
+                if (val2 !== '') {
+                    var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
+                    val2 = name + operation + "'" + val2 + "'";
+                    
+                    if (parameters.description[name] == undefined) {
+                        parameters.description[name] = val2;
+                    } else {
+                        parameters.description[name] = parameters.description[name] +'&&'+val2;
                     }
-                    break;
+                }
+                break;
             }
         });
 
