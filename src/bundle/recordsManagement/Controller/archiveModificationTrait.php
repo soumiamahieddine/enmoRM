@@ -96,7 +96,7 @@ trait archiveModificationTrait
                 $retentionRule->retentionDuration = $refRetentionRule->duration;
             }
         }
-        
+
 
         $retentionRuleReceived = $retentionRule;
 
@@ -426,6 +426,13 @@ trait archiveModificationTrait
 
         $archive->lastModificationDate = \laabs::newTimestamp();
 
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+        $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+        if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+            $text = $descriptionController->read($archiveId, false)->text;
+            $fullText = substr($text, strpos($text, '<<<<<<<<<<<<<<<<<<<<'));
+        }
+
         if (!empty($description)) {
             $descriptionObject = $description;
 
@@ -476,11 +483,13 @@ trait archiveModificationTrait
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-
             $archive->descriptionObject = $descriptionObject;
 
-            $descriptionController->update($archive);
+            if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+                $descriptionController->update($archive, $fullText);
+            } else {
+                $descriptionController->update($archive);
+            }
         }
 
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
@@ -684,11 +693,11 @@ trait archiveModificationTrait
                 preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $contents):
                 $handler = \laabs::createTempStream(base64_decode($contents));
                 break;
-        
+
             case is_resource($contents):
                 $handler = \core\Encoding\Base64::decode($contents);
         }
-        
+
         $digitalResource = $this->digitalResourceController->createFromStream($handler, $filename);
         $digitalResource->archiveId = $archiveId;
         $digitalResource->resId = \laabs::newId();
@@ -707,7 +716,7 @@ trait archiveModificationTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $this->validateDigitalResource($digitalResource);
-    
+
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
@@ -814,6 +823,30 @@ trait archiveModificationTrait
                 $comment,
                 $format
             );
+        }
+    }
+
+    public function extractFulltext()
+    {
+        $archiveIds = $this->sdoFactory->index('recordsManagement/archive', 'archiveId', 'fullTextIndexation=:fullTextIndexation', ['fullTextIndexation' => 'requested']);
+
+        $fulltextService = \laabs::newService(\laabs::configuration('dependency.fileSystem')['fullTextService']['serviceName']);
+
+        foreach ($archiveIds as $archiveId) {
+            $resourcesAbsolutePath = '';
+            $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+            foreach ($digitalResources as $digitalResource) {
+                $resourcesAbsolutePath .= ' '. $digitalResource->address[0]->repository->repositoryUri .$digitalResource->address[0]->path;
+            }
+
+            $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+            $descriptionController->update($archive, $fulltextService->getText($resourcesAbsolutePath));
+
+            $archive->fullTextIndexation = "indexed";
+            $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+
+            // $this->logMetadataModification($archive, $operationResult);
         }
     }
 }

@@ -398,7 +398,14 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/modifyMetadata
      */
-    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiverArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
+    public function updateMetadata(
+        $archiveId,
+        $originatorArchiveId = null,
+        $archiverArchiveId = null,
+        $archiveName = null,
+        $originatingDate = null,
+        $description = null
+    );
 
     /**
      * List an archive resources and children archives
@@ -415,7 +422,7 @@ interface archivesInterface
      *
      * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */
-    public function udpateMovearchivetofolder($archiveId, $folderId=null);
+    public function udpateMovearchivetofolder($archiveId, $folderId = null);
 
     /**
      * Move an archive into a folder
@@ -425,7 +432,7 @@ interface archivesInterface
      *
      * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
      */
-    public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
+    public function udpateMovearchivestofolder($archiveIds, $fromFolderId = null, $toFolderId = null);
 
     /**
      * Index full text
@@ -433,7 +440,7 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/indexFullText
      */
-    public function updateIndexfulltext($limit=200);
+    public function updateIndexfulltext($limit = 200);
 
 
     /**
@@ -442,5 +449,12 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/updateArchiveRetentionRule
      */
-    public function updateArchivesretentionrule($limit=500);
+    public function updateArchivesretentionrule($limit = 500);
+
+    /**
+     * Extract full text from resources of flagged archives
+     *
+     * @action recordsManagement/archive/extractFulltext
+     */
+    public function readExtractfulltext();
 }

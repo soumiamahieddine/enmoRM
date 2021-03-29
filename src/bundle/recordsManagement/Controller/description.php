@@ -23,7 +23,7 @@ namespace bundle\recordsManagement\Controller;
  * Control of the recordsManagement archive description
  *
  * @package RecordsManagement
- * @author  Cyril VAZQUEZ <cyril.vazquez@maarch.org> 
+ * @author  Cyril VAZQUEZ <cyril.vazquez@maarch.org>
  */
 class description implements \bundle\recordsManagement\Controller\archiveDescriptionInterface
 {
@@ -44,10 +44,10 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      * Create the description
      * @param obejct $archive  The described archive
      * @param string $fullText The archive fullText
-     * 
+     *
      * @return bool The result of the operation
      */
-    public function create($archive, $fullText=false)
+    public function create($archive, $fullText = false)
     {
         $descriptionObject = \laabs::newInstance('recordsManagement/description');
         $descriptionObject->archiveId = $archive->archiveId;
@@ -63,7 +63,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
 
         $descriptionObject->text .= $this->getText($archive->descriptionObject);
-        
+
         if ($fullText) {
             $descriptionObject->text .= ' <<<<<<<<<<<<<<<<<<<<'.$fullText;
         }
@@ -84,7 +84,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
                     return (string) $data;
                 }
                 break;
-                
+
             case 'object':
                 if (method_exists($data, '__toString')) {
                     return (string) $data;
@@ -110,17 +110,22 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
     /**
      * Read the description
      * @param string $archiveId The archive identifier
-     * 
+     * @param boolean $isDescriptionOnly If true returns only description, all description Model otherwise
+     *
      * @return mixed The description
      */
-    public function read($archiveId)
+    public function read($archiveId, $isDescriptionOnly = true)
     {
         try {
             $descriptionObject = $this->sdoFactory->read('recordsManagement/description', $archiveId);
 
-            return json_decode($descriptionObject->description);
-        } catch (\Exception $e) {
+            $descriptionObject->description = json_decode($descriptionObject->description);
+            if ($isDescriptionOnly) {
+                return $descriptionObject->description;
+            }
 
+            return $descriptionObject;
+        } catch (\Exception $e) {
         }
     }
 
@@ -180,7 +185,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
             // Normalize searched text
             $protectedText = preg_replace('/[^\w\-\_\*]+/', ' ', \laabs::normalize($text));
-            
+
             // Divide tokens with or without wildcrards for LIKE or TS
             $tokens = \laabs\explode(' ', $protectedText);
             foreach ($tokens as $token) {
@@ -190,7 +195,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
                         continue;
                     }
                     $sqlToken = str_replace("*", "%", $token);
-                    
+
                     // No wildcard at the beginning, add one with space
                     if ($sqlToken[0] != '%') {
                         $sqlToken = '% '.$sqlToken;
@@ -245,7 +250,6 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         return $count;
     }
 
-
     /**
      * Update the description
      * @param mixed  $description The description object
@@ -253,39 +257,13 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      *
      * @return bool The result of the operation
      */
-    public function update($archive)
+    public function update($archive, $fullText = false)
     {
-        if ($archive->fullTextIndexation == "indexed") {
-            $archive->fullTextIndexation == "requested";
-        }
+        // if ($archive->fullTextIndexation == "indexed") {
+        //     $archive->fullTextIndexation == "requested";
+        // }
 
-        // get fileName
-        $dir = \laabs::getTmpDir();
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755);
-        }
-
-        $path = $archive->digitalResources;
-
-        $fileName = $dir . DIRECTORY_SEPARATOR . $path;
-
-        $fileName = fopen($fileName, "w+");
-
-        // extract content file
-        if (isset(\laabs::configuration('recordsManagement')['extractService'])) {
-            try {
-                $extractServiceUri = \laabs::configuration('recordsManagement')['extractService'];
-                $timestampService = \laabs::newService($extractServiceUri);
-                $descriptionObject->text .= $extractService->getText($fileName);
-            } catch (\Exception $e) {
-                throw $e;
-            }
-        }
-
-        var_dump($fileName);
-        exit;
-        
-        $this->create($archive);
+        $this->create($archive, $fullText);
     }
 
      /**
@@ -301,7 +279,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
     /**
      * Get where assert expressions
      * @param object $assert The assert
-     * 
+     *
      * @return string
      */
     protected function getAssertExpression($assert)
@@ -327,16 +305,16 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
         switch (true) {
             case $comparison->right instanceof \core\Language\NumberOperand :
-            case $comparison->right instanceof \core\Language\RangeOperand 
-                && ( $comparison->right->from instanceof \core\Language\NumberOperand 
+            case $comparison->right instanceof \core\Language\RangeOperand
+                && ( $comparison->right->from instanceof \core\Language\NumberOperand
                 || $comparison->right->to instanceof \core\Language\NumberOperand ) :
                 $left = '('. $left.')::numeric';
                 break;
         }
-        
+
         $right = $this->getOperandExpression($comparison->right);
 
-        switch($comparison->code) 
+        switch($comparison->code)
         {
             case LAABS_T_EQUAL:
                 $operator = "=";
@@ -357,7 +335,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             case LAABS_T_SMALLER_OR_EQUAL:
                 $operator = "<=";
                 break;
-            
+
             case LAABS_T_CONTAINS:
                 $left = "LOWER(" . $left . ")";
                 $operator = " LIKE ";
@@ -393,19 +371,19 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
                     return "false";
                 }
                 break;
-            
+
             default:
                 throw new \core\Exception("Unknown comparison operator code " . $comparison->code);
         }
 
         return $left . $operator . $right;
     }
-    
+
     protected function getLogicalExpression($logical)
     {
         $left = $this->getOperandExpression($logical->left);
         $right = $this->getOperandExpression($logical->right);
-        
+
         switch($logical->code) {
             case LAABS_T_AND:
                 $operator = " AND ";
@@ -416,7 +394,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             default:
                 throw new \core\Exception("Unknown logical operator code " . $logical->code);
         }
-        
+
         return $left . $operator . $right;
     }
 
@@ -428,7 +406,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
             case $operand instanceof \core\Language\StringOperand:
                 return $this->getString($operand->value);
-                
+
             case $operand instanceof \core\Language\NumberOperand:
                 return $this->getNumberExpression($operand->value);
 
@@ -452,7 +430,7 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
 
             case $operand instanceof \core\Language\NullOperand:
                 return 'NULL';
-            
+
             case $operand instanceof \core\Language\Func:
                 return $this->getFuncExpression($operand);
 
@@ -489,16 +467,16 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         return "TO_TIMESTAMP(" . $timestamp . ", '". $this->datetimeFormat . "') ";
     }
 
-    
+
     protected function stripAccents($string)
     {
         $string = strtr(utf8_decode($string), utf8_decode('àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ'), 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
         $string = str_replace(' ', '', $string);
-        
+
         return $string;
     }
-    
-    protected function getListExpression($array) 
+
+    protected function getListExpression($array)
     {
         $list = array();
         foreach ($array as $value) {
@@ -515,12 +493,12 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         }
     }
 
-    protected function getNumberExpression($number) 
+    protected function getNumberExpression($number)
     {
         return $number;
     }
 
-    protected function getFuncContains($parameters) 
+    protected function getFuncContains($parameters)
     {
         $rOpd = $this->getOperandExpression($parameters[1]);
         if (strpos($rOpd, "'")===0) {
@@ -531,8 +509,8 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             $this->getOperandExpression($parameters[0])
             . " LIKE " . $this->getString("%" . $rOpd . "%");
     }
-    
-    protected function getFuncStartsWith($parameters) 
+
+    protected function getFuncStartsWith($parameters)
     {
         $rOpd = $this->getOperandExpression($parameters[1]);
         if (strpos($rOpd, "'")===0) {
@@ -543,8 +521,8 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
             $this->getOperandExpression($parameters[0])
             . " LIKE " . $this->getString($rOpd . "%");
     }
-    
-    protected function getFuncIn($parameters) 
+
+    protected function getFuncIn($parameters)
     {
         $lOpd = $this->getOperandExpression($parameters[0]);
         array_shift($parameters);
@@ -556,21 +534,21 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
     {
         return "'" . $string . "'";
     }
-    
-    protected function getNumeric($numeric) 
+
+    protected function getNumeric($numeric)
     {
         return $numeric;
     }
 
 
-    protected function getSelectQueryOptions($query) 
+    protected function getSelectQueryOptions($query)
     {
         $selectQueryOptions = false;
 
         return $selectQueryOptions;
     }
-    
-    protected function getConcat() 
+
+    protected function getConcat()
     {
         return "CONCAT(" . \laabs\implode(", ", func_get_args()) . ")";
     }

@@ -21,28 +21,30 @@ namespace dependency\fileSystem\plugins;
 
 /**
  * The metadata and text extraction tool
- * 
+ *
  * @author Prosper DE LAURE Maarch <prosper.delaure@maarch.org>
  */
 
-class tika implements \dependency\fileSystem\ExctractInterface {
-
-    protected $tikaJarFile;
+class Tika implements \dependency\fileSystem\FullTextInterface
+{
+    protected $tikaJarExecutable;
 
     /**
      * Constructor
-     * @param string $tikaJarFile The tikaJarFile
+     *
+     * @param string $tikaJarExecutable Path to tika jar file executable
      */
- 	public function __construct($tikaJarFile)
+    public function __construct($tikaJarExecutable)
     {
-		$this->tikaJarFile = $tikaJarFile;
+        $this->tikaJarExecutable = $tikaJarExecutable;
     }
 
     /**
      * @param $filename
      * @return string
      */
-    public function getHTML($filename){
+    public function getHTML($filename)
+    {
         return $this->run("--html", $filename);
     }
 
@@ -50,15 +52,17 @@ class tika implements \dependency\fileSystem\ExctractInterface {
      * @param $filename
      * @return string
      */
-    public function getJson($filename){
+    public function getJson($filename)
+    {
         return $this->run("--json", $filename);
     }
-    
+
     /**
      * @param string $filename
      * @return string
      */
-    public function getText($filename) {
+    public function getText($filename)
+    {
         return $this->run("--text", $filename);
     }
 
@@ -66,11 +70,12 @@ class tika implements \dependency\fileSystem\ExctractInterface {
      * @param $filename
      * @return string
      */
-    public function getMetadata($filename){
+    public function getMetadata($filename)
+    {
         return $this->run("--metadata", $filename);
     }
 
-	/**
+    /**
      * @param string $option
      * @param string $fileName
      *
@@ -79,10 +84,9 @@ class tika implements \dependency\fileSystem\ExctractInterface {
      */
     protected function run($option, $fileName)
     {
-        $command = 'java -jar ' . $this->tikaJarFile . ' ' . $option . ' "' . $fileName . '"';
+        $command = 'java -jar ' . $this->tikaJarExecutable . ' ' . $option .  $fileName;
 
         $return = null;
-
         exec($command, $output, $return);
 
         if ($return !== 0) {
@@ -90,9 +94,8 @@ class tika implements \dependency\fileSystem\ExctractInterface {
             $exception->errors = $output;
 
             throw $exception;
-            
         }
-        
+
         $output = implode("\n", $output);
         $output = str_replace("\x92", "'", $output);
         $output = str_replace("\x9C", "oe", $output);
@@ -100,5 +103,4 @@ class tika implements \dependency\fileSystem\ExctractInterface {
 
         return $output;
     }
-    
 }
