@@ -1335,5 +1335,5 @@ msgstr "Veuillez choisir un champ et renseigner une valeur associée."
 msgid "You must select the type of additional description field to add"
 msgstr "Veuillez choisir le type de critère supplémentaire à ajouter"
 
-msgid "Additional fields"
-msgstr "Critères supplémentaires"
+msgid "Add filter"
+msgstr "Ajouter le filtre"
