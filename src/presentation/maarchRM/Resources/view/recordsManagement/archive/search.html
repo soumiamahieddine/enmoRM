@@ -133,8 +133,8 @@
     }
     .btn-toggleOff {
         color:#333333;
-        background-color:#ffffff;
-        border-color:#cccccc;
+        background-color:#e6e6e6;
+        border-color:#adadad;
     }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -210,13 +210,11 @@
 
             // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
             case 'name':
-                // send data if enumeration is filled, simple input otherwise
                 var enumeration = helper.attr("data-enumeration");
                 dropdownList = JSON.parse(enumeration);
 
                 if (dropdownList) {
                     var enumNames = helper.attr("data-enumName");
-                    // test = JSON.parse(enumNames);
                     var dropdownValues = [];
 
                     $.each(dropdownList, function(key, value)
@@ -286,9 +284,6 @@
             $("#helperSelect :selected").text();
             $("#helperSelect :selected").remove();
         }     
-        else {
-            $('#helperError').removeClass('hide');
-        }
         $('#helperSelect').prop('selectedIndex',0);
     });
 
@@ -402,7 +397,6 @@
             return field;
         });
     }
-
     function searchFormSerialize() {
         var parameters = new Object();
 
