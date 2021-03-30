@@ -29,9 +29,9 @@
                         <div class="col-md-12">
                             <hr style="height:1px;border:none;color:gray;background-color:gray;">
                         </div>
-                        <div id="helperBlock" class="col-md-12">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Add filter</label>
+                                <label class="col-sm-2 control-label" style="padding-top: 15px;">Add filter</label>
                                 <div class="col-sm-4">
                                     <table id="helperFilter" class="table table-condensed">
                                         <tbody>
@@ -52,7 +52,7 @@
                                 </div>
                                 <ul class="col-sm-6">
                                     <li id="helperList" style="list-style: none">
-                                        <input id="selectedHelper" type="hidden" class="form-control"/>
+                                        <label id="selectedHelper" class="hide control-label"></label>
                                         <input id="helperValueMin" type="hidden" class="form-control"/>
                                         <input id="helperValueMax" type="hidden" class="form-control"/> 
                                         <select id="helperDropdown" name="service" class="hide form-control"></select>
@@ -95,9 +95,6 @@
 <style>
     input[type="date"] {
         line-height: 20 px;
-    }
-    #helperBlock .control-label{
-        padding-top: 15px;
     }
     #helperError {
         float: right;
@@ -188,7 +185,7 @@
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
             var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5").appendTo(row);
-            $('#selectedHelper').clone().attr('type','text').val(helperText).appendTo(selectedHelperType).prev().remove();
+            $('#selectedHelper').clone().removeClass('hide').html(helperText).appendTo(selectedHelperType).prev().remove();
 
             switch (helperType) {
             case 'array':
