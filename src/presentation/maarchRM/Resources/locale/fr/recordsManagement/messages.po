@@ -1320,8 +1320,5 @@ msgstr "Référentiel des personnes et organisations"
 msgid "Object"
 msgstr "Objet"
 
-msgid "You must select the type of additional description field to add"
-msgstr "Veuillez choisir le type de critère supplémentaire à ajouter"
-
 msgid "Add filter"
 msgstr "Ajouter le filtre"
