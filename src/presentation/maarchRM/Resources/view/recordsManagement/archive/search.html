@@ -29,14 +29,11 @@
                         <div class="col-md-12">
                             <hr style="height:1px;border:none;color:gray;background-color:gray;">
                         </div>
-                        <div class="col-md-12">
+                        <div id="helperBlock" class="col-md-12">
                             <div class="form-group">
-                                <label class="col-sm-4 col-sm-offset-4 control-label" style="margin-top: 2%;">Additional fields</label>
-                                <div class="col-sm-4" style="float:right">
-                                    <table class="table table-condensed">
-                                        <thead>
-                                            <th>Title</th>
-                                        </thead>
+                                <label class="col-sm-2 control-label">Add filter</label>
+                                <div class="col-sm-4">
+                                    <table id="helperFilter" class="table table-condensed">
                                         <tbody>
                                             <tr>
                                                 <td class="col-sm-11">
@@ -53,16 +50,16 @@
                                         </tbody>
                                     </table>
                                 </div>
-                                <ul class="col-sm-offset-3 col-sm-6">
-                                    <li id="helperList" style="list-style: none;">
-                                        <input id="selectedHelper" type="hidden" class="form-control" disabled />
+                                <ul class="col-sm-6">
+                                    <li id="helperList" style="list-style: none">
+                                        <input id="selectedHelper" type="hidden" class="form-control"/>
                                         <input id="helperValueMin" type="hidden" class="form-control"/>
                                         <input id="helperValueMax" type="hidden" class="form-control"/> 
                                         <select id="helperDropdown" name="service" class="hide form-control"></select>
                                         <input id="helperToggle" type="hidden" checked data-style="quick"/>
                                     </li>
                                 </ul>
-                                <span id="helperError" class="col-sm-4 col-sm-offset-4 hide alert-warning">You must select the type of additional description field to add</span>
+                                <span id="helperError" class="col-sm-4 col-sm-offset-7 hide alert-warning">You must select the type of additional description field to add</span>
                             </div>
                         </div>
                         <br />
@@ -96,19 +93,39 @@
     </div>
 </div>
 <style>
+    input[type="date"] {
+        line-height: 20 px;
+    }
+    #helperBlock .control-label{
+        padding-top: 15px;
+    }
     #helperError {
-        float:right;
+        float: right;
+    }
+    #helperFilter td {
+        border-top: none;
     }
     .helper {
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
     }
-    .no-padding {
+    .padding-5 {
         padding-right:5px;
         padding-left:5px;
     }
     .quick .toggle-group { 
         transition: none; 
         -webkit-transition: none; 
+    }
+    .btn-toggleOn {
+        color:#ffffff;
+        background-color:#23aae5;
+        border-color:#199cd5;
+    }
+    .btn-toggleOff {
+        color:#333333;
+        background-color:#ffffff;
+        border-color:#cccccc;
     }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -170,19 +187,19 @@
      
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
-            var selectedHelperType = $('<li/>').addClass("col-sm-3 no-padding").appendTo(row);
+            var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5").appendTo(row);
             $('#selectedHelper').clone().attr('type','text').val(helperText).appendTo(selectedHelperType).prev().remove();
 
             switch (helperType) {
             case 'array':
-                var helperInput = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperInput).prev().remove();
+                var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
+                $('#helperValueMin').clone().attr('type','text').attr('name', helperName).attr('placeholder','Valeur').appendTo(helperInput).prev().remove();
                 break;
 
             case 'text':
             case 'string':
-                var helperInput = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperInput).prev().remove();
+                var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
+                $('#helperValueMin').clone().attr('placeholder','Valeur').attr('type','text').attr('name', helperName).appendTo(helperInput).prev().remove();
                 break;
 
             case 'name':
@@ -196,40 +213,40 @@
                     {
                         dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
                     });
-                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
+                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
                     $('#helperDropdown').clone().attr('name', helperName).removeClass('hide').html(dropdownValues.join('')).appendTo(helperMin);
                 }
                 else {
-                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
+                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
                     $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperMin).prev().remove();
                 }
                 break;
 
             case 'number':
-                var helperMin = $('<li/>').addClass("helperContent col-sm-4 no-padding").appendTo(row);
-                var helperMax = $('<li/>').addClass("numberMax helperContent col-sm-4 no-padding").appendTo(row);
-                $('#helperValueMin').clone().attr('type','number').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','number').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+                var helperMin = $('<li/>').addClass("helperContent col-sm-4 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("numberMax helperContent col-sm-4 padding-5").appendTo(row);
+                $('#helperValueMin').clone().attr('type','number').attr('placeholder','Minimum').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','number').attr('placeholder','Maximum').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
             case 'date':
-                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 no-padding").appendTo(row);
-                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
                 $('#helperValueMin').clone().attr('type','date').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','date').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
             case 'boolean':
-                var helperMin = $('<li/>').addClass("helperContent col-sm-8 no-padding").appendTo(row);
+                var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
                 var helperCheckbox = $('#helperToggle').clone().attr('type','checkbox').attr('name', helperName);
                 $(function() {
                     $(helperCheckbox).bootstrapToggle({
                         on: 'Activé',
                         off: 'Désactivé',
-                        width: '50%',
+                        width: '18%',
                         size: 'normal',
-                        onstyle:'success',
-                        offstyle:'danger'
+                        onstyle:'toggleOn',
+                        offstyle:'toggleOff'
                     });
                 })
                 helperCheckbox.appendTo(helperMin);
@@ -352,11 +369,11 @@
 
         parameters.description = [];
 
-        $('#helperList').find('.helper').each(function(){
-            var val1 = $(this).find('#helperValueMin').val() ? $(this).find('#helperValueMin').val() : val1 = $(this).find('#helperToggle').val();
+        $('#helperList').find('.helper').each(function() {
+            var val1 = $(this).find('#helperValueMin').val() ? $(this).find('#helperValueMin').val() : $(this).find('#helperToggle').val();
             var val2 = $(this).find('#helperValueMax').val();
-            var type = $(this).find('#helperValueMin').attr('type') ? $(this).find('#helperValueMin').attr('type') : type = $(this).find('#helperToggle').attr('type');
-            var name = $(this).find('#helperValueMin').attr('name') ? $(this).find('#helperValueMin').attr('name') : type = $(this).find('#helperToggle').attr('name');
+            var type = $(this).find('#helperValueMin').attr('type') ? $(this).find('#helperValueMin').attr('type') : $(this).find('#helperToggle').attr('type');
+            var name = $(this).find('#helperValueMin').attr('name') ? $(this).find('#helperValueMin').attr('name') : $(this).find('#helperToggle').attr('name');
 
             // if enumeration / dropdownlist is filled
             if ($(this).find('#helperDropdown option:selected').text()) {
@@ -381,6 +398,7 @@
                     break;
 
                 case 'checkbox':
+                case 'boolean' :
                     // format boolean
                     val1 = $(this).find('#helperToggle').val() == 'on' ? '1' : '0';
                     parameters.description[name] = name+'='+ val1;
@@ -427,7 +445,7 @@
                 if (val2 !== '') {
                     var operation = ($(this).find('#helperValueMax').attr('data-range') == 'end') ? "<=" : ">=";
                     val2 = name + operation + "'" + val2 + "'";
-                    
+
                     if (parameters.description[name] == undefined) {
                         parameters.description[name] = val2;
                     } else {
