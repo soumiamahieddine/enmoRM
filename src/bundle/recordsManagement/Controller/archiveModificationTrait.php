@@ -430,7 +430,7 @@ trait archiveModificationTrait
         $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
         if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
             $text = $descriptionController->read($archiveId, false)->text;
-            $fullText = substr($text, strpos($text, '<<<<<<<<<<<<<<<<<<<<'));
+            $fullText = substr($text, strpos($text, PHP_EOL));
         }
 
         if (!empty($description)) {
@@ -601,7 +601,6 @@ trait archiveModificationTrait
                     $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
 
                     $operationResult = true;
-
                 } catch (\Exception $e) {
                     $operationResult = false;
                     $archive->fullTextIndexation = "failed";
@@ -730,6 +729,13 @@ trait archiveModificationTrait
             );
             $this->digitalResourceController->store($digitalResource);
 
+
+            $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+            if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+                $archive->fullTextIndexation = "requested";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+            }
+
             $this->logAddResource($archive, $digitalResource, true);
         } catch (\Exception $e) {
             if ($transactionControl) {
@@ -833,15 +839,24 @@ trait archiveModificationTrait
         $fulltextService = \laabs::newService(\laabs::configuration('dependency.fileSystem')['fullTextService']['serviceName']);
 
         foreach ($archiveIds as $archiveId) {
-            $resourcesAbsolutePath = '';
+            $fullText = "";
             $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
             foreach ($digitalResources as $digitalResource) {
-                $resourcesAbsolutePath .= ' '. $digitalResource->address[0]->repository->repositoryUri .$digitalResource->address[0]->path;
+                $tmpFile = \laabs\tempnam();
+                $tmpStream = fopen($tmpFile, 'w+');
+                $handler = $this->digitalResourceController->contents($digitalResource->resId);
+                stream_copy_to_stream($handler, $tmpStream);
+                rewind($tmpStream);
+                fclose($tmpStream);
+                $fullText .= $fulltextService->getText($tmpFile);
+                unlink($tmpFile);
             }
-
             $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-            $descriptionController->update($archive, $fulltextService->getText($resourcesAbsolutePath));
+
+
+            $descriptionController->update($archive, $fullText);
+
 
             $archive->fullTextIndexation = "indexed";
             $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
