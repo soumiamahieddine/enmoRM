@@ -53,25 +53,41 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
         $descriptionObject->archiveId = $archive->archiveId;
 
         if (!empty($archive->archiveName)) {
-            $descriptionObject->text = $archive->archiveName.' ';
+            $descriptionObject->text = $this->convertReturnCharToSpace($archive->archiveName).' ';
         }
         if (!empty($archive->originatorArchiveId)) {
-            $descriptionObject->text .= $archive->originatorArchiveId.' ';
+            $descriptionObject->text .= $this->convertReturnCharToSpace($archive->originatorArchiveId).' ';
         }
         if (!empty($archive->originatingDate)) {
-            $descriptionObject->text .= $archive->originatingDate.' ';
+            $descriptionObject->text .= $this->convertReturnCharToSpace($archive->originatingDate).' ';
         }
 
-        $descriptionObject->text .= $this->getText($archive->descriptionObject);
+        $descriptionObject->text .= $this->convertReturnCharToSpace($this->getText($archive->descriptionObject));
 
         if ($fullText) {
-            $descriptionObject->text .= ' <<<<<<<<<<<<<<<<<<<<'.$fullText;
+            $descriptionObject->text .= PHP_EOL . $this->convertReturnCharToSpace($fullText);
         }
 
         $descriptionObject->description = json_encode($archive->descriptionObject);
         $archive->description = $descriptionObject->description;
 
         $this->sdoFactory->update($descriptionObject);
+    }
+
+    /**
+     * Convert enter characters inside a string to single space
+     *
+     * @param  string $str string to convert
+     *
+     * @return string      string converted
+     */
+    protected function convertReturnCharToSpace(string $str = null)
+    {
+        if (is_null($str)) {
+            return;
+        }
+
+        return trim(preg_replace('/\s+/', ' ', $str));
     }
 
     protected function getText($data)

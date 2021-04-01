@@ -63,7 +63,7 @@ class Tika implements \dependency\fileSystem\FullTextInterface
      */
     public function getText($filename)
     {
-        return $this->run("--text", $filename);
+        return $this->run("--text --encoding=UTF8 ", $filename);
     }
 
     /**
@@ -97,9 +97,6 @@ class Tika implements \dependency\fileSystem\FullTextInterface
         }
 
         $output = implode("\n", $output);
-        $output = str_replace("\x92", "'", $output);
-        $output = str_replace("\x9C", "oe", $output);
-        $output = utf8_encode($output);
 
         return $output;
     }
