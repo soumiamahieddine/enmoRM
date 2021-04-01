@@ -209,7 +209,7 @@ class Property
 
                 case 'enumeration':
                     try {
-                        eval('$enumeration = '.trim($tagvalues[0]).';');
+                        @eval('$enumeration = '.trim($tagvalues[0]).';');
                     } catch (\Error $e) {
                         $enumeration = \laabs\explode(',', substr(trim($tagvalues[0]), 1, -1));
                     }

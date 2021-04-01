@@ -159,7 +159,7 @@ class descriptionScheme
             $descriptionField->enumeration = $schemeProperty->enumeration;
             if (isset($schemeProperty->tags['enumNames'])) {
                 try {
-                    eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
+                    @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
                 } catch (\Error $e) {
                     $enumNames = \laabs\explode(',', substr(trim($schemeProperty->tags['enumNames'][0]), 1, -1));
                 }
