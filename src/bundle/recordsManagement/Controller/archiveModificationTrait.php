@@ -836,7 +836,7 @@ trait archiveModificationTrait
     {
         $archiveIds = $this->sdoFactory->index('recordsManagement/archive', 'archiveId', 'fullTextIndexation=:fullTextIndexation', ['fullTextIndexation' => 'requested']);
 
-        $fulltextService = \laabs::newService(\laabs::configuration('dependency.fileSystem')['fullTextService']['serviceName']);
+        $fulltextService = \laabs::newService(\laabs::configuration('dependency.fileSystem')['fullTextServices']['serviceName']);
 
         foreach ($archiveIds as $archiveId) {
             $fullText = "";
