@@ -297,7 +297,7 @@ class ServiceKernel extends AbstractKernel
         }
 
         $controller = $this->actionRouter->controller->newInstance();
-        $this->actionReturn = $this->actionRouter->action->call($controller, $this->actionArguments);
+        $this->actionReturn = $this->actionRouter->action->call($controller, array_values($this->actionArguments));
 
         //$serviceReturnType = $this->serviceRoute->getReturnType();
         //$this->serviceReturn = \laabs::castMessage($this->actionReturn, $serviceReturnType);

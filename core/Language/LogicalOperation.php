@@ -7,7 +7,7 @@ class LogicalOperation
     extends AbstractBinaryOperation
 {
     
-    public function __construct($code=LAABS_T_AND, $left, $right)
+    public function __construct($code=LAABS_T_AND, $left=null, $right=null)
     {
         parent::__construct($code, $left, $right);
     }

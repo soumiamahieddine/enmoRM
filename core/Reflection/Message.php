@@ -69,7 +69,7 @@ class Message
      * 
      * @return object The new object
      */
-    public function newInstance($passedArgs=array())
+    public function newInstance($passedArgs=null, ...$args)
     {
         // Get construction method
         if ($constructor = $this->getConstructor()) {

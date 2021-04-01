@@ -169,7 +169,7 @@ trait TemplateDataTrait
         return $value;
     }
 
-    protected function &stepFunc($name, $params=array(), $source)
+    protected function &stepFunc($name, $params = [], $source = null)
     {
         $value = null;
         foreach ($params as $i => $param) {
@@ -198,7 +198,7 @@ trait TemplateDataTrait
             // Array functions
             case 'length':
             case 'count':
-                $value = @count($source);
+                $value = !is_null($source) ? @count($source) : 0;
                 break;
             case 'key':
                 $value = @key($source);

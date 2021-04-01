@@ -208,7 +208,11 @@ class Property
                     break;
 
                 case 'enumeration':
-                    @eval('$enumeration = '.trim($tagvalues[0]).';');
+                    try {
+                        eval('$enumeration = '.trim($tagvalues[0]).';');
+                    } catch (\Error $e) {
+                        $enumeration = \laabs\explode(',', substr(trim($tagvalues[0]), 1, -1));
+                    }
                     $this->enumeration = $enumeration;
                     break;
 
@@ -221,7 +225,7 @@ class Property
                     break;
 
                 case 'minvalue':
-                    $this->minValue = (int) $$tagvalues[0];
+                    $this->minValue = (int) $tagvalues[0];
                     break;
 
                 case 'maxvalue':
