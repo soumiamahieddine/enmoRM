@@ -61,7 +61,7 @@ class Tika implements \dependency\fileSystem\FullTextInterface
      * @param string $filename
      * @return string
      */
-    public function getText($filename)
+    public function getText($filename, $option = null)
     {
         return $this->run("--text --encoding=UTF8 ", $filename);
     }

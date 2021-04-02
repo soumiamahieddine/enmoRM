@@ -836,19 +836,37 @@ trait archiveModificationTrait
     {
         $archiveIds = $this->sdoFactory->index('recordsManagement/archive', 'archiveId', 'fullTextIndexation=:fullTextIndexation', ['fullTextIndexation' => 'requested']);
 
-        $fulltextService = \laabs::newService(\laabs::configuration('dependency.fileSystem')['fullTextServices']['serviceName']);
+        if (empty($archiveIds)) {
+            throw \laabs::newException('recordsManagement/fullTextException', "No archive to extract");
+        }
+
+        $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
 
         foreach ($archiveIds as $archiveId) {
             $fullText = "";
             $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
             foreach ($digitalResources as $digitalResource) {
+                $puid = $digitalResource->puid;
+
+                foreach ($fullTextServices as $fulltextServiceConf) {
+                    $options = null;
+                    if (in_array($puid, $fulltextServiceConf['inputFormats'])) {
+                        $fulltextService = \laabs::newService($fulltextServiceConf['serviceName']);
+                        $options = isset($fulltextServiceConf['options']) ? $fulltextServiceConf['options'] : null;
+                    }
+                }
+
+                if (!isset($fulltextService)) {
+                    throw \laabs::newException('recordsManagement/fullTextException', "File type does not exists has not been configured for extraction");
+                }
+
                 $tmpFile = \laabs\tempnam();
                 $tmpStream = fopen($tmpFile, 'w+');
                 $handler = $this->digitalResourceController->contents($digitalResource->resId);
                 stream_copy_to_stream($handler, $tmpStream);
                 rewind($tmpStream);
                 fclose($tmpStream);
-                $fullText .= $fulltextService->getText($tmpFile);
+                $fullText .= $fulltextService->getText($tmpFile, $options);
                 unlink($tmpFile);
             }
             $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
