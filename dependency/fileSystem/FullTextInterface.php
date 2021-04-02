@@ -24,10 +24,11 @@ namespace dependency\fileSystem;
 interface FullTextInterface
 {
     /**
-     * Get the extracted content from a file 
+     * Get the extracted content from a file
      * @param string $filename
-     * 
+     * @param array $options Array of options
+     *
      * @return string The extracted file content
      */
-    public function getText($filename);
+    public function getText($filename, $options = null);
 }
