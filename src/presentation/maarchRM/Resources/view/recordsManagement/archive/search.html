@@ -204,8 +204,9 @@
 
                 if (dropdownList) {
                     var enumNames = helper.attr("data-enumName");
-                    test = JSON.parse(enumNames); // TODO case 4 if test != null
+                    // test = JSON.parse(enumNames); 
                     var dropdownValues = [];
+
                     $.each(dropdownList, function(key, value)
                     {
                         dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
