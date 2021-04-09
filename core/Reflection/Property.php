@@ -221,7 +221,7 @@ class Property
                     break;
 
                 case 'scale':
-                    $this->scale = (int) $tagvalues[0];
+                    $this->scale = (int) ($tagvalues)[0];
                     break;
 
                 case 'minvalue':

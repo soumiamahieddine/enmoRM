@@ -524,13 +524,13 @@ trait laabsAppTrait
 
     /**
      * Instanciate a new exception. All additional arguments will be passed to constructor
-     * @param string $exceptionName The exception name bundle/exception
+     * @param string $exceptionUri The exception name bundle/exception
      *
      * @return Exception
      */
-    public static function newException($exceptionName)
+    public static function newException($exceptionUri)
     {
-        $bundleName = strtok($exceptionName, LAABS_URI_SEPARATOR);
+        $bundleName = strtok($exceptionUri, LAABS_URI_SEPARATOR);
         $exceptionName = strtok(LAABS_URI_SEPARATOR);
 
         $constructorArgs = func_get_args();

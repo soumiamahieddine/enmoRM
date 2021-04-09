@@ -446,13 +446,13 @@ trait laabsModelTrait
 
     /**
      * Instanciate a new object with given type name
-     * @param string $className The class name bundle/class
+     * @param string $classUri The class name bundle/class
      *
      * @return object
      */
-    public static function newInstance($className)
+    public static function newInstance($classUri)
     {
-        $bundleName = strtok($className, LAABS_URI_SEPARATOR);
+        $bundleName = strtok($classUri, LAABS_URI_SEPARATOR);
         $className = strtok(LAABS_URI_SEPARATOR);
 
         $type = self::bundle($bundleName)->getClass($className);

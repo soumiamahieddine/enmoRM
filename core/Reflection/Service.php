@@ -166,7 +166,7 @@ class Service
      * 
      * @return object The service object
      */
-    public function newInstance($passedArgs=null, ...$args)
+    public function newInstance($passedArgs = null, ...$args)
     {
         // Get construction method
         if ($this->hasConstructor()) {

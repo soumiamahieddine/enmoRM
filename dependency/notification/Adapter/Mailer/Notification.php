@@ -19,7 +19,13 @@
  */
 namespace dependency\notification\Adapter\Mailer;
 
-require_once __DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."PHPMailer-master".DIRECTORY_SEPARATOR."PHPMailerAutoload.php";
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require __DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."PHPMailer".DIRECTORY_SEPARATOR."src".DIRECTORY_SEPARATOR."PHPMailer.php";
+require __DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."PHPMailer".DIRECTORY_SEPARATOR."src".DIRECTORY_SEPARATOR."Exception.php";
+require __DIR__.DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."PHPMailer".DIRECTORY_SEPARATOR."src".DIRECTORY_SEPARATOR."SMTP.php";
+
 
 /**
  * Logger class
@@ -59,7 +65,8 @@ class Notification implements \dependency\notification\NotificationInterface
      */
     public function send($title, $message, $receivers = [])
     {
-        $mail = new \PHPMailer();
+        // $mail = new \PHPMailer();
+        $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->isSMTP();
         $mail->Host = $this->mailHost;
         $mail->Username = $this->mailUsername;
