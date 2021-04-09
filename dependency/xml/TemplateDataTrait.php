@@ -424,8 +424,6 @@ trait TemplateDataTrait
                 break;
             case 'join':
             case 'implode':
-                var_dump(debug_backtrace());
-                exit;
                 $value = @implode($params[0], $source);
                 break;
             case 'constant':
