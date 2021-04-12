@@ -33,7 +33,7 @@ trait TemplateDataTrait
     /* ------------------------------------------------------------------------
         Data sources management
     ------------------------------------------------------------------------ */
-    
+
     /**
      * Bind variable
      * @param string $name
@@ -165,7 +165,7 @@ trait TemplateDataTrait
             }
             break;
         }
-        
+
         return $value;
     }
 
@@ -424,6 +424,10 @@ trait TemplateDataTrait
                 break;
             case 'join':
             case 'implode':
+                if (is_null($source)) {
+                    $value = '';
+                    break;
+                }
                 $value = @implode($params[0], $source);
                 break;
             case 'constant':
@@ -511,7 +515,7 @@ trait TemplateDataTrait
             $instr = $this->parse($param);
             $value = &$this->getData($instr, $source);
         }
-        
+
         return $value;
     }
 
