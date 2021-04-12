@@ -749,7 +749,7 @@ tasks = "[
 ;    },
 ;    {
 ;        'taskId': '13',
-;        'route' : 'recordsManagement/archives/updateIndexfulltext',
+;        'route' : 'recordsManagement/archives/readExtractfulltext',
 ;        'description' : 'Extraction plein texte'
 ;    }
 ;]"
