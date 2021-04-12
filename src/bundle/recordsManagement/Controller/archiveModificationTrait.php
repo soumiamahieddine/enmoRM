@@ -869,15 +869,18 @@ trait archiveModificationTrait
                 $fullText .= $fulltextService->getText($tmpFile, $options);
                 unlink($tmpFile);
             }
-            $archive = $this->sdoFactory->read("recordsManagement/archive", $archiveId);
+            $archive = $this->retrieve($archiveId);
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
 
-            $descriptionController->update($archive, $fullText);
+            try {
+                $descriptionController->update($archive, $fullText);
+                $archive->fullTextIndexation = "indexed";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+            } catch (\Exception $e) {
+                throw new Exception("Error Processing Request", 1);
+            }
 
-
-            $archive->fullTextIndexation = "indexed";
-            $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
 
             // $this->logMetadataModification($archive, $operationResult);
         }
