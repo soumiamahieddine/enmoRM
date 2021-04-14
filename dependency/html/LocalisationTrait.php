@@ -63,7 +63,10 @@ trait LocalisationTrait
     public function translate($node=null, $catalog=false)
     {
         if (!$node) {
-            $node = $this->documentElement;
+            $this->translate($this->documentElement);
+            foreach ($this->fragments as $id => $fragment) {
+                $this->translate($fragment);
+            }
         }
   
         if ($catalog) {
