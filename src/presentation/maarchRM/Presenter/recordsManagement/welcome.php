@@ -87,7 +87,6 @@ class welcome
             $this->view->setSource("filePlan", $filePlan);
             $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
             $this->view->merge($this->view->getElementById('filePlanTree'));
-            //$this->view->translate();
         }
 
         // Retention
@@ -149,7 +148,7 @@ class welcome
         $this->view->setSource('user', $user);
         $this->view->setSource('locale', \laabs::configuration('dependency.localisation')['lang']);
         $this->view->merge();
-        //$this->view->translate();
+        
         return $this->view->saveHtml();
     }
 
