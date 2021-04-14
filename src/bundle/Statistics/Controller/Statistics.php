@@ -719,7 +719,7 @@ EOT;
                 ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
         }
 
-        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'SUM(CAST("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.' AS INTEGER))
+        $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'SUM(CAST(COALESCE(NULLIF("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.', \'\'), \'0\') AS INTEGER))
         FROM "lifeCycle"."event" "event"'.
         ($groupBy ? $joinCondition : '').'
         WHERE "event"."eventType" IN (\''.$eventType.'\')
