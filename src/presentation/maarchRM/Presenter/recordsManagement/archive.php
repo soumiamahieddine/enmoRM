@@ -168,6 +168,9 @@ class archive
                 "recordsManagement/messages"
             );
 
+            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_',$archive->archivalProfileReference);
+            $archive->archivalProfileName = $archivalProfile->name;
+
             if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                 $archive->disposable = true;
             }
@@ -214,8 +217,8 @@ class archive
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        $dataTable->setUnsortableColumns(8);
-        $dataTable->setUnsearchableColumns(8);
+        $dataTable->setUnsortableColumns(7);
+        $dataTable->setUnsearchableColumns(7);
 
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsearchableColumns(0);
@@ -245,7 +248,6 @@ class archive
         );
 
         $this->readPrivilegesOnArchives();
-
         $packageSchemas = \laabs::configuration("medona")["packageSchemas"];
 
         $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
