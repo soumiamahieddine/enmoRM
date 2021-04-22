@@ -63,6 +63,7 @@ class welcome
         $this->view->setSource('datePickerParams', $datePickerPlugin->saveParameters());
 
         $this->view->addContentFile("dashboard/mainScreen/main.html");
+        $this->view->addFragmentFile("filePlan/folderNode.html");
 
         $this->view->translate();
 
@@ -86,7 +87,6 @@ class welcome
             $this->view->setSource("filePlan", $filePlan);
             $this->view->setSource("filePlanPrivileges", $filePlanPrivileges);
             $this->view->merge($this->view->getElementById('filePlanTree'));
-            $this->view->translate();
         }
 
         // Retention
@@ -148,7 +148,7 @@ class welcome
         $this->view->setSource('user', $user);
         $this->view->setSource('locale', \laabs::configuration('dependency.localisation')['lang']);
         $this->view->merge();
-        $this->view->translate();
+        
         return $this->view->saveHtml();
     }
 

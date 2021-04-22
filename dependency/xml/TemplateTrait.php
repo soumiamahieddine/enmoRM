@@ -307,14 +307,17 @@ trait TemplateTrait
 
         if (isset($params['include'])) {
             $res = $params['include'];
-            $targetNode = $this->createDocumentFragment();
-
-            if (pathinfo($res, PATHINFO_EXTENSION) == 'xml') {
-                $targetNode->appendFile($res);
+            if (isset($this->fragments[$res])) {
+                $targetNode = $this->fragments[$res];
             } else {
-                $targetNode->appendHtmlFile($res);
-            }
+                $targetNode = $this->createDocumentFragment();
 
+                if (pathinfo($res, PATHINFO_EXTENSION) == 'xml') {
+                    $targetNode->appendFile($res);
+                } else {
+                    $targetNode->appendHtmlFile($res);
+                }
+            }
         } elseif (!$targetNode = $this->XPath->query("following-sibling::*", $pi)->item(0)) {
             return true;
         }

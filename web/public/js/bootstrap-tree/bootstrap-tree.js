@@ -20,7 +20,7 @@ var BootstrapTree = {
                       //     $(this).next().find("i").addClass("fa-folder").removeClass("fa-folder-o");
                        });
 
-        $('.parent_li').find(' > ul > li').hide();
+        $('.parent_li').find(' > ul > li').css({'display':'none'});
 
         tree.find('li')
             .not('.parent_li')
@@ -71,7 +71,7 @@ var BootstrapTree = {
             if (openNode || openNode == undefined) {
                 this.openNode(parent);
             } else {
-                element.hide();
+                element.css({'display':'none'});
             }
         }
     },
@@ -102,7 +102,7 @@ var BootstrapTree = {
         var closedIcon = i.data('closed-icon');
 
         if (!i.hasClass(openedIcon) && children.length) {
-            children.show('fast');
+            children.css({'display':'block'});
             i.addClass(openedIcon).removeClass(closedIcon);
         }
     },
