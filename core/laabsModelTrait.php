@@ -1667,9 +1667,8 @@ trait laabsModelTrait
                 }
             }
         } else {
-            return static::buildBranch($objects, null, $refField, $keyField, $childListProperty);
+            return static::buildTree2($objects, $refField, $keyField, $childListProperty);
         }
-        
     }
 
     protected static function buildBranch(array &$objects, $parentId, $idProperty, $parentIdProperty, $childListProperty)
@@ -1687,6 +1686,35 @@ trait laabsModelTrait
         }
 
         return $branch;
+    }
+
+    protected static function buildTree2(array &$objects, $idProperty, $parentIdProperty, $childListProperty)
+    {
+        $tree = [];
+
+        // Create an associative array with each key being the ID of the item
+        foreach ($objects as $object) {
+            $tree[(string) $object->{$idProperty}] = $object;
+        }
+
+        // Loop over the array and add each child to their parent
+        foreach ($tree as $id => $object) {
+            if (empty($object->{$parentIdProperty})) {
+                continue;
+            }
+            
+            $tree[$object->{$parentIdProperty}]->{$childListProperty}[] = $object;
+        }
+
+        // Loop over the array again and remove any items that don't have a parent of 0;
+        foreach ($tree as $id => $object) {
+            if (empty($object->{$parentIdProperty})) {
+                continue;
+            }
+            unset($tree[$id]);
+        }
+
+        return $tree;
     }
 
     /**

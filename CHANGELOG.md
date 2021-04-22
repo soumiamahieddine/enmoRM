@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 2.7.3
+- `Fixed` Actualisation lors du changement d'organisation après connexion.
+- `Added` Prise en compte de l'ajout d'une référence à une archive parente lors du versement d'un bordereau MADES.
+- `Fixed` Erreur lors de la consultation des statistiques.
+- `Fixed` Amélioration des performances du chargement des dossiers virtuels sur l'écran principal.
+
 ## Version 2.7.2
 - `Added` Tri des dossiers virtuels par ordre alphabétique.
 - `Added` Affichage des champs de référence externe dans la liste des données descriptives.

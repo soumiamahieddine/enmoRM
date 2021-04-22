@@ -44,6 +44,7 @@ class Document extends \dependency\xml\Document
     public $translator;
     public $dateTimeFormatter;
     public $pluginsParameters = [];
+    public $fragments = [];
     /**
      *   -- document --
      *   <html>
@@ -101,7 +102,6 @@ class Document extends \dependency\xml\Document
             $container = $this->createElement('div');
             $this->appendChild($container);
         }
-
     }
 
     /**
@@ -345,8 +345,8 @@ class Document extends \dependency\xml\Document
      */
     public function addContent($content, $container = false)
     {
-        $contentFragment = $this->createDocumentFragment();
-        $contentFragment->appendHtml($content);
+        $contentFragment = $this->addFragment($content);
+        
         if (!$container) {
             $container = $this->getContainer();
         }
@@ -363,8 +363,7 @@ class Document extends \dependency\xml\Document
      */
     public function addContentFile($contentResource, $container = false)
     {
-        $contentFragment = $this->createDocumentFragment();
-        $contentFragment->appendHtmlFile($contentResource);
+        $contentFragment = $this->addFragmentFile($contentResource);
 
         if (!$container) {
             $container = $this->getContainer();
@@ -384,6 +383,36 @@ class Document extends \dependency\xml\Document
         if ($container) {
             return $container->childNodes;
         }
+    }
+
+    /**
+     * Adds a fragment to the document, without including it to the dom tree
+     * @param string $content
+     * @return DOMDocumentFragment
+     */
+    public function addFragment($contents)
+    {
+        $contentFragment = $this->createDocumentFragment();
+        $contentFragment->appendHtml($contents);
+
+        $this->fragments[crc32($contents)] = $contentFragment;
+
+        return $contentFragment;
+    }
+
+    /**
+     * Adds a fragment to the document, without including it to the dom tree
+     * @param string $contentResource
+     * @return DOMDocumentFragment
+     */
+    public function addFragmentFile($contentResource)
+    {
+        $contentFragment = $this->createDocumentFragment();
+        $contentFragment->appendHtmlFile($contentResource);
+
+        $this->fragments[$contentResource] = $contentFragment;
+
+        return $contentFragment;
     }
 
     /*************************************************************************/

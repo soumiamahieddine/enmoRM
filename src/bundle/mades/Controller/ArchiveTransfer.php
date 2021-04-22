@@ -450,7 +450,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
     protected function validateFilingContainer($archiveUnit)
     {
-        $containerArchive = $archiveController->read($archiveUnit->filing->container);
+        $containerArchive = $this->archiveController->read($archiveUnit->filing->container);
 
         // Check level in file plan
         if ($containerArchive->fileplanLevel == 'item') {
@@ -723,6 +723,9 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
     {
         if (isset($archiveUnit->filing->folder)) {
             $archive->filePlanPosition = $archiveUnit->filing->folder;
+        }
+        if (isset($archiveUnit->filing->container)) {
+            $archive->parentArchiveId = $archiveUnit->filing->container;
         }
     }
 
