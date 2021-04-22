@@ -370,7 +370,6 @@ input:invalid {
             field.attr('placeholder', $('#date_text').text());
 
             parent.append(field);
-
             if (descriptionField.format == 'datetime') {
                 field.data('format', 'datetime');
                 field.datetimepicker(dateTimePickerParams);
@@ -384,7 +383,15 @@ input:invalid {
                 }
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
-                        var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:mm:ss');
+                        console.log('toto');
+                        var date = this.val().split(' ')[0];
+                        var time = this.val().split(' ')[1];
+                        var dateFormatted = date;
+                        var dateSliced = date.split('-');
+                        if (dateSliced[2].length == 4) {
+                            dateFormatted = dateSliced[2] + '-' + dateSliced[1] + '-' + dateSliced[0]
+                        }
+                        var dateObject = dateFormatted + 'T' + time;
 
                         return dateObject;
                     } else {
@@ -932,8 +939,9 @@ input:invalid {
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
                     data = data.replace('T', ' ');
-                    field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
-                    field.data('DateTimePicker').date(data)
+                    time = data.split(' ')[1];
+                    date = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
+                    // field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                 } else {
                     data = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
                     field.datepicker('setDate', data);

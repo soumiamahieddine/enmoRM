@@ -452,7 +452,6 @@
 
     NewArchive = {
         loadImportForm: function(e, profileMetadata) {
-            console.trace();
             $('#folderContents').addClass('hide');
             trigger('newArchiveForm.recordsManagement', [profileMetadata, ArchiveFolderList.orgRegNumber, ArchiveFolderList.folderId, e.data('parent-archive-id'), e.data('parent-archive-name')]);
         }
