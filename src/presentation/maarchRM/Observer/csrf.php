@@ -98,8 +98,15 @@ class csrf
      */
     public function setResponseToken(&$response)
     {
+        $this->getAccountId();
+
         // Do not process base uri or whitelisted URIs
-        if (empty(\laabs::kernel()->request->uri) || in_array(\laabs::kernel()->request->uri, $this->whiteList)) {
+        if ((
+            empty(\laabs::kernel()->request->uri)
+            || in_array(\laabs::kernel()->request->uri, $this->whiteList)
+            )
+            && (empty($this->accountId))
+        ) {
             return;
         }
 
@@ -129,7 +136,7 @@ class csrf
 
         // Save auth information to user account
         $this->updateAccount();
-            
+
         \laabs::setToken(strtoupper($this->config["cookieName"]), $responseToken, null, false);
     }
 
