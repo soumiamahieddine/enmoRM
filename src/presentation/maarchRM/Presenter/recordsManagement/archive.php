@@ -246,7 +246,7 @@ class archive
 
         $this->readPrivilegesOnArchives();
 
-        $packageSchemas = \laabs::configuration("medona")["packageSchemas"];
+        $packageSchemas = isset(\laabs::configuration("medona")["packageSchemas"]) ? \laabs::configuration("medona")["packageSchemas"] : null;
 
         $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
         $this->view->setSource('maxResults', \laabs::configuration('presentation.maarchRM')['maxResults']);
