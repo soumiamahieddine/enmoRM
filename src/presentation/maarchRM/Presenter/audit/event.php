@@ -87,7 +87,7 @@ class event
         $events = array();
         $routes = array();
         $translator = $this->view->translator;
-        
+
         $bundles = \laabs::bundles();
         foreach ($bundles as $bundle) {
             $apis = $bundle->getApis();
@@ -136,7 +136,7 @@ class event
         $this->view->addContentFile("audit/result.html");
 
         $conf = \laabs::configuration('audit');
-        if ($conf && array_key_exists('separateInstance', $conf)) {
+        if ($conf && property_exists($conf, 'separateInstance')) {
             $multipleInstance = !(bool) $conf['separateInstance'];
         } else {
             $multipleInstance = false;
