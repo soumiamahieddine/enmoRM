@@ -328,7 +328,7 @@
 
             getTemplate = function () {
                 var template = $('<div>').addClass('bootstrap-datetimepicker-widget dropdown-menu'),
-                    dateView = $('<div>').addClass('datepicker').append(getDatePickerTemplate()),
+                    dateView = $('<div>').addClass('datepicker2').append(getDatePickerTemplate()),
                     timeView = $('<div>').addClass('timepicker').append(getTimePickerTemplate()),
                     content = $('<ul>').addClass('list-unstyled'),
                     toolbar = $('<li>').addClass('picker-switch' + (options.collapse ? ' accordion-toggle' : '')).append(getToolbar());
@@ -497,7 +497,7 @@
                 if (dir) {
                     currentViewMode = Math.max(minViewModeNumber, Math.min(3, currentViewMode + dir));
                 }
-                widget.find('.datepicker > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
+                widget.find('.datepicker2 > div').hide().filter('.datepicker-' + datePickerModes[currentViewMode].clsName).show();
             },
 
             fillDow = function () {
@@ -2523,7 +2523,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().subtract(7, 'd'));
                 } else {
                     this.date(d.clone().add(this.stepping(), 'm'));
@@ -2535,7 +2535,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().add(7, 'd'));
                 } else {
                     this.date(d.clone().subtract(this.stepping(), 'm'));
@@ -2546,7 +2546,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().subtract(1, 'y'));
                 } else {
                     this.date(d.clone().add(1, 'h'));
@@ -2557,7 +2557,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().add(1, 'y'));
                 } else {
                     this.date(d.clone().subtract(1, 'h'));
@@ -2568,7 +2568,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().subtract(1, 'd'));
                 }
             },
@@ -2577,7 +2577,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().add(1, 'd'));
                 }
             },
@@ -2586,7 +2586,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().subtract(1, 'M'));
                 }
             },
@@ -2595,7 +2595,7 @@
                     return;
                 }
                 var d = this.date() || this.getMoment();
-                if (widget.find('.datepicker').is(':visible')) {
+                if (widget.find('.datepicker2').is(':visible')) {
                     this.date(d.clone().add(1, 'M'));
                 }
             },
