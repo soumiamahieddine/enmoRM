@@ -283,8 +283,8 @@ class Document extends \dependency\xml\Document
         // $this->addScript("/public/js/moment_2.14.1/moment.js");
         $this->addScript("/public/js/moment_2.14.1/moment.min.js");
 
-        // $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.js");
-        $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.min.js");
+        $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.js");
+        // $this->addScript("/public/js/dateTimePicker/bootstrap-datetimepicker.min.js");
 
         $this->addScript("/public/js/csrf/csrfprotector.js");//min version does not exists
 
@@ -346,7 +346,7 @@ class Document extends \dependency\xml\Document
     public function addContent($content, $container = false)
     {
         $contentFragment = $this->addFragment($content);
-        
+
         if (!$container) {
             $container = $this->getContainer();
         }
