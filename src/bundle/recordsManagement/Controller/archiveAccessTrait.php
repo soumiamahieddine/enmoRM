@@ -1597,11 +1597,14 @@ trait archiveAccessTrait
      *
      * @return [type]             [description]
      */
-    public function readFromIdentifiers(array $archiveIds)
+    public function readFromIdentifiers(array $archiveIds = null)
     {
-        $list = '"'.implode('", "', $archiveIds).'"';
-        $where = '= ['.$list.']';
-        $archives = $this->sdoFactory->find('recordsManagement/archive', 'archiveId ' . $where);
+        $archives = [];
+        if (!is_null($archiveIds)) {
+            $list = '"'.implode('", "', $archiveIds).'"';
+            $where = '= ['.$list.']';
+            $archives = $this->sdoFactory->find('recordsManagement/archive', 'archiveId ' . $where);
+        }
 
         return $archives;
     }
