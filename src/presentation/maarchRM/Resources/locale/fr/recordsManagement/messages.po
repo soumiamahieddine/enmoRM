@@ -1325,3 +1325,6 @@ msgstr "Archive ajoutée aux favoris."
 
 msgid "Archive removed from collection."
 msgstr "Archive retirée des favoris."
+
+msgid "Remove All Collections"
+msgstr "Supprimer tous les favoris"
