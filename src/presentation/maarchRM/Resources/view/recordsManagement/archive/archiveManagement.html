@@ -196,6 +196,7 @@ var ArchivesAction = {
         } else {
             collection.archiveIds.push(archives);
         }
+
         var data = {};
         data.collection = collection;
 
@@ -211,7 +212,7 @@ var ArchivesAction = {
                 } else {
                     gritter.show($('#addedToCollection').html(), true);
                 }
-                $('#collection').val($('#collection').val());
+                $('#collection').val(JSON.stringify(collection));
 
                 if (htmlElement == null && collectionHtmlElement == null) {
                     $("#archiveList_table").DataTable().clear().draw();
