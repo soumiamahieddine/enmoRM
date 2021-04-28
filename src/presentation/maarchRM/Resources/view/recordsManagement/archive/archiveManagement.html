@@ -179,16 +179,20 @@ var ArchivesAction = {
         });
     },
 
-    updateCollection: function(archives, isInUserCollection, htmlElement, collectionHtmlElement) {
+    updateCollection: function(archives, isInUserCollection, htmlElement = null, collectionHtmlElement = null) {
         var collection = JSON.parse($('#collection').val());
         if (collection.archiveIds === null) {
             collection.archiveIds = [];
         }
 
         if (isInUserCollection) {
-            // remove archive from collection
-            // not supported for chrome < 47, firefox < 43, safari <9, edge < 14 (meaning before december 2015)
-            collection.archiveIds = collection.archiveIds.filter(item => !archives.includes(item));
+            if (archives.length == 0) {
+                collection.archiveIds = [];
+            } else {
+                // remove archive from collection
+                // not supported for chrome < 47, firefox < 43, safari <9, edge < 14 (meaning before december 2015)
+                collection.archiveIds = collection.archiveIds.filter(item => !archives.includes(item));
+            }
         } else {
             collection.archiveIds.push(archives);
         }
@@ -208,10 +212,16 @@ var ArchivesAction = {
                     gritter.show($('#addedToCollection').html(), true);
                 }
                 $('#collection').val($('#collection').val());
-                htmlElement.classList.toggle('fa-star-o');
-                htmlElement.classList.toggle('fa-star');
-                htmlElement.classList.toggle('yellow');
-                collectionHtmlElement.attr('data-isinusercollection', !isInUserCollection);
+
+                if (htmlElement == null && collectionHtmlElement == null) {
+                    $("#archiveList_table").DataTable().clear().draw();
+                    $('#numberResults').text(0);
+                } else {
+                    htmlElement.classList.toggle('fa-star-o');
+                    htmlElement.classList.toggle('fa-star');
+                    htmlElement.classList.toggle('yellow');
+                    collectionHtmlElement.attr('data-isinusercollection', !isInUserCollection);
+                }
             },
             error: function (response) {
                 return false;

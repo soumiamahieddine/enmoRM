@@ -39,6 +39,7 @@ class Collection extends \presentation\maarchRM\Presenter\recordsManagement\arch
     public function index($collection)
     {
         $archives = \laabs::callService('recordsManagement/archives/readArchives', $collection->archiveIds);
+        $this->view->setSource('isCollectionView', true);
 
         $resultListElement = parent::presentResultList($archives, \laabs::configuration("presentation.maarchRM")["maxResults"]);
 

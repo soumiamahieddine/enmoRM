@@ -4,3 +4,8 @@
 	</div>
 	<div class="container-fluid" id="collectionList"></div>
 </div>
+<script>
+	$('#deleteCollections').on('click', function() {
+		ArchivesAction.updateCollection([], true, null, null);
+	});
+</script>

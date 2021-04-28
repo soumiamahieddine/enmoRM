@@ -7,11 +7,13 @@
         <div class="panel-heading clearfix">
             <div class="pull-left">
                 <?merge hasReachMaxResults.not() ?>
-                <h4><?merge archive.count() ?> archive(s)</h4>
+                <h4><span id="numberResults"><?merge archive.count() ?></span> archive(s)</h4>
                 <?merge hasReachMaxResults ?>
-                <h4><?merge archive.count() ?> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
+                <h4><span id="numberResults"><?merge archive.count() ?></span> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
             </div>
             <div class="dropdown pull-right">
+                <?merge isCollectionView.bool() ?>
+                <button class="btn btn-warning" type="button" id="deleteCollections">Remove All Collections</button>
                 <button class="btn btn-warning dropdown-toggle" type="button" id="archiveList_actions" data-toggle="dropdown" aria-expanded="true" title="Actions" disabled="disabled">
                     <i class="fa fa-navicon">&nbsp;</i>&nbsp;Actions
                     <span class="caret"></span>
