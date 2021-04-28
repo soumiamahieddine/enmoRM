@@ -842,6 +842,7 @@ trait archiveModificationTrait
 
         $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
 
+        $archiveExtractedCount = 0;
         foreach ($archiveIds as $archiveId) {
             $fullText = "";
             $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
@@ -866,7 +867,7 @@ trait archiveModificationTrait
                 stream_copy_to_stream($handler, $tmpStream);
                 rewind($tmpStream);
                 fclose($tmpStream);
-                $fullText .= $fulltextService->getText($tmpFile, $options);
+                $fullText .= $fulltextService->getText($tmpFile, $options) . " ";
                 unlink($tmpFile);
             }
             $archive = $this->retrieve($archiveId);
@@ -881,8 +882,12 @@ trait archiveModificationTrait
                 throw new Exception("Error Processing Request", 1);
             }
 
+            echo "Archive $archive->archiveName extracted" . PHP_EOL;
 
-            // $this->logMetadataModification($archive, $operationResult);
+            $this->logMetadataModification($archive, true);
+            $archiveExtractedCount++;
         }
+
+        echo "$archiveExtractedCount archives extracted" . PHP_EOL;
     }
 }
