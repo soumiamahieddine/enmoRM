@@ -852,6 +852,10 @@ trait archiveModificationTrait
             foreach ($digitalResources as $digitalResource) {
                 $puid = $digitalResource->puid;
 
+                if (empty($puid)) {
+                    throw \laabs::newException('recordsManagement/fullTextException', "File puid has bot been detected for $digitalResource->filename");
+                }
+
                 foreach ($fullTextServices as $fulltextServiceConf) {
                     $options = null;
                     if (in_array($puid, $fulltextServiceConf['inputFormats'])) {
