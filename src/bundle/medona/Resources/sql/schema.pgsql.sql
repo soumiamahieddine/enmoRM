@@ -1,6 +1,6 @@
 DROP SCHEMA IF EXISTS "medona" CASCADE;
 
-CREATE SCHEMA "medona"
+CREATE SCHEMA "medona";
 
 -- Table: "medona"."archivalAgreement"
 
