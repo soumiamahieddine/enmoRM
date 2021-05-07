@@ -1399,14 +1399,12 @@ trait archiveAccessTrait
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
-        $defaultCommunicationRule = isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule']) ? \laabs::configuration("recordsManagement")['defaultCommunicationRule'] : null;
-
         if (!empty($archive->accessRuleCode)) {
             $accessRuleCode = $archive->accessRuleCode;
         } elseif (!empty($archive->archivalProfileReference)) {
             $archivalProfile = $this->archivalProfileController->getByReference($archive->archivalProfileReference);
             $accessRuleCode = $archivalProfile->accessRuleCode;
-        } elseif (isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule'])) {
+        } elseif (isset(\laabs::configuration("recordsManagement")['actionWithoutCommunicationRule'])) {
             $accessRuleCode = null;
         } else {
             return;
