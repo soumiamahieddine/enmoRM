@@ -13,6 +13,13 @@ TRUNCATE TABLE "batchProcessing"."scheduling" CASCADE;
 TRUNCATE TABLE "batchProcessing"."logScheduling" CASCADE;
 TRUNCATE TABLE "batchProcessing"."notification" CASCADE;
 
+ -- Collection
+TRUNCATE TABLE "collection"."collectionId" CASCADE;
+TRUNCATE TABLE "collection"."name" CASCADE;
+TRUNCATE TABLE "collection"."archiveIds" CASCADE;
+TRUNCATE TABLE "collection"."accountId" CASCADE;
+TRUNCATE TABLE "collection"."orgId" CASCADE;
+
  -- Contact
 TRUNCATE TABLE "contact"."communication" CASCADE;
 TRUNCATE TABLE "contact"."address" CASCADE;

@@ -3,14 +3,17 @@
     <h4><span>Your query returns too much results, only first results are displayed.</span></h4>
     <div class="panel panel-primary">
         <input type="hidden" id="transaction" value="[?merge transaction ?]" />
+        <input type="hidden" id="collection" value="[?merge collection.json() ?]" />
         <div class="panel-heading clearfix">
             <div class="pull-left">
                 <?merge hasReachMaxResults.not() ?>
-                <h4><?merge archive.count() ?> archive(s)</h4>
+                <h4><span id="numberResults"><?merge archive.count() ?></span> archive(s)</h4>
                 <?merge hasReachMaxResults ?>
-                <h4><?merge archive.count() ?> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
+                <h4><span id="numberResults"><?merge archive.count() ?></span> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
             </div>
             <div class="dropdown pull-right">
+                <?merge isCollectionView.bool() ?>
+                <button class="btn btn-warning" type="button" id="deleteCollections">Remove All Collections</button>
                 <button class="btn btn-warning dropdown-toggle" type="button" id="archiveList_actions" data-toggle="dropdown" aria-expanded="true" title="Actions" disabled="disabled">
                     <i class="fa fa-navicon">&nbsp;</i>&nbsp;Actions
                     <span class="caret"></span>
@@ -30,6 +33,7 @@
                         <th>Deposit date</th>
                         <th>Disposal date</th>
                         <th>Status</th>
+                        <th><span><i class="fa fa-star-o" title="Favoris"></i></span></th>
                         <th style="min-width:150px;"></th>
                     </tr>
                 </thead>
@@ -52,6 +56,7 @@
                         <td data-order="[?merge .depositDate.format('Y-m-d H:i:s') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
+                        <td data-isInUserCollection="[?merge .isInUserCollection.bool().then('true', 'false') ?]"><i class="collection fa [?merge .isInUserCollection.bool().then('fa-star yellow', 'fa-star-o') ?]"></i></td>
                         <td>
                             <div class="btn-group pull-right">
                                 <!--button type="button" class="btn btn-success btn-sm requestDelivery" id="requestCom" data-archiveid='[?merge .archiveId?]' title="Request of communication"><span class="fa fa-cloud-upload">&nbsp;</span></button-->
@@ -71,7 +76,11 @@
     </div>
     <?hinclude recordsManagement/archive/archiveManagement.html ?>
 </div>
-
+<style>
+    .yellow {
+        color: #FFFF00;
+    }
+</style>
 <script>
     /* MULTIPLE ARCHIVE SELECTION*/
 

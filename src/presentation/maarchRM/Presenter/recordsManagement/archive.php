@@ -125,7 +125,22 @@ class archive
      */
     public function search($archives, $count)
     {
-        $this->view->addContentFile("recordsManagement/archive/resultList.html");
+        $this->presentResultList($archives, $count);
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     *
+     *
+     * @param array   $archives Array of archive object
+     * @param integer $count    Count of archive object without limit
+     *
+     * @return domElement
+     */
+    public function presentResultList($archives, $count)
+    {
+        $resultList = $this->view->addContentFile("recordsManagement/archive/resultList.html");
 
         $this->view->translate();
 
@@ -156,6 +171,8 @@ class archive
         $orgsByRegNumber = $orgController->orgList();
 
         $currentDate = \laabs::newDate();
+        $collection = \laabs::callService('Collection/Collection/readByUser');
+
         foreach ($archives as $archive) {
             $archive->finalDispositionDesc = $this->view->translator->getText(
                 $archive->finalDisposition,
@@ -203,6 +220,15 @@ class archive
                     $archive->isCommunicable = '1';
                 }
             }
+
+            $archive->isInUserCollection = false;
+            if (!is_null($collection->archiveIds) && !empty($collection->archiveIds)) {
+                foreach ($collection->archiveIds as $collectedArchiveId) {
+                    if ($collectedArchiveId == $archive->archiveId) {
+                        $archive->isInUserCollection = true;
+                    }
+                }
+            }
         }
 
         $hasReachMaxResults = false;
@@ -214,8 +240,8 @@ class archive
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        $dataTable->setUnsortableColumns(8);
-        $dataTable->setUnsearchableColumns(8);
+        $dataTable->setUnsortableColumns([8, 9]);
+        $dataTable->setUnsearchableColumns([8, 9]);
 
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsearchableColumns(0);
@@ -256,9 +282,11 @@ class archive
         $this->view->setSource('archive', $archives);
         $this->view->setSource('transaction', $this->transaction);
         $this->view->setSource('packageSchemas', $packageSchemas);
+        $this->view->setSource('collection', $collection);
+
         $this->view->merge();
 
-        return $this->view->saveHtml();
+        return $resultList;
     }
 
     /**

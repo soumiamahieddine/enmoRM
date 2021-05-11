@@ -620,7 +620,6 @@ trait archiveAccessTrait
                 foreach ($archive->digitalResources as $i => $digitalResource) {
                     $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($digitalResource->resId);
                 }
-
             } elseif ($loadResourcesInfo) {
                 foreach ($archive->digitalResources as $i => $digitalResource) {
                     $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
@@ -1589,5 +1588,24 @@ trait archiveAccessTrait
 
         $handler = fopen($zipfile, 'r');
         return $handler;
+    }
+
+    /**
+     * Retrieve archive from array of archiveIds
+     *
+     * @param  array  $archiveIds Array of archive identifier
+     *
+     * @return [type]             [description]
+     */
+    public function readFromIdentifiers(array $archiveIds = null)
+    {
+        $archives = [];
+        if (!is_null($archiveIds)) {
+            $list = '"'.implode('", "', $archiveIds).'"';
+            $where = '= ['.$list.']';
+            $archives = $this->sdoFactory->find('recordsManagement/archive', 'archiveId ' . $where);
+        }
+
+        return $archives;
     }
 }

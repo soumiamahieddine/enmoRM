@@ -1,0 +1,11 @@
+<div class="container-fluid">
+	<div class="page-header">
+		<h1><span class="fa fa-shopping-basket fa-fw"></span>&nbsp;Favoris</h1>
+	</div>
+	<div class="container-fluid" id="collectionList"></div>
+</div>
+<script>
+	$('#deleteCollections').on('click', function() {
+		ArchivesAction.updateCollection([], true, null, null);
+	});
+</script>
