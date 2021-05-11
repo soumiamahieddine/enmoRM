@@ -196,7 +196,7 @@ class Statistics
         foreach ($directStats as $groupBy => $result) {
             $groupByFound = false;
             for ($i = 0; $i < count($stats); $i++) {
-                if ($stats[$i][$filter] == $groupby) {
+                if ($stats[$i][$filter] == $groupBy) {
                     if ($resultType == 'sum') {
                         $result1 = floatval(str_replace(" ", "", $stats[$i][$resultType]));
                         $result2 = floatval(str_replace(" ", "", $result));
@@ -716,7 +716,7 @@ EOT;
                 ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
                 ON "archivalProfile"."reference" = "event"."eventInfo"::json->>10'
                 : ' INNER JOIN "organization"."organization" "organization"
-                ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
+                ON "organization"."registrationNumber" = "event"."eventInfo"::json->>4';
         }
 
         $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'SUM(CAST(COALESCE(NULLIF("event"."eventInfo"::json->>'.$jsonSizeColumnNumber.', \'\'), \'0\') AS INTEGER))
@@ -766,7 +766,7 @@ EOT;
                 ? ' LEFT JOIN "recordsManagement"."archivalProfile" "archivalProfile"
                 ON "archivalProfile"."reference" = "event"."eventInfo"::json->>10'
                 : ' INNER JOIN "organization"."organization" "organization"
-                ON "organization"."registrationNumber" = "event"."eventInfo"::json->>6';
+                ON "organization"."registrationNumber" = "event"."eventInfo"::json->>4';
         }
 
         $query = 'SELECT '.($groupBy ? $selectCondition . ' AS "'.$groupBy.'", ' : '').'COUNT("event"."eventId")
