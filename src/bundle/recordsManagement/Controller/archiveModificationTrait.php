@@ -470,7 +470,10 @@ trait archiveModificationTrait
                 }
             }
 
-            if (!empty($archive->archivalProfileReference) && is_object($descriptionObject)) {
+            if (!empty($archive->archivalProfileReference)
+                && is_object($descriptionObject)
+                && \laabs::configuration("recordsManagement")['archivalProfileType'] != 1
+            ) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
 
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);

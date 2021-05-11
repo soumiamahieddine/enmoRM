@@ -448,7 +448,7 @@ class archive
      */
     public function edit($archive)
     {
-        if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
+        if (!empty($archive->descriptionClass) && $presenter = $this->getDescriptionPresenter($archive->descriptionClass)) {
             return $presenter->edit($archive);
         }
     }
@@ -1116,8 +1116,8 @@ class archive
         $editMetadata = false;
         if (!empty($archive->descriptionObject)) {
             $this->getDescriptionHtml($archive);
-            // Edit Metadata button is display only if the content is in SEDA 1 & if the archive status is 'preserved'
-            if ($archive->descriptionClass == "archivesPubliques/content" && $archive->status == "preserved") {
+            // Edit Metadata button is display only the archive status is 'preserved'
+            if ($archive->status == "preserved") {
                 $editMetadata = true;
             }
         }
