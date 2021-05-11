@@ -222,12 +222,21 @@ class log implements archiveDescriptionInterface
             }
         }
 
+        if (!is_null($description)) {
+            $queryString .= $description;
+        }
+
         $archiveController = \laabs::newController('recordsManagement/archive');
         $archives = [];
 
         $sortBy = ">fromDate";
 
-        $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, [], $sortBy, 0, $maxResults);
+        try {
+            $logs = $this->sdoFactory->find("recordsManagement/log", $queryString, [], $sortBy, 0, $maxResults);
+        } catch (\Exception $e) {
+            return [];
+        }
+
 
         foreach ($logs as $log) {
             try {
