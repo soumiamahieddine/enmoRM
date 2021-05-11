@@ -16,8 +16,7 @@
     # when target is not an existing public resource
     RewriteEngine On 
     
-    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_URI} ^/public [NC]
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f
     RewriteRule .* - [QSA,L]
 
     # Rewrite to dynamic frontal if no file extension
