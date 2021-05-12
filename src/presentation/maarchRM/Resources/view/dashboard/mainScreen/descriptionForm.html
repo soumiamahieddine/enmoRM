@@ -238,6 +238,8 @@ input:invalid {
 
         addArchiveDescription : function(archiveDescription) {
             var descriptionField = archiveDescription.descriptionField;
+            descriptionField.required = archiveDescription.required;
+            descriptionField.readonly = archiveDescription.readonly;
             var target = $("#archivalProfileFields");
             var formGroup = Metadata.getFormGroup(descriptionField);
             target.append(formGroup);
