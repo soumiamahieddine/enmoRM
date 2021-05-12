@@ -914,7 +914,7 @@ conversionServices = "[
 ; ]"
 
 ;path to tika extraction executable
-;tikaJarExecutable="/home/jerome/Downloads/tika-app-1.25.jar"
+;tikaJarExecutable="/path/to/tika-app-X.XX.jar"
 
 ;path to tesseract executable (only for windows)
 ;tesseractExecutable="C:\...."
