@@ -87,7 +87,6 @@ trait archiveEntryTrait
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
         }
 
-
         if (!isset($archive->archiveId)) {
             $archive->archiveId = \laabs::newId();
         }
@@ -365,7 +364,7 @@ trait archiveEntryTrait
 
         foreach ($archives as $archive) {
             $archive = \laabs::castMessage($archive, 'recordsManagement/archive');
-            
+
             $this->loadDigitalResourcesBatch($archive, $batchDirectory);
 
             $this->receive($archive);
@@ -378,7 +377,7 @@ trait archiveEntryTrait
         if (isset($archive->digitalResources) && !empty($archive->digitalResources)) {
             foreach ($archive->digitalResources as $digitalResource) {
                 $filePath = $batchDirectory.DIRECTORY_SEPARATOR.$digitalResource->fileName;
-    
+
                 $fileContent = file_get_contents($filePath);
                 $digitalResource->handler = base64_encode($fileContent);
                 $digitalResource->size = filesize($filePath);
@@ -690,8 +689,7 @@ trait archiveEntryTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
-
-        if (strpos($this->currentServiceLevel->control, "fullTextIndexation")) {
+        if (strpos($this->currentServiceLevel->control, "fullTextIndexation") !== false) {
             $archive->fullTextIndexation = "requested";
         } else {
             $archive->fullTextIndexation = "none";

@@ -96,7 +96,7 @@ trait archiveModificationTrait
                 $retentionRule->retentionDuration = $refRetentionRule->duration;
             }
         }
-        
+
 
         $retentionRuleReceived = $retentionRule;
 
@@ -426,6 +426,13 @@ trait archiveModificationTrait
 
         $archive->lastModificationDate = \laabs::newTimestamp();
 
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+        $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+        if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+            $text = $descriptionController->read($archiveId, false)->text;
+            $fullText = substr($text, strpos($text, PHP_EOL));
+        }
+
         if (!empty($description)) {
             $descriptionObject = $description;
 
@@ -479,11 +486,13 @@ trait archiveModificationTrait
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-
             $archive->descriptionObject = $descriptionObject;
 
-            $descriptionController->update($archive);
+            if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+                $descriptionController->update($archive, $fullText);
+            } else {
+                $descriptionController->update($archive);
+            }
         }
 
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
@@ -595,7 +604,6 @@ trait archiveModificationTrait
                     $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
 
                     $operationResult = true;
-
                 } catch (\Exception $e) {
                     $operationResult = false;
                     $archive->fullTextIndexation = "failed";
@@ -687,11 +695,11 @@ trait archiveModificationTrait
                 preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $contents):
                 $handler = \laabs::createTempStream(base64_decode($contents));
                 break;
-        
+
             case is_resource($contents):
                 $handler = \core\Encoding\Base64::decode($contents);
         }
-        
+
         $digitalResource = $this->digitalResourceController->createFromStream($handler, $filename);
         $digitalResource->archiveId = $archiveId;
         $digitalResource->resId = \laabs::newId();
@@ -710,7 +718,7 @@ trait archiveModificationTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $this->validateDigitalResource($digitalResource);
-    
+
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
@@ -723,6 +731,13 @@ trait archiveModificationTrait
                 $archive->storagePath
             );
             $this->digitalResourceController->store($digitalResource);
+
+
+            $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+            if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+                $archive->fullTextIndexation = "requested";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+            }
 
             $this->logAddResource($archive, $digitalResource, true);
         } catch (\Exception $e) {
@@ -818,5 +833,68 @@ trait archiveModificationTrait
                 $format
             );
         }
+    }
+
+    public function extractFulltext()
+    {
+        $archiveIds = $this->sdoFactory->index('recordsManagement/archive', 'archiveId', 'fullTextIndexation=:fullTextIndexation', ['fullTextIndexation' => 'requested']);
+
+        if (empty($archiveIds)) {
+            throw \laabs::newException('recordsManagement/fullTextException', "No archive to extract");
+        }
+
+        $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
+
+        $archiveExtractedCount = 0;
+        foreach ($archiveIds as $archiveId) {
+            $fullText = "";
+            $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+            foreach ($digitalResources as $digitalResource) {
+                $puid = $digitalResource->puid;
+
+                if (empty($puid)) {
+                    throw \laabs::newException('recordsManagement/fullTextException', "File puid has not been detected for $digitalResource->filename");
+                }
+
+                foreach ($fullTextServices as $fulltextServiceConf) {
+                    $options = null;
+                    if (in_array($puid, $fulltextServiceConf['inputFormats'])) {
+                        $fulltextService = \laabs::newService($fulltextServiceConf['serviceName']);
+                        $options = isset($fulltextServiceConf['options']) ? $fulltextServiceConf['options'] : null;
+                    }
+                }
+
+                if (!isset($fulltextService)) {
+                    throw \laabs::newException('recordsManagement/fullTextException', "File type does not exists has not been configured for extraction");
+                }
+
+                $tmpFile = \laabs\tempnam();
+                $tmpStream = fopen($tmpFile, 'w+');
+                $handler = $this->digitalResourceController->contents($digitalResource->resId);
+                stream_copy_to_stream($handler, $tmpStream);
+                rewind($tmpStream);
+                fclose($tmpStream);
+                $fullText .= $fulltextService->getText($tmpFile, $options) . " ";
+                unlink($tmpFile);
+            }
+            $archive = $this->retrieve($archiveId);
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+
+
+            try {
+                $descriptionController->update($archive, $fullText);
+                $archive->fullTextIndexation = "indexed";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+            } catch (\Exception $e) {
+                throw new Exception("Error Processing Request", 1);
+            }
+
+            echo "Archive $archive->archiveName extracted" . PHP_EOL;
+
+            $this->logMetadataModification($archive, true);
+            $archiveExtractedCount++;
+        }
+
+        echo "$archiveExtractedCount archives extracted" . PHP_EOL;
     }
 }
