@@ -78,9 +78,6 @@ trait archiveEntryTrait
      */
     public function receive($archive, $zipContainer = false)
     {
-        // var_dump($archive);
-        // exit;
-
         if ($zipContainer) {
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
             $zipResource = $archive->digitalResources[0];
@@ -89,9 +86,6 @@ trait archiveEntryTrait
             $this->receiveAttachments($archive);
             $archive = \laabs::cast($archive, 'recordsManagement/archive');
         }
-
-        // var_dump($archive);
-
 
         if (!isset($archive->archiveId)) {
             $archive->archiveId = \laabs::newId();

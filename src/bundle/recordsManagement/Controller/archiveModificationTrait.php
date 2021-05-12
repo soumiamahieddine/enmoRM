@@ -853,7 +853,7 @@ trait archiveModificationTrait
                 $puid = $digitalResource->puid;
 
                 if (empty($puid)) {
-                    throw \laabs::newException('recordsManagement/fullTextException', "File puid has bot been detected for $digitalResource->filename");
+                    throw \laabs::newException('recordsManagement/fullTextException', "File puid has not been detected for $digitalResource->filename");
                 }
 
                 foreach ($fullTextServices as $fulltextServiceConf) {

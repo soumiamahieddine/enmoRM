@@ -275,10 +275,6 @@ class description implements \bundle\recordsManagement\Controller\archiveDescrip
      */
     public function update($archive, $fullText = false)
     {
-        // if ($archive->fullTextIndexation == "indexed") {
-        //     $archive->fullTextIndexation == "requested";
-        // }
-
         $this->create($archive, $fullText);
     }
 

@@ -35,10 +35,8 @@ class Tesseract implements \dependency\fileSystem\FullTextInterface
             switch (DIRECTORY_SEPARATOR) {
                 // Windows installation
                 case '\\':
-                    // TODO correct with installation path tesseract windows
                     $this->executable = 'C:\Program Files (x86)\Tesseract-OCR\Tesseract.exe';
                     break;
-
                 case "/":
                 default:
                     $this->executable = "tesseract";
@@ -60,7 +58,7 @@ class Tesseract implements \dependency\fileSystem\FullTextInterface
 
     /**
      * @param string $fileName
-     * @param string $option
+     * @param string $options
      *
      * @return string
      * @throws \Exception
