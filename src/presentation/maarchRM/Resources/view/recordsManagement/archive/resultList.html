@@ -31,7 +31,6 @@
                         <th>Originator</th>
                         <th>Profile</th>
                         <th>Deposit date</th>
-                        <th>Disposal date</th>
                         <th>Status</th>
                         <th><span><i class="fa fa-star-o" title="Favoris"></i></span></th>
                         <th style="min-width:150px;"></th>
@@ -50,11 +49,10 @@
                                 value="[?merge .archiveId ?]"/>
                         </td>
                         <td class="archiveName"><?merge .archiveName ?></td>
-                        <td><?merge .archiveId ?></td>
+                        <td><?merge .archiverArchiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
-                        <td class="profile"><?merge .archivalProfileReference ?></td>
+                        <td class="profile"><?merge .archivalProfileName ?></td>
                         <td data-order="[?merge .depositDate.format('Y-m-d H:i:s') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
-                        <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
                         <td data-isInUserCollection="[?merge .isInUserCollection.bool().then('true', 'false') ?]"><i class="collection fa [?merge .isInUserCollection.bool().then('fa-star yellow', 'fa-star-o') ?]"></i></td>
                         <td>
