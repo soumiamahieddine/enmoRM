@@ -1031,7 +1031,7 @@ boolFormat = 1
 
 dateFormat = YYYY-MM-DD
 timeFormat = HH24:MI:SS
-datetimeFormat = "YYYY-MM-DD HH24:MI:SS,US"
+datetimeFormat = "YYYY-MM-DDtHH24:MI:SS,US"
 
 ; Log events in Laabs log
 ; 0 = no trace
