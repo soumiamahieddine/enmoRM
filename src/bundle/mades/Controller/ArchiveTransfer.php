@@ -406,10 +406,11 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
     protected function validateFiling($archiveUnit)
     {
-        $this->validateFilingActivity($archiveUnit);
 
         if (!empty($archiveUnit->filing->container)) {
             $this->validateFilingContainer($archiveUnit);
+        } else {
+            $this->validateFilingActivity($archiveUnit);
         }
 
         if (isset($archiveUnit->archiveUnits) && count($archiveUnit->archiveUnits) > 0) {
