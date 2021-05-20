@@ -370,7 +370,6 @@ input:invalid {
             field.attr('placeholder', $('#date_text').text());
 
             parent.append(field);
-
             if (descriptionField.format == 'datetime') {
                 field.data('format', 'datetime');
                 field.datetimepicker(dateTimePickerParams);
@@ -934,6 +933,7 @@ input:invalid {
                     data = data.replace('T', ' ');
                     field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
+                    field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                 } else {
                     data = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
                     field.datepicker('setDate', data);
