@@ -1400,21 +1400,20 @@ trait archiveAccessTrait
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
-        if (isset(\laabs::configuration("recordsManagement")['ruleWithoutCommunicationRule']) 
-            && (\laabs::configuration("recordsManagement")['ruleWithoutCommunicationRule']) == "open") 
-        {
-            $archivalProfile = $this->archivalProfileController->getByReference($archive->archivalProfileReference);
-            $accessRuleCode = $archivalProfile->accessRuleCode;
-        } elseif (isset(\laabs::configuration("recordsManagement")['ruleWithoutCommunicationRule']) 
-            && (\laabs::configuration("recordsManagement")['ruleWithoutCommunicationRule']) == "close") 
-        {
-            $accessRuleCode = "close";
-        }
+        if(isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule'])){
+            $defaultCommunicationRule = \laabs::configuration("recordsManagement")['defaultCommunicationRule'];
+        }   
         if (!empty($archive->accessRuleCode)) {
             $accessRuleCode = $archive->accessRuleCode;
         } elseif (!empty($archive->archivalProfileReference)) {
             $archivalProfile = $this->archivalProfileController->getByReference($archive->archivalProfileReference);
             $accessRuleCode = $archivalProfile->accessRuleCode;
+        } elseif (isset($defaultCommunicationRule) && !empty($defaultCommunicationRule)) {
+            foreach ($accessRuleController->index() as $code => $accessRule) {
+                if ($accessRule == $defaultCommunicationRule) {
+                    $accessRuleCode = \laabs::configuration("recordsManagement")['defaultCommunicationRule'];
+                } 
+            }
         } else {
             return;
         }
