@@ -384,14 +384,6 @@ input:invalid {
                 if (this.val()){
                     if (field.data('format') == 'datetime') {
                         var dateObject = this.data('DateTimePicker').date().format('YYYY-MM-DDTHH:mm:ss');
-                        // var date = this.val().split(' ')[0];
-                        // var time = this.val().split(' ')[1];
-                        // var dateFormatted = date;
-                        // var dateSliced = date.split('-');
-                        // if (dateSliced[2].length == 4) {
-                        //     dateFormatted = dateSliced[2] + '-' + dateSliced[1] + '-' + dateSliced[0]
-                        // }
-                        // var dateObject = dateFormatted + 'T' + time;
 
                         return dateObject;
                     } else {
@@ -942,8 +934,6 @@ input:invalid {
                     field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
                     field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
-                    // time = data.split(' ')[1];
-                    // date = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
                 } else {
                     data = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
                     field.datepicker('setDate', data);
