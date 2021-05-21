@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 2.7.4
+ - `Fixed` Mauvaise ventilation par profil d'archive et service producteur dans l'onglet statistique
+ - `Fixed` Impossibilité de sauvegarder des métadonnées de type datetime via l'écran
+ - `Fixed` Champs obligatoires n'apparaissent plus lors de l'ajout/modification des métadonnées
+ - `Fixed` Mauvais retour lors de la recherche sur les champs description
+ - `Changed` Modification de l'utilisateur attribué lors de la création du schéma medona
+
 ## Version 2.7.3
 - `Fixed` Actualisation lors du changement d'organisation après connexion.
 - `Added` Prise en compte de l'ajout d'une référence à une archive parente lors du versement d'un bordereau MADES.
@@ -25,7 +32,7 @@
 - `Fixed` Calcul de la prochaine exécution mêmeen cas d'erreur dans le planificateur de tâches.
 - `Fixed` Affichage du compte de service en charge d'exécuter la tâche dans le planificateur de tâches.
 - `Fixed` Restauration du fichier permettant la génération de la doc OPENAPI.
-- `Fixed` Correction du bug de déconnexion intempestive lors du changement d'organisation d'appartenance. 
+- `Fixed` Correction du bug de déconnexion intempestive lors du changement d'organisation d'appartenance.
 - `Fixed` Amélioration de la détection de l'algorithme de hash sur les bordereaux externes.
 - `Fixed` Correction du bug lors de la modification des paramètres d'un cluster de stockage.
 - `Fixed` Correction de l'affichage de la prévisualisation de certains PDF.
