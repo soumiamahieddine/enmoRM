@@ -1399,26 +1399,20 @@ trait archiveAccessTrait
      */
     public function getAccessRule($archive, $archivalProfile = false)
     {
-        if(isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule'])){
-            $defaultCommunicationRule = \laabs::configuration("recordsManagement")['defaultCommunicationRule'];
-        }   
+        $defaultCommunicationRule = isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule']) ? \laabs::configuration("recordsManagement")['defaultCommunicationRule'] : null;
+
         if (!empty($archive->accessRuleCode)) {
             $accessRuleCode = $archive->accessRuleCode;
         } elseif (!empty($archive->archivalProfileReference)) {
             $archivalProfile = $this->archivalProfileController->getByReference($archive->archivalProfileReference);
             $accessRuleCode = $archivalProfile->accessRuleCode;
-        } elseif (isset($defaultCommunicationRule) && !empty($defaultCommunicationRule)) {
-            foreach ($accessRuleController->index() as $code => $accessRule) {
-                if ($accessRule == $defaultCommunicationRule) {
-                    $accessRuleCode = \laabs::configuration("recordsManagement")['defaultCommunicationRule'];
-                } 
-            }
+        } elseif (isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule'])) {
+            $accessRuleCode = null;
         } else {
             return;
         }
-        if (!empty($accessRuleCode)) {
-            $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
-        }
+
+        $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
     }
 
     /**
