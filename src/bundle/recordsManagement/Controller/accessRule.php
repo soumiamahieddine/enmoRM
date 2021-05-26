@@ -68,16 +68,21 @@ class accessRule
     public function edit($code = null)
     {
         if (is_null($code)) {
-            $defaultCommunicationRule = isset(\laabs::configuration("recordsManagement")['defaultCommunicationRule']) ? \laabs::configuration("recordsManagement")['defaultCommunicationRule'] : null;
+            $defaultCommunicationRule = isset(\laabs::configuration("recordsManagement")['actionWithoutCommunicationRule']) ? \laabs::configuration("recordsManagement")['actionWithoutCommunicationRule'] : null;
 
-            if (is_null($defaultCommunicationRule)) {
+            if (is_null($defaultCommunicationRule) || !in_array($defaultCommunicationRule, ['allow', 'deny'])) {
                 throw new \core\Exception\ConflictException("Missing or wrong default communication Rule");
-
             }
-            $accessRule = \laabs::newInstance('recordsManagement/accessRule');
 
+            $accessRule = \laabs::newInstance('recordsManagement/accessRule');
+            if ($defaultCommunicationRule == 'allow') {
+                $accessRule->duration = "PD0";
+            } else {
+                $accessRule->duration = "P999999999Y";
+            }
+        } else {
+            $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
         }
-        $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
 
         return $accessRule;
     }
