@@ -70,7 +70,7 @@ class accessRule
         if (is_null($code)) {
             $defaultCommunicationRule = isset(\laabs::configuration("recordsManagement")['actionWithoutCommunicationRule']) ? \laabs::configuration("recordsManagement")['actionWithoutCommunicationRule'] : null;
 
-            if (is_null($defaultCommunicationRule) || !in_array($defaultCommunicationRule, ['allow', 'deny'])) {
+            if (!is_null($defaultCommunicationRule) && !in_array($defaultCommunicationRule, ['allow', 'deny'])) {
                 throw new \core\Exception\ConflictException("Missing or wrong default communication Rule");
             }
 
