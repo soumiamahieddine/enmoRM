@@ -933,7 +933,6 @@ input:invalid {
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
                     data = data.replace('T', ' ');
-                    field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
                     field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                 } else {
