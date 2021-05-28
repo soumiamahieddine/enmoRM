@@ -52,7 +52,6 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "descriptionSchema" text,
   "descriptionClass" text,
   "retentionStartDate" text,
-  "isRetentionLastDeposit" boolean,
   "retentionRuleCode" text ,
   "description" text,
   "accessRuleCode" text,
@@ -60,6 +59,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "acceptArchiveWithoutProfile" boolean default true,
   "fileplanLevel" text,
   "processingStatuses" jsonb,
+  "isRetentionLastDeposit" boolean,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")

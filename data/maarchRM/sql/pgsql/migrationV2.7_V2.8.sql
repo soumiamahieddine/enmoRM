@@ -1,8 +1,5 @@
 -- Migration script for PGSQL from Maarch RM V2.7 to V2.8
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 DROP SCHEMA IF EXISTS "Collection" CASCADE;
 
 CREATE SCHEMA "Collection";
@@ -30,12 +27,4 @@ WITH (
   OIDS=FALSE
 );
 
-=======
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isRetentionLastDeposit" boolean default false;
->>>>>>> feat/#16379 : Elimination date based on the last deposit
-=======
-ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isRetentionLastDeposit" boolean default false;
->>>>>>> feat/#16379 : Elimination date based on the last deposit
-=======
-ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isRetentionLastDeposit" boolean default false;
->>>>>>> d39e120eee045cc330d971d6b53aef67b6b97b7e
