@@ -275,11 +275,8 @@ msgstr "Lecture seule"
 msgid "View in the list"
 msgstr "Voir dans la liste"
 
-<<<<<<< HEAD
 msgid "cannot be recursively called"
 msgstr "ne peut pas être appelé récursivement"
 
-=======
->>>>>>> feat/#16379 : Elimination date based on the last deposit
 msgid "Update when an item is added"
 msgstr "Mettre à jour au versement d'une pièce"

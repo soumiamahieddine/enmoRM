@@ -79,7 +79,11 @@ class archivalProfile
     public $retentionStartDate;
 
     /**
+<<<<<<< HEAD
      * The starting date of the retention rule calculation is from last deposit
+=======
+     * The starting date of calculated retention rule based on last deposit date
+>>>>>>> d39e120eee045cc330d971d6b53aef67b6b97b7e
      *
      * @var boolean
      */
