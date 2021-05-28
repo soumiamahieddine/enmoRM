@@ -59,7 +59,7 @@ CREATE TABLE "recordsManagement"."archivalProfile"
   "acceptArchiveWithoutProfile" boolean default true,
   "fileplanLevel" text,
   "processingStatuses" jsonb,
-  "isRetentionLastDeposit" boolean,
+  "isRetentionLastDeposit" boolean default false,
   PRIMARY KEY ("archivalProfileId"),
   UNIQUE ("reference"),
   FOREIGN KEY ("accessRuleCode")
