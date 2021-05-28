@@ -780,7 +780,7 @@ trait archiveEntryTrait
     }
 
     /**
-     * Check a parentArchive retention rule
+     * Update the retention start date of an archive
      *
      * @param recordsManagement/archive $archive      The archive to receive
      */
