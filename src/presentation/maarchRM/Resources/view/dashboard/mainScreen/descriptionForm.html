@@ -238,6 +238,8 @@ input:invalid {
 
         addArchiveDescription : function(archiveDescription) {
             var descriptionField = archiveDescription.descriptionField;
+            descriptionField.required = archiveDescription.required;
+            descriptionField.readonly = archiveDescription.readonly;
             var target = $("#archivalProfileFields");
             var formGroup = Metadata.getFormGroup(descriptionField);
             target.append(formGroup);
@@ -370,7 +372,6 @@ input:invalid {
             field.attr('placeholder', $('#date_text').text());
 
             parent.append(field);
-
             if (descriptionField.format == 'datetime') {
                 field.data('format', 'datetime');
                 field.datetimepicker(dateTimePickerParams);
@@ -932,8 +933,8 @@ input:invalid {
                 field = target.find("input");
                 if (field.data('format') == 'datetime') {
                     data = data.replace('T', ' ');
-                    field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                     field.data('DateTimePicker').date(data)
+                    field.data('DateTimePicker').format('YYYY-MM-DD HH:mm:ss');
                 } else {
                     data = new Date(data).toLocaleDateString("[?merge locale ?]").replace(/\//g, "-");
                     field.datepicker('setDate', data);
