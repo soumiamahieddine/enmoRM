@@ -115,7 +115,8 @@ class welcome
             $archiveDescriptions = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archivalProfile->reference)->archiveDescription;
             $archivalProfiles[$key]->archiveDescription = $archiveDescriptions;
             $archivalProfiles[$key]->searchFields = [];
-            foreach ($archivalProfile->archiveDescription as $archiveDescription) {
+            foreach ($archivalProfile->archiveDescription as $k => $archiveDescription) {
+                $archivalProfiles[$key]->archiveDescription[$k]->readonly = $archiveDescription->isImmutable;
                 switch ($archiveDescription->descriptionField->type) {
                     case 'text':
                     case 'name':

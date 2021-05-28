@@ -1,7 +1,6 @@
 DROP SCHEMA IF EXISTS "medona" CASCADE;
 
-CREATE SCHEMA "medona"
-  AUTHORIZATION postgres;
+CREATE SCHEMA "medona";
 
 -- Table: "medona"."archivalAgreement"
 
