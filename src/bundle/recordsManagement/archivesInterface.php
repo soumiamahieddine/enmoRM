@@ -460,9 +460,9 @@ interface archivesInterface
      */
     public function readArchives(array $archiveIds);
 
-    /*
+    /**
      * Extract full text from resources of flagged archives
-     *
+     **
      * @action recordsManagement/archive/extractFulltext
      */
     public function readExtractfulltext();
