@@ -32,7 +32,7 @@
                         <th>Profile</th>
                         <th>Deposit date</th>
                         <th>Status</th>
-                        <th><span><i class="fa fa-star-o" title="Favoris"></i></span></th>
+                        <th><span><i class="fa fa-star-half-full" title="Favoris"></i></span></th>
                         <th style="min-width:150px;"></th>
                     </tr>
                 </thead>
@@ -54,7 +54,7 @@
                         <td class="profile"><?merge .archivalProfileName ?></td>
                         <td data-order="[?merge .depositDate.format('Y-m-d H:i:s') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
-                        <td data-isInUserCollection="[?merge .isInUserCollection.bool().then('true', 'false') ?]"><i class="collection fa [?merge .isInUserCollection.bool().then('fa-star yellow', 'fa-star-o') ?]"></i></td>
+                        <td data-isInUserCollection="[?merge .isInUserCollection.bool().then('true', 'false') ?]"><i class="collection fa [?merge .isInUserCollection.bool().then('fa-star orange', 'fa-star-o') ?]"></i></td>
                         <td>
                             <div class="btn-group pull-right">
                                 <!--button type="button" class="btn btn-success btn-sm requestDelivery" id="requestCom" data-archiveid='[?merge .archiveId?]' title="Request of communication"><span class="fa fa-cloud-upload">&nbsp;</span></button-->
@@ -75,8 +75,8 @@
     <?hinclude recordsManagement/archive/archiveManagement.html ?>
 </div>
 <style>
-    .yellow {
-        color: #FFFF00;
+    .orange {
+        color: orange;
     }
 </style>
 <script>
