@@ -106,13 +106,13 @@
                     <?merge .type.ifeq('date') ?>
                     <div class="form-group col-md-12">
                             <label class="col-md-3 control-label text-primary"><small><?merge .label ?></small></label>
-                        <?merge .name.ifeq('datetime') ?>
+                        <?merge .format.ifeq('datetime') ?>
                             <div class="input-group input-group-sm input-daterange col-md-4">
                                 <input type="text" data-range='start' class="advancedSearchField form-control input-sm dateTimePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
                                 <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
                                 <input type="text" data-range='end' class="advancedSearchField form-control input-sm dateTimePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
                             </div>
-                        <?merge .name.ifne('datetime') ?>
+                        <?merge .format.ifne('datetime') ?>
                             <div class="input-group input-group-sm input-daterange col-md-4">
                                 <input type="text" data-range='start' class="advancedSearchField form-control input-sm datePicker col-md-6 descriptionInput" name="[?merge .name ?]" />
                                 <span class="input-group-addon xsmall"><i class=" fa fa-arrow-right"></i></span>
@@ -324,6 +324,7 @@ FulltextSearchForm = {
 
                 case 'text':
                     if (value !== '') {
+   
                         if ($(this).hasClass('datePicker')) {
                             var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
                             value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";

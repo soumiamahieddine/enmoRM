@@ -40,7 +40,7 @@
                                                     <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
                                                         <?merge descriptionScheme?>
-                                                        <option type="[?merge .type ?]" externalRef="[?merge .ref.bool()?]" data-enumName="[?merge .enumNames.json()?]" data-enumeration="[?merge .enumeration.json() ?]" helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?></option>
+                                                        <option type="[?merge .type ?]" format="[?merge .format ?]" externalRef="[?merge .ref.bool()?]" data-enumName="[?merge .enumNames.json()?]" data-enumeration="[?merge .enumeration.json() ?]" helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?></option>
                                                     </select>
                                                 </td>
                                                 <td>
@@ -191,10 +191,16 @@
         var helperText = $("#helperSelect :selected").text();
         var helperName = helper.attr("helperName");
         var helperType = helper.attr('type');
+        var test = helper.attr('format');
+
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
             var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
             $('#selectedHelper').clone().removeClass('hide').html(helperText).appendTo(selectedHelperType).prev().remove();
+
+            if (test === "datetime") {
+                helperType = test;
+            }
 
             switch (helperType) {
             case 'array':
@@ -243,11 +249,21 @@
                 break;
 
             case 'date':
+                console.log('date toto');
                 var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
                 $('#helperValueMin').clone().attr('type','date').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','date').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
+
+            case 'datetime':
+                //TODO JS to render date + time
+                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
+                $('#helperValueMin').clone().attr('type','datetime').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','datetime').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+                break;
+
 
             case 'boolean':
                 var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
