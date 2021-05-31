@@ -191,15 +191,15 @@
         var helperText = $("#helperSelect :selected").text();
         var helperName = helper.attr("helperName");
         var helperType = helper.attr('type');
-        var test = helper.attr('format');
+        var formatDateTime = helper.attr('format');
 
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
             var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
             $('#selectedHelper').clone().removeClass('hide').html(helperText).appendTo(selectedHelperType).prev().remove();
 
-            if (test === "datetime") {
-                helperType = test;
+            if (formatDateTime === "datetime") {
+                helperType = formatDateTime;
             }
 
             switch (helperType) {
@@ -249,7 +249,6 @@
                 break;
 
             case 'date':
-                console.log('date toto');
                 var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
                 $('#helperValueMin').clone().attr('type','date').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
@@ -257,11 +256,22 @@
                 break;
 
             case 'datetime':
-                //TODO JS to render date + time
-                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
-                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
-                $('#helperValueMin').clone().attr('type','datetime').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','datetime').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+                //TODO find a workaround for firefox (type datetime-local not compatible)
+                var helperMin = $('<li/>').addClass("startDate DateTimePicker helperContent col-sm-4 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate DateTimePicker helperContent col-sm-4 padding-5").appendTo(row);
+                $('#helperValueMin').clone().attr('type','datetime-local').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
+                $('#helperValueMin').datetimepicker({
+                    format:'DD/MM/YYYY HH:mm:ss',
+                    defaultDate: new Date()
+                });
+                var dateFormat = $('#helperValueMin').datepicker().val();
+                //$('#helperValueMin').data('DateTimePicker').date().format('YYYY-MM-DD HH:MM:SS') + "'";
+                $('#helperValueMax').clone().attr('type','datetime-local').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+                $('#helperValueMax').datetimepicker({
+                    format:'DD/MM/YYYY HH:mm:ss',
+                    defaultDate: new Date()
+                });
+                var dateMax = $('#helperValueMax').datetimepicker().val();
                 break;
 
 
