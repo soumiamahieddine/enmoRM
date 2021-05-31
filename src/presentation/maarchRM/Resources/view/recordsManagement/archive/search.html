@@ -31,6 +31,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
+
                                 <label class="col-sm-2 control-label" style="padding-top: 15px;">Add filter</label>
                                 <div class="col-sm-4">
                                     <table id="helperFilter" class="table table-condensed">
@@ -40,11 +41,11 @@
                                                     <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
                                                         <?merge descriptionScheme?>
-                                                        <option type="[?merge .type ?]" data-enumeration="[?merge .enumeration.json() ?]" data-helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?></option>
+                                                        <option type="[?merge .type ?]" externalRef="[?merge .ref.bool()?]" data-enumName="[?merge .enumNames.json()?]" data-enumeration="[?merge .enumeration.json() ?]" helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?></option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <button type="button" data-helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
+                                                    <button type="button" helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -59,7 +60,6 @@
                                         <input id="helperToggle" type="hidden" checked data-style="quick"/>
                                     </li>
                                 </ul>
-                                <span id="helperError" class="col-sm-4 col-sm-offset-7 hide alert-warning">You must select the type of additional description field to add</span>
                             </div>
                         </div>
                         <br />
@@ -94,21 +94,20 @@
 </div>
 <style>
     input[type="date"] {
-        line-height: 20 px;
-    }
-    #helperError {
-        float: right;
+        line-height: 20px;
     }
     #helperFilter td {
         border-top: none;
     }
+    .align-right {
+        text-align: right;
+    }
     .helper {
-        margin-bottom: 5px;
+        margin-bottom: 10px;
         margin-top: 5px;
     }
     .padding-5 {
-        padding-right:5px;
-        padding-left:5px;
+        padding-left: 5px;
     }
     .quick .toggle-group { 
         transition: none; 
@@ -121,8 +120,8 @@
     }
     .btn-toggleOff {
         color:#333333;
-        background-color:#ffffff;
-        border-color:#cccccc;
+        background-color:#e6e6e6;
+        border-color:#adadad;
     }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -160,7 +159,7 @@
     });
 
     $("#helperList").on('click', ".deleteHelper", function() {
-        var helperValue = $(this).closest('.helper').find('#selectedHelper').val();
+        var helperValue = $(this).closest('.helper').find('#selectedHelper').text();
         var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
         var helperToggle = $(this).closest('.helper').find('#helperToggle').attr('type');
 
@@ -176,15 +175,14 @@
     });
 
     $('#addHelper').on('click', function () {
-        var helperText = $("#helperSelect :selected").text();
         var helper = $('#helperSelect').find("option:selected");
-        var helperName = helper.attr("data-helperName");
+        var helperText = $("#helperSelect :selected").text();
+        var helperName = helper.attr("helperName");
         var helperType = helper.attr('type');
-        $('#helperError').addClass('hide');
      
         if (helperText) {
             var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
-            var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5").appendTo(row);
+            var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
             $('#selectedHelper').clone().removeClass('hide').html(helperText).appendTo(selectedHelperType).prev().remove();
 
             switch (helperType) {
@@ -199,12 +197,14 @@
                 $('#helperValueMin').clone().attr('placeholder','Valeur').attr('type','text').attr('name', helperName).appendTo(helperInput).prev().remove();
                 break;
 
+            // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
             case 'name':
-                // send data if enumeration is filled, simple input otherwise
                 var enumeration = helper.attr("data-enumeration");
                 dropdownList = JSON.parse(enumeration);
 
                 if (dropdownList) {
+                    var enumNames = helper.attr("data-enumName");
+                    test = JSON.parse(enumNames); // TODO case 4 if test != null
                     var dropdownValues = [];
                     $.each(dropdownList, function(key, value)
                     {
@@ -213,9 +213,14 @@
                     var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
                     $('#helperDropdown').clone().attr('name', helperName).removeClass('hide').html(dropdownValues.join('')).appendTo(helperMin);
                 }
+                else if (helper.attr('externalRef') == 1) {
+                    var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
+                    $('#helperValueMin').clone().attr('type','text').attr('placeholder','Valeur').addClass('externalRefField').attr('name', helperName).appendTo(helperMin).prev().remove();
+                    getTypeahead();
+                }
                 else {
                     var helperMin = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                    $('#helperValueMin').clone().attr('type','text').attr('name', helperName).appendTo(helperMin).prev().remove();
+                    $('#helperValueMin').clone().attr('type','text').attr('placeholder','Valeur').attr('name', helperName).appendTo(helperMin).prev().remove();
                 }
                 break;
 
@@ -250,7 +255,6 @@
                 break;
 
             default:
-                $('#helperError').removeClass('hide');
                 return;
         }
 
@@ -269,9 +273,6 @@
             $("#helperSelect :selected").text();
             $("#helperSelect :selected").remove();
         }     
-        else {
-            $('#helperError').removeClass('hide');
-        }
         $('#helperSelect').prop('selectedIndex',0);
     });
 
@@ -303,7 +304,6 @@
         $.ajax({
             type     : 'GET',
             url      : '/recordsManagement/archives',
-            //data     : $("#archive_searchForm").serialize(),
             data     : data,
             dataType : 'html',
             success  : function (response) {
@@ -336,6 +336,57 @@
         $('#archive_searchResult').empty();
     });
 
+    function getTypeahead () {
+        $.each(this.$("#helperList").find(".externalRefField"), function() {
+            var field = $(this);
+            var name = field.attr("name");
+
+            setTimeout(function(){
+                var data = new Bloodhound({
+                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
+                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                    remote: {
+                        url: '/descriptionRef/'+name+'?query=%QUERY',
+                        wildcard: '%QUERY'
+                    }
+                });
+                data.initialize();
+
+                field.typeahead(
+                    {
+                        hint: true,
+                        highlight: true,
+                        minLength: 1
+                    },
+                    {
+                        name: 'data',
+                        source: data.ttAdapter(),
+                        templates: {
+                            suggestion: function(data) {
+                                delete data._query;
+                                var html = $('<div>');
+                                var keyname = Object.keys(data)[0];
+                                var key = data.keyname;
+                                html.append($('<strong class="badge">').text(key));
+                                delete data[keyname];
+                                var value = Object.keys(data).map(function(name){return data[name]}).join(" - ");
+                                html.append(' '+value);
+                                return html;
+                            }
+                        }
+                    }
+                ).on('typeahead:selected', function ($event, suggestion, source) {
+                    var keys = Object.keys(suggestion); //fetched the key at first index
+                    field.val(suggestion[keys[0]]);
+                    field.typeahead('val', suggestion[keys[0]]);
+                });
+            }, 300);
+
+
+            return field;
+        });
+    }
+    
     function searchFormSerialize() {
         var parameters = new Object();
 
