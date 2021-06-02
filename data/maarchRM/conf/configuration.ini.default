@@ -92,6 +92,9 @@ archiveIdGenerator = "{
 ; Default Retention Rule if any retention rule is set up ("dispose" or "preserve")
 actionWithoutRetentionRule = "dispose"
 
+; Default Communication Rule if no communication rule is set up ("allow" or "deny")
+actionWithoutCommunicationRule = "deny"
+
 ; Delete the description of an archive when an archive is deleted
 deleteDescription = false
 

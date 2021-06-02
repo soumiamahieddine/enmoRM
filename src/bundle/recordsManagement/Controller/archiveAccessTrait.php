@@ -1404,12 +1404,13 @@ trait archiveAccessTrait
         } elseif (!empty($archive->archivalProfileReference)) {
             $archivalProfile = $this->archivalProfileController->getByReference($archive->archivalProfileReference);
             $accessRuleCode = $archivalProfile->accessRuleCode;
+        } elseif (isset(\laabs::configuration("recordsManagement")['actionWithoutCommunicationRule'])) {
+            $accessRuleCode = null;
         } else {
             return;
         }
-        if (!empty($accessRuleCode)) {
-            $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
-        }
+
+        $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
     }
 
     /**
