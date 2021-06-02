@@ -51,7 +51,7 @@
                                     </table>
                                 </div>
                                 <ul class="col-sm-6">
-                                    <li id="helperList" style="list-style: none">
+                                    <li id="helperList" style="list-style: none">                                            
                                         <label id="selectedHelper" class="hide control-label"></label>
                                         <input id="helperValueMin" type="hidden" class="form-control"/>
                                         <input id="helperValueMax" type="hidden" class="form-control"/>
@@ -175,7 +175,6 @@
         var helperValue = $(this).closest('.helper').find('#selectedHelper').text();
         var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
         var helperToggle = $(this).closest('.helper').find('#helperToggle').attr('type');
-
         if (helperToggle == 'checkbox') {
             helperType = 'boolean';
         }
@@ -259,19 +258,17 @@
                 //TODO find a workaround for firefox (type datetime-local not compatible)
                 var helperMin = $('<li/>').addClass("startDate DateTimePicker helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate DateTimePicker helperContent col-sm-4 padding-5").appendTo(row);
-                $('#helperValueMin').clone().attr('type','datetime-local').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
                 $('#helperValueMin').datetimepicker({
                     format:'DD/MM/YYYY HH:mm:ss',
                     defaultDate: new Date()
                 });
-                var dateFormat = $('#helperValueMin').datepicker().val();
-                //$('#helperValueMin').data('DateTimePicker').date().format('YYYY-MM-DD HH:MM:SS') + "'";
-                $('#helperValueMax').clone().attr('type','datetime-local').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','datetime-local').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
+
                 $('#helperValueMax').datetimepicker({
                     format:'DD/MM/YYYY HH:mm:ss',
                     defaultDate: new Date()
                 });
-                var dateMax = $('#helperValueMax').datetimepicker().val();
+                $('#helperValueMax').clone().attr('type','datetime-local').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
 
 
