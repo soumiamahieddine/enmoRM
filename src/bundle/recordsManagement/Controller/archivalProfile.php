@@ -265,7 +265,6 @@ class archivalProfile
      */
     public function update($archivalProfile)
     {
-
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
