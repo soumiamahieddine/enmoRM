@@ -33,7 +33,7 @@ trait TemplateDataTrait
     /* ------------------------------------------------------------------------
         Data sources management
     ------------------------------------------------------------------------ */
-    
+
     /**
      * Bind variable
      * @param string $name
@@ -165,11 +165,11 @@ trait TemplateDataTrait
             }
             break;
         }
-        
+
         return $value;
     }
 
-    protected function &stepFunc($name, $params=array(), $source)
+    protected function &stepFunc($name, $params = [], $source = null)
     {
         $value = null;
         foreach ($params as $i => $param) {
@@ -198,13 +198,19 @@ trait TemplateDataTrait
             // Array functions
             case 'length':
             case 'count':
-                $value = @count($source);
+                $value = !is_null($source) ? @count($source) : 0;
                 break;
             case 'key':
-                $value = @key($source);
+                $value = null;
+                if (!is_null($source)) {
+                    $value = @key($source);
+                }
                 break;
             case 'current':
-                $value = @current($source);
+                $value = null;
+                if (!is_null($source)) {
+                    $value = @current($source);
+                }
                 break;
             case 'first':
                 $value = @reset($source);
@@ -424,6 +430,10 @@ trait TemplateDataTrait
                 break;
             case 'join':
             case 'implode':
+                if (is_null($source)) {
+                    $value = '';
+                    break;
+                }
                 $value = @implode($params[0], $source);
                 break;
             case 'constant':
@@ -511,7 +521,7 @@ trait TemplateDataTrait
             $instr = $this->parse($param);
             $value = &$this->getData($instr, $source);
         }
-        
+
         return $value;
     }
 

@@ -602,13 +602,13 @@ class Bundle
 
     /**
      * Instantiate a new exception object from bundle exception component
-     * @param string $name The name of the exception to instantiate
+     * @param string $nameUri The name of the exception to instantiate
      * 
      * @return object
      */
-    public function newException($name)
+    public function newException($nameUri)
     {
-        $exception = $this->getException($name);
+        $exception = $this->getException($nameUri);
 
         $args = func_get_args();
         array_shift($args);

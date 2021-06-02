@@ -379,7 +379,7 @@ class PresentationKernel
             }
             $presenterArgs = array_merge($presenterArgs, $this->userMessage);
             
-            $content = $this->viewRouter->view->present($presenter, $presenterArgs);
+            $content = $this->viewRouter->view->present($presenter, array_values($presenterArgs));
 
         } else {
 

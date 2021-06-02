@@ -446,7 +446,7 @@ trait archiveModificationTrait
                                 $archiveOldField = $archive->descriptionObject->$fieldName;
                                 sort($archiveNewField);
                                 sort($archiveOldField);
-                                if (is_object($descriptionObject->$fieldName[0])) {
+                                if (is_object($descriptionObject->{$fieldName}[0])) {
                                     foreach ($archiveNewField as $index => $object) {
                                         if ($archiveOldField[$index] != $object) {
                                             throw new \bundle\recordsManagement\Exception\invalidArchiveException(

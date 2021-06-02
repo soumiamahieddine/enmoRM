@@ -173,7 +173,7 @@ class archivalProfile
         // Read profile description
         $archivalProfile->archiveDescription = $this->sdoFactory->readChildren('recordsManagement/archiveDescription', $archivalProfile, null, 'position');
         usort($archivalProfile->archiveDescription, function ($a, $b) {
-            return $a->position > $b->position;
+            return $a->position > $b->position ? 1 : -1;
         });
         
         $descriptionFields = $this->descriptionSchemeController->getDescriptionFields($archivalProfile->descriptionClass);
