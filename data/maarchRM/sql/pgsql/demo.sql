@@ -156,7 +156,8 @@ INSERT INTO "batchProcessing"."scheduling" ("schedulingId","name","taskId","freq
 ('chainJournalLifeCycle', 'Chaînage du journal du cycle de vie', '02', '00;20;;;;;;;', NULL, 'System', '2019-03-14 17:17:08.959422', '2019-03-15 19:00:00', 'scheduled'),
 ('integrity', 'Intégrité', '03', '00;01;;;;4;H;00;20', NULL, 'System', '2019-03-14 17:17:41.825506', '2019-03-14 21:17:41.825513', 'scheduled'),
 ('processdestruction', 'Traiter les destructions', '04', '00;04;;;;;;;', NULL, 'System', NULL, NULL, 'paused'),
-('purge', 'Purge', '05', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused')
+('purge', 'Purge', '05', '00;08;;;;;;;', NULL, 'System', NULL, NULL, 'paused'),
+('extractionAndIndexation', 'Extraction et Indexation plein texte' '13', '30;01;;;;;;;' NULL, 'System', NULL, '2021-06-02 10:12:42', 'paused')
 ;
 
 INSERT INTO "contact"."communicationMean" ("code","name","enabled") VALUES
