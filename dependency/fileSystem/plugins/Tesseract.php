@@ -65,6 +65,7 @@ class Tesseract implements \dependency\fileSystem\FullTextInterface
      */
     protected function run($fileName, $options = null)
     {
+        $languages = null;
         if (!is_null($options)) {
             $languages = implode('+', $options['languages']);
         }

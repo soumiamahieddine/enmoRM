@@ -896,5 +896,7 @@ trait archiveModificationTrait
         }
 
         echo "$archiveExtractedCount archives extracted" . PHP_EOL;
+
+        return true;
     }
 }
