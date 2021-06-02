@@ -778,6 +778,20 @@ trait archiveEntryTrait
     }
 
     /**
+     * Update the retention start date of an archive
+     *
+     * @param recordsManagement/archive $archive      The archive to receive
+     */
+    public function updateRetentionRuleStartDate($archive)
+    {
+        if ($this->archivalProfileController->getByReference($archive->archivalProfileReference) &&
+            (!empty($archive->fileplanLevel) && $archive->fileplanLevel == 'file')) {
+            $archive->retentionStartDate = \laabs::newTimestamp();
+            $archive->disposalDate = $archive->retentionStartDate->shift($archive->retentionDuration);
+        }
+    }
+
+    /**
      * Deposit a new archive
      *
      * @param recordsManagement/archive $archive The archive to deposit
@@ -848,6 +862,7 @@ trait archiveEntryTrait
             if (!empty($archive->parentArchiveId)) {
                 $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
                 $parentArchive->lastModificationDate = \laabs::newTimestamp();
+                $this->updateRetentionRuleStartDate($parentArchive);
                 $this->sdoFactory->update($parentArchive, 'recordsManagement/archive');
             }
         }

@@ -27,3 +27,4 @@ WITH (
   OIDS=FALSE
 );
 
+ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isRetentionLastDeposit" boolean default false;

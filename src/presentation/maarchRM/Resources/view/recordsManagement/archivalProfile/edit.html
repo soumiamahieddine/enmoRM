@@ -203,11 +203,13 @@ file that was distributed with this source code.
                 descriptionClass: $('#descriptionClass').val(),
                 retentionStartDate: $('#startDate option:selected').val(),
                 description: $('#description').val(),
+                isRetentionLastDeposit: $('#isRetentionLastDepositToggle').prop("checked"),
                 accessRuleCode: $('#accessRuleCode').val(),
                 retentionRuleCode: $('#code').val(),
                 acceptUserIndex: $('#allowUserIndexes').prop("checked"),
                 archiveDescription: []
             }
+
             //Cas d'extension Workflow
             if ($("#workflowTab").length != 0) {
                 serializedObject.processingStatuses = {};
@@ -335,9 +337,11 @@ file that was distributed with this source code.
             $("#fileplanLevel").val('item');
             $("#contentsTabBtn").addClass('hide');
             $("#archivalProfileNavControl").find('a').first().click();
+            $('#updateRetentionRuleOnDeposit').addClass('hide');
         } else {
             $("#fileplanLevel").val('file');
             $("#contentsTabBtn").removeClass('hide');
+            $('#updateRetentionRuleOnDeposit').removeClass('hide');
         }
     });
 </script>
