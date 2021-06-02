@@ -201,10 +201,16 @@ trait TemplateDataTrait
                 $value = !is_null($source) ? @count($source) : 0;
                 break;
             case 'key':
-                $value = @key($source);
+                $value = null;
+                if (!is_null($source)) {
+                    $value = @key($source);
+                }
                 break;
             case 'current':
-                $value = @current($source);
+                $value = null;
+                if (!is_null($source)) {
+                    $value = @current($source);
+                }
                 break;
             case 'first':
                 $value = @reset($source);

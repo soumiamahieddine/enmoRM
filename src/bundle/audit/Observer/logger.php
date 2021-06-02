@@ -239,14 +239,15 @@ class logger
      * @subject bundle\audit\AUDIT_ENTRY_OUTPUT
      */
     public function notifyOutput(&$output)
-    {   
+    {
         if (isset($output['variables'])) {
+            if (!is_array($output['variables'])) {
+                $output['variables'] = [$output['variables']];
+            }
             $output['fullMessage'] = vsprintf($output['message'], $output['variables']);
         } else {
             $output['fullMessage'] = $output['message'];
-
         }
         $this->output[] = $output;
     }
-
 }
