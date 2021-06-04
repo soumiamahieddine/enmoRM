@@ -176,6 +176,7 @@
         var helperValue = $(this).closest('.helper').find('#selectedHelper').text();
         var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
         var helperToggle = $(this).closest('.helper').find('#helperToggle').attr('type');
+
         if (helperToggle == 'checkbox') {
             helperType = 'boolean';
         }
@@ -244,6 +245,7 @@
             case 'number':
                 var helperMin = $('<li/>').addClass("helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("numberMax helperContent col-sm-4 padding-5").appendTo(row);
+
                 $('#helperValueMin').clone().attr('type','number').attr('placeholder','Minimum').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','number').attr('placeholder','Maximum').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
                 break;
@@ -251,28 +253,24 @@
             case 'date':
                 var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
-
                 var valueMinIdentifier = generateUniqIdentifier();
                 var valueMaxIdentifier = generateUniqIdentifier();
 
                 $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('datePicker').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).appendTo(helperMax).prev().remove();
-                $('#' + valueMinIdentifier).datepicker();
-                $('#' + valueMaxIdentifier).datepicker();
+                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('datePicker').appendTo(helperMax).prev().remove();
 
+                $('#' + valueMinIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true}).datepicker('setDate', 'today');
+                $('#' + valueMaxIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true}).datepicker('setDate', 'today');
                 break;
 
             case 'datetime':
                 var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
-                var dateNow = new Date();
-
                 var valueMinIdentifier = generateUniqIdentifier();
                 var valueMaxIdentifier = generateUniqIdentifier();
 
-                $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).appendTo(helperMin).prev().remove();
-
-                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('dateTimePicker').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('dateTimePicker').appendTo(helperMax).prev().remove();
 
                 dateTimePickerParams = JSON.parse($('#datetimePickerParams').val());
                 $('#' + valueMinIdentifier).datetimepicker(dateTimePickerParams);
