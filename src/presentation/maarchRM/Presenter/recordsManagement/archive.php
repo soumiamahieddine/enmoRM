@@ -103,6 +103,10 @@ class archive
             $descriptionSchemeName->translateType = $this->translator->getText($descriptionSchemeName->type);
         }
 
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->getParameters());
         $this->view->setSource("maxResults", $maxResults);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);

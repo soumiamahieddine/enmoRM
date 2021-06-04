@@ -80,6 +80,7 @@
         <!-- Message usage -->
         <input type="hidden" id="useRestitutionMessages" value="[?merge useRestitutionMessages ?]">
         <input type="hidden" id="useDestructionMessages" value="[?merge useDestructionMessages ?]">
+        <input type="hidden" id="datetimePickerParams" value="[?merge dateTimePickerParams ?]">
 
         <div class="container-fluid" id="archive_searchResult"></div>
     </div>
@@ -250,29 +251,32 @@
             case 'date':
                 var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
                 var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
-                $('#helperValueMin').clone().attr('type','date').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','date').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+
+                var valueMinIdentifier = generateUniqIdentifier();
+                var valueMaxIdentifier = generateUniqIdentifier();
+
+                $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('datePicker').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).appendTo(helperMax).prev().remove();
+                $('#' + valueMinIdentifier).datepicker();
+                $('#' + valueMaxIdentifier).datepicker();
+
                 break;
 
             case 'datetime':
-                //TODO find a workaround for firefox (type datetime-local not compatible)
-                var helperMin = $('<li/>').addClass("startDate DateTimePicker helperContent col-sm-4 padding-5").appendTo(row);
-                var helperMax = $('<li/>').addClass("endDate DateTimePicker helperContent col-sm-4 padding-5").appendTo(row);
+                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
                 var dateNow = new Date();
-                $('#helperValueMin').datetimepicker({
-                    format:'DD/MM/YYYY HH:mm:ss',
-                    useCurrent: false,
-                    defaultDate: dateNow
-                });
-                $('#helperValueMin').clone().attr('type','datetime-local').attr('data-range','start').attr('name', helperName).appendTo(helperMin).prev().remove();
 
-                $('#helperValueMax').datetimepicker({
-                    format:'DD/MM/YYYY HH:mm:ss',
-                    useCurrent: false,
-                    defaultDate: dateNow
-                });
+                var valueMinIdentifier = generateUniqIdentifier();
+                var valueMaxIdentifier = generateUniqIdentifier();
 
-                $('#helperValueMax').clone().attr('type','datetime-local').attr('data-range','end').attr('name', helperName).appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).appendTo(helperMin).prev().remove();
+
+                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).appendTo(helperMax).prev().remove();
+
+                dateTimePickerParams = JSON.parse($('#datetimePickerParams').val());
+                $('#' + valueMinIdentifier).datetimepicker(dateTimePickerParams);
+                $('#' + valueMaxIdentifier).datetimepicker(dateTimePickerParams);
                 break;
 
 
@@ -373,6 +377,13 @@
 
         $('#archive_searchResult').empty();
     });
+
+    function generateUniqIdentifier () {
+        var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+        var uniqid = randLetter + Date.now();
+
+        return uniqid;
+    };
 
     function getTypeahead () {
         $.each(this.$("#helperList").find(".externalRefField"), function() {
