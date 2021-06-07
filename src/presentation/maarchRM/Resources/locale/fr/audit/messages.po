@@ -1947,3 +1947,9 @@ msgstr "Import du référentiel de règle de conservation"
 
 msgid "result(s) on"
 msgstr "résultat(s) sur"
+
+msgid "Archive %s extracted"
+msgstr "Archive %s extraite"
+
+msgid "%s archive(s) extracted"
+msgstr "%s archive(s) extraite(s)"

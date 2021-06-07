@@ -839,13 +839,10 @@ trait archiveModificationTrait
     {
         $archiveIds = $this->sdoFactory->index('recordsManagement/archive', 'archiveId', 'fullTextIndexation=:fullTextIndexation', ['fullTextIndexation' => 'requested']);
 
-        if (empty($archiveIds)) {
-            throw \laabs::newException('recordsManagement/fullTextException', "No archive to extract");
-        }
-
         $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
 
         $archiveExtractedCount = 0;
+        $res = [];
         foreach ($archiveIds as $archiveId) {
             $fullText = "";
             $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
@@ -880,7 +877,6 @@ trait archiveModificationTrait
             $archive = $this->retrieve($archiveId);
             $descriptionController = $this->useDescriptionController($archive->descriptionClass);
 
-
             try {
                 $descriptionController->update($archive, $fullText);
                 $archive->fullTextIndexation = "indexed";
@@ -889,13 +885,16 @@ trait archiveModificationTrait
                 throw new Exception("Error Processing Request", 1);
             }
 
-            echo "Archive $archive->archiveName extracted" . PHP_EOL;
+            $logMessage = ["message" => "Archive %s extracted", "variables"=> $archive->archiveName];
+            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
             $this->logMetadataModification($archive, true);
             $archiveExtractedCount++;
         }
 
-        echo "$archiveExtractedCount archives extracted" . PHP_EOL;
+        $logMessage = ["message" => "%s archive(s) extracted", "variables"=> $archiveExtractedCount];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
 
         return true;
     }
