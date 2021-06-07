@@ -30,7 +30,7 @@
                             <hr style="height:1px;border:none;color:gray;background-color:gray;">
                         </div>
                         <div class="col-md-12">
-                            <div class="form-group">
+                            <div class="form-group" id="helperForm">
                                 <label class="col-sm-2 control-label" style="padding-top: 15px;">Add filter</label>
                                 <div class="col-sm-4">
                                     <table id="helperFilter" class="table table-condensed">
@@ -334,8 +334,9 @@
 
     $('#archive_search').on('click', function () {
         var data = searchFormSerialize();
-        if (data == -1)
+        if (data == -1) {
             return;
+        }
         $('#archive_search').prop('disabled', true);
         $('#archive_searchForm').find('[name="archiveIdentifier"]').val('');
 
@@ -435,7 +436,7 @@
     function searchFormSerialize() {
         var parameters = new Object();
 
-        $('#archive_searchForm').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(function() {
+        $('#searchFormHolder').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(function() {
             if(!$(this).hasClass('orgHide')) {
                 parameters[$(this).attr('name')] = $(this).val();
             }
@@ -443,7 +444,7 @@
 
         var hasParent = [];
 
-        $('#archive_searchForm').find('input[type="checkbox"]').each(function(){
+        $('#searchFormHolder').find('input[type="checkbox"]').each(function(){
             if ($(this).attr('name') != "hasParent") {
                 parameters[$(this).attr('name')] = $(this).prop("checked");
                 return;
@@ -457,8 +458,9 @@
             return -1;
         }
 
-        if (hasParent.length == 1)
-                parameters.hasParent = hasParent[0];
+        if (hasParent.length == 1) {
+            parameters.hasParent = hasParent[0];
+        }
 
         parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
@@ -466,6 +468,36 @@
         parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         //parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+
+        var description = new Object();
+        $('#helperForm').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(function() {
+            if(
+                !$(this).hasClass('orgHide')
+                && $(this).val() != ""
+                && $(this).val() != null
+                && $(this).val() != "null") {
+                description[$(this).attr('name')] = $(this).val();
+            }
+        });
+
+        $('#helperForm').find('input[type="checkbox"]').each(function(){
+            if ($(this).attr('name') != "hasParent") {
+                description[$(this).attr('name')] = $(this).prop("checked");
+                return;
+            }
+            if ($(this).parent().hasClass("btn-info"))
+                hasParent.push($(this).val());
+        });
+
+        var descriptionString = "";
+        for (let property of Object.keys(description)) {
+            if (descriptionString.length > 1) {
+                descriptionString += "&&";
+            }
+            descriptionString += property + '=' + description[property];
+        }
+
+        parameters.description = encodeURI(descriptionString);
 
         return parameters;
     }
