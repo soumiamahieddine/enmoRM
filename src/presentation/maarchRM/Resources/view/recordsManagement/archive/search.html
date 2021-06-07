@@ -74,8 +74,6 @@
                 </div>
             </div>
         </div>
-        <!-- Error message -->
-        <div class="hide" id="errorMessage">You must enter a profile and at least a date (maximum and/or minimum)</div>
 
         <!-- Message usage -->
         <input type="hidden" id="useRestitutionMessages" value="[?merge useRestitutionMessages ?]">
@@ -256,11 +254,11 @@
                 var valueMinIdentifier = generateUniqIdentifier();
                 var valueMaxIdentifier = generateUniqIdentifier();
 
-                $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('datePicker').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('datePicker').appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','text').attr('placeholder','Date de début').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('datePicker').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','text').attr('placeholder','Date de fin').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('datePicker').appendTo(helperMax).prev().remove();
 
-                $('#' + valueMinIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true}).datepicker('setDate', 'today');
-                $('#' + valueMaxIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true}).datepicker('setDate', 'today');
+                $('#' + valueMinIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true });
+                $('#' + valueMaxIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true });
                 break;
 
             case 'datetime':
@@ -269,8 +267,8 @@
                 var valueMinIdentifier = generateUniqIdentifier();
                 var valueMaxIdentifier = generateUniqIdentifier();
 
-                $('#helperValueMin').clone().attr('type','text').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('dateTimePicker').appendTo(helperMin).prev().remove();
-                $('#helperValueMax').clone().attr('type','text').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('dateTimePicker').appendTo(helperMax).prev().remove();
+                $('#helperValueMin').clone().attr('type','text').attr('placeholder','Date et heure de début').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('dateTimePicker').appendTo(helperMin).prev().remove();
+                $('#helperValueMax').clone().attr('type','text').attr('placeholder','Date et heure de fin').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('dateTimePicker').appendTo(helperMax).prev().remove();
 
                 dateTimePickerParams = JSON.parse($('#datetimePickerParams').val());
                 $('#' + valueMinIdentifier).datetimepicker(dateTimePickerParams);
@@ -374,6 +372,7 @@
         //delete $("#archive_searchForm [name=originatingEndDate]").data('datepicker').setDates();
 
         $('#archive_searchResult').empty();
+        document.location.reload();
     });
 
     function generateUniqIdentifier () {
