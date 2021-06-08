@@ -257,8 +257,9 @@
                 $('#helperValueMin').clone().attr('type','text').attr('placeholder','Date de début').attr('data-range','start').attr('name', helperName).attr('id', valueMinIdentifier).addClass('datePicker').appendTo(helperMin).prev().remove();
                 $('#helperValueMax').clone().attr('type','text').attr('placeholder','Date de fin').attr('data-range','end').attr('name', helperName).attr('id', valueMaxIdentifier).addClass('datePicker').appendTo(helperMax).prev().remove();
 
-                $('#' + valueMinIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true });
-                $('#' + valueMaxIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true });
+                $('#' + valueMinIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true, format:'dd-mm-yyyy' });
+                $('#' + valueMaxIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true, format:'dd-mm-yyyy' });
+
                 break;
 
             case 'datetime':
@@ -340,11 +341,13 @@
         $('#archive_search').prop('disabled', true);
         $('#archive_searchForm').find('[name="archiveIdentifier"]').val('');
 
+        //remove processData to prevent URI encoding mishaps
         $.ajax({
             type     : 'GET',
             url      : '/recordsManagement/archives',
             data     : data,
             dataType : 'html',
+            processData: false,
             success  : function (response) {
                 $('#archive_searchResult').empty().html(response);
                 $('#archive_search').prop('disabled', false);
@@ -433,6 +436,7 @@
             return field;
         });
     }
+
     function searchFormSerialize() {
         var parameters = new Object();
 
@@ -470,9 +474,12 @@
         //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
 
         var description = new Object();
+        //retrieve input value from dynamic form for standard text input
         $('#helperForm').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(function() {
             if(
                 !$(this).hasClass('orgHide')
+                &&!$(this).hasClass('datePicker')
+                &&!$(this).hasClass('dateTimePicker')
                 && $(this).val() != ""
                 && $(this).val() != null
                 && $(this).val() != "null") {
@@ -480,7 +487,7 @@
             }
         });
 
-        $('#helperForm').find('input[type="checkbox"]').each(function(){
+        $('#helperForm').find('input[type="checkbox"]').each(function() {
             if ($(this).attr('name') != "hasParent") {
                 description[$(this).attr('name')] = $(this).prop("checked");
                 return;
@@ -492,15 +499,63 @@
         var descriptionString = "";
         for (let property of Object.keys(description)) {
             if (descriptionString.length > 1) {
-                descriptionString += "&&";
+                descriptionString += "%26%26";
             }
-            descriptionString += property + '=' + description[property];
+            descriptionString += property + '%3D' + '\"' + description[property] + '\"';
         }
 
-        parameters.description = encodeURI(descriptionString);
+        parameters.description = descriptionString;
+
+        if (descriptionString.length > 1) {
+            descriptionString = "%26%26";
+        } else {
+            descriptionString = "";
+
+        }
+        $('#helperForm').find('input[type="text"].datePicker, input[type="text"].dateTimePicker').each(function() {
+            // if field not empty
+            if(
+                !$(this).hasClass('orgHide')
+                && $(this).val() != ""
+                && $(this).val() != null
+                && $(this).val() != "null") {
+                let value = "";
+
+                if ($(this).hasClass('datePicker')) {
+                    value = convertDate($(this).val());
+                } else if ($(this).hasClass('dateTimePicker')) {
+                    var splitDateTime = $(this).val().split(' ');
+                    value = convertDate(splitDateTime[0]) + 'T' + splitDateTime[1];
+                }
+
+                if ($(this).attr('data-range') == 'start') {
+                    descriptionString += $(this).attr('name') + '%3E%3D' + '\"' + value + '\"';
+                } else if ($(this).attr('data-range') == 'end')
+                    descriptionString += $(this).attr('name') + '%3C%3D' + '\"' + value + '\"';
+            }
+        });
+
+        parameters.description += descriptionString;
+
+        // Had to do this to send a proper query to server
+        var stringifyHtmlParameters = "";
+        for (let property of Object.keys(parameters)) {
+            if (stringifyHtmlParameters.length > 1) {
+                stringifyHtmlParameters += "&";
+            }
+            stringifyHtmlParameters += property + '=' + parameters[property];
+        }
+
+        return stringifyHtmlParameters;
 
         return parameters;
-    }
+    };
+
+    function convertDate(data) {
+        var stringSplitted = data.split('-');
+
+        return stringSplitted[2] + '-' + stringSplitted[1] + '-' + stringSplitted[0];
+    };
 
     /* ----------------------------------------------------------------------------------------------------*/
     /* -- VALIDATION MODAL -- */
