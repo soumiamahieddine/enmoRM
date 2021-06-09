@@ -266,7 +266,7 @@ FulltextSearchForm = {
 
         var text = this.form.find('[name="searchForm_inputSearch"]').val().trim();
         if (text) {
-            query.text = text
+            query.text = text;
         }
 
         var profileReference = $('#profileSelection').data('profileReference');
@@ -338,6 +338,7 @@ FulltextSearchForm = {
                             break;
                         } else if ($(this).hasClass('dateTimePicker')) {
                             var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                            // TODO fix datetime sent in params with a date conversion (done @rm/archives/search.html)
                             value = name + operation + "'" + $(this).data('DateTimePicker').date().format('YYYY-MM-DD HH:MM:SS') + "'";
 
                             // Fill start and end values
@@ -432,4 +433,9 @@ FulltextSearchForm = {
     $('#fullTextSearchForm').onEvent("setSearchBarClass.recordsManagement", function(e, newClass) {
         $('#fullTextSearchForm').addClass(newClass);
     });
+    function convertDate(data) {
+        var stringSplitted = data.split('-');
+
+        return stringSplitted[2] + '-' + stringSplitted[1] + '-' + stringSplitted[0];
+    };
 </script>
