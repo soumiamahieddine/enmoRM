@@ -341,8 +341,8 @@
                         .prev()
                         .remove();
 
-                    $('#' + valueMinIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true, format:'dd-mm-yyyy' });
-                    $('#' + valueMaxIdentifier).datepicker({ language: "fr", todayHighlight: true, todayBtn: true, format:'dd-mm-yyyy' });
+                    $('#' + valueMinIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
+                    $('#' + valueMaxIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
 
                     break;
 
