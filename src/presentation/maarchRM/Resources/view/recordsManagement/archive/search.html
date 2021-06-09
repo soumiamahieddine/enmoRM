@@ -506,9 +506,14 @@
 
         parameters.description = descriptionString;
 
+        var isEmptyOriginalDescriptionString = true; //should not add && uri encoded on first loop
+        if (descriptionString.length > 1) {
+            isEmptyOriginalDescriptionString = false; // should add && uri encoded on first loop
+        }
+
         descriptionString = "";
         $('#helperForm').find('input[type="text"].datePicker, input[type="text"].dateTimePicker').each(function() {
-            if (descriptionString.length > 1) {
+            if (descriptionString.length > 1 || !isEmptyOriginalDescriptionString) {
                 descriptionString += "%26%26";
             }
 
@@ -546,8 +551,6 @@
         }
 
         return stringifyHtmlParameters;
-
-        return parameters;
     };
 
     function convertDate(data) {
