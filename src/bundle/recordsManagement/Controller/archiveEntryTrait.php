@@ -862,7 +862,9 @@ trait archiveEntryTrait
             if (!empty($archive->parentArchiveId)) {
                 $parentArchive = $this->sdoFactory->read('recordsManagement/archive', $archive->parentArchiveId);
                 $parentArchive->lastModificationDate = \laabs::newTimestamp();
-                $this->updateRetentionRuleStartDate($parentArchive);
+                if ($this->archivalProfileController->getByReference($parentArchive->archivalProfileReference)->isRetentionLastDeposit) {
+                    $this->updateRetentionRuleStartDate($parentArchive);
+                }
                 $this->sdoFactory->update($parentArchive, 'recordsManagement/archive');
             }
         }
