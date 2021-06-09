@@ -433,9 +433,4 @@ FulltextSearchForm = {
     $('#fullTextSearchForm').onEvent("setSearchBarClass.recordsManagement", function(e, newClass) {
         $('#fullTextSearchForm').addClass(newClass);
     });
-    function convertDate(data) {
-        var stringSplitted = data.split('-');
-
-        return stringSplitted[2] + '-' + stringSplitted[1] + '-' + stringSplitted[0];
-    };
 </script>
