@@ -619,7 +619,6 @@
 
                 case 'text':
                     if (value !== '') {
-
                         if ($(this).hasClass('datePicker')) {
                             var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
                             value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
@@ -632,8 +631,12 @@
                             }
                             break;
                         } else if ($(this).hasClass('dateTimePicker')) {
+                            // cannot use dateTimePicker formatting because he add a random number of seconds in formatting
+                            var splitDateTime = $(this).val().split(' ');
+                            dateConverted = convertDate(splitDateTime[0]) + ' ' + splitDateTime[1];
+
                             var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
-                            value = name + operation + "'" + $(this).data('DateTimePicker').date().format('YYYY-MM-DD HH:MM:SS') + "'";
+                            value = name + operation + "'" + dateConverted + "'";
 
                             // Fill start and end values
                             if (parameters.description[name] == undefined) {
