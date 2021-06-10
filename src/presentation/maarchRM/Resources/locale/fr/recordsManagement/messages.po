@@ -1328,3 +1328,12 @@ msgstr "Archive retirée des favoris."
 
 msgid "Remove All Collections"
 msgstr "Supprimer tous les favoris"
+
+msgid "You must select a description field and set corresponding value."
+msgstr "Veuillez choisir un champ et renseigner une valeur associée."
+
+msgid "You must select the type of additional description field to add"
+msgstr "Veuillez choisir le type de critère supplémentaire à ajouter"
+
+msgid "Add filter"
+msgstr "Ajouter le filtre"
