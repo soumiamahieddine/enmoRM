@@ -449,7 +449,6 @@
         $('#archive_search').prop('disabled', true);
         $('#archive_searchForm').find('[name="archiveIdentifier"]').val('');
 
-        //remove processData to prevent URI encoding mishaps
         $.ajax({
             type     : 'GET',
             url      : '/recordsManagement/archives',
@@ -638,7 +637,6 @@
                             var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
                             value = name + operation + "'" + dateConverted + "'";
 
-                            // Fill start and end values
                             if (parameters.description[name] == undefined) {
                                 parameters.description[name] = value;
                             } else {
@@ -656,7 +654,6 @@
                         var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
                         value = name + operation + $(this).val();
 
-                        // Fill start and end values
                         if (parameters.description[name] == undefined) {
                             parameters.description[name] = value;
                         } else {
