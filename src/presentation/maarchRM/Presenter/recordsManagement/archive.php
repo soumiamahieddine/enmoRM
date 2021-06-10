@@ -79,7 +79,7 @@ class archive
             $emptyRole = false;
             $ownerOriginatorOrgs = $this->getOwnerOriginatorsOrgs($currentService);
         }
-
+        $descriptionSchemeNames = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields');
         $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $retentionRules = $retentionRuleController->index();
 
@@ -98,13 +98,22 @@ class archive
         if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
             $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
         }
+        $this->translator->setCatalog('recordsManagement/descriptionField');
+        foreach ($descriptionSchemeNames as $descriptionSchemeName) {
+            $descriptionSchemeName->translateType = $this->translator->getText($descriptionSchemeName->type);
+        }
 
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->getParameters());
         $this->view->setSource("maxResults", $maxResults);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
         $this->view->setSource("deleteDescription", $deleteDescription);
+        $this->view->setSource("descriptionScheme", $descriptionSchemeNames);
 
         $this->view->merge();
 

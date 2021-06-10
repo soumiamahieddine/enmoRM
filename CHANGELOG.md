@@ -1,5 +1,19 @@
 # CHANGELOG
 
+
+## Version 2.8
+
+- `Added` Possibilité pour les service producteurs d'indexer le contenu texte des documents archivés afin de pouvoir les rechercher sur l'intégralité des termes.
+- `Added` Possibilité d'ajouter des critères supplémentaires lors d'une recherche dans l'écran de gestion.
+- `Added` Possibilité pour les gestionnaires d'archive de regrouper les archives de leur choix dans une collection de favoris afin de simplifier les actions de gestion sur un ensemble d'archives.
+- `Added` Nouveau point de menu pour accéder directement à sa collection de favoris.
+- `Changed` Pour le service d'archive, la date de référence pour le calcul de la date d'élimination d'un dossier est désormais déterminée en fonction de la date du dernier versement de pièce afin de prolonger la conservation des dossiers actifs.
+- `Changed` Evolution des champs affichés dans les résultats de recherche de l'écran de gestion.
+- `Fixed` Erreur au lancement de la tâche plannifiée "Intégrité Périodique" par le compte Système.
+- `Fixed` Possibilité de lister les contenus présents dans le répertoire public/web.
+- `Fixed` Compatibilité timestamp pour version de  postgres >= 12.
+- `Fixed` Compatibilité PHP 8.0.
+
 ## Version 2.7.3
 - `Fixed` Actualisation lors du changement d'organisation après connexion.
 - `Added` Prise en compte de l'ajout d'une référence à une archive parente lors du versement d'un bordereau MADES.
