@@ -575,6 +575,55 @@ class organization
             }
         }
 
+        // bloque la suppression du rôle autorité de contrôle si déclaré comme autorité de contrôle
+        if ($this->sdoFactory->count("medona/controlAuthority", "controlAuthorityOrgUnitId='$orgId'") && (!isset($organization->orgRoleCodes) || isset($organization->orgRoleCodes) && !$organization->orgRoleCodes->contains("controlAuthority"))) {
+            throw new \core\Exception("This service is declared as an authority control. Remove it from the authority control panel before deleting this role.");
+        }
+
+        // bloque la suppression du rôle producteur si dans un accord de versement
+        if (isset($organization->orgRoleCodes) && !$organization->orgRoleCodes->contains("originator")) {
+            foreach($this->sdoFactory->index("medona/archivalAgreement", "originatorOrgIds") as $readingOriginatorOrgIds) {
+                $readingOriginatorOrgIds = preg_split("/[\s]/",$readingOriginatorOrgIds);
+                foreach($readingOriginatorOrgIds as $currentOriginatorOrgId) {
+                    if ($currentOriginatorOrgId == $orgId) {
+                        throw new \core\Exception("This service belongs to an archival agreement.");
+                    };
+                }
+            };
+        }
+
+        // bloque la suppression du rôle service versant si dans un accord de versement
+        if (isset($organization->orgRoleCodes) && ($this->sdoFactory->count("medona/archivalAgreement", "depositorOrgRegNumber='$organization->registrationNumber'")>0) && !$organization->orgRoleCodes->contains("depositor")) {
+            throw new \core\Exception("This service belongs to an archival agreement.");
+        }
+
+        // bloque la suppression du rôle service archives si dans un accord de versement
+        if (isset($organization->orgRoleCodes) && ($this->sdoFactory->count("medona/archivalAgreement", "archiverOrgRegNumber='$organization->registrationNumber'")>0) && !$organization->orgRoleCodes->contains("archiver")) {
+            throw new \core\Exception("This service belongs to an archival agreement.");
+        }
+
+        // bloque la suppression du rôle service archives si au moins une archive
+        $numberOfArchives = (string)$this->sdoFactory->count("recordsManagement/archive", "archiverOrgRegNumber='$organization->registrationNumber'");
+        if (isset($organization->orgRoleCodes) && ($numberOfArchives > 0) && !$organization->orgRoleCodes->contains("archiver")) {
+            throw new \core\Exception\ForbiddenException(
+                "This service has %s archive(s).",
+                403,
+                null,
+                [$numberOfArchives]
+            );
+        }
+
+        // bloque la suppression du rôle producteur si au moins une archive
+        $numberOfArchives = (string)$this->sdoFactory->count("recordsManagement/archive", "originatorOrgRegNumber='$organization->registrationNumber'");
+        if (isset($organization->orgRoleCodes) && ($numberOfArchives > 0) && !$organization->orgRoleCodes->contains("archiver")) {
+            throw new \core\Exception\ForbiddenException(
+                "This service has %s archive(s).",
+                403,
+                null,
+                [$numberOfArchives]
+            );
+        }
+
         try {
             if ($this->isUsed($organization->registrationNumber)) {
                 $originalOrganization = $this->read($orgId);

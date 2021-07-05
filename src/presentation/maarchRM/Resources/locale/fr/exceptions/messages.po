@@ -59,6 +59,15 @@ msgstr "La date de fin est antérieure à la date de début."
 msgid "An owner is already defined."
 msgstr "Un Opérateur d'Archivage est déjà défini."
 
+msgid "This service is declared as an authority control. Remove it from the authority control panel before deleting this role."
+msgstr "Ce service est déclaré comme autorité de contrôle. Veuillez supprimer ce lien (menu Gestion des Autorités de Contrôle) avant de lui ôter ce rôle."
+
+msgid "This service belongs to an archival agreement."
+msgstr "Ce service est dans un accord de versement."
+
+msgid "This service has %s archive(s)."
+msgstr "Ce service possède %s archive(s)."
+
 msgid "Profile %s not found"
 msgstr "Le profil %s n'a pas été trouvé"
 
