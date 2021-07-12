@@ -7,7 +7,7 @@ class ComparisonOperation
     extends AbstractBinaryOperation
 {
     
-    public function __construct($code=LAABS_T_EQUAL, $left, $right=LAABS_T_TRUE)
+    public function __construct($code=LAABS_T_EQUAL, $left=null, $right=LAABS_T_TRUE)
     {
         parent::__construct($code, $left, $right);
     }
