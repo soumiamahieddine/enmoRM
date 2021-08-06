@@ -243,7 +243,7 @@ class message
         $toDate = null,
         $status = null,
         $isIncoming = null,
-        &$queryParams
+        &$queryParams = null
     ) {
         $queryParts = array();
         $currentService = \laabs::getToken("ORGANIZATION");
