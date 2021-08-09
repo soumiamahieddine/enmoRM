@@ -689,7 +689,7 @@ trait archiveEntryTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $archive->serviceLevelReference = $this->currentServiceLevel->reference;
-        if (strpos($this->currentServiceLevel->control, "fullTextIndexation") !== false) {
+        if (strpos($this->currentServiceLevel->control, "fullTextIndexation") !== false && $archive->descriptionClass != "recordsManagement/log") {
             $archive->fullTextIndexation = "requested";
         } else {
             $archive->fullTextIndexation = "none";

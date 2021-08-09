@@ -462,8 +462,11 @@ interface archivesInterface
 
     /**
      * Extract full text from resources of flagged archives
-     **
+     *
+     * @param int $maxResults Maximum number of archive to extract
+     * @param int $timeLimit  Time limit for extraction
+     *
      * @action recordsManagement/archive/extractFulltext
      */
-    public function readExtractfulltext();
+    public function readExtractfulltext($maxResults = null, $timeLimit = null);
 }
