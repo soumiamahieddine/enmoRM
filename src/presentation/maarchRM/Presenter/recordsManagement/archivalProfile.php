@@ -214,7 +214,7 @@ class archivalProfile
             }
             // sort alphabetically properties of description classes
             usort($properties, function ($a, $b) {
-                return $a->label > $b->label;
+                return $a->label <=> $b->label;
             });
 
             $descriptionClass->properties = json_encode($properties);
