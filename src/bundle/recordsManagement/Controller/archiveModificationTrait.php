@@ -845,7 +845,7 @@ trait archiveModificationTrait
      */
     public function extractFulltext($maxResults = null, $timeLimit = null)
     {
-        if (!is_null($maxResults)) {
+        if (!is_null($maxResults) && $maxResults != "null") {
             $maxResults = intval($maxResults);
         }
 
@@ -870,7 +870,8 @@ trait archiveModificationTrait
 
         $archiveExtractedCount = 0;
         $errors = [];
-        $endTimeScript = microtime(true) + ($timeLimit * 1000);
+        $endTimeScript = microtime(true) + $timeLimit;
+
         foreach ($archiveIds as $archiveId) {
             if (!is_null($timeLimit) && ($endTimeScript - microtime(true)) <= 0) {
                 $logMessage = ["message" => "Time Limit reached"];
