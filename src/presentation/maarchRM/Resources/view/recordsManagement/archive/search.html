@@ -291,12 +291,23 @@
         enumeration = null,
         enumNames = null
     ) {
-        var row = $('<li/>').addClass('helper row').appendTo($("#helperList"));
+        if($("#" + helperName).length == 0) {
+            if($(".divProp").length != 0) {
+                var title = $('<label/>').appendTo($(".divProp").parent()).html("ET");
+            }
+            var div = $('<div/>').attr('id', helperName).addClass('panel panel-default divProp').appendTo($("#helperList"));
+            // var title = $('<label/>').attr('for', helperName).appendTo(div).html(helperText);
+            var or = helperText;
+        } else {
+            var div = $("#" + helperName);
+            var or = "Ou ";
+        }
+        var row = $('<li/>').addClass('helper row').appendTo(div);
         var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
         $('#selectedHelper')
             .clone()
             .removeClass('hide')
-            .html(helperText)
+            .html(or)
             .appendTo(selectedHelperType)
             .prev()
             .remove();
@@ -504,31 +515,33 @@
         var supprButton = $('<button/>')
             .attr('title', 'supprimer')
             .attr('type', 'button')
-            .addClass("btn btn-danger deleteHelper")
+            .addClass("btn btn-delete deleteHelper")
             .appendTo(buttonColumn);
 
         var icon = $('<i/>')
-            .addClass('fa fa-trash')
+            .addClass('fa fa-minus')
             .appendTo(supprButton);
 
-        var buttonColumn = $('<li/>').addClass('col-sm-1').appendTo(row);
-        var orButton = $('<button/>')
-            .attr('title', 'Ou')
-            .attr('type', 'button')
-            .attr('data-helpertext', helperText)
-            .attr('data-name', helperName)
-            .attr('data-type', helperType)
-            .attr('data-format', helperFormat)
-            .attr('data-externalRef', isExternalRef)
-            .attr('data-enumeration', enumeration)
-            .attr('data-enumNames', enumNames)
-            .attr('data-format', helperFormat)
-            .addClass("btn btn-success orHelper")
-            .appendTo(buttonColumn);
+        if($("#" + helperName).find(".orHelper").length == 0) {
+            var buttonColumn = $('<li/>').addClass('col-sm-1').appendTo(row);
+            var orButton = $('<button/>')
+                .attr('title', 'Ou')
+                .attr('type', 'button')
+                .attr('data-helpertext', helperText)
+                .attr('data-name', helperName)
+                .attr('data-type', helperType)
+                .attr('data-format', helperFormat)
+                .attr('data-externalRef', isExternalRef)
+                .attr('data-enumeration', enumeration)
+                .attr('data-enumNames', enumNames)
+                .attr('data-format', helperFormat)
+                .addClass("btn btn-success orHelper")
+                .appendTo(buttonColumn);
 
-        var icon = $('<i/>')
-            .addClass('fa fa-plus')
-            .appendTo(orButton);
+            var icon = $('<i/>')
+                .addClass('fa fa-plus')
+                .appendTo(orButton);
+        }
 
         $("#helperSelect :selected").text();
         $("#helperSelect :selected").remove();
