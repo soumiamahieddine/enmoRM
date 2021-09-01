@@ -1129,7 +1129,7 @@ class archive
         if (!empty($archive->descriptionObject)) {
             $this->getDescriptionHtml($archive);
             // Edit Metadata button is display only the archive status is 'preserved'
-            if ($archive->status == "preserved") {
+            if ($archive->status == "preserved" && (isset($archive->messages) && $archive->messages[0]->schema != "mades")) {
                 $editMetadata = true;
             }
         }
