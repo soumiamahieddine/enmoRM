@@ -171,18 +171,31 @@
     });
 
     $("#helperList").on('click', ".deleteHelper", function() {
-        var helperValue = $(this).closest('.helper').find('#selectedHelper').text();
-        var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
-        var helperToggle = $(this).closest('.helper').find('#helperToggle').attr('type');
+        var div = ($(this).closest('.divProp'));
 
-        if (helperToggle == 'checkbox') {
-            helperType = 'boolean';
+        if(div.find(".helper").length == 1) {
+            if(div.prev().is('label')) {
+                var labelToRemove = div.prev();
+            } else if (div.next().is('label')) {
+                labelToRemove = div.next();
+            }
+            labelToRemove.remove();
+            div.remove();
         }
-        $(this).closest('.helper').remove();
-        $("#helperSelect").append($("<option></option>")
-                    .attr("value", helperValue)
-                    .attr("type", helperType)
-                    .text(helperValue));
+        var helper = $(this).closest('.helper');
+
+        if (helper.is(':first-child')) {
+            var label = helper.find("#selectedHelper").text();
+            var orButton = helper.find(".orHelper").clone();
+            helper.remove();
+
+            var newFirst = div.find(".helper").first();
+            newFirst.find("#selectedHelper").text(label);
+            orButton.appendTo(newFirst.find(".buttonColumn"));
+        } else {
+            helper.remove();
+        }
+        
     });
 
     $("#helperList").on('click', ".orHelper", function() {
@@ -293,10 +306,9 @@
     ) {
         if($("#" + helperName).length == 0) {
             if($(".divProp").length != 0) {
-                var title = $('<label/>').appendTo($(".divProp").parent()).html("ET");
+                var title = $('<label/>').addClass("andLabel").appendTo($(".divProp").parent()).html("ET");
             }
             var div = $('<div/>').attr('id', helperName).addClass('panel panel-default divProp').appendTo($("#helperList"));
-            // var title = $('<label/>').attr('for', helperName).appendTo(div).html(helperText);
             var or = helperText;
         } else {
             var div = $("#" + helperName);
@@ -510,12 +522,12 @@
                 return;
         }
 
-        var buttonColumn = $('<li/>').addClass('col-sm-1').appendTo(row);
+        var buttonColumn = $('<li/>').addClass('col-sm-2 buttonColumn').appendTo(row);
 
         var supprButton = $('<button/>')
             .attr('title', 'supprimer')
             .attr('type', 'button')
-            .addClass("btn btn-delete deleteHelper")
+            .addClass("btn btn-danger deleteHelper")
             .appendTo(buttonColumn);
 
         var icon = $('<i/>')
@@ -523,7 +535,6 @@
             .appendTo(supprButton);
 
         if($("#" + helperName).find(".orHelper").length == 0) {
-            var buttonColumn = $('<li/>').addClass('col-sm-1').appendTo(row);
             var orButton = $('<button/>')
                 .attr('title', 'Ou')
                 .attr('type', 'button')
@@ -542,9 +553,6 @@
                 .addClass('fa fa-plus')
                 .appendTo(orButton);
         }
-
-        $("#helperSelect :selected").text();
-        $("#helperSelect :selected").remove();
     }
 
     function generateUniqIdentifier () {
