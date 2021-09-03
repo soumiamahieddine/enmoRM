@@ -178,6 +178,8 @@
                 var labelToRemove = div.prev();
             } else if (div.next().is('label')) {
                 labelToRemove = div.next();
+            } else {
+                labelToRemove = div.find("label");
             }
             labelToRemove.remove();
             div.remove();
@@ -728,7 +730,13 @@
                             dateConverted = convertDate(splitDateTime[0]) + ' ' + splitDateTime[1];
 
                             var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
-                            value = name + operation + "'" + dateConverted + "'";
+                            if (($(this).data('range') == 'start')) {
+                                var operation = ">=";
+                                value = "(" + name + operation + "'" + dateConverted + "'";
+                            } else {
+                                var operation = "<=";
+                                value = name + operation + "'" + dateConverted + "')";
+                            }
 
                             if (parameters.description[name] == undefined) {
                                 if (hasTwoCount) {
@@ -737,7 +745,7 @@
                                 parameters.description[name] = value;
                             } else {
                                 if (hasTwoCount) {
-                                    parameters.description[name] = parameters.description[name] +'||' + value;
+                                    parameters.description[name] = parameters.description[name] +' || ' + value;
                                 } else {
                                     parameters.description[name] = parameters.description[name] +'&&' + value;
                                 }
@@ -760,7 +768,13 @@
 
                 case 'number':
                     if (value !== '') {
-                        var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                        if (($(this).data('range') == 'start')) {
+                            var operation = ">=";
+                            value = "(" + name + operation + "'" + dateConverted + "'";
+                        } else {
+                            var operation = "<=";
+                            value = name + operation + "'" + dateConverted + "')";
+                        }
                         value = name + operation + $(this).val();
 
                         if (parameters.description[name] == ""
@@ -773,7 +787,7 @@
                             parameters.description[name] = value;
                         } else {
                             if (hasTwoCount) {
-                                parameters.description[name] = parameters.description[name] +'||' + value;
+                                parameters.description[name] = parameters.description[name] +') || (' + value;
                                 shouldCount = false;
 
                             } else {
@@ -792,6 +806,9 @@
         for (name in parameters.description) {
             arr.push(parameters.description[name]);
         }
+        arr.forEach(function(part, index) {
+            this[index] = "(" + part + ")";
+        }, arr);
         parameters.description = arr.join(' && ');
 
         return parameters;
