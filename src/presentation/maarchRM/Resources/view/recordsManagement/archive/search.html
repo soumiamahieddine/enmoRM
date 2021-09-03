@@ -760,7 +760,7 @@
                                 || parameters.description[name] == undefined
                                 || parameters.description[name] == null
                             ) {
-                                parameters.description[name] = name + '="' + value.trim() + '"';
+                                parameters.description[name] = name + '="*' + value.trim() + '*"';
                             } else {
                                 parameters.description[name] = parameters.description[name] + '||' + name + '="' + value.trim() + '"';
                             }
