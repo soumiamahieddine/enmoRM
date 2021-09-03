@@ -706,8 +706,13 @@
                 case 'text':
                     if (value !== '') {
                         if ($(this).hasClass('datePicker')) {
-                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
-                            value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+                            if (($(this).data('range') == 'start')) {
+                                var operation = ">=";
+                                value = "(" + name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+                            } else {
+                                var operation = "<=";
+                                value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "')";
+                            }
 
                             // Fill start and end values
                             if (parameters.description[name] == undefined) {
@@ -729,7 +734,6 @@
                             var splitDateTime = $(this).val().split(' ');
                             dateConverted = convertDate(splitDateTime[0]) + ' ' + splitDateTime[1];
 
-                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
                             if (($(this).data('range') == 'start')) {
                                 var operation = ">=";
                                 value = "(" + name + operation + "'" + dateConverted + "'";
