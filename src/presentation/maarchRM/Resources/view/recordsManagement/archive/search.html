@@ -171,19 +171,52 @@
     });
 
     $("#helperList").on('click', ".deleteHelper", function() {
-        var helperValue = $(this).closest('.helper').find('#selectedHelper').text();
-        var helperType = $(this).closest('.helper').find('#helperValueMin').attr('type');
-        var helperToggle = $(this).closest('.helper').find('#helperToggle').attr('type');
+        var div = ($(this).closest('.divProp'));
 
-        if (helperToggle == 'checkbox') {
-            helperType = 'boolean';
+        if(div.find(".helper").length == 1) {
+            if(div.prev().is('label')) {
+                var labelToRemove = div.prev();
+            } else if (div.next().is('label')) {
+                labelToRemove = div.next();
+            } else {
+                labelToRemove = div.find("label");
+            }
+            labelToRemove.remove();
+            div.remove();
         }
-        $(this).closest('.helper').remove();
-        $("#helperSelect").append($("<option></option>")
-                    .attr("value", helperValue)
-                    .attr("type", helperType)
-                    .text(helperValue));
+        var helper = $(this).closest('.helper');
+
+        if (helper.is(':first-child')) {
+            var label = helper.find("#selectedHelper").text();
+            var orButton = helper.find(".orHelper").clone();
+            helper.remove();
+
+            var newFirst = div.find(".helper").first();
+            newFirst.find("#selectedHelper").text(label);
+            orButton.appendTo(newFirst.find(".buttonColumn"));
+        } else {
+            helper.remove();
+        }
+        
     });
+
+    $("#helperList").on('click', ".orHelper", function() {
+        var helperText = $(this).data('helpertext');
+        var helperName = $(this).data('name');
+        var helperType = $(this).data('type');
+        var helperFormat = $(this).data('format');
+        var isExternalRef = $(this).data('externalRef');
+        var enumeration = $(this).data('enumeration');
+        var enumNames = $(this).data('enumnames');
+
+        if (enumeration) {
+            enumeration = JSON.stringify(enumeration);
+        }
+
+        addHelperText(helperText, helperName, helperType, helperFormat, isExternalRef, enumeration, enumNames);
+    });
+
+
 
     $('#addHelper').on('click', function () {
         var helper = $('#helperSelect').find("option:selected");
@@ -191,233 +224,12 @@
         var helperName = helper.attr("helperName");
         var helperType = helper.attr('type');
         var helperFormat = helper.attr('format');
+        var isExternalRef = helper.attr('externalRef');
+        var enumeration = helper.attr('data-enumeration');
+        var enumNames = helper.attr('data-enumName');
 
         if (helperText) {
-            var row = $('<li/>').addClass('helper').appendTo($("#helperList"));
-            var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
-            $('#selectedHelper')
-                .clone()
-                .removeClass('hide')
-                .html(helperText)
-                .appendTo(selectedHelperType)
-                .prev()
-                .remove();
-
-            if (helperFormat === "datetime") {
-                helperType = helperFormat;
-            }
-
-            switch (helperType) {
-                case 'array':
-                        var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                        $('#helperValueMin')
-                            .clone()
-                            .attr('type','text')
-                            .attr('name', helperName)
-                            .attr('placeholder','Valeur')
-                            .attr('id', generateUniqIdentifier())
-                            .appendTo(helperInput)
-                            .prev()
-                            .remove();
-                        break;
-
-                case 'text':
-                case 'string':
-                    var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                    $('#helperValueMin')
-                        .clone()
-                        .attr('placeholder','Valeur')
-                        .attr('id', generateUniqIdentifier())
-                        .attr('type','text')
-                        .attr('name', helperName)
-                        .appendTo(helperInput)
-                        .prev()
-                        .remove();
-                    break;
-
-                // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
-                case 'name':
-                    var enumeration = helper.attr("data-enumeration");
-                    dropdownList = JSON.parse(enumeration);
-
-                    if (dropdownList) {
-                        var enumNames = helper.attr("data-enumName");
-                        var dropdownValues = [];
-
-                        $.each(dropdownList, function(key, value)
-                        {
-                            dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
-                        });
-                        var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                        $('#helperDropdown')
-                            .clone()
-                            .attr('id', generateUniqIdentifier())
-                            .attr('name', helperName)
-                            .removeClass('hide')
-                            .addClass(' ')
-                            .html(dropdownValues.join(''))
-                            .appendTo(helperInput);
-                    }
-                    else if (helper.attr('externalRef') == 1) {
-                        var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                        $('#helperValueMin')
-                            .clone()
-                            .attr('type','text')
-                            .attr('placeholder','Valeur')
-                            .attr('id', generateUniqIdentifier())
-                            .addClass('externalRefField')
-                            .attr('name', helperName)
-                            .appendTo(helperInput)
-                            .prev()
-                            .remove();
-                        getTypeahead();
-                    }
-                    else {
-                        var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                        $('#helperValueMin')
-                            .clone()
-                            .attr('type','text')
-                            .attr('id', generateUniqIdentifier())
-                            .attr('placeholder','Valeur')
-                            .attr('name', helperName)
-                            .appendTo(helperInput)
-                            .prev()
-                            .remove();
-                    }
-                    break;
-
-                case 'number':
-                    var helperMin = $('<li/>').addClass("helperContent col-sm-4 padding-5").appendTo(row);
-                    var helperMax = $('<li/>').addClass("helperContent col-sm-4 padding-5").appendTo(row);
-
-                    $('#helperValueMin')
-                        .clone()
-                        .attr('id', generateUniqIdentifier())
-                        .attr('type','number')
-                        .attr('placeholder','Minimum')
-                        .attr('data-range','start')
-                        .attr('name', helperName)
-                        .appendTo(helperMin)
-                        .prev()
-                        .remove();
-                    $('#helperValueMax')
-                        .clone()
-                        .attr('id', generateUniqIdentifier())
-                        .attr('type','number')
-                        .attr('placeholder','Maximum')
-                        .attr('data-range','end')
-                        .attr('name', helperName)
-                        .appendTo(helperMax)
-                        .prev()
-                        .remove();
-                    break;
-
-                case 'date':
-                    var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
-                    var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
-                    var valueMinIdentifier = generateUniqIdentifier();
-                    var valueMaxIdentifier = generateUniqIdentifier();
-
-                    $('#helperValueMin')
-                        .clone()
-                        .attr('type','text')
-                        .attr('placeholder','Date de début')
-                        .attr('data-range','start')
-                        .attr('name', helperName)
-                        .attr('id', valueMinIdentifier)
-                        .addClass('datePicker')
-                        .appendTo(helperMin)
-                        .prev()
-                        .remove();
-                    $('#helperValueMax')
-                        .clone()
-                        .attr('type','text')
-                        .attr('placeholder','Date de fin')
-                        .attr('data-range','end')
-                        .attr('name', helperName)
-                        .attr('id', valueMaxIdentifier)
-                        .addClass('datePicker')
-                        .appendTo(helperMax)
-                        .prev()
-                        .remove();
-
-                    $('#' + valueMinIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
-                    $('#' + valueMaxIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
-
-                    break;
-
-                case 'datetime':
-                    var helperMin = $('<li/>').addClass("startDate helperContent col-sm-4 padding-5").appendTo(row);
-                    var helperMax = $('<li/>').addClass("endDate helperContent col-sm-4 padding-5").appendTo(row);
-                    var valueMinIdentifier = generateUniqIdentifier();
-                    var valueMaxIdentifier = generateUniqIdentifier();
-
-                    $('#helperValueMin')
-                        .clone()
-                        .attr('type','text')
-                        .attr('placeholder','Date et heure de début')
-                        .attr('data-range','start')
-                        .attr('name', helperName)
-                        .attr('id', valueMinIdentifier)
-                        .addClass('dateTimePicker')
-                        .appendTo(helperMin)
-                        .prev()
-                        .remove();
-                    $('#helperValueMax')
-                        .clone()
-                        .attr('type','text')
-                        .attr('placeholder','Date et heure de fin')
-                        .attr('data-range','end')
-                        .attr('name', helperName)
-                        .attr('id', valueMaxIdentifier)
-                        .addClass('dateTimePicker')
-                        .appendTo(helperMax)
-                        .prev()
-                        .remove();
-
-                    dateTimePickerParams = JSON.parse($('#datetimePickerParams').val());
-                    $('#' + valueMinIdentifier).datetimepicker(dateTimePickerParams);
-                    $('#' + valueMaxIdentifier).datetimepicker(dateTimePickerParams);
-                    break;
-
-
-                case 'boolean':
-                    var helperInput = $('<li/>').addClass("helperContent col-sm-8 padding-5").appendTo(row);
-                    var helperCheckbox = $('#helperToggle')
-                        .clone()
-                        .attr('type','checkbox')
-                        .attr('name', helperName);
-                    $(function() {
-                        $(helperCheckbox).bootstrapToggle({
-                            on: 'Activé',
-                            off: 'Désactivé',
-                            width: '18%',
-                            size: 'normal',
-                            onstyle:'toggleOn',
-                            offstyle:'toggleOff'
-                        });
-                    })
-                    helperCheckbox.appendTo(helperInput);
-                    break;
-
-                default:
-                    return;          
-            }
-
-            var buttonColumn = $('<li/>').appendTo(row);
-
-            var button = $('<button/>')
-                .attr('title', 'supprimer')
-                .attr('type', 'button')
-                .addClass("btn btn-danger deleteHelper")
-                .appendTo(buttonColumn);
-
-            var icon = $('<i/>')
-                .addClass('fa fa-trash')
-                .appendTo(button);
-
-            $("#helperSelect :selected").text();
-            $("#helperSelect :selected").remove();
+            addHelperText(helperText, helperName, helperType, helperFormat, isExternalRef, enumeration, enumNames);
         }     
         $('#helperSelect').prop('selectedIndex',0);
     });
@@ -484,6 +296,266 @@
         $('#archive_searchResult').empty();
         document.location.reload();
     });
+
+    function addHelperText(
+        helperText,
+        helperName,
+        helperType,
+        helperFormat,
+        isExternalRef = 0,
+        enumeration = null,
+        enumNames = null
+    ) {
+        if($("#" + helperName).length == 0) {
+            if($(".divProp").length != 0) {
+                var title = $('<label/>').addClass("andLabel").appendTo($(".divProp").parent()).html("ET");
+            }
+            var div = $('<div/>').attr('id', helperName).addClass('panel panel-default divProp').appendTo($("#helperList"));
+            var or = helperText;
+        } else {
+            var div = $("#" + helperName);
+            var or = "Ou ";
+        }
+        var row = $('<li/>').addClass('helper row').appendTo(div);
+        var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
+        $('#selectedHelper')
+            .clone()
+            .removeClass('hide')
+            .html(or)
+            .appendTo(selectedHelperType)
+            .prev()
+            .remove();
+
+        if (helperFormat === "datetime") {
+            helperType = helperFormat;
+        }
+
+        switch (helperType) {
+            case 'array':
+                    var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                    $('#helperValueMin')
+                        .clone()
+                        .attr('type','text')
+                        .attr('name', helperName)
+                        .attr('placeholder','Valeur')
+                        .attr('id', generateUniqIdentifier())
+                        .appendTo(helperInput)
+                        .prev()
+                        .remove();
+                    break;
+
+            case 'text':
+            case 'string':
+                var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                $('#helperValueMin')
+                    .clone()
+                    .attr('placeholder','Valeur')
+                    .attr('id', generateUniqIdentifier())
+                    .attr('type','text')
+                    .attr('name', helperName)
+                    .appendTo(helperInput)
+                    .prev()
+                    .remove();
+                break;
+
+            // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
+            case 'name':
+                dropdownList = JSON.parse(enumeration);
+
+                if (dropdownList) {
+                    var dropdownValues = [];
+                    $.each(dropdownList, function(key, value)
+                    {
+                        dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
+                    });
+                    var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                    $('#helperDropdown')
+                        .clone()
+                        .attr('id', generateUniqIdentifier())
+                        .attr('name', helperName)
+                        .removeClass('hide')
+                        .addClass(' ')
+                        .html(dropdownValues.join(''))
+                        .appendTo(helperInput);
+                }
+                else if (isExternalRef == 1) {
+                    var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                    $('#helperValueMin')
+                        .clone()
+                        .attr('type','text')
+                        .attr('placeholder','Valeur')
+                        .attr('id', generateUniqIdentifier())
+                        .addClass('externalRefField')
+                        .attr('name', helperName)
+                        .appendTo(helperInput)
+                        .prev()
+                        .remove();
+                    getTypeahead();
+                }
+                else {
+                    var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                    $('#helperValueMin')
+                        .clone()
+                        .attr('type','text')
+                        .attr('id', generateUniqIdentifier())
+                        .attr('placeholder','Valeur')
+                        .attr('name', helperName)
+                        .appendTo(helperInput)
+                        .prev()
+                        .remove();
+                }
+                break;
+
+            case 'number':
+                var helperMin = $('<li/>').addClass("helperContent col-sm-3 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("helperContent col-sm-3 padding-5").appendTo(row);
+
+                $('#helperValueMin')
+                    .clone()
+                    .attr('id', generateUniqIdentifier())
+                    .attr('type','number')
+                    .attr('placeholder','Minimum')
+                    .attr('data-range','start')
+                    .attr('name', helperName)
+                    .appendTo(helperMin)
+                    .prev()
+                    .remove();
+                $('#helperValueMax')
+                    .clone()
+                    .attr('id', generateUniqIdentifier())
+                    .attr('type','number')
+                    .attr('placeholder','Maximum')
+                    .attr('data-range','end')
+                    .attr('name', helperName)
+                    .appendTo(helperMax)
+                    .prev()
+                    .remove();
+                break;
+
+            case 'date':
+                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-3 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-3  padding-5").appendTo(row);
+                var valueMinIdentifier = generateUniqIdentifier();
+                var valueMaxIdentifier = generateUniqIdentifier();
+
+                $('#helperValueMin')
+                    .clone()
+                    .attr('type','text')
+                    .attr('placeholder','Date de début')
+                    .attr('data-range','start')
+                    .attr('name', helperName)
+                    .attr('id', valueMinIdentifier)
+                    .addClass('datePicker')
+                    .appendTo(helperMin)
+                    .prev()
+                    .remove();
+                $('#helperValueMax')
+                    .clone()
+                    .attr('type','text')
+                    .attr('placeholder','Date de fin')
+                    .attr('data-range','end')
+                    .attr('name', helperName)
+                    .attr('id', valueMaxIdentifier)
+                    .addClass('datePicker')
+                    .appendTo(helperMax)
+                    .prev()
+                    .remove();
+
+                $('#' + valueMinIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
+                $('#' + valueMaxIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
+
+                break;
+
+            case 'datetime':
+                var helperMin = $('<li/>').addClass("startDate helperContent col-sm-3 padding-5").appendTo(row);
+                var helperMax = $('<li/>').addClass("endDate helperContent col-sm-3 padding-5").appendTo(row);
+                var valueMinIdentifier = generateUniqIdentifier();
+                var valueMaxIdentifier = generateUniqIdentifier();
+
+                $('#helperValueMin')
+                    .clone()
+                    .attr('type','text')
+                    .attr('placeholder','Date et heure de début')
+                    .attr('data-range','start')
+                    .attr('name', helperName)
+                    .attr('id', valueMinIdentifier)
+                    .addClass('dateTimePicker')
+                    .appendTo(helperMin)
+                    .prev()
+                    .remove();
+                $('#helperValueMax')
+                    .clone()
+                    .attr('type','text')
+                    .attr('placeholder','Date et heure de fin')
+                    .attr('data-range','end')
+                    .attr('name', helperName)
+                    .attr('id', valueMaxIdentifier)
+                    .addClass('dateTimePicker')
+                    .appendTo(helperMax)
+                    .prev()
+                    .remove();
+
+                dateTimePickerParams = JSON.parse($('#datetimePickerParams').val());
+                $('#' + valueMinIdentifier).datetimepicker(dateTimePickerParams);
+                $('#' + valueMaxIdentifier).datetimepicker(dateTimePickerParams);
+                break;
+
+
+            case 'boolean':
+                var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                var helperCheckbox = $('#helperToggle')
+                    .clone()
+                    .attr('type','checkbox')
+                    .attr('name', helperName);
+                $(function() {
+                    $(helperCheckbox).bootstrapToggle({
+                        on: 'Activé',
+                        off: 'Désactivé',
+                        width: '18%',
+                        size: 'normal',
+                        onstyle:'toggleOn',
+                        offstyle:'toggleOff'
+                    });
+                })
+                helperCheckbox.appendTo(helperInput);
+                break;
+
+            default:
+                return;
+        }
+
+        var buttonColumn = $('<li/>').addClass('col-sm-2 buttonColumn').appendTo(row);
+
+        var supprButton = $('<button/>')
+            .attr('title', 'supprimer')
+            .attr('type', 'button')
+            .addClass("btn btn-danger deleteHelper")
+            .appendTo(buttonColumn);
+
+        var icon = $('<i/>')
+            .addClass('fa fa-minus')
+            .appendTo(supprButton);
+
+        if($("#" + helperName).find(".orHelper").length == 0) {
+            var orButton = $('<button/>')
+                .attr('title', 'Ou')
+                .attr('type', 'button')
+                .attr('data-helpertext', helperText)
+                .attr('data-name', helperName)
+                .attr('data-type', helperType)
+                .attr('data-format', helperFormat)
+                .attr('data-externalRef', isExternalRef)
+                .attr('data-enumeration', enumeration)
+                .attr('data-enumNames', enumNames)
+                .attr('data-format', helperFormat)
+                .addClass("btn btn-success orHelper")
+                .appendTo(buttonColumn);
+
+            var icon = $('<i/>')
+                .addClass('fa fa-plus')
+                .appendTo(orButton);
+        }
+    }
 
     function generateUniqIdentifier () {
         var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
@@ -581,6 +653,7 @@
 
         var advancedSearchField = $('#helperForm').find('.advancedSearchField:visible');
         parameters.description = [];
+        var hasTwoCount = false;
         advancedSearchField.each(function() {
             var value = $(this).val();
             var name = $(this).attr('name');
@@ -593,7 +666,14 @@
                 case 'select':
                     // keyword enum
                     if (value !== '') {
-                        parameters.description[name] = name+'="'+value+'"';
+                        if (parameters.description[name] == ""
+                            || parameters.description[name] == undefined
+                            || parameters.description[name] == null
+                        ) {
+                            parameters.description[name] = name + '="' + value + '"';
+                        } else {
+                            parameters.description[name] = parameters.description[name] + '||' + name+'="'+value+'"';
+                        }
                     }
                     break;
 
@@ -613,20 +693,40 @@
                             return;
                     }
 
-                    parameters.description[name] = name+'=' + value;
+                    if (parameters.description[name] == ""
+                        || parameters.description[name] == undefined
+                        || parameters.description[name] == null
+                    ) {
+                        parameters.description[name] = name + '="' + value + '"';
+                    } else {
+                        parameters.description[name] = parameters.description[name] + '||' + name+'="'+value+'"';
+                    }
                     break;
 
                 case 'text':
                     if (value !== '') {
                         if ($(this).hasClass('datePicker')) {
-                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
-                            value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+                            if (($(this).data('range') == 'start')) {
+                                var operation = ">=";
+                                value = "(" + name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+                            } else {
+                                var operation = "<=";
+                                value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "')";
+                            }
 
                             // Fill start and end values
                             if (parameters.description[name] == undefined) {
+                                if (hasTwoCount) {
+                                    hasTwoCount = false;
+                                }
                                 parameters.description[name] = value;
                             } else {
-                                parameters.description[name] = parameters.description[name] +'&&'+value;
+                                if (hasTwoCount) {
+                                    parameters.description[name] = parameters.description[name] +'||' + value;
+                                } else {
+                                    parameters.description[name] = parameters.description[name] +'&&' + value;
+                                }
+                                hasTwoCount = !hasTwoCount;
                             }
                             break;
                         } else if ($(this).hasClass('dateTimePicker')) {
@@ -634,16 +734,37 @@
                             var splitDateTime = $(this).val().split(' ');
                             dateConverted = convertDate(splitDateTime[0]) + ' ' + splitDateTime[1];
 
-                            var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
-                            value = name + operation + "'" + dateConverted + "'";
+                            if (($(this).data('range') == 'start')) {
+                                var operation = ">=";
+                                value = "(" + name + operation + "'" + dateConverted + "'";
+                            } else {
+                                var operation = "<=";
+                                value = name + operation + "'" + dateConverted + "')";
+                            }
 
                             if (parameters.description[name] == undefined) {
+                                if (hasTwoCount) {
+                                    hasTwoCount = false;
+                                }
                                 parameters.description[name] = value;
                             } else {
-                                parameters.description[name] = parameters.description[name] +'&&' + value;
+                                if (hasTwoCount) {
+                                    parameters.description[name] = parameters.description[name] +' || ' + value;
+                                } else {
+                                    parameters.description[name] = parameters.description[name] +'&&' + value;
+                                }
+                                hasTwoCount = !hasTwoCount;
                             }
                         } else {
-                            parameters.description[name] = name + '="' + value.trim() + '"';
+                            if (parameters.description[name] == ""
+                                || parameters.description[name] == undefined
+                                || parameters.description[name] == null
+                            ) {
+                                parameters.description[name] = name + '="*' + value.trim() + '*"';
+                            } else {
+                                parameters.description[name] = parameters.description[name] + '||' + name + '="' + value.trim() + '"';
+                            }
+
                         }
                     }
 
@@ -651,15 +772,36 @@
 
                 case 'number':
                     if (value !== '') {
-                        var operation = ($(this).data('range') == 'start') ? ">=" : "<=";
+                        if (($(this).data('range') == 'start')) {
+                            var operation = ">=";
+                            value = "(" + name + operation + "'" + dateConverted + "'";
+                        } else {
+                            var operation = "<=";
+                            value = name + operation + "'" + dateConverted + "')";
+                        }
                         value = name + operation + $(this).val();
 
-                        if (parameters.description[name] == undefined) {
+                        if (parameters.description[name] == ""
+                            || parameters.description[name] == undefined
+                            || parameters.description[name] == null
+                        ) {
+                            if (hasTwoCount) {
+                                hasTwoCount = false;
+                            }
                             parameters.description[name] = value;
                         } else {
-                            parameters.description[name] = parameters.description[name] +'&&' + value;
+                            if (hasTwoCount) {
+                                parameters.description[name] = parameters.description[name] +') || (' + value;
+                                shouldCount = false;
+
+                            } else {
+                                parameters.description[name] = parameters.description[name] +'&&' + value;
+                            }
+
+                            hasTwoCount = !hasTwoCount;
                         }
                     }
+
                     break;
             };
         });
@@ -668,7 +810,9 @@
         for (name in parameters.description) {
             arr.push(parameters.description[name]);
         }
-
+        arr.forEach(function(part, index) {
+            this[index] = "(" + part + ")";
+        }, arr);
         parameters.description = arr.join(' && ');
 
         return parameters;
