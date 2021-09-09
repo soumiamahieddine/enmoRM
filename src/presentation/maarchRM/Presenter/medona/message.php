@@ -669,7 +669,11 @@ class message
             foreach ($exception->errors as $error) {
                 if (method_exists($error,'getFormat')) {
                     $format = $this->translator->getText($error->getFormat());
-                    $error->setMessage(vsprintf($format, $error->getVariables()));
+                    $errorVariables = $error->getVariables();
+                    if (is_null($errorVariables) || empty($errorVariables)) {
+                        $errorVariables = [];
+                    }
+                    $error->setMessage(vsprintf($format, $errorVariables));
                 }
             }
         }
