@@ -1,5 +1,6 @@
 <?php
-/* 
+
+/*
  * Copyright (C) Maarch
  *
  * This file is part of bundle Mades
@@ -72,7 +73,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         $message->recipientOrgRegNumber = $archiveTransfer->archivalAgency->identifier;
 
         $message->reference = $archiveTransfer->messageIdentifier;
-        
+
         if (isset($archiveTransfer->archivalAgreement)) {
             $message->archivalAgreementReference = $archiveTransfer->archivalAgreement;
         }
@@ -101,12 +102,12 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             $message->object->dataObjectPackage->descriptiveMetadata,
             $message->object->dataObjectPackage->binaryDataObjects
         );
-        
+
         $dirname = dirname($message->path);
-        
+
         $messageFiles = [$message->path];
         foreach ($message->object->dataObjectPackage->binaryDataObjects as $dataObjectId => $binaryDataObject) {
-            $message->size += (integer) $binaryDataObject->size;
+            $message->size += (int) $binaryDataObject->size;
 
             if (!isset($binaryDataObject->attachment)) {
                 $this->sendError("211", "Le document identifié par le nom '$dataObjectId' n'a pas été transmis.");
@@ -117,7 +118,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             $attachment = $binaryDataObject->attachment;
 
             if (isset($attachment->filename)) {
-                $filename = $dirname.DIRECTORY_SEPARATOR.$attachment->filename;
+                $filename = $dirname . DIRECTORY_SEPARATOR . $attachment->filename;
                 if (!is_file($filename)) {
                     $this->sendError(
                         "211",
@@ -143,9 +144,8 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                     continue;
                 }
 
-                $filename = $dirname.DIRECTORY_SEPARATOR.$dataObjectId;
+                $filename = $dirname . DIRECTORY_SEPARATOR . $dataObjectId;
                 file_put_contents($filename, $contents);
-
             } elseif (isset($attachment->content)) {
                 if (strlen($attachment->content) == 0) {
                     $this->sendError("211", "Le contenu du document n'a pas été transmis.");
@@ -161,7 +161,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                     continue;
                 }
 
-                $filename = $dirname.DIRECTORY_SEPARATOR.$dataObjectId;
+                $filename = $dirname . DIRECTORY_SEPARATOR . $dataObjectId;
                 file_put_contents($filename, $contents);
             }
 
@@ -172,7 +172,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (strtolower($messageDigest->content) != strtolower(hash($messageDigest->algorithm, $contents))) {
                 $this->sendError(
                     "207",
-                    "L'empreinte numérique du document '".basename($filename)."' ne correspond pas à celle transmise."
+                    "L'empreinte numérique du document '" . basename($filename) . "' ne correspond pas à celle transmise."
                 );
 
                 continue;
@@ -186,7 +186,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (!in_array($receivedFile, $messageFiles)) {
                 $this->sendError(
                     "101",
-                    "Le fichier '".basename($receivedFile)."' n'est pas référencé dans le message."
+                    "Le fichier '" . basename($receivedFile) . "' n'est pas référencé dans le message."
                 );
             }
         }
@@ -226,7 +226,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (!empty($archivalAgreement)) {
             if ($archivalAgreement->originatorOrgIds) {
                 $this->knownOrgUnits = [];
-        
+
                 $this->validateOriginators(
                     $message->object->dataObjectPackage->descriptiveMetadata,
                     $archivalAgreement
@@ -250,7 +250,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
         $this->validateDataObjects($message, $archivalAgreement);
         $this->validateArchiveUnits($message->object->dataObjectPackage->descriptiveMetadata, $archivalAgreement);
-      
+
         return true;
     }
 
@@ -269,13 +269,13 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                     );
                     continue;
                 }
-                
+
                 if (!in_array('originator', (array) $orgUnit->orgRoleCodes)) {
                     $this->sendError(
                         "302",
                         "Le service identifié par '$archiveOriginator' n'est pas référencé comme producteur dans le système."
                     );
-                
+
                     continue;
                 }
 
@@ -321,7 +321,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         $binaryDataObjects = $message->object->dataObjectPackage->binaryDataObjects;
 
         $messageDir = dirname($message->path);
-        
+
         foreach ($binaryDataObjects as $dataObjectId => $binaryDataObject) {
             if (!isset($binaryDataObject->attachment)) {
                 continue;
@@ -330,9 +330,9 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             $attachment = $binaryDataObject->attachment;
 
             if (isset($attachment->filename)) {
-                $filepath = $messageDir.DIRECTORY_SEPARATOR.$attachment->filename;
+                $filepath = $messageDir . DIRECTORY_SEPARATOR . $attachment->filename;
             } else {
-                $filepath = $messageDir.DIRECTORY_SEPARATOR.$dataObjectId;
+                $filepath = $messageDir . DIRECTORY_SEPARATOR . $dataObjectId;
             }
 
             $contents = file_get_contents($filepath);
@@ -342,11 +342,10 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
             if (strpos($serviceLevel->control, 'formatDetection') !== false) {
                 $format = $formatController->identifyFormat($filepath);
-
                 if (!$format) {
                     $this->sendError(
                         "205",
-                        "Le format du document '".basename($filepath)."' n'a pas pu être déterminé"
+                        "Le format du document '" . basename($filepath) . "' n'a pas pu être déterminé"
                     );
                 } else {
                     $puid = $format->puid;
@@ -358,7 +357,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (count($allowedFormats) && isset($puid) && !in_array($puid, $allowedFormats)) {
                 $this->sendError(
                     "307",
-                    "Le format du document '".basename($filepath)."' ".$puid." n'est pas autorisé par l'accord de versement."
+                    "Le format du document '" . basename($filepath) . "' " . $puid . " n'est pas autorisé par l'accord de versement."
                 );
             }
 
@@ -368,15 +367,15 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                 if (!$validation !== true && is_array($validation)) {
                     $this->sendError(
                         "307",
-                        "Le format du document '".basename($filepath)."' n'est pas valide : ".implode(', ', $validation)
+                        "Le format du document '" . basename($filepath) . "' n'est pas valide : " . implode(', ', $validation)
                     );
                 }
-                $this->infos[] = (string) \laabs::newDateTime().": Validation du format par JHOVE 1.11";
+                $this->infos[] = (string) \laabs::newDateTime() . ": Validation du format par JHOVE 1.11";
             }
 
             if (($arr = get_object_vars($fileInfo)) && !empty($arr)) {
                 file_put_contents(
-                    $messageDir.DIRECTORY_SEPARATOR.$dataObjectId.'.info',
+                    $messageDir . DIRECTORY_SEPARATOR . $dataObjectId . '.info',
                     json_encode($fileInfo, \JSON_PRETTY_PRINT)
                 );
             }
@@ -387,7 +386,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
     {
         foreach ($archiveUnitContainer as $archiveUnit) {
             $this->validateFiling($archiveUnit);
-            
+
             if (isset($archiveUnit->profile)) {
                 $archivalProfile = $this->useArchivalProfile($archiveUnit->profile);
 
@@ -601,13 +600,13 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
 
         $archive->depositorOrgRegNumber = $archiveTransfer->transferringAgency->identifier;
         $archive->archiverOrgRegNumber = $archiveTransfer->archivalAgency->identifier;
-        
+
         if (isset($archiveUnit->filing->activity)) {
             $archive->originatorOrgRegNumber = $archiveUnit->filing->activity;
         } else {
             $archive->originatorOrgRegNumber = $archive->depositorOrgRegNumber;
         }
-        
+
         $this->processManagementMetadata($archive, $archiveUnit, $archiveTransfer);
 
         $this->processFiling($archive, $archiveUnit);
@@ -617,7 +616,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (!empty($archiveUnit->dataObjectReferences)) {
             $this->processBinaryDataObjects($archive, $archiveUnit->dataObjectReferences, $message);
         }
-        
+
         if (!empty($archiveUnit->log)) {
             $this->processLifeCycleEvents($archive, $archiveUnit);
         }
@@ -625,7 +624,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         if (!empty($archiveUnit->archiveUnitReferences)) {
             $this->processRelationships($archive, $archiveUnit->archiveUnitReferences, $archiveTransfer);
         }
-        
+
         if (!empty($archiveUnit->archiveUnit)) {
             foreach ($archiveUnit->archiveUnit as $key => $subArchiveUnit) {
                 $subArchive = $this->processArchiveUnit($subArchiveUnit, $message);
@@ -634,7 +633,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
                 $this->processedArchives[] = $subArchive;
             }
         }
-        
+
         return $archive;
     }
 
@@ -719,7 +718,6 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
         }
     }
 
-    
     protected function processFiling($archive, $archiveUnit)
     {
         if (isset($archiveUnit->filing->folder)) {
@@ -739,7 +737,7 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             $digitalResource->archiveId = $archive->archiveId;
             $digitalResource->resId = \laabs::newId();
             $digitalResource->size = $binaryDataObject->size;
-            
+
             if (isset($binaryDataObject->format->puid)) {
                 $digitalResource->puid = $binaryDataObject->format->puid;
             }
@@ -762,13 +760,21 @@ class ArchiveTransfer extends abstractMessage implements \bundle\medona\Controll
             if (isset($binaryDataObject->attachment->content)) {
                 $digitalResource->setContents(base64_decode($binaryDataObject->attachment->content));
             } elseif (isset($binaryDataObject->attachment->filename)) {
-                $handler = fopen(dirname($message->path).DIRECTORY_SEPARATOR.$binaryDataObject->attachment->filename, 'r');
+                $handler = fopen(dirname($message->path) . DIRECTORY_SEPARATOR . $binaryDataObject->attachment->filename, 'r');
                 $digitalResource->setHandler($handler);
             } elseif (isset($binaryDataObject->attachment->uri)) {
                 $handler = fopen($binaryDataObject->attachment->uri, 'r');
                 $digitalResource->setHandler($handler);
             }
-            
+
+            $messageDir = dirname($message->path);
+            if (file_exists($messageDir . DIRECTORY_SEPARATOR . $dataObjectId . '.info')) {
+                $string = file_get_contents($messageDir . DIRECTORY_SEPARATOR . $dataObjectId . '.info');
+                $json = json_decode($string);
+                $digitalResource->puid = $json->format->puid;
+                unlink($messageDir . DIRECTORY_SEPARATOR . $dataObjectId . '.info');
+            }
+
             $archive->digitalResources[] = $digitalResource;
         }
     }
