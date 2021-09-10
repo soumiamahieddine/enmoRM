@@ -183,9 +183,9 @@ class ArchiveDeliveryRequest extends abstractMessage
             $communicableArchives = [];
             foreach ($archives as $archive) {
                 if ($this->isCommunicable($archive)) {
-                    $communicableArchives['communicable'] = $archive;
+                    $communicableArchives['communicable'][] = $archive;
                 } else {
-                    $communicableArchives['notCommunicable'] = $archive;
+                    $communicableArchives['notCommunicable'][] = $archive;
                 }
             }
 
