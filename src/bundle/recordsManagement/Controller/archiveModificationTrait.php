@@ -856,21 +856,48 @@ trait archiveModificationTrait
         $archiveIds = $this->sdoFactory->index(
             'recordsManagement/archive',
             'archiveId',
-            'fullTextIndexation=:requested OR fullTextIndexation=:skipped',
+            'fullTextIndexation=:requested',
             [
-                'requested' => 'requested',
-                'skipped' => 'skipped'
+                'requested' => 'requested'
             ],
             null,
             0,
             $maxResults
         );
 
+        $selectedRequested = count($archiveIds);
+
+        $logMessage = ["message" => "%s archives requested selected", "variables"=> $selectedRequested];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        if($selectedRequested < $maxResults) {
+            $archiveIds = array_merge(
+                $archiveIds,
+                $this->sdoFactory->index(
+                    'recordsManagement/archive',
+                    'archiveId',
+                    'fullTextIndexation=:skipped',
+                    [
+                        'skipped' => 'skipped'
+                    ],
+                    null,
+                    0,
+                    $maxResults - $selectedRequested
+                )
+            );
+        }
+
+        $logMessage = ["message" => "%s archives previously skipped selected", "variables"=> count($archiveIds) - $selectedRequested];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
         $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
 
         $archiveExtractedCount = 0;
         $errors = [];
         $endTimeScript = microtime(true) + $timeLimit;
+
+        $skipped = 0;
+        $indexed = 0;
 
         foreach ($archiveIds as $archiveId) {
             if (!is_null($timeLimit) && ($endTimeScript - microtime(true)) <= 0) {
@@ -920,22 +947,30 @@ trait archiveModificationTrait
                 $descriptionController->update($archive, $fullText);
                 if (!empty($status)) {
                     $archive->fullTextIndexation = $status;
+                    $skipped++;
                 } else {
                     $archive->fullTextIndexation = "indexed";
+                    $indexed++;
                 }
                 $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
             } catch (\Exception $e) {
                 throw new Exception("Error Processing Request", 1);
             }
 
-            $logMessage = ["message" => "Archive %s extracted", "variables"=> $archive->archiveName];
-            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+            // $logMessage = ["message" => "Archive %s extracted", "variables"=> $archive->archiveName];
+            // \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
             $this->logMetadataModification($archive, true);
             $archiveExtractedCount++;
         }
 
-        $logMessage = ["message" => "%s archive(s) extracted", "variables"=> $archiveExtractedCount];
+        // $logMessage = ["message" => "%s archive(s) processed", "variables"=> $archiveExtractedCount];
+        // \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) indexed", "variables"=> $indexed];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) skipped", "variables"=> $skipped];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         return true;

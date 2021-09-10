@@ -1951,5 +1951,17 @@ msgstr "résultat(s) sur"
 msgid "Archive %s extracted"
 msgstr "Archive %s extraite"
 
+msgid "%s archive(s) indexed"
+msgstr "%s archive(s) indexée(s)"
+
+msgid "%s archive(s) skipped"
+msgstr "%s archive(s) passée(s)"
+
+msgid "%s archives requested selected"
+msgstr "%s archive(s) en attente selectionnée(s)"
+
+msgid "%s archives previously skipped selected"
+msgstr "%s archive(s) précedemment passée(s) selectionnée(s)"
+
 msgid "%s archive(s) extracted"
 msgstr "%s archive(s) extraite(s)"
