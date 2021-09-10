@@ -570,7 +570,7 @@ abstract class abstractMessage
                 }
             }
             $handler = fopen($messageDir . DIRECTORY_SEPARATOR . $filename, 'x+');
-            stream_copy_to_stream($handler, $digitalResource->getHandler());
+            stream_copy_to_stream($digitalResource->getHandler(), $handler);
             fclose($handler);
         }
 
