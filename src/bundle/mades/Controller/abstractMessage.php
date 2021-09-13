@@ -548,28 +548,34 @@ abstract class abstractMessage
     {
         $this->messageDirectory = \laabs::configuration('medona')['messageDirectory'];
 
-        $messageDir = $this->messageDirectory.DIRECTORY_SEPARATOR.$message->messageId;
+        $messageDir = $this->messageDirectory . DIRECTORY_SEPARATOR . $message->messageId;
         if (!is_dir($messageDir)) {
             mkdir($messageDir, 0775, true);
         }
-
         // Documents
+        $i = 2;
         foreach ($this->currentDigitalResources as $digitalResource) {
             if ($digitalResource->fileName) {
                 $filename = $digitalResource->fileName;
+                if (file_exists($messageDir . DIRECTORY_SEPARATOR . $filename)) {
+                    $fileInfo = pathinfo($messageDir . DIRECTORY_SEPARATOR . $filename);
+                    $filename = $fileInfo['filename'] . '_' . $i . '.' . $fileInfo['extension'];
+                    $i++;
+                }
             } else {
                 $filename = $digitalResource->resId;
 
                 if (isset($digitalResource->fileExtension)) {
-                    $filename .= ".".$digitalResource->fileExtension;
+                    $filename .= "." . $digitalResource->fileExtension;
                 }
             }
-            $handler = fopen($messageDir.DIRECTORY_SEPARATOR.$filename, 'w');
-            stream_copy_to_stream($handler, $digitalResource->getHandler());
+            $handler = fopen($messageDir . DIRECTORY_SEPARATOR . $filename, 'x+');
+            stream_copy_to_stream($digitalResource->getHandler(), $handler);
             fclose($handler);
         }
-        
-        $message->path = $messageDir.DIRECTORY_SEPARATOR.$message->messageId.'.json';
+
+
+        $message->path = $messageDir . DIRECTORY_SEPARATOR . $message->messageId . '.json';
         file_put_contents($message->path, json_encode($message->object));
     }
 
