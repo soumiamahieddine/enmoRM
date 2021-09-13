@@ -103,7 +103,7 @@ interface serviceAccountInterface
      *
      * @action auth/serviceAccount/updateServiceInformation
      */
-    public function update($serviceAccount, $orgId = null, $servicesURI);
+    public function update($serviceAccount, $orgId = null, $servicesURI = []);
 
     /**
      * Enable a service Account

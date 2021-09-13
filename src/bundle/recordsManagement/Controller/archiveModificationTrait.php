@@ -835,22 +835,86 @@ trait archiveModificationTrait
         }
     }
 
-    public function extractFulltext()
+    /**
+     * Extract full text script
+     *
+     * @param  int $maxResults Max results number to display
+     * @param  int $timeLimit  Time limit in seconds
+     *
+     * @return [type]              [description]
+     */
+    public function extractFulltext($maxResults = null, $timeLimit = null)
     {
-        $archiveIds = $this->sdoFactory->index('recordsManagement/archive', 'archiveId', 'fullTextIndexation=:fullTextIndexation', ['fullTextIndexation' => 'requested']);
+        if (!is_null($maxResults) && $maxResults != "null") {
+            $maxResults = intval($maxResults);
+        }
+
+        if (!is_null($timeLimit)) {
+            $timeLimit = intval($timeLimit);
+        }
+
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            'archiveId',
+            'fullTextIndexation=:requested',
+            [
+                'requested' => 'requested'
+            ],
+            null,
+            0,
+            $maxResults
+        );
+
+        $selectedRequested = count($archiveIds);
+
+        $logMessage = ["message" => "%s archives requested selected", "variables"=> $selectedRequested];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        if($selectedRequested < $maxResults) {
+            $archiveIds = array_merge(
+                $archiveIds,
+                $this->sdoFactory->index(
+                    'recordsManagement/archive',
+                    'archiveId',
+                    'fullTextIndexation=:skipped',
+                    [
+                        'skipped' => 'skipped'
+                    ],
+                    null,
+                    0,
+                    $maxResults - $selectedRequested
+                )
+            );
+        }
+
+        $logMessage = ["message" => "%s archives previously skipped selected", "variables"=> count($archiveIds) - $selectedRequested];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
 
         $archiveExtractedCount = 0;
-        $res = [];
+        $errors = [];
+        $endTimeScript = microtime(true) + $timeLimit;
+
+        $skipped = 0;
+        $indexed = 0;
+
         foreach ($archiveIds as $archiveId) {
+            if (!is_null($timeLimit) && ($endTimeScript - microtime(true)) <= 0) {
+                $logMessage = ["message" => "Time Limit reached"];
+                \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+                break;
+            }
             $fullText = "";
+            $status = "";
             $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
             foreach ($digitalResources as $digitalResource) {
                 $puid = $digitalResource->puid;
 
                 if (empty($puid)) {
-                    throw \laabs::newException('recordsManagement/fullTextException', "File puid has not been detected for $digitalResource->filename");
+                    $errors[] = "File puid has not been detected for " . $digitalResource->filename;
+                    $status = "skipped";
+                    continue;
                 }
 
                 foreach ($fullTextServices as $fulltextServiceConf) {
@@ -862,7 +926,9 @@ trait archiveModificationTrait
                 }
 
                 if (!isset($fulltextService)) {
-                    throw \laabs::newException('recordsManagement/fullTextException', "File type does not exists has not been configured for extraction");
+                    $status = "skipped";
+                    $errors[] = "File type does not exists has not been configured for extraction for file " . $digitalResource->filename;
+                    continue;
                 }
 
                 $tmpFile = \laabs\tempnam();
@@ -879,22 +945,33 @@ trait archiveModificationTrait
 
             try {
                 $descriptionController->update($archive, $fullText);
-                $archive->fullTextIndexation = "indexed";
+                if (!empty($status)) {
+                    $archive->fullTextIndexation = $status;
+                    $skipped++;
+                } else {
+                    $archive->fullTextIndexation = "indexed";
+                    $indexed++;
+                }
                 $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
             } catch (\Exception $e) {
                 throw new Exception("Error Processing Request", 1);
             }
 
-            $logMessage = ["message" => "Archive %s extracted", "variables"=> $archive->archiveName];
-            \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+            // $logMessage = ["message" => "Archive %s extracted", "variables"=> $archive->archiveName];
+            // \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
             $this->logMetadataModification($archive, true);
             $archiveExtractedCount++;
         }
 
-        $logMessage = ["message" => "%s archive(s) extracted", "variables"=> $archiveExtractedCount];
+        // $logMessage = ["message" => "%s archive(s) processed", "variables"=> $archiveExtractedCount];
+        // \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) indexed", "variables"=> $indexed];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
+        $logMessage = ["message" => "%s archive(s) skipped", "variables"=> $skipped];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         return true;
     }

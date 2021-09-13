@@ -121,7 +121,9 @@ class archivalProfile
      */
     public function getByReference($reference, $withRelatedProfiles = true)
     {
-
+        if (is_null($reference)) {
+            return null;
+        }
         try {
             $archivalProfile = $this->sdoFactory->read('recordsManagement/archivalProfile', array('reference' => $reference));
 

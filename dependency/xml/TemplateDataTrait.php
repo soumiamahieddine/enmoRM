@@ -246,7 +246,7 @@ trait TemplateDataTrait
                 $value = @array_key_exists($params[0], $source);
                 break;
             case 'inarray':
-                $value = @in_array($params[0], $source);
+                $value = @in_array($params[0], (array) $source);
                 break;
 
             // Variable functions

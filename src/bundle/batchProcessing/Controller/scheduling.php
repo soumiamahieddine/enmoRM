@@ -314,22 +314,21 @@ class scheduling
          * Exemple frequency = [0;18;"Thu";"";"";"5";"m";"0";"20"];
          * Thursday 18h -> 20h every 5 Minutes
          */
-
         if (!empty($frequency[1])) {
             $frequency[1] -= $H_Offset;
         }
         if (!empty($frequency[8] && $frequency[8] != "00")) {
             $frequency[8] -= $H_Offset;
         }
-        if ($frequency[1] < 0) {
-            $frequency[1] = 24 + $frequency[1];
-        } elseif ($frequency[1] >= 24) {
-            $frequency[1] = $frequency[1] - 24;
+        if (intval($frequency[1]) < 0) {
+            $frequency[1] = 24 + intval($frequency[1]);
+        } elseif (intval($frequency[1]) >= 24) {
+            $frequency[1] = intval($frequency[1]) - 24;
         }
-        if ($frequency[8] < 0) {
-            $frequency[8] = 24 + $frequency[8];
-        } elseif ($frequency[8] >= 24) {
-            $frequency[8] = $frequency[8] - 24;
+        if (intval($frequency[8]) < 0) {
+            $frequency[8] = 24 + intval($frequency[8]);
+        } elseif (intval($frequency[8]) >= 24) {
+            $frequency[8] = intval($frequency[8]) - 24;
         }
         
         if ($frequency[6] != "") {

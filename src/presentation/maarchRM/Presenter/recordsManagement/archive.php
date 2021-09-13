@@ -194,8 +194,12 @@ class archive
                 "recordsManagement/messages"
             );
 
-            $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_',$archive->archivalProfileReference);
-            $archive->archivalProfileName = $archivalProfile->name;
+
+            $archive->archivalProfileName = null;
+            if (!is_null($archive->archivalProfileReference)) {
+                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+                $archive->archivalProfileName = $archivalProfile->name;
+            }
 
             if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                 $archive->disposable = true;
