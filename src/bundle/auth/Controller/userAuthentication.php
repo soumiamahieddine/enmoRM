@@ -42,6 +42,12 @@ class userAuthentication
     protected $securityPolicy;
 
     /**
+     * The auth type
+     * @var string
+     */
+    protected $authType;
+
+    /**
      * Constructor
      * @param object $sdoFactory         The user model
      * @param string $passwordEncryption The password encryption
@@ -52,6 +58,7 @@ class userAuthentication
         $this->sdoFactory = $sdoFactory;
         $this->passwordEncryption = $passwordEncryption;
         $this->securityPolicy = $securityPolicy;
+        $this->authType = \laabs::configuration('auth')['type'] ?? 'password';
     }
 
     /**
@@ -94,31 +101,37 @@ class userAuthentication
         }
 
         // Check password
-        if (!password_verify($password, $userAccount->password) && hash($this->passwordEncryption, $password) != $userAccount->password) {
-            // Update bad password count
-            $userLogin->badPasswordCount = $userAccount->badPasswordCount + 1;
-            $this->sdoFactory->update($userLogin, 'auth/account');
+        if ($this->authType == 'password') {
+            if (!password_verify($password, $userAccount->password) && hash($this->passwordEncryption, $password) != $userAccount->password) {
+                // Update bad password count
+                $userLogin->badPasswordCount = $userAccount->badPasswordCount + 1;
+                $this->sdoFactory->update($userLogin, 'auth/account');
 
-            // If count exceeds max attempts, lock user
-            if ($this->securityPolicy['loginAttempts']
-                && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1
-            ) {
-                $userAccountController = \laabs::newController('auth/userAccount');
-                $userAccountController->lock($userLogin->accountId, true);
+                // If count exceeds max attempts, lock user
+                if ($this->securityPolicy['loginAttempts']
+                    && $userLogin->badPasswordCount > $this->securityPolicy['loginAttempts'] - 1
+                ) {
+                    $userAccountController = \laabs::newController('auth/userAccount');
+                    $userAccountController->lock($userLogin->accountId, true);
 
-                $eventController = \laabs::newController('audit/event');
-                $eventController->add(
-                    "auth/userAccount/updateLock_userAccountId_",
-                    array("accountId" => $userLogin->accountId),
-                    null,
-                    true,
-                    true
-                );
+                    $eventController = \laabs::newController('audit/event');
+                    $eventController->add(
+                        "auth/userAccount/updateLock_userAccountId_",
+                        array("accountId" => $userLogin->accountId),
+                        null,
+                        true,
+                        true
+                    );
+                }
+
+                throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
             }
 
-            throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
+            if (password_needs_rehash($userAccount->password, PASSWORD_DEFAULT)) {
+                $userLogin->password = password_hash($password, PASSWORD_DEFAULT);
+            }
         }
-
+        
         // Check locked
         if ($userAccount->locked == true) {
             if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
@@ -137,10 +150,6 @@ class userAuthentication
         $userLogin->tokenDate = null;
         $userLogin->lastLogin = $currentDate;
 
-        if (password_needs_rehash($userAccount->password, PASSWORD_DEFAULT)) {
-            $userLogin->password = password_hash($password, PASSWORD_DEFAULT);
-        }
-
         $this->sdoFactory->update($userLogin, 'auth/account');
 
         if (isset($this->securityPolicy['sessionTimeout'])) {
@@ -153,17 +162,19 @@ class userAuthentication
         $accountToken->accountId = $userAccount->accountId;
         $userToken = \laabs::setToken('AUTH', $accountToken, $tokenDuration);
 
-        if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
-            $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
-            if ($diff > $this->securityPolicy['passwordValidity']) {
+        if ($this->authType == 'password') {
+            if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
+                $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
+                if ($diff > $this->securityPolicy['passwordValidity']) {
+                    throw \laabs::newException('auth/userPasswordChangeRequestException');
+                }
+            }
+
+            if ($userAccount->passwordChangeRequired == true) {
+                \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration);
+                \laabs::unsetToken('AUTH');
                 throw \laabs::newException('auth/userPasswordChangeRequestException');
             }
-        }
-
-        if ($userAccount->passwordChangeRequired == true) {
-            \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration);
-            \laabs::unsetToken('AUTH');
-            throw \laabs::newException('auth/userPasswordChangeRequestException');
         }
 
         return $userAccount;

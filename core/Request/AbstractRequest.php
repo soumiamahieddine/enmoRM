@@ -143,7 +143,9 @@ abstract class AbstractRequest
     protected function getAuthentication()
     {
         if (isset($_SERVER['PHP_AUTH_USER'])) {
-            $this->authentication = new basicAuthentication($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+            $this->authentication = new basicAuthentication($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ?? null);
+        } elseif (isset($_SERVER['REMOTE_USER']) && isset($_SERVER['AUTH_TYPE'])) {
+            $this->authentication = new remoteAuthentication($_SERVER['REMOTE_USER'], $_SERVER['AUTH_TYPE']);
         } elseif (isset($_SERVER['PHP_AUTH_DIGEST'])) {
             $neededParts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
             $data = array();
@@ -159,5 +161,4 @@ abstract class AbstractRequest
             $this->authentication = new digestAuthentication($data['username'], $data['nonce'], $data['uri'], $data['response'], $data['qop'], $data['nc'], $data['cnonce']);
         }        
     }
-    
 }

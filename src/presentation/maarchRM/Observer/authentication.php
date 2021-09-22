@@ -106,6 +106,16 @@ class authentication
                         }
                         break;
 
+                    case LAABS_REMOTE_AUTH:
+                        if (isset(\laabs::configuration('auth')['type']) && \laabs::configuration('auth')['type'] == $requestAuth->authType) {
+                            try {
+                                $this->requestToken = \laabs::callService('auth/authentication/createUserlogin', $requestAuth->remoteUser, null);
+                            } catch (\Exception $e) {
+                                throw $e;
+                            }
+                        }
+                        break;
+
                     /*case LAABS_DIGEST_AUTH:
                         if ($this->authenticationService->logIn($requestAuth->username, $requestAuth->nonce, $requestAuth->uri, $requestAuth->response, $requestAuth->qop, $requestAuth->nc, $requestAuth->cnonce)) {
                             $token = $this->encrypt($_SESSION['dependency']['authentication']['credential']);
