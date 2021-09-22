@@ -496,3 +496,6 @@ msgstr "Mauvais nombre de colonnes dans le csv à la ligne %s"
 
 msgid "User has an unknown security level"
 msgstr "L'utilisateur a un niveau de sécurité non renseigné dans la configuration. Veuillez contacter votre administrateur système"
+
+msgid "User unknown"
+msgstr "Utilisateur inconnu du système"

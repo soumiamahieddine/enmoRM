@@ -20,7 +20,7 @@
 namespace bundle\auth\Exception;
 
 class unknownUserException
-    extends \Exception
+    extends \core\Exception
 {
     public $message = false;
 
@@ -28,11 +28,14 @@ class unknownUserException
      * undocumented function
      *
      * @return void
-     * @author 
+     * @author
      */
-    public function __construct()
+    public function __construct($message = false)
     {
-        $this->message = "User unknown";
+        if (!$message) {
+            $message = "User unknown";
+        }
+        parent::__construct($message);
     }
 
 }
