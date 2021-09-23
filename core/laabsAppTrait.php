@@ -1392,4 +1392,14 @@ trait laabsAppTrait
 
     }
 
+    /**
+     * Get the auth methods
+     * 
+     * @return array
+     */
+    public static function getAuthModes()
+    {
+        return self::getList('LAABS_AUTH_MODES');
+    }
+
 }

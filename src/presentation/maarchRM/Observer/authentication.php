@@ -107,12 +107,17 @@ class authentication
                         break;
 
                     case LAABS_REMOTE_AUTH:
-                        if (isset(\laabs::configuration('auth')['type']) && \laabs::configuration('auth')['type'] == $requestAuth->authType) {
-                            try {
-                                $this->requestToken = \laabs::callService('auth/authentication/createUserlogin', $requestAuth->remoteUser, null);
-                            } catch (\Exception $e) {
-                                throw $e;
-                            }
+                        try {
+                            $userAuthenticationController = \laabs::newController('auth/userAuthentication');
+                            $this->requestToken = $this->account = $userAuthenticationController->logRemoteUser($requestAuth->remoteUser);
+                            $this->accountId = $this->account->accountId;
+
+                            \laabs::kernel()->response->code = 307;
+                            \laabs::kernel()->response->setHeader('Location', '/');
+                            \laabs::kernel()->sendResponse();
+                            \laabs::kernel()->end();
+                        } catch (\Exception $e) {
+                            throw $e;
                         }
                         break;
 

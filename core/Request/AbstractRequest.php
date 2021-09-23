@@ -142,23 +142,43 @@ abstract class AbstractRequest
      */
     protected function getAuthentication()
     {
-        if (isset($_SERVER['PHP_AUTH_USER'])) {
-            $this->authentication = new basicAuthentication($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ?? null);
-        } elseif (isset($_SERVER['REMOTE_USER']) && isset($_SERVER['AUTH_TYPE'])) {
-            $this->authentication = new remoteAuthentication($_SERVER['REMOTE_USER'], $_SERVER['AUTH_TYPE']);
-        } elseif (isset($_SERVER['PHP_AUTH_DIGEST'])) {
-            $neededParts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
-            $data = array();
-            $keys = implode('|', array_keys($neededParts));
-         
-            preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $_SERVER['PHP_AUTH_DIGEST'], $matches, PREG_SET_ORDER);
+        $this->authentication = $this->selectAuthentication(); 
+    }
 
-            foreach ($matches as $match) {
-                $data[$match[1]] = $match[3] ? $match[3] : $match[4];
-                unset($neededParts[$match[1]]);
+    protected function selectAuthentication()
+    {
+        $authModes = \laabs::getAuthModes();
+        foreach ($authModes as $authMode) {
+            switch ($authMode) {
+                case LAABS_BASIC_AUTH:
+                    if (isset($_SERVER['PHP_AUTH_USER']) && iiset($_SERVER['PHP_AUTH_PW'])) {
+                        return new basicAuthentication($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+                    }
+                    break;
+
+                case LAABS_DIGEST_AUTH:
+                    if (isset($_SERVER['PHP_AUTH_DIGEST'])) {
+                        $neededParts = array('nonce'=>1, 'nc'=>1, 'cnonce'=>1, 'qop'=>1, 'username'=>1, 'uri'=>1, 'response'=>1);
+                        $data = array();
+                        $keys = implode('|', array_keys($neededParts));
+                     
+                        preg_match_all('@(' . $keys . ')=(?:([\'"])([^\2]+?)\2|([^\s,]+))@', $_SERVER['PHP_AUTH_DIGEST'], $matches, PREG_SET_ORDER);
+
+                        foreach ($matches as $match) {
+                            $data[$match[1]] = $match[3] ? $match[3] : $match[4];
+                            unset($neededParts[$match[1]]);
+                        }
+
+                        return new digestAuthentication($data['username'], $data['nonce'], $data['uri'], $data['response'], $data['qop'], $data['nc'], $data['cnonce']);
+                    }
+                    break;
+
+                case LAABS_REMOTE_AUTH:
+                    if (isset($_SERVER['REMOTE_USER']) && isset($_SERVER['AUTH_TYPE'])) {
+                        return new remoteAuthentication($_SERVER['REMOTE_USER'], $_SERVER['AUTH_TYPE']);
+                    }
+                    break;
             }
-
-            $this->authentication = new digestAuthentication($data['username'], $data['nonce'], $data['uri'], $data['response'], $data['qop'], $data['nc'], $data['cnonce']);
-        }        
+        }
     }
 }
