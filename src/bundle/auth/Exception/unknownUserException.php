@@ -30,12 +30,11 @@ class unknownUserException
      * @return void
      * @author
      */
-    public function __construct($message = false)
+    public function __construct($message = false, $code = 401)
     {
         if (!$message) {
             $message = "User unknown";
         }
-        parent::__construct($message);
+        parent::__construct($message, $code);
     }
-
 }
