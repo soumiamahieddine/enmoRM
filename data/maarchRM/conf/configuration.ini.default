@@ -809,7 +809,7 @@ conversionServices = "[
 ]"
 
 ;Configuration of fulltextservices
-;serviceName : path to dpeendency file
+;serviceName : path to dependency file
 ;inputFormat : puid of file the service should extract
 ;options : options for extract service
 ;languages : language recognition pattern for tesseract. See https://tesseract-ocr.github.io/tessdoc/Data-Files-in-different-versions.html for complete list
