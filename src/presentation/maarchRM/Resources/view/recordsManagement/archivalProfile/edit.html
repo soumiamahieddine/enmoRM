@@ -59,8 +59,10 @@ file that was distributed with this source code.
                          <div class="form-group">
                             <label class="col-md-3 control-label">Discoverable</label>
                             <div class="col-md-9">
-                                <input type='hidden' id="isDiscoverable" name="isDiscoverable">
-                                <input type="checkbox" id="isDiscoverableToggle">
+                                <input type='hidden' id="isDiscoverable" name="isDiscoverable" >
+                                <div rel="tooltip" data-placement="bottom" title="Permet aux utilisateurs des services autres que producteurs et gestionnaires de rechercher les archives du profil, sans pour autant pourvoir les consulter" style="width: 100px">
+                                    <input type="checkbox" data-toggle="toggle" id="isDiscoverableToggle" >
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -109,7 +111,6 @@ file that was distributed with this source code.
     #fieldsPart {
         margin-bottom: 3%;
     }
-
     #archivalProfileNavControl {
         font-size: 18px;
     }
