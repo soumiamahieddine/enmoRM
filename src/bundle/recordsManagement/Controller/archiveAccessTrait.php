@@ -1108,12 +1108,6 @@ trait archiveAccessTrait
             }
         }
 
-        if (isset($args['isDiscoverable'])) {
-            if ($args['isDiscoverable']) {
-                $queryParts['isDiscoverable'] = "isDiscoverable=true";
-            }
-        }
-
         if ($checkAccess) {
             $accessRuleAssert = $this->getAccessRuleAssert($currentDateString);
 
@@ -1150,15 +1144,32 @@ trait archiveAccessTrait
             }
         }
 
-        $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
-        $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
-        $queryParts['user'] = "(userOrgRegNumbers = '".$currentService->registrationNumber."' OR userOrgRegNumbers = '".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber."')";
+        $queryParts['originator'] = "originatorOrgRegNumber=['" . implode("', '", $userServiceOrgRegNumbers) . "']";
+        $queryParts['archiver'] = "archiverOrgRegNumber=['" . implode("', '", $userServiceOrgRegNumbers) . "']";
+        $queryParts['user'] = "(userOrgRegNumbers = '" . $currentService->registrationNumber .
+            "' OR userOrgRegNumbers = '" . $currentService->registrationNumber .
+            " *' OR userOrgRegNumbers = '* " . $currentService->registrationNumber .
+            " *' OR userOrgRegNumbers = '* " . $currentService->registrationNumber . "')";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
-        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId
-            ."' AND (accessRuleComDate <= '$currentDateString'))";
+        $discoverableProfiles = $this->archivalProfileController->index(null, 'isDiscoverable=true');
 
-        return "(".implode(" OR ", $queryParts).")";
+
+        $discoverableProfilesIdentifiers =  array_map(
+            function ($profile) {
+                return "'" . $profile->reference . "'";
+            },
+            $discoverableProfiles
+        );
+
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '" . $currentService->ownerOrgId
+            . "' AND (
+                (accessRuleComDate <= '$currentDateString')
+                OR (archivalProfileReference = [" .  \laabs\implode(", ", $discoverableProfilesIdentifiers) . "])
+            )
+        )";
+
+        return "(" . implode(" OR ", $queryParts) . ")";
     }
 
     /**
