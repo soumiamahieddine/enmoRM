@@ -1337,3 +1337,6 @@ msgstr "Veuillez choisir le type de critère supplémentaire à ajouter"
 
 msgid "Add filter"
 msgstr "Ajouter le filtre"
+
+msgid "Search in other services"
+msgstr "Rechercher dans d'autres services"

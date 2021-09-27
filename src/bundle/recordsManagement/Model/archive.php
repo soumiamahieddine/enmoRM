@@ -121,6 +121,11 @@ class archive
      */
     public $archivalAgreementReference;
 
+    /**
+     * @var bool
+     */
+    public $isDiscoverable;
+
     /* ************************************************************************
      * Management Data
      *********************************************************************** */

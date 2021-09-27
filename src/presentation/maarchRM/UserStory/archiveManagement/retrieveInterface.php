@@ -70,6 +70,7 @@ interface retrieveInterface
      * @param string  $text
      * @param string  $archiverArchiveId
      * @param integer $maxResults
+     * @param boolean $isDiscoverable
      *
      * @uses recordsManagement/archives/read
      * @uses recordsManagement/archives/readCount
@@ -88,7 +89,8 @@ interface retrieveInterface
         $description = null,
         $text = null,
         $archiverArchiveId = null,
-        $maxResults = null
+        $maxResults = null,
+        $isDiscoverable = false
     );
 
     /**

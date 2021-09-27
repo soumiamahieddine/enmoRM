@@ -28,3 +28,4 @@ WITH (
 );
 
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isRetentionLastDeposit" boolean default false;
+ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isDiscoverable" boolean default false;

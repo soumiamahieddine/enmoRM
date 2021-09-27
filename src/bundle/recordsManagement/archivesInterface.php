@@ -56,6 +56,7 @@ interface archivesInterface
      * @param string  $originatingEndDate
      * @param string  $archiverArchiveId
      * @param integer $maxResults
+     * @param boolean $isDiscoverable
      *
      * @action recordsManagement/archive/search
      *
@@ -83,7 +84,8 @@ interface archivesInterface
         $originatingStartDate = null,
         $originatingEndDate = null,
         $archiverArchiveId = null,
-        $maxResults = null
+        $maxResults = null,
+        $isDiscoverable = false
     );
 
     /**
@@ -112,6 +114,7 @@ interface archivesInterface
      * @param string  $originatingEndDate
      * @param string  $archiverArchiveId
      * @param integer $maxResults
+     * @param boolean $isDiscoverable
      *
      * @action recordsManagement/archive/count
      *
@@ -139,7 +142,8 @@ interface archivesInterface
         $originatingStartDate = null,
         $originatingEndDate = null,
         $archiverArchiveId = null,
-        $maxResults = null
+        $maxResults = null,
+        $isDiscoverable = false
     );
 
     /**

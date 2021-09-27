@@ -56,6 +56,13 @@ file that was distributed with this source code.
                                 <input type="checkbox" id="fileplanLevelToggle">
                             </div>
                         </div>
+                         <div class="form-group">
+                            <label class="col-md-3 control-label">Discoverable</label>
+                            <div class="col-md-9">
+                                <input type='hidden' id="isDiscoverable" name="isDiscoverable">
+                                <input type="checkbox" id="isDiscoverableToggle">
+                            </div>
+                        </div>
                     </div>
 
                     <?hinclude recordsManagement/archivalProfile/tabs.html ?>
@@ -200,6 +207,7 @@ file that was distributed with this source code.
                 reference: $('#reference').val(),
                 name: $('#name').val(),
                 fileplanLevel: $("#fileplanLevel").val(),
+                isDiscoverable : $("#isDiscoverableToggle").prop("checked"),
                 descriptionClass: $('#descriptionClass').val(),
                 retentionStartDate: $('#startDate option:selected').val(),
                 description: $('#description').val(),
@@ -234,7 +242,6 @@ file that was distributed with this source code.
             }
 
             serializedObject.archiveDescription = PropertiesList.serialize();
-
             if ($("#fileplanLevel").val() != 'item') {
                 serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
                 serializedObject.containedProfiles = ArchiveStructure.serialize();
@@ -260,6 +267,11 @@ file that was distributed with this source code.
         if ($('#fileplanLevel').val() == 'item') {
             $('#fileplanLevelToggle').bootstrapToggle('on');
             $("#contentsTabBtn").addClass('hide');
+        }
+
+        $('#isDiscoverableToggle').bootstrapToggle();
+        if ($('#isDiscoverable').val() == '1') {
+            $('#isDiscoverableToggle').bootstrapToggle('on');
         }
 
         $("#archivalProfileNavControl").find('a').first().click();
@@ -344,4 +356,8 @@ file that was distributed with this source code.
             $('#updateRetentionRuleOnDeposit').removeClass('hide');
         }
     });
+
+     $('#isDiscoverableToggle').on('change', function (e) {
+        $("#isDiscoverable").val($(this).prop('checked'));
+     });
 </script>

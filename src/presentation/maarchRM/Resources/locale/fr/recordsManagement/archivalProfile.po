@@ -280,3 +280,6 @@ msgstr "ne peut pas être appelé récursivement"
 
 msgid "Update when a file is added"
 msgstr "Mettre à jour au versement d'une pièce"
+
+msgid "Discoverable"
+msgstr "Décelable"

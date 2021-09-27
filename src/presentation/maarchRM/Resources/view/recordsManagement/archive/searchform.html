@@ -181,11 +181,26 @@
         </div>
         <!-- PARTIAL RETENTION RULE -->
         <div class="col-md-4">
-            <div class="form-group">
-                <label class="col-sm-4 control-label">Partial retention rule</label>
-                <div class="col-sm-8 checkbox" id="partialRetentionRule">
-                    <input type="checkbox" name="partialRetentionRule" data-toggle="toggle" data-on="Oui" data-off="Non">
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-sm-8 control-label">Partial retention rule</label>
+                            <div class="col-sm4 checkbox" id="partialRetentionRule">
+                                <input type="checkbox" name="partialRetentionRule" id="partialRetentionRuleToggle">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <label class="col-sm-8 control-label">Search in other services</label>
+                            <div class="col-sm4 checkbox" id="isDiscoverable">
+                                <input type="checkbox" name="isDiscoverable" id="isDiscoverableToggle">
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
         <!-- DEPOSITOR -->
@@ -247,3 +262,15 @@
     </div>
     <span class="hide" id="required_fields">You must fill all required fields (*)</span>
 </div>
+
+<script>
+    $('#partialRetentionRuleToggle').bootstrapToggle({
+        on: 'Oui',
+        off: 'Non'
+    });
+
+    $('#isDiscoverableToggle').bootstrapToggle({
+        on: 'Oui',
+        off: 'Non'
+    });
+</script>

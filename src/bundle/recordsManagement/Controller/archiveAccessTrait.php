@@ -55,6 +55,7 @@ trait archiveAccessTrait
      * @param string  $processingStatus
      * @param bool    $checkAccess
      * @param integer $maxResults
+     * @param boolean $isDiscoverable
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -83,7 +84,8 @@ trait archiveAccessTrait
         $archiverArchiveId = null,
         $processingStatus = null,
         $checkAccess = true,
-        $maxResults = null
+        $maxResults = null,
+        $isDiscoverable = false
     ) {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
@@ -111,7 +113,8 @@ trait archiveAccessTrait
             $originatingStartDate,
             $originatingEndDate,
             $archiverArchiveId,
-            $processingStatus
+            $processingStatus,
+            $isDiscoverable
         );
 
         foreach ($searchClasses as $descriptionClass => $descriptionController) {
@@ -149,6 +152,7 @@ trait archiveAccessTrait
      * @param string  $processingStatus
      * @param bool    $checkAccess
      * @param integer $maxResults
+     * @param boolean $isDiscoverable
      *
      * @return integer $count Count of archives from search
      */
@@ -177,7 +181,8 @@ trait archiveAccessTrait
         $archiverArchiveId = null,
         $processingStatus = null,
         $checkAccess = true,
-        $maxResults = null
+        $maxResults = null,
+        $isDiscoverable = false
     ) {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
@@ -205,7 +210,8 @@ trait archiveAccessTrait
             $originatingStartDate,
             $originatingEndDate,
             $archiverArchiveId,
-            $processingStatus
+            $processingStatus,
+            $isDiscoverable
         );
 
         $count = 0;
@@ -237,29 +243,31 @@ trait archiveAccessTrait
         $originatingStartDate = null,
         $originatingEndDate = null,
         $archiverArchiveId = null,
-        $processingStatus = null
+        $processingStatus = null,
+        $isDiscoverable = false
     ) {
         $archiveArgs = [
-            'archiveId' => $archiveId,
-            'profileReference' => $profileReference,
-            'status' => $status,
-            'archiveName' => $archiveName,
-            'agreementReference' => $agreementReference,
-            'archiveExpired' => $archiveExpired,
-            'finalDisposition' => $finalDisposition,
+            'archiveId'              => $archiveId,
+            'profileReference'       => $profileReference,
+            'status'                 => $status,
+            'archiveName'            => $archiveName,
+            'agreementReference'     => $agreementReference,
+            'archiveExpired'         => $archiveExpired,
+            'finalDisposition'       => $finalDisposition,
             'originatorOrgRegNumber' => $originatorOrgRegNumber,
-            'originatorOwnerOrgId' => $originatorOwnerOrgId,
-            'originatorArchiveId' => $originatorArchiveId,
-            'originatingDate' => $originatingDate,
-            'filePlanPosition' => $filePlanPosition,
-            'hasParent' => $hasParent,
-            'partialRetentionRule' => $partialRetentionRule,
-            'retentionRuleCode' => $retentionRuleCode,
-            'depositStartDate' => $depositStartDate,
-            'depositEndDate' => $depositEndDate,
-            'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
-            'archiverArchiveId' => $archiverArchiveId,
-            'processingStatus' => $processingStatus
+            'originatorOwnerOrgId'   => $originatorOwnerOrgId,
+            'originatorArchiveId'    => $originatorArchiveId,
+            'originatingDate'        => $originatingDate,
+            'filePlanPosition'       => $filePlanPosition,
+            'hasParent'              => $hasParent,
+            'partialRetentionRule'   => $partialRetentionRule,
+            'retentionRuleCode'      => $retentionRuleCode,
+            'depositStartDate'       => $depositStartDate,
+            'depositEndDate'         => $depositEndDate,
+            'originatingDate'        => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
+            'archiverArchiveId'      => $archiverArchiveId,
+            'processingStatus'       => $processingStatus,
+            'isDiscoverable'         => $isDiscoverable
         ];
 
         if (!$filePlanPosition) {
@@ -977,11 +985,11 @@ trait archiveAccessTrait
 
         $queryParts = [];
         if (!empty($args['archiveName'])) {
-            $queryParts[] = "archiveName='*".$args['archiveName']."*'";
+            $queryParts[] = "archiveName='*" . $args['archiveName'] . "*'";
         }
         if (!empty($args['profileReference'])) {
             $queryParts['archivalProfileReference'] = "archivalProfileReference = :archivalProfileReference";
-            $queryParams['archivalProfileReference']=$args['profileReference'];
+            $queryParams['archivalProfileReference'] = $args['profileReference'];
         }
         if (!empty($args['agreementReference'])) {
             $queryParts['archivalAgreementReference'] = "archivalAgreementReference=:archivalAgreementReference";
@@ -1016,7 +1024,7 @@ trait archiveAccessTrait
         }
         if (!empty($args['finalDisposition'])) {
             $queryParts['finalDisposition'] = "finalDisposition= :finalDisposition";
-            $queryParams['finalDisposition'] =$args['finalDisposition'];
+            $queryParams['finalDisposition'] = $args['finalDisposition'];
         }
         if (!empty($args['originatorOrgRegNumber'])) {
             $queryParts[] = "originatorOrgRegNumber= :originatorOrgRegNumber";
@@ -1097,6 +1105,12 @@ trait archiveAccessTrait
             } elseif (is_string($args['processingStatus'])) {
                 $queryParts['processingStatus'] = "processingStatus= :processingStatus";
                 $queryParams['processingStatus'] = $args['processingStatus'];
+            }
+        }
+
+        if (isset($args['isDiscoverable'])) {
+            if ($args['isDiscoverable']) {
+                $queryParts['isDiscoverable'] = "isDiscoverable=true";
             }
         }
 
