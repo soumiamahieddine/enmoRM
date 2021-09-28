@@ -1378,15 +1378,19 @@ trait archiveAccessTrait
         $userServices[] = $currentUserService->registrationNumber;
 
         // OWNER access
-        if (!is_null($currentUserService->orgRoleCodes)
-            && \laabs\in_array('owner', $currentUserService->orgRoleCodes)) {
+        if (
+            !is_null($currentUserService->orgRoleCodes)
+            && \laabs\in_array('owner', $currentUserService->orgRoleCodes)
+        ) {
             return true;
         }
 
         // ARCHIVER access
-        if (!is_null($currentUserService->orgRoleCodes)
+        if (
+            !is_null($currentUserService->orgRoleCodes)
             && \laabs\in_array('archiver', $currentUserService->orgRoleCodes)
-            && $archive->archiverOrgRegNumber === $currentUserService->registrationNumber) {
+            && $archive->archiverOrgRegNumber === $currentUserService->registrationNumber
+        ) {
             return true;
         }
 
@@ -1398,9 +1402,13 @@ trait archiveAccessTrait
         }
 
         // COMMUNICATION ACCESS
-        if (!is_null($archive->accessRuleComDate)
-            && ($isCommunication)
-            && ($archive->accessRuleComDate <= $currentDate)) {
+        if (
+            $isCommunication
+            && (
+                is_null($archive->accessRuleComDate)
+                || $archive->accessRuleComDate <= $currentDate
+            )
+        ) {
             return true;
         }
 
