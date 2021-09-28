@@ -38,9 +38,8 @@
                 </thead>
                 <tbody>
                     <?merge archive ?>
-                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]" data-iscommunicable="[?merge .isCommunicable ?]">
+                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?] [?merge .hasRights.bool().not().then('text-muted') ?]" data-iscommunicable="[?merge .isCommunicable ?]" data-hasRights="[?merge .hasRights.bool().then('true', 'false') ?]">
                         <td>
-                            <?merge .hasRights.bool() ?>
                             <input type="checkbox"
                                 data-archive-status="[?merge .status ?]"
                                 data-final-disposition='[?merge .finalDisposition ?]'
@@ -58,8 +57,7 @@
                         <td>
                             <div class="btn-group pull-right">
                                 <!--button type="button" class="btn btn-success btn-sm requestDelivery" id="requestCom" data-archiveid='[?merge .archiveId?]' title="Request of communication"><span class="fa fa-cloud-upload">&nbsp;</span></button-->
-                                <button type="button" class="btn btn-success btn-sm viewArchive" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
-                                <?merge .hasRights.bool().not() @disabled ?>
+                                <button type="button" class="btn btn-success btn-sm viewArchive [?merge .hasRights.bool().not().then('disabled') ?]" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
                                 <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-edit">&nbsp;</i>&nbsp;
                                     <span class="caret"></span>
@@ -96,6 +94,16 @@
             $("#archiveList_actions").prop('disabled', false);
         } else {
             $("#archiveList_actions").prop('disabled', true);
+        }
+    });
+
+    $('#archiveList_actions').on('click', function () {
+        //use addToCollection because it includes all differents types
+        var archivesSelected = ArchivesAction.getSelectedArchives('addToCollection');
+        if (archivesSelected.hasNoRightsCount > 0) {
+            $('#resultListHtmlAuthorizedMenu').hide();
+        } else {
+            $('#resultListHtmlAuthorizedMenu').show();
         }
     });
 </script>
