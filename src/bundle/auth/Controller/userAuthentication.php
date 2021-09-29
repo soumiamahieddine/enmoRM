@@ -68,6 +68,8 @@ class userAuthentication
         // Check userAccount exists and get it
         $userAccount = $this->getUserByName($userName);
 
+        $this->checkEnabled($userAccount);
+
         // Check password ans status
         $userLogin = $this->checkCredentials($userAccount, $password);
 
@@ -107,6 +109,8 @@ class userAuthentication
     {
         // Check userAccount exists and get it
         $userAccount = $this->getUserByName($userName);
+
+        $this->checkEnabled($userAccount);
 
         $userLogin = \laabs::newInstance('auth/userLogin');
         $userLogin->accountId = $userAccount->accountId;
@@ -151,18 +155,6 @@ class userAuthentication
     protected function checkCredentials($userAccount, $password)
     {
         $currentDate = \laabs::newTimestamp();
-
-        // Check enabled
-        if ($userAccount->enabled != true) {
-            $e = \laabs::newException(
-                'auth/authenticationException',
-                'User %1$s is disabled',
-                403,
-                null,
-                array($userName)
-            );
-            throw $e;
-        }
 
         // Create user login object
         $userLogin = \laabs::newInstance('auth/userLogin');
@@ -292,6 +284,26 @@ class userAuthentication
 
         if ($this->securityPolicy['passwordRequiresMixedCase'] && (!preg_match('~[A-Z]~', $newPassword) || !preg_match('~[a-z]~', $newPassword))) {
             throw new \core\Exception\ForbiddenException("The password must contain upper and lower case.", 403);
+        }
+    }
+
+    /**
+     * Check if user is enabled
+     * @param object $userAccount
+     * 
+     * @return object
+     */
+    protected function checkEnabled($userAccount)
+    {
+        if ($userAccount->enabled != true) {
+            $e = \laabs::newException(
+                'auth/authenticationException',
+                'User %1$s is disabled',
+                403,
+                null,
+                array($userName)
+            );
+            throw $e;
         }
     }
 
