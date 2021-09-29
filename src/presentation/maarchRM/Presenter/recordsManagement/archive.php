@@ -205,8 +205,12 @@ class archive
                 $archive->disposable = true;
             }
 
-            if (empty($archive->disposalDate)
-                && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))
+            if (
+                empty($archive->disposalDate)
+                && (
+                    empty($archive->retentionRuleCode)
+                    || empty($archive->retentionDuration)
+                )
             ) {
                 $archive->noRetention = true;
             }
@@ -215,7 +219,8 @@ class archive
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
 
                 try {
-                    if ($archive->status == 'disposed'
+                    if (
+                        $archive->status == 'disposed'
                         || $archive->status == 'error'
                         || $archive->status == 'restituted'
                         || $archive->status == 'transfered'
@@ -228,7 +233,6 @@ class archive
                     $archive->hasRights = false;
                 }
             }
-
             $archive->isCommunicable = '2';
             if ($archive->accessRuleComDate) {
                 $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
@@ -248,8 +252,10 @@ class archive
         }
 
         $hasReachMaxResults = false;
-        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
-            && count($archives) >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+        if (
+            isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && count($archives) >= \laabs::configuration('presentation.maarchRM')['maxResults']
+        ) {
             $hasReachMaxResults = true;
         }
 

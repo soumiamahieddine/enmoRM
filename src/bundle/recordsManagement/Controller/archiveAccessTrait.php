@@ -55,7 +55,6 @@ trait archiveAccessTrait
      * @param string  $processingStatus
      * @param bool    $checkAccess
      * @param integer $maxResults
-     * @param boolean $isDiscoverable
      *
      * @return recordsManagement/archive[] Array of recordsManagement/archive object
      */
@@ -84,8 +83,7 @@ trait archiveAccessTrait
         $archiverArchiveId = null,
         $processingStatus = null,
         $checkAccess = true,
-        $maxResults = null,
-        $isDiscoverable = false
+        $maxResults = null
     ) {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
@@ -113,8 +111,7 @@ trait archiveAccessTrait
             $originatingStartDate,
             $originatingEndDate,
             $archiverArchiveId,
-            $processingStatus,
-            $isDiscoverable
+            $processingStatus
         );
 
         foreach ($searchClasses as $descriptionClass => $descriptionController) {
@@ -152,7 +149,6 @@ trait archiveAccessTrait
      * @param string  $processingStatus
      * @param bool    $checkAccess
      * @param integer $maxResults
-     * @param boolean $isDiscoverable
      *
      * @return integer $count Count of archives from search
      */
@@ -181,8 +177,7 @@ trait archiveAccessTrait
         $archiverArchiveId = null,
         $processingStatus = null,
         $checkAccess = true,
-        $maxResults = null,
-        $isDiscoverable = false
+        $maxResults = null
     ) {
         $accountController = \laabs::newController('auth/userAccount');
         $accountController->isAuthorized('user');
@@ -210,8 +205,7 @@ trait archiveAccessTrait
             $originatingStartDate,
             $originatingEndDate,
             $archiverArchiveId,
-            $processingStatus,
-            $isDiscoverable
+            $processingStatus
         );
 
         $count = 0;
@@ -243,8 +237,7 @@ trait archiveAccessTrait
         $originatingStartDate = null,
         $originatingEndDate = null,
         $archiverArchiveId = null,
-        $processingStatus = null,
-        $isDiscoverable = false
+        $processingStatus = null
     ) {
         $archiveArgs = [
             'archiveId'              => $archiveId,
@@ -266,8 +259,7 @@ trait archiveAccessTrait
             'depositEndDate'         => $depositEndDate,
             'originatingDate'        => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
             'archiverArchiveId'      => $archiverArchiveId,
-            'processingStatus'       => $processingStatus,
-            'isDiscoverable'         => $isDiscoverable
+            'processingStatus'       => $processingStatus
         ];
 
         if (!$filePlanPosition) {
