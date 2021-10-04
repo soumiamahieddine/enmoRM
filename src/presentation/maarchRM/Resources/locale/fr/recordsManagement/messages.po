@@ -1337,3 +1337,6 @@ msgstr "Veuillez choisir le type de critère supplémentaire à ajouter"
 
 msgid "Add filter"
 msgstr "Ajouter le filtre"
+
+msgid "Archive or children archive not communicable"
+msgstr "L'archive ou une de ses archives enfants n'est pas communicable"
