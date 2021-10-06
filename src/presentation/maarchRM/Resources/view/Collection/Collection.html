@@ -6,6 +6,13 @@
 </div>
 <script>
 	$('#deleteCollections').on('click', function() {
+		var collectionLength = $('#archiveList_table').DataTable().rows().count();
+		if (collectionLength < 1) {
+			return;
+		}
 		ArchivesAction.updateCollection([], true, null, null);
+		setTimeout(function(){
+            load('/collection');
+        }, 200)
 	});
 </script>
