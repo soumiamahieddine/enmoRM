@@ -1,6 +1,5 @@
 # CHANGELOG
 
-
 ## Version 2.8
 
 - `Added` Possibilité pour les service producteurs d'indexer le contenu texte des documents archivés afin de pouvoir les rechercher sur l'intégralité des termes.
@@ -11,7 +10,7 @@
 - `Changed` Evolution des champs affichés dans les résultats de recherche de l'écran de gestion.
 - `Fixed` Erreur au lancement de la tâche plannifiée "Intégrité Périodique" par le compte Système.
 - `Fixed` Possibilité de lister les contenus présents dans le répertoire public/web.
-- `Fixed` Compatibilité timestamp pour version de  postgres >= 12.
+- `Fixed` Compatibilité timestamp pour version de postgres >= 12.
 - `Fixed` Compatibilité PHP 8.0.
 
 ## Version 2.7.3

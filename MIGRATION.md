@@ -1,7 +1,7 @@
 # Migration 2.7 vers 2.8
 
 ## Vhost
-Ajout d'un nouveau bundle Collection pour l'enregistrement d'archvies en favoris
+Ajout d'un nouveau bundle Collection pour l'enregistrement d'archives en favoris.
 
 # Migration 2.6 vers 2.7
 ## Configuration
