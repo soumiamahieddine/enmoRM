@@ -102,7 +102,15 @@
     }
     .helper {
         margin-bottom: 10px;
-        margin-top: 5px;
+        margin-top: 10px;
+    }
+    .row label {
+        white-space: nowrap;
+        max-width: 160px;
+        width: 100%;
+        overflow: hidden;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
     }
     .padding-5 {
         padding-left: 5px;
@@ -366,13 +374,14 @@
                     var dropdownValues = [];
                     $.each(dropdownList, function(key, value)
                     {
-                        dropdownValues.push('<option value="'+ key +'">'+ value +'</option>');
+                        dropdownValues.push('<option value="'+ value +'">'+ value +'</option>');
                     });
                     var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
                     $('#helperDropdown')
                         .clone()
                         .attr('id', generateUniqIdentifier())
                         .attr('name', helperName)
+                        .attr('type', 'select')
                         .removeClass('hide')
                         .addClass(' ')
                         .html(dropdownValues.join(''))
@@ -530,6 +539,7 @@
             .attr('title', 'supprimer')
             .attr('type', 'button')
             .addClass("btn btn-danger deleteHelper")
+            .attr('style','margin-right:7px')
             .appendTo(buttonColumn);
 
         var icon = $('<i/>')
@@ -658,6 +668,7 @@
             var value = $(this).val();
             var name = $(this).attr('name');
             var type = $(this).attr('type');
+
             if (type == "" || type == null || type == undefined) {
                 type = $(this).data('type');
             }
