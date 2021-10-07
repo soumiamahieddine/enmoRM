@@ -31,7 +31,9 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group" id="helperForm">
-                                <label class="col-sm-2 control-label" style="padding-top: 15px;">Add filter</label>
+                                <label class="col-sm-2 control-label" style="padding-top: 15px; padding-left: 15px;padding-left: 15px;width: 11.56% !important;">
+                                    Add filter
+                                </label>
                                 <div class="col-sm-4">
                                     <table id="helperFilter" class="table table-condensed">
                                         <tbody>
@@ -97,6 +99,9 @@
     #helperFilter td {
         border-top: none;
     }
+    #helperList .panel {
+        background-color: #f5f5f5 !important;
+    }
     .align-right {
         text-align: right;
     }
@@ -104,9 +109,10 @@
         margin-bottom: 10px;
         margin-top: 10px;
     }
+    /* Add ... & truncate to handle long labels */
     .row label {
         white-space: nowrap;
-        max-width: 160px;
+        max-width: 185px;
         width: 100%;
         overflow: hidden;
         -o-text-overflow: ellipsis;
@@ -325,7 +331,7 @@
             var or = "Ou ";
         }
         var row = $('<li/>').addClass('helper row').appendTo(div);
-        var selectedHelperType = $('<li/>').addClass("col-sm-3 padding-5 align-right").appendTo(row);
+        var selectedHelperType = $('<li/>').addClass("col-sm-3 align-right").appendTo(row);
         $('#selectedHelper')
             .clone()
             .removeClass('hide')
