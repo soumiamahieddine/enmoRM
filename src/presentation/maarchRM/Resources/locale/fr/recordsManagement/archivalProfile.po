@@ -282,4 +282,4 @@ msgid "Update when a file is added"
 msgstr "Mettre à jour au versement d'une pièce"
 
 msgid "Discoverable"
-msgstr "Décelable"
+msgstr "Autorise la découverte (hors producteur)"
