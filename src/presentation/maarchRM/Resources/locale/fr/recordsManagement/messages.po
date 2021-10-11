@@ -1321,10 +1321,10 @@ msgid "Object"
 msgstr "Objet"
 
 msgid "Archive added to collection."
-msgstr "Archive ajoutée aux favoris."
+msgstr "Archive(s) ajoutée(s) aux favoris."
 
 msgid "Archive removed from collection."
-msgstr "Archive retirée des favoris."
+msgstr "Archive(s) retirée(s) des favoris."
 
 msgid "Remove All Collections"
 msgstr "Supprimer tous les favoris"
