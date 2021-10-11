@@ -1,4 +1,4 @@
-<div id="contain" >
+<div id="contain">
     <div class="container-fluid" data-translate-catalog="recordsManagement/messages">
         <div class="page-header">
             <h1>
@@ -23,9 +23,9 @@
                 </div>
                 <div id="collapseOne" class="well panel-collapse collapse in" style="margin-bottom: 0px">
                     <form class="form-horizontal" id="archive_searchForm">
-                        <input type="hidden" name="maxResults" id="maxResults" value="[?merge maxResults ?]"/>
+                        <input type="hidden" name="maxResults" id="maxResults" value="[?merge maxResults ?]" />
                         <?hinclude recordsManagement/archive/searchform.html ?>
-                    <!-- Helpers -->
+                        <!-- Search Helpers -->
                         <div class="col-md-12">
                             <hr style="height:1px;border:none;color:gray;background-color:gray;">
                         </div>
@@ -42,23 +42,31 @@
                                                     <select class="form-control" name="type" id="helperSelect">
                                                         <option value=""></option>
                                                         <?merge descriptionScheme?>
-                                                        <option type="[?merge .type ?]" format="[?merge .format ?]" externalRef="[?merge .ref.bool()?]" data-enumName="[?merge .enumNames.json()?]" data-enumeration="[?merge .enumeration.json() ?]" helperName="[?merge .name ?]" value="[?merge .label ?]"><?merge .label ?></option>
+                                                        <option type="[?merge .type ?]" format="[?merge .format ?]"
+                                                            externalRef="[?merge .ref.bool()?]"
+                                                            data-enumName="[?merge .enumNames.json()?]"
+                                                            data-enumeration="[?merge .enumeration.json() ?]"
+                                                            helperName="[?merge .name ?]" value="[?merge .label ?]">
+                                                            <?merge .label ?>
+                                                        </option>
                                                     </select>
                                                 </td>
                                                 <td>
-                                                    <button type="button" helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add"><span class="fa fa-plus"></span></button>
+                                                    <button type="button" helperName="[?merge .name ?]" class="btn btn-success" id="addHelper" title="Add">
+                                                        <span>class="fa fa-plus"></span>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <ul class="col-sm-6">
-                                    <li id="helperList" style="list-style: none">                                            
+                                    <li id="helperList" style="list-style: none">
                                         <label id="selectedHelper" class="hide control-label"></label>
-                                        <input id="helperValueMin" type="hidden" class="form-control advancedSearchField"/>
-                                        <input id="helperValueMax" type="hidden" class="form-control advancedSearchField"/>
+                                        <input id="helperValueMin" type="hidden" class="form-control advancedSearchField" />
+                                        <input id="helperValueMax" type="hidden" class="form-control advancedSearchField" />
                                         <select id="helperDropdown" name="service" class="hide form-control advancedSearchField"></select>
-                                        <input id="helperToggle" type="hidden" class="advancedSearchField" checked data-style="quick"/>
+                                        <input id="helperToggle" class="hide advancedSearchField" checked data-style="quick" />
                                     </li>
                                 </ul>
                             </div>
@@ -66,10 +74,12 @@
                         <br />
                         <div class="clearfix">
                             <div class="col-md-12">
-                                <button type="button" class="btn btn-primary col-md-offset-4 col-md-2" id="archive_search" title="Search"><i
-                                        class="fa fa-search">&nbsp;</i>Search</button>
-                                <button type="button" class="btn btn-warning col-md-offset-1 col-md-2" id="archive_resetForm" title="Reset"><i
-                                        class="fa fa-refresh">&nbsp;</i>Reset</button>
+                                <button type="button" class="btn btn-primary col-md-offset-4 col-md-2" id="archive_search" title="Search">
+                                    <i class="fa fa-search">&nbsp;</i>Search
+                                </button>
+                                <button type="button" class="btn btn-warning col-md-offset-1 col-md-2" id="archive_resetForm" title="Reset">
+                                    <i class="fa fa-refresh">&nbsp;</i>Reset
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -85,7 +95,8 @@
         <div class="container-fluid" id="archive_searchResult"></div>
     </div>
 
-    <div class="modal fade bs-example-modal-lg" id="corruptedModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal fade bs-example-modal-lg" id="corruptedModal" tabindex="-1" role="dialog"
+        aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="container_corruptedModal">
             </div>
@@ -96,19 +107,24 @@
     input[type="date"] {
         line-height: 20px;
     }
+
     #helperFilter td {
         border-top: none;
     }
+
     #helperList .panel {
         background-color: #f5f5f5 !important;
     }
+
     .align-right {
         text-align: right;
     }
+
     .helper {
         margin-bottom: 10px;
         margin-top: 10px;
     }
+
     /* Add ... & truncate to handle long labels */
     #selectedHelper {
         white-space: nowrap;
@@ -118,22 +134,26 @@
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
     }
+
     .row .tt-hint {
         display: none;
     }
+
     .padding-5 {
         padding-left: 5px;
     }
+
     .btn-toggleOff {
-        color:#333333;
-        background-color:#e6e6e6;
-        border-color:#adadad;
+        color: #333333;
+        background-color: #e6e6e6;
+        border-color: #adadad;
         padding-left: 15px !important;
     }
+
     .btn-toggleOn {
-        color:#ffffff;
-        background-color:#23aae5;
-        border-color:#199cd5;
+        color: #ffffff;
+        background-color: #23aae5;
+        border-color: #199cd5;
     }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -166,15 +186,16 @@
             }
             return;
         }
-        $(this).parent().find(".btn-info").removeClass('btn-info').addClass('btn-default').removeClass("active");
+        $(this).parent().find(".btn-info").removeClass('btn-info').addClass('btn-default').removeClass(
+        "active");
         $(this).removeClass("btn-default").addClass('btn-info');
     });
 
-    $("#helperList").on('click', ".deleteHelper", function() {
+    $("#helperList").on('click', ".deleteHelper", function () {
         var div = ($(this).closest('.divProp'));
 
-        if(div.find(".helper").length == 1) {
-            if(div.prev().is('label')) {
+        if (div.find(".helper").length == 1) {
+            if (div.prev().is('label')) {
                 var labelToRemove = div.prev();
             } else if (div.next().is('label')) {
                 labelToRemove = div.next();
@@ -197,10 +218,9 @@
         } else {
             helper.remove();
         }
-        
     });
 
-    $("#helperList").on('click', ".orHelper", function() {
+    $("#helperList").on('click', ".orHelper", function () {
         var helperText = $(this).data('helpertext');
         var helperName = $(this).data('name');
         var helperType = $(this).data('type');
@@ -230,8 +250,8 @@
 
         if (helperText) {
             addHelperText(helperText, helperName, helperType, helperFormat, isExternalRef, enumeration, enumNames);
-        }     
-        $('#helperSelect').prop('selectedIndex',0);
+        }
+        $('#helperSelect').prop('selectedIndex', 0);
     });
 
     $('#archive_searchByIdentifier').on('click', function () {
@@ -240,15 +260,16 @@
         }
 
         ajax($(this), {
-            type        : 'GET',
-            url         : '/recordsManagement/archives',
-            data        : { archiveId: $('#archive_archiveIdentifier').val().trim() },
-            dataType    : 'html',
-            success     : function (response) {
+            type: 'GET',
+            url: '/recordsManagement/archives',
+            data: {
+                archiveId: $('#archive_archiveIdentifier').val().trim()
+            },
+            dataType: 'html',
+            success: function (response) {
                 $('#archive_searchResult').empty().html(response);
             },
-            error       : function (e) {
-            }
+            error: function (e) {}
         });
     });
 
@@ -262,15 +283,15 @@
         $('#archive_searchForm').find('[name="archiveIdentifier"]').val('');
 
         $.ajax({
-            type     : 'GET',
-            url      : '/recordsManagement/archives',
-            data     : data,
-            dataType : 'html',
-            success  : function (response) {
+            type: 'GET',
+            url: '/recordsManagement/archives',
+            data: data,
+            dataType: 'html',
+            success: function (response) {
                 $('#archive_searchResult').empty().html(response);
                 $('#archive_search').prop('disabled', false);
             },
-            error    : function(response) {
+            error: function (response) {
                 response = JSON.parse(response.responseText);
                 gritter.show(response.message);
                 $('#archive_search').prop('disabled', false);
@@ -306,11 +327,12 @@
         enumeration = null,
         enumNames = null
     ) {
-        if($("#" + helperName).length == 0) {
-            if($(".divProp").length != 0) {
+        if ($("#" + helperName).length == 0) {
+            if ($(".divProp").length != 0) {
                 var title = $('<label/>').addClass("andLabel").appendTo($(".divProp").parent()).html("ET");
             }
-            var div = $('<div/>').attr('id', helperName).addClass('panel panel-default divProp').appendTo($("#helperList"));
+            var div = $('<div/>').attr('id', helperName).addClass('panel panel-default divProp').appendTo($(
+                "#helperList"));
             var or = helperText;
         } else {
             var div = $("#" + helperName);
@@ -332,41 +354,40 @@
 
         switch (helperType) {
             case 'array':
-                    var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
-                    $('#helperValueMin')
-                        .clone()
-                        .attr('type','text')
-                        .attr('name', helperName)
-                        .attr('placeholder','Valeur')
-                        .attr('id', generateUniqIdentifier())
-                        .appendTo(helperInput)
-                        .prev()
-                        .remove();
-                    break;
+                var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
+                $('#helperValueMin')
+                    .clone()
+                    .attr('type', 'text')
+                    .attr('name', helperName)
+                    .attr('placeholder', 'Valeur')
+                    .attr('id', generateUniqIdentifier())
+                    .appendTo(helperInput)
+                    .prev()
+                    .remove();
+                break;
 
             case 'text':
             case 'string':
                 var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
                 $('#helperValueMin')
                     .clone()
-                    .attr('placeholder','Valeur')
+                    .attr('placeholder', 'Valeur')
                     .attr('id', generateUniqIdentifier())
-                    .attr('type','text')
+                    .attr('type', 'text')
                     .attr('name', helperName)
                     .appendTo(helperInput)
                     .prev()
                     .remove();
                 break;
 
-            // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
+                // 1-dropdown if enumeration, 2-typeahead if external Ref, 3-simple text, 4-label+text
             case 'name':
                 dropdownList = JSON.parse(enumeration);
 
                 if (dropdownList) {
                     var dropdownValues = [];
-                    $.each(dropdownList, function(key, value)
-                    {
-                        dropdownValues.push('<option value="'+ value +'">'+ value +'</option>');
+                    $.each(dropdownList, function (key, value) {
+                        dropdownValues.push('<option value="' + value + '">' + value + '</option>');
                     });
                     var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
                     $('#helperDropdown')
@@ -378,13 +399,12 @@
                         .addClass(' ')
                         .html(dropdownValues.join(''))
                         .appendTo(helperInput);
-                }
-                else if (isExternalRef == 1) {
+                } else if (isExternalRef == 1) {
                     var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
                     $('#helperValueMin')
                         .clone()
-                        .attr('type','text')
-                        .attr('placeholder','Valeur')
+                        .attr('type', 'text')
+                        .attr('placeholder', 'Valeur')
                         .attr('id', generateUniqIdentifier())
                         .attr('externalRef', isExternalRef)
                         .attr('name', helperName)
@@ -392,15 +412,14 @@
                         .appendTo(helperInput)
                         .prev()
                         .remove();
-                        getTypeahead();
-                }
-                else {
+                    getTypeahead();
+                } else {
                     var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
                     $('#helperValueMin')
                         .clone()
-                        .attr('type','text')
+                        .attr('type', 'text')
                         .attr('id', generateUniqIdentifier())
-                        .attr('placeholder','Valeur')
+                        .attr('placeholder', 'Valeur')
                         .attr('name', helperName)
                         .appendTo(helperInput)
                         .prev()
@@ -415,9 +434,9 @@
                 $('#helperValueMin')
                     .clone()
                     .attr('id', generateUniqIdentifier())
-                    .attr('type','number')
-                    .attr('placeholder','Minimum')
-                    .attr('data-range','start')
+                    .attr('type', 'number')
+                    .attr('placeholder', 'Minimum')
+                    .attr('data-range', 'start')
                     .attr('name', helperName)
                     .appendTo(helperMin)
                     .prev()
@@ -425,9 +444,9 @@
                 $('#helperValueMax')
                     .clone()
                     .attr('id', generateUniqIdentifier())
-                    .attr('type','number')
-                    .attr('placeholder','Maximum')
-                    .attr('data-range','end')
+                    .attr('type', 'number')
+                    .attr('placeholder', 'Maximum')
+                    .attr('data-range', 'end')
                     .attr('name', helperName)
                     .appendTo(helperMax)
                     .prev()
@@ -442,9 +461,9 @@
 
                 $('#helperValueMin')
                     .clone()
-                    .attr('type','text')
-                    .attr('placeholder','Date de début')
-                    .attr('data-range','start')
+                    .attr('type', 'text')
+                    .attr('placeholder', 'Date de début')
+                    .attr('data-range', 'start')
                     .attr('name', helperName)
                     .attr('id', valueMinIdentifier)
                     .addClass('datePicker')
@@ -453,9 +472,9 @@
                     .remove();
                 $('#helperValueMax')
                     .clone()
-                    .attr('type','text')
-                    .attr('placeholder','Date de fin')
-                    .attr('data-range','end')
+                    .attr('type', 'text')
+                    .attr('placeholder', 'Date de fin')
+                    .attr('data-range', 'end')
                     .attr('name', helperName)
                     .attr('id', valueMaxIdentifier)
                     .addClass('datePicker')
@@ -463,8 +482,20 @@
                     .prev()
                     .remove();
 
-                $('#' + valueMinIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
-                $('#' + valueMaxIdentifier).datepicker({ language: "fr",autoclose:true, todayBtn: true, todayBtn:'linked', format:'dd-mm-yyyy' }).datepicker();
+                $('#' + valueMinIdentifier).datepicker({
+                    language: "fr",
+                    autoclose: true,
+                    todayBtn: true,
+                    todayBtn: 'linked',
+                    format: 'dd-mm-yyyy'
+                }).datepicker();
+                $('#' + valueMaxIdentifier).datepicker({
+                    language: "fr",
+                    autoclose: true,
+                    todayBtn: true,
+                    todayBtn: 'linked',
+                    format: 'dd-mm-yyyy'
+                }).datepicker();
 
                 break;
 
@@ -476,9 +507,9 @@
 
                 $('#helperValueMin')
                     .clone()
-                    .attr('type','text')
-                    .attr('placeholder','Date et heure de début')
-                    .attr('data-range','start')
+                    .attr('type', 'text')
+                    .attr('placeholder', 'Date et heure de début')
+                    .attr('data-range', 'start')
                     .attr('name', helperName)
                     .attr('id', valueMinIdentifier)
                     .addClass('dateTimePicker')
@@ -487,9 +518,9 @@
                     .remove();
                 $('#helperValueMax')
                     .clone()
-                    .attr('type','text')
-                    .attr('placeholder','Date et heure de fin')
-                    .attr('data-range','end')
+                    .attr('type', 'text')
+                    .attr('placeholder', 'Date et heure de fin')
+                    .attr('data-range', 'end')
                     .attr('name', helperName)
                     .attr('id', valueMaxIdentifier)
                     .addClass('dateTimePicker')
@@ -507,16 +538,17 @@
                 var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
                 var helperCheckbox = $('#helperToggle')
                     .clone()
-                    .attr('type','checkbox')
+                    .removeClass('hide')
+                    .attr('type', 'checkbox')
                     .attr('name', helperName);
-                $(function() {
+                $(function () {
                     $(helperCheckbox).bootstrapToggle({
                         on: 'Activé',
                         off: 'Désactivé',
                         width: '22%',
                         size: 'normal',
-                        onstyle:'toggleOn',
-                        offstyle:'toggleOff'
+                        onstyle: 'toggleOn',
+                        offstyle: 'toggleOff'
                     });
                 })
                 helperCheckbox.appendTo(helperInput);
@@ -532,14 +564,14 @@
             .attr('title', 'supprimer')
             .attr('type', 'button')
             .addClass("btn btn-danger deleteHelper")
-            .attr('style','margin-right:7px')
+            .attr('style', 'margin-right:7px')
             .appendTo(buttonColumn);
 
         var icon = $('<i/>')
             .addClass('fa fa-minus')
             .appendTo(supprButton);
 
-        if($("#" + helperName).find(".orHelper").length == 0) {
+        if ($("#" + helperName).find(".orHelper").length == 0) {
             var orButton = $('<button/>')
                 .attr('title', 'Ou')
                 .attr('type', 'button')
@@ -560,53 +592,52 @@
         }
     }
 
-    function generateUniqIdentifier () {
+    function generateUniqIdentifier() {
         var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
         var uniqid = randLetter + Date.now();
 
         return uniqid;
     };
 
-    function getTypeahead () {
-        $.each(this.$("#helperList").find(".externalRefField"), function() {
+    function getTypeahead() {
+        $.each(this.$("#helperList").find(".externalRefField"), function () {
             var field = $(this);
             var name = field.attr("name");
 
-            setTimeout(function(){
+            setTimeout(function () {
                 var data = new Bloodhound({
                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace(),
                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                     remote: {
-                        url: '/descriptionRef/'+name+'?query=%QUERY',
+                        url: '/descriptionRef/' + name + '?query=%QUERY',
                         wildcard: '%QUERY'
                     }
                 });
                 data.initialize();
 
-                field.typeahead(
-                    {
-                        hint: true,
-                        highlight: true,
-                        minLength: 1
-                    },
-                    {
-                        name: 'data',
-                        source: data.ttAdapter(),
-                        templates: {
-                            suggestion: function(data) {
-                                delete data._query;
-                                var html = $('<div>');
-                                var keyname = Object.keys(data)[0];
-                                var key = data.keyname;
-                                html.append($('<strong class="badge">').text(key));
-                                delete data[keyname];
-                                var value = Object.keys(data).map(function(name){return data[name]}).join(" - ");
-                                html.append(' '+value);
-                                return html;
-                            }
+                field.typeahead({
+                    hint: true,
+                    highlight: true,
+                    minLength: 1
+                }, {
+                    name: 'data',
+                    source: data.ttAdapter(),
+                    templates: {
+                        suggestion: function (data) {
+                            delete data._query;
+                            var html = $('<div>');
+                            var keyname = Object.keys(data)[0];
+                            var key = data.keyname;
+                            html.append($('<strong class="badge">').text(key));
+                            delete data[keyname];
+                            var value = Object.keys(data).map(function (name) {
+                                return data[name]
+                            }).join(" - ");
+                            html.append(' ' + value);
+                            return html;
                         }
                     }
-                ).on('typeahead:selected', function ($event, suggestion, source) {
+                }).on('typeahead:selected', function ($event, suggestion, source) {
                     var keys = Object.keys(suggestion); //fetched the key at first index
                     field.val(suggestion[keys[0]]);
                     field.typeahead('val', suggestion[keys[0]]);
@@ -621,15 +652,16 @@
     function searchFormSerialize() {
         var parameters = new Object();
 
-        $('#searchFormHolder').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(function() {
-            if(!$(this).hasClass('orgHide')) {
-                parameters[$(this).attr('name')] = $(this).val();
-            }
-        });
+        $('#searchFormHolder').find('input[type="text"], input[type="hidden"], input[type="number"], select').each(
+            function () {
+                if (!$(this).hasClass('orgHide')) {
+                    parameters[$(this).attr('name')] = $(this).val();
+                }
+            });
 
         var hasParent = [];
 
-        $('#searchFormHolder').find('input[type="checkbox"]').each(function(){
+        $('#searchFormHolder').find('input[type="checkbox"]').each(function () {
             if ($(this).attr('name') != "hasParent") {
                 parameters[$(this).attr('name')] = $(this).prop("checked");
                 return;
@@ -649,15 +681,35 @@
 
         parameters.finalDisposition = $("#archive_searchForm [name=finalDisposition]:checked").val();
         parameters.archiveExpired = $("#archive_searchForm [name=archiveExpired]:checked").val();
-        parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
-        parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
+        parameters.depositStartDate = $("#archive_searchForm [name=depositStartDate]").data('datepicker')
+            .getFormattedDate('yyyy-mm-dd');
+        parameters.depositEndDate = $("#archive_searchForm [name=depositEndDate]").data('datepicker').getFormattedDate(
+            'yyyy-mm-dd');
         //parameters.originatingStartDate = $("#archive_searchForm [name=originatingStartDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
         //parameters.originatingEndDate = $("#archive_searchForm [name=originatingEndDate]").data('datepicker').getFormattedDate('yyyy-mm-dd');
 
         var advancedSearchField = $('#helperForm').find('.advancedSearchField:visible');
         parameters.description = [];
         var hasTwoCount = false;
-        advancedSearchField.each(function() {
+
+        $('#helperForm').find('input[type="checkbox"]').each(function () {
+            var name = $(this).attr('name');
+            var value = null;
+            if (parameters.description[name] == "" || parameters.description[name] == undefined || parameters
+                .description[name] == null) {
+                if ($(this).prop("checked")) {
+                    value = 1;
+                } else value = 0;
+                parameters.description[name] = name + '="' + value + '"';
+            } else {
+                if ($(this).prop("checked")) {
+                    value = 1;
+                } else value = 0;
+                parameters.description[name] = parameters.description[name] + '||' + name + '="' + value + '"';
+            }
+        });
+
+        advancedSearchField.each(function () {
             var value = $(this).val();
             var name = $(this).attr('name');
             var type = $(this).attr('type');
@@ -670,13 +722,14 @@
                 case 'select':
                     // keyword enum
                     if (value !== '') {
-                        if (parameters.description[name] == ""
-                            || parameters.description[name] == undefined
-                            || parameters.description[name] == null
+                        if (parameters.description[name] == "" ||
+                            parameters.description[name] == undefined ||
+                            parameters.description[name] == null
                         ) {
                             parameters.description[name] = name + '="' + value + '"';
                         } else {
-                            parameters.description[name] = parameters.description[name] + '||' + name+'="'+value+'"';
+                            parameters.description[name] = parameters.description[name] + '||' + name + '="' +
+                                value + '"';
                         }
                     }
                     break;
@@ -689,21 +742,24 @@
                     }
 
                     switch ($(this).val()) {
-                        case "1": value = "1";
+                        case "1":
+                            value = "1";
                             break;
-                        case "0": value = "0";
+                        case "0":
+                            value = "0";
                             break;
                         default:
                             return;
                     }
 
-                    if (parameters.description[name] == ""
-                        || parameters.description[name] == undefined
-                        || parameters.description[name] == null
+                    if (parameters.description[name] == "" ||
+                        parameters.description[name] == undefined ||
+                        parameters.description[name] == null
                     ) {
                         parameters.description[name] = name + '="' + value + '"';
                     } else {
-                        parameters.description[name] = parameters.description[name] + '||' + name+'="'+value+'"';
+                        parameters.description[name] = parameters.description[name] + '||' + name + '="' +
+                            value + '"';
                     }
                     break;
 
@@ -712,10 +768,12 @@
                         if ($(this).hasClass('datePicker')) {
                             if (($(this).data('range') == 'start')) {
                                 var operation = ">=";
-                                value = "(" + name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "'";
+                                value = "(" + name + operation + "'" + $(this).data('datepicker')
+                                    .getFormattedDate('yyyy-mm-dd') + "'";
                             } else {
                                 var operation = "<=";
-                                value = name + operation + "'" + $(this).data('datepicker').getFormattedDate('yyyy-mm-dd') + "')";
+                                value = name + operation + "'" + $(this).data('datepicker').getFormattedDate(
+                                    'yyyy-mm-dd') + "')";
                             }
 
                             // Fill start and end values
@@ -726,9 +784,9 @@
                                 parameters.description[name] = value;
                             } else {
                                 if (hasTwoCount) {
-                                    parameters.description[name] = parameters.description[name] +'||' + value;
+                                    parameters.description[name] = parameters.description[name] + '||' + value;
                                 } else {
-                                    parameters.description[name] = parameters.description[name] +'&&' + value;
+                                    parameters.description[name] = parameters.description[name] + '&&' + value;
                                 }
                                 hasTwoCount = !hasTwoCount;
                             }
@@ -753,20 +811,22 @@
                                 parameters.description[name] = value;
                             } else {
                                 if (hasTwoCount) {
-                                    parameters.description[name] = parameters.description[name] +' || ' + value;
+                                    parameters.description[name] = parameters.description[name] + ' || ' +
+                                    value;
                                 } else {
-                                    parameters.description[name] = parameters.description[name] +'&&' + value;
+                                    parameters.description[name] = parameters.description[name] + '&&' + value;
                                 }
                                 hasTwoCount = !hasTwoCount;
                             }
                         } else {
-                            if (parameters.description[name] == ""
-                                || parameters.description[name] == undefined
-                                || parameters.description[name] == null
+                            if (parameters.description[name] == "" ||
+                                parameters.description[name] == undefined ||
+                                parameters.description[name] == null
                             ) {
                                 parameters.description[name] = name + '="*' + value.trim() + '*"';
                             } else {
-                                parameters.description[name] = parameters.description[name] + '||' + name + '="*' + value.trim() + '*"';
+                                parameters.description[name] = parameters.description[name] + '||' + name +
+                                    '="*' + value.trim() + '*"';
                             }
 
                         }
@@ -785,9 +845,9 @@
                         }
                         value = name + operation + $(this).val();
 
-                        if (parameters.description[name] == ""
-                            || parameters.description[name] == undefined
-                            || parameters.description[name] == null
+                        if (parameters.description[name] == "" ||
+                            parameters.description[name] == undefined ||
+                            parameters.description[name] == null
                         ) {
                             if (hasTwoCount) {
                                 hasTwoCount = false;
@@ -795,11 +855,11 @@
                             parameters.description[name] = value;
                         } else {
                             if (hasTwoCount) {
-                                parameters.description[name] = parameters.description[name] +') || (' + value;
+                                parameters.description[name] = parameters.description[name] + ') || (' + value;
                                 shouldCount = false;
 
                             } else {
-                                parameters.description[name] = parameters.description[name] +'&&' + value;
+                                parameters.description[name] = parameters.description[name] + '&&' + value;
                             }
 
                             hasTwoCount = !hasTwoCount;
@@ -810,11 +870,12 @@
             };
         });
 
+
         var arr = [];
         for (name in parameters.description) {
             arr.push(parameters.description[name]);
         }
-        arr.forEach(function(part, index) {
+        arr.forEach(function (part, index) {
             this[index] = "(" + part + ")";
         }, arr);
         parameters.description = arr.join(' && ');
@@ -843,7 +904,10 @@
     var organizations = new Bloodhound({
         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('displayName'),
         queryTokenizer: Bloodhound.tokenizers.whitespace,
-        prefetch: {url: '/organizations/todisplay?orgUnit=true', ttl: '0'},
+        prefetch: {
+            url: '/organizations/todisplay?orgUnit=true',
+            ttl: '0'
+        },
         limit: 100
     });
 
@@ -851,49 +915,46 @@
     organizations.initialize();
 
     // initialize typeahead
-    $('#orgTypeahead').typeahead(
-        {
-            hint: true,
-            highlight: true,
-            minLength: 2
-        },
-        {
-            name: 'organizations',
-            displayKey: 'displayName',
-            templates: {
-                empty: function() {
-                    return "<span class='well well-sm'>"+$('#noOriginatorFound').html()+"</span>";
-                },
-                suggestion: function(organization) {
-                    var display =
-                        "<span>"
-                        + "<span style='font-family:Helvetica, sans-serif;'>";
+    $('#orgTypeahead').typeahead({
+        hint: true,
+        highlight: true,
+        minLength: 2
+    }, {
+        name: 'organizations',
+        displayKey: 'displayName',
+        templates: {
+            empty: function () {
+                return "<span class='well well-sm'>" + $('#noOriginatorFound').html() + "</span>";
+            },
+            suggestion: function (organization) {
+                var display =
+                    "<span>" +
+                    "<span style='font-family:Helvetica, sans-serif;'>";
 
-                    if(organization.ownerOrgName) {
-                        display += organization.ownerOrgName
-                                + "<br>> ";
-                    }
-                       display += organization.displayName
-                        + "</span></span><br>";
-
-                    $("#originatorOwnerOrgName").val("");
-                    return display;
+                if (organization.ownerOrgName) {
+                    display += organization.ownerOrgName +
+                        "<br>> ";
                 }
-            },
-            source: function(query, cb) {
-                organizations.search(query, function(suggestions) {
-                    var i = suggestions.length
-                    while (i--) {
-                        if ($('#orgs').find('[data-orgid="'+ suggestions[i].orgId +'"]').length)
-                            suggestions.splice(i, 1);
-                    }
-                    cb(suggestions);
-                });
-            },
-            skipCache: true
-        }
-    ).on('typeahead:selected', function($event, suggestion, source) {
-        if(suggestion.orgId) {
+                display += organization.displayName +
+                    "</span></span><br>";
+
+                $("#originatorOwnerOrgName").val("");
+                return display;
+            }
+        },
+        source: function (query, cb) {
+            organizations.search(query, function (suggestions) {
+                var i = suggestions.length
+                while (i--) {
+                    if ($('#orgs').find('[data-orgid="' + suggestions[i].orgId + '"]').length)
+                        suggestions.splice(i, 1);
+                }
+                cb(suggestions);
+            });
+        },
+        skipCache: true
+    }).on('typeahead:selected', function ($event, suggestion, source) {
+        if (suggestion.orgId) {
             $("#originatorOrgRegNumber").val(suggestion.registrationNumber);
             $("#originatorOrgInfo").show();
             $("#originatorOwnerOrgName").val(suggestion.ownerOrgName);
@@ -908,12 +969,12 @@
 
     $('#orgTypeahead').keyup(function () {
 
-        if(!$(this).val()) {
+        if (!$(this).val()) {
             $("#originatorOrgInfo").hide();
         }
     });
 
-    $("#orgTypeahead").keydown(function(event) {
+    $("#orgTypeahead").keydown(function (event) {
         // reinit typeahead and hidden input when suppr or backspace keys are pressed
         if (event.which == 46 || event.which == 8) {
             $("#originatorOrgRegNumber").val('');
@@ -921,10 +982,8 @@
         }
     });
 
-    $("#orgTypeahead").click(function() {
+    $("#orgTypeahead").click(function () {
         $("#originatorOrgRegNumber").val('');
         $("#originatorOwnerOrgId").val('');
     });
-
-
 </script>
