@@ -106,6 +106,21 @@ class authentication
                         }
                         break;
 
+                    case LAABS_REMOTE_AUTH:
+                        try {
+                            $userAuthenticationController = \laabs::newController('auth/userAuthentication');
+                            $this->requestToken = $this->account = $userAuthenticationController->logRemoteUser($requestAuth->remoteUser);
+                            $this->accountId = $this->account->accountId;
+
+                            \laabs::kernel()->response->code = 307;
+                            \laabs::kernel()->response->setHeader('Location', '/');
+                            \laabs::kernel()->sendResponse();
+                            \laabs::kernel()->end();
+                        } catch (\Exception $e) {
+                            throw $e;
+                        }
+                        break;
+
                     /*case LAABS_DIGEST_AUTH:
                         if ($this->authenticationService->logIn($requestAuth->username, $requestAuth->nonce, $requestAuth->uri, $requestAuth->response, $requestAuth->qop, $requestAuth->nc, $requestAuth->cnonce)) {
                             $token = $this->encrypt($_SESSION['dependency']['authentication']['credential']);

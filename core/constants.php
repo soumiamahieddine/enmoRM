@@ -137,6 +137,7 @@ const LAABS_BATCH_STATUS_COMPLETED = "Completed";
 const LAABS_BASIC_AUTH = "basic";
 const LAABS_DIGEST_AUTH = "digest";
 const LAABS_APP_AUTH = "app";
+const LAABS_REMOTE_AUTH = "remote";
 
 // TOKENS
 // Operations

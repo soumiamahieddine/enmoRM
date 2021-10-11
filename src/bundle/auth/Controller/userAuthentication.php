@@ -65,33 +65,101 @@ class userAuthentication
      */
     public function login($userName, $password)
     {
-        // Check userAccount exists
-        $currentDate = \laabs::newTimestamp();
+        // Check userAccount exists and get it
+        $userAccount = $this->getUserByName($userName);
 
+        $this->checkEnabled($userAccount);
+
+        // Check password ans status
+        $userLogin = $this->checkCredentials($userAccount, $password);
+
+        if (isset($this->securityPolicy['sessionTimeout'])) {
+            $tokenDuration = $this->securityPolicy['sessionTimeout'];
+        } else {
+            $tokenDuration = 86400;
+        }
+        
+        // Set token
+        $this->setToken($userLogin, $tokenDuration);
+        
+        // Require password change
+        if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
+            $diff = ($userLogin->lastLogin->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
+            if ($diff > $this->securityPolicy['passwordValidity']) {
+                throw \laabs::newException('auth/userPasswordChangeRequestException');
+            }
+        }
+
+        if ($userAccount->passwordChangeRequired == true) {
+            \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration);
+            \laabs::unsetToken('AUTH');
+            throw \laabs::newException('auth/userPasswordChangeRequestException');
+        }
+
+        return $userAccount;
+    }
+
+    /**
+     * Log a remote user
+     * @param string $userName
+     *
+     * @return auth/userAccount
+     */
+    public function logRemoteUser($userName)
+    {
+        // Check userAccount exists and get it
+        $userAccount = $this->getUserByName($userName);
+
+        $this->checkEnabled($userAccount);
+
+        $userLogin = \laabs::newInstance('auth/userLogin');
+        $userLogin->accountId = $userAccount->accountId;
+        $userLogin->lastIp = $_SERVER["REMOTE_ADDR"];
+
+        if (isset($this->securityPolicy['sessionTimeout'])) {
+            $tokenDuration = $this->securityPolicy['sessionTimeout'];
+        } else {
+            $tokenDuration = 86400;
+        }
+        
+        // Set token
+        $this->setToken($userLogin, $tokenDuration);
+
+        return $userAccount;
+    }
+
+    /**
+     * Get user from userName
+     * @param string $userName
+     * 
+     * @return auth/account
+     * @throws auth/authenticationException when username not found
+     */
+    public function getUserByName(string $userName)
+    {
         $exists = $this->sdoFactory->exists('auth/account', array('accountName' => $userName));
 
         if (!$exists) {
             throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
         }
 
-        $userAccount = $this->sdoFactory->read('auth/account', array('accountName' => $userName));
+        return $this->sdoFactory->read('auth/account', array('accountName' => $userName));
+    }
+
+    /**
+     * Check user password and hability to login
+     * @param object $userAccount
+     * 
+     * @return object
+     */
+    protected function checkCredentials($userAccount, $password)
+    {
+        $currentDate = \laabs::newTimestamp();
 
         // Create user login object
         $userLogin = \laabs::newInstance('auth/userLogin');
         $userLogin->accountId = $userAccount->accountId;
         $userLogin->lastIp = $_SERVER["REMOTE_ADDR"];
-
-        // Check enabled
-        if ($userAccount->enabled != true) {
-            $e = \laabs::newException(
-                'auth/authenticationException',
-                'User %1$s is disabled',
-                403,
-                null,
-                array($userName)
-            );
-            throw $e;
-        }
 
         // Check password
         if (!password_verify($password, $userAccount->password) && hash($this->passwordEncryption, $password) != $userAccount->password) {
@@ -119,6 +187,10 @@ class userAuthentication
             throw \laabs::newException('auth/authenticationException', 'Username and / or password invalid', 401);
         }
 
+        if (password_needs_rehash($userAccount->password, PASSWORD_DEFAULT)) {
+            $userLogin->password = password_hash($password, PASSWORD_DEFAULT);
+        }
+        
         // Check locked
         if ($userAccount->locked == true) {
             if (!isset($this->securityPolicy['lockDelay']) // No delay while locked
@@ -137,36 +209,21 @@ class userAuthentication
         $userLogin->tokenDate = null;
         $userLogin->lastLogin = $currentDate;
 
-        if (password_needs_rehash($userAccount->password, PASSWORD_DEFAULT)) {
-            $userLogin->password = password_hash($password, PASSWORD_DEFAULT);
-        }
-
         $this->sdoFactory->update($userLogin, 'auth/account');
 
-        if (isset($this->securityPolicy['sessionTimeout'])) {
-            $tokenDuration = $this->securityPolicy['sessionTimeout'];
-        } else {
-            $tokenDuration = 86400;
-        }
+        return $userLogin;
+    }
 
+    /**
+     * Sets the auth token
+     * @param object $userLogin
+     * @param int    $tokenDuration
+     */
+    public function setToken($userLogin, $tokenDuration)
+    {
         $accountToken = new \StdClass();
-        $accountToken->accountId = $userAccount->accountId;
+        $accountToken->accountId = $userLogin->accountId;
         $userToken = \laabs::setToken('AUTH', $accountToken, $tokenDuration);
-
-        if ($this->securityPolicy['passwordValidity'] && $this->securityPolicy["passwordValidity"] != 0) {
-            $diff = ($currentDate->getTimestamp() - $userAccount->passwordLastChange->getTimestamp()) / $tokenDuration;
-            if ($diff > $this->securityPolicy['passwordValidity']) {
-                throw \laabs::newException('auth/userPasswordChangeRequestException');
-            }
-        }
-
-        if ($userAccount->passwordChangeRequired == true) {
-            \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration);
-            \laabs::unsetToken('AUTH');
-            throw \laabs::newException('auth/userPasswordChangeRequestException');
-        }
-
-        return $userAccount;
     }
 
     /**
@@ -227,6 +284,26 @@ class userAuthentication
 
         if ($this->securityPolicy['passwordRequiresMixedCase'] && (!preg_match('~[A-Z]~', $newPassword) || !preg_match('~[a-z]~', $newPassword))) {
             throw new \core\Exception\ForbiddenException("The password must contain upper and lower case.", 403);
+        }
+    }
+
+    /**
+     * Check if user is enabled
+     * @param object $userAccount
+     * 
+     * @return object
+     */
+    protected function checkEnabled($userAccount)
+    {
+        if ($userAccount->enabled != true) {
+            $e = \laabs::newException(
+                'auth/authenticationException',
+                'User %1$s is disabled',
+                403,
+                null,
+                array($userName)
+            );
+            throw $e;
         }
     }
 

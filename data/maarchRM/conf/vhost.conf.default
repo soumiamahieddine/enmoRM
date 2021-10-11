@@ -52,4 +52,21 @@
     SetEnv LAABS_ERROR_URI recordsManagement/welcome/error
 
     SetEnv LAABS_CRYPT_KEY mySecretKey
+
+    ### AUTHENTICATION WITH  KERBEROS ### 
+    
+    # SetEnv LAABS_AUTH_MODES remote;basic;digest
+
+    # <Directory "/var/www/laabs/web">
+    #     <If "'%{HTTP:User-Agent}' !~ m#service(.*)$#">
+    #         AuthType Kerberos
+    #         AuthName "KERBEROS AUTHENTICATION"
+    #         KrbAuthRealms DOMAIN.COM
+    #         KrbServiceName HTTP
+    #         Krb5Keytab /etc/apache2/kerb.keytab
+    #         KrbMethodNegotiate On
+    #         KrbMethodK5Passwd Off
+    #         Require valid-user
+    #     </If>
+    # </Directory>
 </VirtualHost>
