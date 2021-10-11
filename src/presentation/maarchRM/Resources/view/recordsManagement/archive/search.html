@@ -110,7 +110,7 @@
         margin-top: 10px;
     }
     /* Add ... & truncate to handle long labels */
-    .row label {
+    #selectedHelper {
         white-space: nowrap;
         max-width: 185px;
         width: 100%;
@@ -118,36 +118,22 @@
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
     }
+    .row .tt-hint {
+        display: none;
+    }
     .padding-5 {
         padding-left: 5px;
     }
-    .quick .toggle-group {
-        transition: none;
-        -webkit-transition: none;
+    .btn-toggleOff {
+        color:#333333;
+        background-color:#e6e6e6;
+        border-color:#adadad;
+        padding-left: 15px !important;
     }
     .btn-toggleOn {
         color:#ffffff;
         background-color:#23aae5;
         border-color:#199cd5;
-    }
-    .btn-toggleOff {
-        color:#333333;
-        background-color:#e6e6e6;
-        border-color:#adadad;
-    }
-    .quick .toggle-group { 
-        transition: none; 
-        -webkit-transition: none; 
-    }
-    .btn-toggleOn {
-        color:#ffffff;
-        background-color:#23aae5;
-        border-color:#199cd5;
-    }
-    .btn-toggleOff {
-        color:#333333;
-        background-color:#e6e6e6;
-        border-color:#adadad;
     }
 </style>
 <script src="/public/js/bootstrap-toggle/bootstrap-toggle.js"></script>
@@ -219,7 +205,7 @@
         var helperName = $(this).data('name');
         var helperType = $(this).data('type');
         var helperFormat = $(this).data('format');
-        var isExternalRef = $(this).data('externalRef');
+        var isExternalRef = $(this).data('externalref');
         var enumeration = $(this).data('enumeration');
         var enumNames = $(this).data('enumnames');
 
@@ -400,12 +386,13 @@
                         .attr('type','text')
                         .attr('placeholder','Valeur')
                         .attr('id', generateUniqIdentifier())
-                        .addClass('externalRefField')
+                        .attr('externalRef', isExternalRef)
                         .attr('name', helperName)
+                        .addClass('externalRefField')
                         .appendTo(helperInput)
                         .prev()
                         .remove();
-                    getTypeahead();
+                        getTypeahead();
                 }
                 else {
                     var helperInput = $('<li/>').addClass("helperContent col-sm-6 padding-5").appendTo(row);
@@ -526,7 +513,7 @@
                     $(helperCheckbox).bootstrapToggle({
                         on: 'Activé',
                         off: 'Désactivé',
-                        width: '18%',
+                        width: '22%',
                         size: 'normal',
                         onstyle:'toggleOn',
                         offstyle:'toggleOff'
