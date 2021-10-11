@@ -151,7 +151,7 @@ abstract class AbstractRequest
         foreach ($authModes as $authMode) {
             switch ($authMode) {
                 case LAABS_BASIC_AUTH:
-                    if (isset($_SERVER['PHP_AUTH_USER']) && iiset($_SERVER['PHP_AUTH_PW'])) {
+                    if (isset($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW'])) {
                         return new basicAuthentication($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
                     }
                     break;
