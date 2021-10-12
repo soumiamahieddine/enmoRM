@@ -838,10 +838,10 @@
                     if (value !== '') {
                         if (($(this).data('range') == 'start')) {
                             var operation = ">=";
-                            value = "(" + name + operation + "'" + dateConverted + "'";
+                            value = "(" + name + operation + "'" + value + "'";
                         } else {
                             var operation = "<=";
-                            value = name + operation + "'" + dateConverted + "')";
+                            value = name + operation + "'" + value + "')";
                         }
                         value = name + operation + $(this).val();
 
