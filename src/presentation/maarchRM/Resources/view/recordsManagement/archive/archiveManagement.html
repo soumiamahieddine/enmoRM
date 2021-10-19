@@ -115,6 +115,7 @@ var ArchivesAction = {
         var relevant = null;
         var ids = [];
         var names = [];
+        var hasNoRightsCount = 0;
 
         if (status == '') {
             dataSelector.push('[data-archive-status]');
@@ -146,6 +147,9 @@ var ArchivesAction = {
         $.each(relevant, function () {
             ids.push($(this).val());
             id = '#'+ $(this).val();
+            if ($(id).attr('data-hasRights') == 'false') {
+                hasNoRightsCount++;
+            }
             names.push($(id).attr('name'));
         });
 
@@ -153,7 +157,8 @@ var ArchivesAction = {
             selected: $('input[data-archive-status]:checked').length,
             relevant: relevant.length,
             ids: ids,
-            names: names
+            names: names,
+            hasNoRightsCount: hasNoRightsCount
         };
 
         if (selectedArchives.selected == 0) {

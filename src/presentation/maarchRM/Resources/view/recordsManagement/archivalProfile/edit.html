@@ -33,7 +33,9 @@ file that was distributed with this source code.
                         <div class="form-group">
                             <label class="col-md-3 control-label">Identifier <span style="color: red">*</span></label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" id="reference" name="reference" placeholder="Reference" disabled="[?merge archivalProfile.reference.ifne('').then('disabled') ?]"/>
+                                <input type="text" class="form-control" id="reference" name="reference"
+                                    placeholder="Reference"
+                                    disabled="[?merge archivalProfile.reference.ifne('').then('disabled') ?]" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -45,7 +47,8 @@ file that was distributed with this source code.
                         <div class="form-group">
                             <label class="col-md-3 control-label">Description</label>
                             <div class="col-md-9">
-                                <textarea class="form-control" id="description" name="description" placeholder="Description"></textarea>
+                                <textarea class="form-control" id="description" name="description"
+                                    placeholder="Description"></textarea>
                             </div>
                         </div>
                         <?merge archivalProfile.type.ifeq('1').not() ?>
@@ -56,13 +59,24 @@ file that was distributed with this source code.
                                 <input type="checkbox" id="fileplanLevelToggle">
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"
+                                title="Permet aux utilisateurs des services autres que producteurs et gestionnaires de rechercher les archives du profil, sans pour autant pourvoir les consulter">Discoverable
+                                <span style="font-size:16px;color:#199cd5">&#x1F6C8</span>
+                            </label>
+                            <div class="col-md-9">
+                                <input type='hidden' id="isDiscoverable" name="isDiscoverable">
+                                <input type="checkbox" data-toggle="toggle" id="isDiscoverableToggle">
+                            </div>
+                        </div>
                     </div>
 
                     <?hinclude recordsManagement/archivalProfile/tabs.html ?>
                 </div>
                 <div class="clearfix">
                     <div class="pull-right">
-                        <button type="button" id="archivalProfileCancelBtn" class="btn btn-warning"><i class="fa fa-undo">&nbsp;</i>Cancel</button>
+                        <button type="button" id="archivalProfileCancelBtn" class="btn btn-warning"><i
+                                class="fa fa-undo">&nbsp;</i>Cancel</button>
                         <button type="button" id="save" class="btn btn-success" title="Save">
                             <?merge archivalProfile.archivalProfileId.ifne('') ?>
                             <span><i class="fa fa-save">&nbsp;</i>Save</span>
@@ -168,7 +182,7 @@ file that was distributed with this source code.
             }
 
             //RegExp identifier field ( = ArchivalProfile.reference)
-            var reg =/^[A-Za-z][A-Za-z0-9_-]*$/;
+            var reg = /^[A-Za-z][A-Za-z0-9_-]*$/;
             var identifier = parameters.archivalProfile.reference;
             if (!reg.test(identifier)) {
                 gritter.show($("#identifier_format_error").text(), false);
@@ -200,6 +214,7 @@ file that was distributed with this source code.
                 reference: $('#reference').val(),
                 name: $('#name').val(),
                 fileplanLevel: $("#fileplanLevel").val(),
+                isDiscoverable: $("#isDiscoverableToggle").prop("checked"),
                 descriptionClass: $('#descriptionClass').val(),
                 retentionStartDate: $('#startDate option:selected').val(),
                 description: $('#description').val(),
@@ -215,9 +230,11 @@ file that was distributed with this source code.
                 serializedObject.processingStatuses = {};
                 var lists = $('#processingStatuses').find("[name='processingStatus']");
                 lists.each(function (index, value) {
-                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()] =
+                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text()
+                            .trim()] =
                         JSON.parse($(value).find("[name='statusinfo']").text().trim());
-                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text().trim()].position =
+                    serializedObject.processingStatuses[$(value).find("[name='statuscode']").text()
+                            .trim()].position =
                         index;
 
                 });
@@ -234,9 +251,9 @@ file that was distributed with this source code.
             }
 
             serializedObject.archiveDescription = PropertiesList.serialize();
-
             if ($("#fileplanLevel").val() != 'item') {
-                serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop("checked");
+                serializedObject.acceptArchiveWithoutProfile = $('#acceptArchiveWithoutProfile').prop(
+                    "checked");
                 serializedObject.containedProfiles = ArchiveStructure.serialize();
             } else {
                 serializedObject.acceptArchiveWithoutProfile = false;
@@ -251,6 +268,11 @@ file that was distributed with this source code.
         load('/archivalProfiles');
     });
 
+    $('#isDiscoverableToggle').bootstrapToggle({
+        on: 'Oui',
+        off: 'Non',
+    });
+
     $("#contain").ready(function () {
         $('#fileplanLevelToggle').bootstrapToggle({
             on: $('#text_item'),
@@ -262,6 +284,9 @@ file that was distributed with this source code.
             $("#contentsTabBtn").addClass('hide');
         }
 
+        if ($('#isDiscoverable').val() == '1') {
+            $('#isDiscoverableToggle').bootstrapToggle('on');
+        }
         $("#archivalProfileNavControl").find('a').first().click();
 
         ArchivalProfile.loadRetentionRule();
@@ -343,5 +368,9 @@ file that was distributed with this source code.
             $("#contentsTabBtn").removeClass('hide');
             $('#updateRetentionRuleOnDeposit').removeClass('hide');
         }
+    });
+
+    $('#isDiscoverableToggle').on('change', function (e) {
+        $("#isDiscoverable").val($(this).prop('checked'));
     });
 </script>

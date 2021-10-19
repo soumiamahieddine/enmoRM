@@ -1,28 +1,30 @@
 <ul data-translate-catalog="recordsManagement/messages" class="dropdown-menu actionMenu" data-archiveid='[?merge .archiveId?]' aria-labelledby="actionsModify">
-    <?merge hasModificationPrivilege.bool() ?>
-    <li class="editRetentionRule" data-type="retentionRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify retention rule</a></li>
-    <?merge hasModificationPrivilege.bool() ?>
-    <li class="editAccessRule" data-type="accessRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify access rule</a></li>
-    <?merge hasModificationPrivilege.bool() ?>
-    <li class="freeze [?merge .status.ifeq('frozen').then('hide', '') ?]" data-type="freeze"><a href="#"><i class="fa fa-lock">&nbsp;</i>&nbsp;Freeze</a></li>
-    <?merge hasModificationPrivilege.bool() ?>
-    <li class="unfreeze [?merge .status.ifne('frozen').then('hide', '') ?]" data-type="unfreeze"><a href="#"><i class="fa fa-unlock">&nbsp;</i>&nbsp;Unfreeze</a></li>
-    <?merge hasModificationPrivilege.bool() ?>
-    <li class="divider"></li>
-    <?merge hasDeliveryPrivilege.bool() ?>
+    <?merge .hasRights.bool() ?>
+    <span>
+        <?merge hasModificationPrivilege.bool() ?>
+        <li class="editRetentionRule" data-type="retentionRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify retention rule</a></li>
+        <?merge hasModificationPrivilege.bool() ?>
+        <li class="editAccessRule" data-type="accessRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify access rule</a></li>
+        <?merge hasModificationPrivilege.bool() ?>
+        <li class="freeze [?merge .status.ifeq('frozen').then('hide', '') ?]" data-type="freeze"><a href="#"><i class="fa fa-lock">&nbsp;</i>&nbsp;Freeze</a></li>
+        <?merge hasModificationPrivilege.bool() ?>
+        <li class="unfreeze [?merge .status.ifne('frozen').then('hide', '') ?]" data-type="unfreeze"><a href="#"><i class="fa fa-unlock">&nbsp;</i>&nbsp;Unfreeze</a></li>
+        <?merge hasModificationPrivilege.bool() ?>
+        <li class="divider"></li>
+        <?merge hasModificationRequestPrivilege.bool() ?>
+        <li class="requestModification" data-type="requestModification"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request a modification</a></li>
+        <?merge hasRestitutionPrivilege.bool() ?>
+        <li class="flagForRestitution" data-type="flagForRestitution"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for restitution</a></li>
+        <?merge hasDestructionPrivilege.bool() ?>
+        <li class="flagForDestruction [?merge .status.ifeq('disposable').then('hide', '') ?]" data-type="flagForDestruction"><a href="#"><i class="fa fa-trash">&nbsp;</i>&nbsp;Flag for destruction</a></li>
+        <?merge hasDestructionCancelPrivilege.bool() ?>
+        <li class="cancelDestruction [?merge .status.ifne('disposable').then('hide', '') ?]" data-type="cancelDestruction"><a href="#"><i class="fa fa-undo">&nbsp;</i>&nbsp;Cancel destruction request</a></li>
+        <?merge hasTransferPrivilege.bool() ?>
+        <li class="flagForTransfer" data-type="flagForTransfer"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for transfer</a></li>
+        <li class="divider"></li>
+        <?merge hasIntegrityCheckPrivilege.bool() ?>
+        <li class="checkHash" data-type="checkHash"><a href="#"><i class="fa fa-database">&nbsp;</i>&nbsp;Verify integrity</a></li>
+        <li class="divider"></li>
+    </span>
     <li class="requestDelivery" data-type="requestCommunication"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request of communication</a></li>
-    <?merge hasModificationRequestPrivilege.bool() ?>
-    <li class="requestModification" data-type="requestModification"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Request a modification</a></li>
-    <?merge hasRestitutionPrivilege.bool() ?>
-    <li class="flagForRestitution" data-type="flagForRestitution"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for restitution</a></li>
-    <?merge hasDestructionPrivilege.bool() ?>
-    <li class="flagForDestruction [?merge .status.ifeq('disposable').then('hide', '') ?]" data-type="flagForDestruction"><a href="#"><i class="fa fa-trash">&nbsp;</i>&nbsp;Flag for destruction</a></li>
-    <?merge hasDestructionCancelPrivilege.bool() ?>
-    <li class="cancelDestruction [?merge .status.ifne('disposable').then('hide', '') ?]" data-type="cancelDestruction"><a href="#"><i class="fa fa-undo">&nbsp;</i>&nbsp;Cancel destruction request</a></li>
-    <?merge hasTransferPrivilege.bool() ?>
-    <li class="flagForTransfer" data-type="flagForTransfer"><a href="#"><i class="fa fa-upload">&nbsp;</i>&nbsp;Flag for transfer</a></li>
-    <li class="divider"></li>
-    <?merge hasIntegrityCheckPrivilege.bool() ?>
-    <li class="checkHash" data-type="checkHash"><a href="#"><i class="fa fa-database">&nbsp;</i>&nbsp;Verify integrity</a></li>
-    <li class="divider"></li>
 </ul>

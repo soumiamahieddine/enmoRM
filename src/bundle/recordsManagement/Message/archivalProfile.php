@@ -140,4 +140,11 @@ class archivalProfile
      * @var json
      */
     public $processingStatuses;
+
+     /**
+     * Is property discoverable by services outside of owner service
+     *
+     * @var boolean
+     */
+    public $isDiscoverable;
 }

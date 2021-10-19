@@ -184,7 +184,7 @@
             <div class="form-group">
                 <label class="col-sm-4 control-label">Partial retention rule</label>
                 <div class="col-sm-8 checkbox" id="partialRetentionRule">
-                    <input type="checkbox" name="partialRetentionRule" data-toggle="toggle" data-on="Oui" data-off="Non">
+                    <input type="checkbox" name="partialRetentionRule" id="partialRetentionRuleToggle">
                 </div>
             </div>
         </div>
@@ -247,3 +247,10 @@
     </div>
     <span class="hide" id="required_fields">You must fill all required fields (*)</span>
 </div>
+
+<script>
+    $('#partialRetentionRuleToggle').bootstrapToggle({
+        on: 'Oui',
+        off: 'Non'
+    });
+</script>

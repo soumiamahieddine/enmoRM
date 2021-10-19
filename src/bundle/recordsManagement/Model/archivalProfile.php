@@ -159,6 +159,13 @@ class archivalProfile
     public $processingStatuses;
 
     /**
+     * Is property discoverable by services outside of owner service
+     *
+     * @var boolean
+     */
+    public $isDiscoverable;
+
+    /**
      * Get the properties
      * @return array
      */
