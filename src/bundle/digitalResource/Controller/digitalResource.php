@@ -76,7 +76,7 @@ class digitalResource
     }
 
     /**
-     * Search documents
+     * Search digital resource
      * @param string    $archiveId
      * @param integer   $sizeMin
      * @param integer   $sizeMax
