@@ -35,11 +35,11 @@ class AuthorizationOriginatingAgencyRequest extends abstractMessage
         $authorizationOriginatingAgencyRequest->authorizationOriginatingAgencyRequestIdentifier =
             $message->reference;
 
-        $authorizationOriginatingAgencyRequest->request = $this->sendRequest($message->authorizationRequestContent);
-
         $authorizationOriginatingAgencyRequest->archivalAgency = $this->sendOrganization($message->senderOrg);
 
         $authorizationOriginatingAgencyRequest->originatingAgency = $this->sendOrganization($message->recipientOrg);
+
+        $authorizationOriginatingAgencyRequest->request = $this->sendRequest($message->authorizationRequestContent);
     }
 
 }

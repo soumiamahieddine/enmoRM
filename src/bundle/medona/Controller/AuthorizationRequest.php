@@ -39,7 +39,7 @@ class AuthorizationRequest extends abstractMessage
         $registrationNumber = $this->getCurrentRegistrationNumber();
         $queryParts = array();
 
-        $queryParts[] = "type='AuthorizationControlAuthorityRequest'";
+        $queryParts[] = "type=['AuthorizationOriginatingAgencyRequest', 'AuthorizationControlAuthorityRequest']";
         $queryParts[] = "recipientOrgRegNumber=$registrationNumber";
         $queryParts[] = "authorizationReason = 'ArchiveDeliveryRequest'";
         $queryParts[] = "status='sent'";

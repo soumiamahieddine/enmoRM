@@ -1486,7 +1486,7 @@ trait archiveAccessTrait
         $unitIdentifiers = $this->sdoFactory->find('medona/unitIdentifier', "objectId='$archiveId'");
 
         foreach ($unitIdentifiers as $unitIdentifier) {
-            $queryString [] ="messageId='$unitIdentifier->messageId'";
+            $queryString [] = "messageId='$unitIdentifier->messageId'";
         }
 
         if (count($unitIdentifiers) != 0) {

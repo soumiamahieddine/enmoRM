@@ -357,6 +357,7 @@ class ArchiveDeliveryRequest extends abstractMessage
         }
     }
 
+
     /**
      * Derogation archive delivery request message
      * @param string $messageId The message identifier
@@ -364,11 +365,24 @@ class ArchiveDeliveryRequest extends abstractMessage
     public function derogation($messageId)
     {
         $this->changeStatus($messageId, "derogation");
-
-        $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
-
-        $message->derogation = "true";
+        $controlAutorityControler = \laabs::newController("medona/ControlAuthority");
+        // $message = $this->sdoFactory->read('medona/message', array('messageId' => $messageId));
+        $message = $this->read($messageId);
+        $archives = $this->getArchivesByMessageIdentifier($messageId);
+        $authorizationControlAuthorityRequestController = \laabs::newController('medona/AuthorizationControlAuthorityRequest');
+        $authorizationOriginatingAgencyRequestController = \laabs::newController('medona/AuthorizationOriginatingAgencyRequest');
+        $message->derogation = true;
         $this->update($message);
+
+        foreach ($archives as $archive) {
+            if ($message->senderOrgRegNumber != $archive->originatorOrgRegNumber) {
+                $authorizationOriginatingAgencyRequestController->send($message, $archive->originatorOrgRegNumber);
+            } elseif (count($controlAutorityControler->index()) > 0) {
+                $authorizationControlAuthorityRequestController->send((string) $message->messageId, $archive->originatorOrgRegNumber);
+            } else {
+                $this->accept((string) $message->messageId);
+            }
+        }
 
         $event = $this->lifeCycleJournalController->logEvent(
             'medona/authorization',
@@ -377,13 +391,6 @@ class ArchiveDeliveryRequest extends abstractMessage
             $message,
             true
         );
-
-        $controlAutorityControler = \laabs::newController("medona/ControlAuthority");
-        if (count($controlAutorityControler->index()) > 0) {
-            $this->sendAuthorizationRequest((string) $message->messageId);
-        } else {
-            $this->accept((string) $message->messageId);
-        }
     }
 
     /**
@@ -491,7 +498,7 @@ class ArchiveDeliveryRequest extends abstractMessage
             $archives[] = $this->archiveController->communicate($unitIdentifier->objectId);
         }
 
-        $logMessage = ["message" => "%s archives are communicated", "variables"=> count($archives)];
+        $logMessage = ["message" => "%s archives are communicated", "variables" => count($archives)];
         \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
 
         try {

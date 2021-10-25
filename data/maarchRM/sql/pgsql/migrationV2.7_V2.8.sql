@@ -29,3 +29,6 @@ WITH (
 
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isRetentionLastDeposit" boolean default false;
 ALTER TABLE "recordsManagement"."archivalProfile" ADD COLUMN "isDiscoverable" boolean default false;
+
+INSERT INTO "lifeCycle"."eventFormat" ("type","format","message","notification") VALUES
+('medona/authorization', 'type senderOrgRegNumber senderOrgName recipientOrgRegNumber recipientOrgName reference', 'Traitement du message %14$s de type %9$s de %11$s (%10$s) par %13$s (%12$s)', false);

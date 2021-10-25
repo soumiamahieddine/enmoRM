@@ -239,6 +239,8 @@ class archive
                 if ($communicationDelay->invert != 0) {
                     $archive->isCommunicable = '1';
                 }
+            } elseif (!$archive->hasRights) {
+                $archive->isCommunicable = '1';
             }
 
             $archive->isInUserCollection = false;

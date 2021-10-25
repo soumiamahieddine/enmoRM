@@ -54,8 +54,8 @@ class AuthorizationOriginatingAgencyRequestReply extends abstractMessage
 
         $message->reference = $requestMessage->reference.'_Reply_'.date("Y-m-d_H-i-s");
         $message->requestReference = $requestMessage->reference;
-        $message->authorizationReason = $requestMessage->authorizationReason;
         $requestMessage->replyReference = $message->reference;
+        $message->authorizationReason = $requestMessage->authorizationReason;
 
         $message->senderOrgRegNumber = $requestMessage->recipientOrgRegNumber;
         $senderOrg = $this->orgController->getOrgByRegNumber($message->senderOrgRegNumber);
