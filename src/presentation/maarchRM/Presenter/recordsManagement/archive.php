@@ -251,6 +251,8 @@ class archive
             }
         }
 
+        $archive->availableOriginatingServices = json_encode($this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference));
+
         $hasReachMaxResults = false;
         if (
             isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
@@ -309,6 +311,37 @@ class archive
         $this->view->merge();
 
         return $resultList;
+    }
+
+    protected function getDescendantServices($orgId, $archivalAgreementReference)
+    {
+        $orgs = [];
+        if (!is_null($archivalAgreementReference)) {
+            $archivalAgreement = \laabs::callService('medona/archivalAgreement/readGetByReference', $archivalAgreementReference);
+            foreach ($archivalAgreement->originatorOrgIds as $originatorOrgId) {
+                $orgs[] = \laabs::callService('organization/organization/read_orgId_', (string) $originatorOrgId);
+                array_merge(\laabs::callService('organization/organization/readDescendantServices', (string) $originatorOrgId), $orgs);
+            }
+        } else {
+            $orgs = \laabs::callService('organization/organization/readDescendantServices', $orgId);
+        }
+
+        $descendantServices = [];
+        foreach ($orgs as $key => $org) {
+            // May be empty if archivalAgreement originatorOrgId has no descendant service
+            if (!empty($org)) {
+                $descendantServices[$key] = new \stdClass();
+                $descendantServices[$key]->orgId = (string) $org->orgId;
+                $descendantServices[$key]->displayName = $org->displayName;
+            }
+        }
+
+        // sort by alphabetical order of displayName (php 8)
+        usort($descendantServices, function ($a, $b) {
+            return $a->displayName <=> $b->displayName;
+        });
+
+        return $descendantServices;
     }
 
     /**

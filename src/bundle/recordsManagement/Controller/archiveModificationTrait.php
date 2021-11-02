@@ -975,4 +975,17 @@ trait archiveModificationTrait
 
         return true;
     }
+
+    /**
+     * Update originator service of an array of archives
+     *
+     * @param  array  $archiveIds Array of archive identifiers
+     * @param  string $orgId      Organization identified destined to be new originator of archive
+     *
+     */
+    public function updateOriginator($archiveIds, $orgId)
+    {
+        var_dump('dans le controleur');
+        exit;
+    }
 }

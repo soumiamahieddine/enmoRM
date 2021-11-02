@@ -1,0 +1,38 @@
+<!-- <tr id="selectedArchiveId">
+    <td><strong>New originating service</strong></td>
+	<td>
+		<select name="originatorList" id="originatorList" class="form-control">
+	</td>
+</tr> -->
+
+<script>
+	var editOriginator_load = function (archiveId, archiveName, type) {
+		$('#selectedOriginator').remove();
+		var selectedOriginatorTr = $('<tr>').attr('id', "selectedOriginator");
+		selectedOriginatorTr.append($('<td>').append($('<strong>').text('New originating service')));
+		var td = $('<td>');
+
+		var availableOriginatingServices = $('#' + archiveId).data('availableoriginatingservices');
+		var select = $('<select>').attr('name', "originatorList").attr("id", "originatorList").addClass('form-control');
+		availableOriginatingServices.forEach(org => {
+			select.append($('<option>').val(org.orgId).text(org.displayName));
+		});
+
+		td.append(select);
+		selectedOriginatorTr.append(td);
+
+		$('#modificationModal table tbody').append(selectedOriginatorTr);
+
+        $('#modificationModal').modal();
+	}
+
+	var editOriginator_serialize = function () {
+		var parameter = {};
+
+        parameter.orgId = $('#originatorList').val();
+        parameter.archiveIds = [];
+        parameter.archiveIds.push($('#selectedArchiveId').val());
+        
+        return parameter;
+	}
+</script>

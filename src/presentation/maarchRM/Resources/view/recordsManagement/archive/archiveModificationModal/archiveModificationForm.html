@@ -19,6 +19,7 @@
             <?hinclude recordsManagement/archive/archiveModificationModal/retentionRule.html?>
             <?hinclude recordsManagement/archive/archiveModificationModal/requestCommunication.html?>
             <?hinclude recordsManagement/archive/archiveModificationModal/archiveTransfer.html?>
+            <?hinclude recordsManagement/archive/archiveModificationModal/originatorModification.html?>
         </div>
     </div>
 </div>
@@ -79,15 +80,24 @@
             var transaction = false;
 
             $("#transaction").val() ? transaction = true : transaction = false;
-            if (type === "accessRule" || type === "retentionRule" || type === "requestCommunication") {
-                parameter = eval(type+"_serialize()");
-            } else if (type === "flagForTransfer") {
-                if ($('#archivalAgencySelect').find('option:selected').val()) {
-                    parameter.archiverOrgRegNumber = $('#archivalAgencySelect').find('option:selected').val();
-                }
+
+            switch (type) {
+                case "accessRule":
+                case "retentionRule":
+                case "requestCommunication":
+                case "editOriginator":
+                    parameter = eval(type+"_serialize()");
+                    break;
+                case "flagForTransfer":
+                    if ($('#archivalAgencySelect').find('option:selected').val()) {
+                        parameter.archiverOrgRegNumber = $('#archivalAgencySelect').find('option:selected').val();
+                    }
+                    break;
+                default:
+                    break;
             }
 
-            if (transaction) {
+            if (transaction && type != "editOriginator") {
                 parameter.identifier = this.modal.find('[name="identifier"]').val();
                 parameter.comment = this.modal.find('[name="comment"]').val();
                 parameter.format = this.modal.find('[name="format"]').val()

@@ -4,6 +4,8 @@
         <li class="editRetentionRule toto" data-type="retentionRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify retention rule</a></li>
         <?merge hasModificationPrivilege.bool() ?>
         <li class="editAccessRule" data-type="accessRule"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify access rule</a></li>
+        <?merge hasOriginatingPrivilege.bool() ?>
+        <li class="editOriginator" data-type="editOriginator"><a href="#"><i class="fa fa-edit">&nbsp;</i>&nbsp;Modify originator service</a></li>
         <?merge hasModificationPrivilege.bool() ?>
         <li class="freeze" data-type="freeze"><a href="#"><i class="fa fa-lock">&nbsp;</i>&nbsp;Freeze</a></li>
         <?merge hasModificationPrivilege.bool() ?>

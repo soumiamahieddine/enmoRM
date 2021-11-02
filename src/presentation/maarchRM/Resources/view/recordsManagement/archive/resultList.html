@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                     <?merge archive ?>
-                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?] [?merge .hasRights.bool().not().then('text-muted') ?]" data-iscommunicable="[?merge .isCommunicable ?]" data-hasRights="[?merge .hasRights.bool().then('true', 'false') ?]">
+                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?] [?merge .hasRights.bool().not().then('text-muted') ?]" data-iscommunicable="[?merge .isCommunicable ?]" data-hasRights="[?merge .hasRights.bool().then('true', 'false') ?]" data-availableoriginatingservices="[?merge .availableOriginatingServices ?]">
                         <td>
                             <input type="checkbox"
                                 data-archive-status="[?merge .status ?]"

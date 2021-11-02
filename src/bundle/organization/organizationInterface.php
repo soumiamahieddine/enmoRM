@@ -354,4 +354,15 @@ interface organizationInterface
      * @return boolean        Import with reset of table data or not
      */
     public function createImport($data, $isReset);
+
+    /**
+     * List descendant services and org from a parent org
+     *
+     * @param  string $orgId Organization Identifier
+     *
+     * @action organization/organization/readDescendantServices
+     *
+     * @return array         Array of descendant services
+     */
+    public function readDescendantServices($orgId);
 }

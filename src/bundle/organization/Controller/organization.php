@@ -71,7 +71,7 @@ class organization
      *
      * @return organization/organization[] An array of organization whith service
      */
-    public function todisplay($ownerOrg, $orgUnit, $term)
+    public function todisplay($ownerOrg = false, $orgUnit = false, $term = "")
     {
         $authController = \laabs::newController("auth/userAccount");
         $user = $authController->get(\laabs::getToken('AUTH')->accountId);

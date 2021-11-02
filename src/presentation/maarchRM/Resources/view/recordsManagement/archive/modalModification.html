@@ -30,6 +30,7 @@
     <span id="mtext_flagForTransfer">Flag for transfer</span>
     <span id="mtext_retentionRule">Change disposal rule</span>
     <span id="mtext_accessRule">Edit access rule</span>
+    <span id="mtext_editOriginator">Edit Originating service</span>
     <span id="mtext_flagForDestruction">Flag for destruction</span>
     <span id="mtext_requestModification">Request a modification</span>
     <span id="mtext_cancelDestruction">Cancel destruction</span>
@@ -95,7 +96,8 @@
             requestModification : '/modificationRequest',
             cancelDestruction   : '/recordsManagement/cancelDestruction',
             freeze              : '/recordsManagement/archive/freeze',
-            unfreeze            : '/recordsManagement/archive/unfreeze'
+            unfreeze            : '/recordsManagement/archive/unfreeze',
+            editOriginator      : '/recordsManagement/archive/originator',
         },
         actionsType : {},
         modal : $('#modificationModal'),
@@ -117,19 +119,25 @@
                 this.modal.modal();
             }
 
-            if (type === 'requestCommunication' && $('#' +archiveId).data('iscommunicable') === 1) {
-                $('#derogationTr').show();
-                $('#derogationInputTr').show();
-                $("#derogationTr .toggle").removeClass('btn-default off');
-                $("#derogationTr .toggle").addClass('btn-info');
+            $('#derogationTr').hide();
+            $('#derogationInputTr').hide();
 
-            } else {
-                $('#derogationTr').hide();
-                $('#derogationInputTr').hide();
-            }
-
-            if (type === 'requestModification') {
-                $('#messageFormatTr').hide();
+            switch (type) {
+                case 'requestCommunication':
+                    if ($('#' +archiveId).data('iscommunicable') === 1) {
+                        $('#derogationTr').show();
+                        $('#derogationInputTr').show();
+                        $("#derogationTr .toggle").removeClass('btn-default off');
+                        $("#derogationTr .toggle").addClass('btn-info');
+                    }
+                    break;
+                case 'requestModification':
+                    $('#messageFormatTr').hide();
+                    break;
+                case 'editOriginator':
+                    $('#message').hide();
+                    break;
+                default:
             }
 
             if (!transaction) {
@@ -291,8 +299,6 @@
                 type = 'PUT';
             }
 
-            console.log(this.actionsList[this.modalType]);
-            
             $.ajax({
                 url         : this.actionsList[this.modalType],
                 type        : type,
