@@ -1,15 +1,8 @@
-<!-- <tr id="selectedArchiveId">
-    <td><strong>New originating service</strong></td>
-	<td>
-		<select name="originatorList" id="originatorList" class="form-control">
-	</td>
-</tr> -->
-
 <script>
 	var editOriginator_load = function (archiveId, archiveName, type) {
 		$('#selectedOriginator').remove();
 		var selectedOriginatorTr = $('<tr>').attr('id', "selectedOriginator");
-		selectedOriginatorTr.append($('<td>').append($('<strong>').text('New originating service')));
+		selectedOriginatorTr.append($('<td>').append($('<strong>').text($('#mtext_editOriginator').text())));
 		var td = $('<td>');
 
 		var availableOriginatingServices = $('#' + archiveId).data('availableoriginatingservices');
