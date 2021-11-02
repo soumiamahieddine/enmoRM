@@ -96,6 +96,7 @@
             cancelDestruction   : '/recordsManagement/cancelDestruction',
             freeze              : '/recordsManagement/archive/freeze',
             unfreeze            : '/recordsManagement/archive/unfreeze'
+/*             originatorOrg       : '/recordsManagement/archive/originatorOrg' */
         },
         actionsType : {},
         modal : $('#modificationModal'),
@@ -172,6 +173,37 @@
             });
         },
 
+/*         loadOriginatorOrg : function() {
+            $.ajax({
+                type     : "GET",
+                url      : "http://maarchrm/organization/organization/search?enabled=true",
+                dataType : 'json',
+                success  : function (response) {
+                    var organizations = response;
+                    $('#originatorOrgSelect').find('option').remove();
+                    $.each(organizations, function (key, value) {
+                        $('#originatorOrgSelect').append($('<option>', {
+                            value: value.registrationNumber,
+                            text: value.displayName
+                        }));
+                    });
+
+                    var length = $('#originatorOrgSelect').children('option').length;
+                    if (length === 0) {
+                        $('#originatorOrgSelect').append($('<option>', {
+                            value: '',
+                            text: $('#empty_originatorOrg').html()
+                        }));
+                    }
+
+                    $('#modificationModal').modal();
+                },
+                error   : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+ */
         loadRule: function(archiveId, archiveName) {
             if (this.modalType ==='accessRule') {
                 url = '/recordsManagement/archive/accessRule/' + archiveId;
