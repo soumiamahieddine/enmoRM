@@ -989,6 +989,12 @@ trait archiveModificationTrait
         $currentOwnerOrgId = $archive->originatorOwnerOrgId;
         $newOriginatorOrg = $this->sdoFactory->read('organization/organization', $orgId);
 
+        if ($newOriginatorOrg->enabled == false) {
+            throw new \bundle\recordsManagement\Exception\organizationException(
+                "This organization is disabled."
+            );
+        }
+
         if ($currentOwnerOrgId == $newOriginatorOrg->ownerOrgId) {
             $archive->originatorOrgRegNumber = $newOriginatorOrg->registrationNumber;
             $archive->lastModificationDate = \laabs::newTimestamp();
