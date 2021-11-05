@@ -263,6 +263,9 @@ msgstr "Une archive gelée ne peut pas être modifiée."
 msgid "An archive that does not have the status 'preserved' can't be modified."
 msgstr "Une archive n'ayant pas le statut 'Conservée' ne peut pas être modifiée"
 
+msgid "The new originator organization of the archive must have the same owner organization as the current one."
+msgstr "Le nouveau service producteur de l'archive doit avoir la même organisation racine que le service producteur actuel."
+
 msgid "An action is already in progress on this archive."
 msgstr "Une action est déjà en cours sur cette archive."
 

@@ -979,13 +979,24 @@ trait archiveModificationTrait
     /**
      * Update originator service of an array of archives
      *
-     * @param  array  $archiveIds Array of archive identifiers
+     * @param  string $archiveIds List of archive identifiers
      * @param  string $orgId      Organization identified destined to be new originator of archive
      *
      */
     public function updateOriginator($archiveIds, $orgId)
     {
-        var_dump('dans le controleur');
-        exit;
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveIds);
+        $currentOwnerOrgId = $archive->originatorOwnerOrgId;
+        $newOriginatorOrg = $this->sdoFactory->read('organization/organization', $orgId);
+
+        if ($currentOwnerOrgId == $newOriginatorOrg->ownerOrgId) {
+            $archive->originatorOrgRegNumber = $newOriginatorOrg->registrationNumber;
+            $archive->lastModificationDate = \laabs::newTimestamp();
+            $this->sdoFactory->update($archive,'recordsManagement/archive');
+        } else {
+            throw new \bundle\recordsManagement\Exception\organizationException(
+                "The new originator organization of the archive must have the same owner organization as the current one."
+            );
+        }
     }
 }

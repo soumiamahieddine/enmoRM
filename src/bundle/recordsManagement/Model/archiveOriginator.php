@@ -22,13 +22,13 @@ namespace bundle\recordsManagement\Model;
  * Class model that represents an archive
  *
  * @package RecordsManagement
- * @author  Cyril VAZQUEZ (Maarch) <cyril.vazquez@maarch.org>
+ * @author  Charlotte Bataille (Maarch) <charlotte.bataille@maarch.org>
  * 
  * @substitution recordsManagement/archive
  * 
  * @pkey [archiveId]
  */
-class archiveStatus
+class archiveOriginator
 {
     /**
      * The archive identifier
@@ -39,12 +39,12 @@ class archiveStatus
     public $archiveId;
 
     /**
-     * The status
+     * The registration number of the originator organization
      *
      * @var string
-     * @enumeration [pending, preserved, frozen, disposable, disposed]
+     * @notempty
      */
-    public $status;
+    public $originatorOrgRegNumber;
 
     /**
      * @var timestamp
