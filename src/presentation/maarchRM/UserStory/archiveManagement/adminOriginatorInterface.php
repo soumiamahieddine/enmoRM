@@ -31,6 +31,7 @@ interface adminOriginatorInterface
 
     /**
      * @uses recordsManagement/archives/updateOriginator
+     * @return recordsManagement/archive/setOriginator
      */
     public function updateRecordsmanagementArchiveOriginator($archiveIds, $orgId);
 }

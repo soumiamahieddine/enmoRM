@@ -979,30 +979,48 @@ trait archiveModificationTrait
     /**
      * Update originator service of an array of archives
      *
-     * @param  string $archiveIds List of archive identifiers
+     * @param  array  $archiveIds Array of archive identifiers
      * @param  string $orgId      Organization identified destined to be new originator of archive
      *
      */
     public function updateOriginator($archiveIds, $orgId)
     {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveIds);
-        $currentOwnerOrgId = $archive->originatorOwnerOrgId;
-        $newOriginatorOrg = $this->sdoFactory->read('organization/organization', $orgId);
+        if (!is_array($archiveIds)) {
+            $archiveIds = [$archiveIds];
+        }
 
+        $result = [];
+        $result["success"] = [];
+        $result["error"] = [];
+
+
+        $newOriginatorOrg = $this->sdoFactory->read('organization/organization', $orgId);
         if ($newOriginatorOrg->enabled == false) {
             throw new \bundle\recordsManagement\Exception\organizationException(
                 "This organization is disabled."
             );
         }
 
-        if ($currentOwnerOrgId == $newOriginatorOrg->ownerOrgId) {
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $currentOwnerOrgId = $archive->originatorOwnerOrgId;
+
+            if ($currentOwnerOrgId != $newOriginatorOrg->ownerOrgId) {
+                $result["error"][] = $archiveId;
+                continue;
+                // throw new \bundle\recordsManagement\Exception\organizationException(
+                //     "The new originator organization of the archive must have the same owner organization as the current one."
+                // );
+            }
+
             $archive->originatorOrgRegNumber = $newOriginatorOrg->registrationNumber;
             $archive->lastModificationDate = \laabs::newTimestamp();
             $this->sdoFactory->update($archive,'recordsManagement/archive');
-        } else {
-            throw new \bundle\recordsManagement\Exception\organizationException(
-                "The new originator organization of the archive must have the same owner organization as the current one."
-            );
+
+            $result["success"][] = $archiveId;
+
         }
+
+        return $result;
     }
 }

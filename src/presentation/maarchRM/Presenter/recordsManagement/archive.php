@@ -1461,4 +1461,30 @@ class archive
 
         return $file;
     }
+
+    /**
+     * Serializer JSON for changing originator method
+     * @param array $result
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function setOriginator($result)
+    {
+        $success = count($result['success']);
+        $echec = count($result['error']);
+
+        $this->json->message = '%1$s archive(s) modified.';
+        $this->json->message = $this->translator->getText($this->json->message);
+        $this->json->message = sprintf($this->json->message, $success);
+
+        if ($echec > 0) {
+            $message = '%1$s archive(s) can not be modified.';
+            $message = $this->translator->getText($message);
+            $message = sprintf($message, $echec);
+
+            $this->json->message .= ' '.$message;
+        }
+
+        return $this->json->save();
+    }
 }
