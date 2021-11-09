@@ -1,12 +1,5 @@
 # CHANGELOG
 
-## Version 2.7.4
- - `Fixed` Mauvaise ventilation par profil d'archive et service producteur dans l'onglet statistique
- - `Fixed` Impossibilité de sauvegarder des métadonnées de type datetime via l'écran
- - `Fixed` Champs obligatoires n'apparaissent plus lors de l'ajout/modification des métadonnées
- - `Fixed` Mauvais retour lors de la recherche sur les champs description
- - `Changed` Modification de l'utilisateur attribué lors de la création du schéma medona
-
 ## Version 2.7.3
 - `Fixed` Actualisation lors du changement d'organisation après connexion.
 - `Added` Prise en compte de l'ajout d'une référence à une archive parente lors du versement d'un bordereau MADES.
