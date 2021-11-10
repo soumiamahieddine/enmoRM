@@ -1,11 +1,31 @@
 <script>
 	var editOriginator_load = function (archiveId, archiveName, type) {
+
+		var url = '/recordsManagement/archive/availableoriginators/' + archiveId
+		var type = 'GET';
+
+		$.ajax({
+			url         : url,
+			type        : type,
+			contentType : 'application/json',
+			dataType    : 'json',
+			success     : function (response) {
+				displayOrignator(response);
+			},
+			error    : function(response) {
+				gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+			}
+		});
+	}
+
+	var displayOrignator = function(originatorTab) {
+
 		$('#selectedOriginator').remove();
 		var selectedOriginatorTr = $('<tr>').attr('id', "selectedOriginator");
 		selectedOriginatorTr.append($('<td>').append($('<strong>').text($('#mtext_editOriginator').text())));
 		var td = $('<td>');
 
-		var availableOriginatingServices = $('#' + archiveId).data('availableoriginatingservices');
+		var availableOriginatingServices = originatorTab;
 		var select = $('<select>').attr('name', "originatorList").attr("id", "originatorList").addClass('form-control');
 		availableOriginatingServices.forEach(org => {
 			select.append($('<option>').val(org.orgId).text(org.displayName));

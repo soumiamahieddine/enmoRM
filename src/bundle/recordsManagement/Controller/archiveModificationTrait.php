@@ -977,6 +977,54 @@ trait archiveModificationTrait
     }
 
     /**
+     * Get available originators for an archive
+     * @param string $archiveId The archive identifier
+     *
+     * @return [type]              [description]
+     */
+    public function indexAvailableOriginators($archiveId)
+    {
+        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+
+        $availableOriginatingServices = $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference);
+        
+        return $availableOriginatingServices;
+    }
+
+    protected function getDescendantServices($orgId, $archivalAgreementReference)
+    {
+        $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+        $organizationController = \laabs::newController('organization/organization');
+        $orgs = [];
+        if (!is_null($archivalAgreementReference)) {
+            $archivalAgreement = $archivalAgreementController->getByReference($archivalAgreementReference);
+            foreach ($archivalAgreement->originatorOrgIds as $originatorOrgId) {
+                $orgs[] = $organizationController->read((string) $originatorOrgId);
+                array_merge($organizationController->readDescendantServices((string) $originatorOrgId), $orgs);
+            }
+        } else {
+            $orgs = \laabs::callService('organization/organization/readDescendantServices', $orgId);
+        }
+
+        $descendantServices = [];
+        foreach ($orgs as $key => $org) {
+            // May be empty if archivalAgreement originatorOrgId has no descendant service
+            if (!empty($org)) {
+                $descendantServices[$key] = new \stdClass();
+                $descendantServices[$key]->orgId = (string) $org->orgId;
+                $descendantServices[$key]->displayName = $org->displayName;
+            }
+        }
+
+        // sort by alphabetical order of displayName (php 8)
+        usort($descendantServices, function ($a, $b) {
+            return $a->displayName <=> $b->displayName;
+        });
+
+        return $descendantServices;
+    }
+
+    /**
      * Update originator service of an array of archives
      *
      * @param  array  $archiveIds Array of archive identifiers

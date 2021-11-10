@@ -30,6 +30,13 @@ interface adminOriginatorInterface
 {
 
     /**
+     * Get available originators for an archive
+     * 
+     * @uses recordsManagement/archive/read_archiveId_Availableoriginators
+     */
+    public function readRecordsmanagementArchiveAvailableoriginators_archiveId_();
+
+    /**
      * @uses recordsManagement/archives/updateOriginator
      * @return recordsManagement/archive/setOriginator
      */
