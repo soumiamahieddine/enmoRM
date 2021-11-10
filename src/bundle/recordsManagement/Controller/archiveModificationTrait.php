@@ -1056,9 +1056,12 @@ trait archiveModificationTrait
             if ($currentOwnerOrgId != $newOriginatorOrg->ownerOrgId) {
                 $result["error"][] = $archiveId;
                 continue;
-                // throw new \bundle\recordsManagement\Exception\organizationException(
-                //     "The new originator organization of the archive must have the same owner organization as the current one."
-                // );
+            }
+            
+            $isAvailableOriginator = array_search($archive->originatorOrgRegNumber, array_column($this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), 'orgId'));
+            
+            if (!$isAvailableOriginator) {
+                $result["error"][] = $archiveId;
             }
 
             $archive->originatorOrgRegNumber = $newOriginatorOrg->registrationNumber;
