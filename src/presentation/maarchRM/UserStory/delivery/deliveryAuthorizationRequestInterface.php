@@ -52,4 +52,23 @@ interface deliveryAuthorizationRequestInterface
      * @return medona/message/rejectAuthorizationControlAuthorityRequest
      */
     public function updateAuthorizationcontrolauthorityrequest_messageId_Reject($messageId, $comment = null);
+
+    /**
+     * Accept authorization originating agency request
+     * @param string $messageId The message identifier
+     *
+     * @uses medona/archiveAuthorization/updateOriginatingagencyrequestacceptance_messageId_
+     * @return medona/message/acceptAuthorizationOriginatingAgencyRequest
+     */
+    public function updateAuthorizationoriginatingagencyrequest_messageId_Accept($messageId);
+
+    /**
+     * Reject authorization originating agencyy request
+     * @param string $messageId The message identifier
+     * @param string $comment   The message comment
+     *
+     * @uses medona/archiveAuthorization/updateOriginatingagencyrequestrejection
+     * @return medona/message/rejectAuthorizationOriginatingAgencyRequest
+     */
+    public function updateAuthorizationoriginatingagencyrequest_messageId_Reject($messageId, $comment =null);
 }
