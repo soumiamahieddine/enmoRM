@@ -70,11 +70,4 @@ interface archivalAgreementInterface
      * @action medona/archivalAgreement/delete
      */
     public function delete_archivalAgreementId_();
-
-    /**
-     * @param string $reference Archival Agreement Reference
-     *
-     * @action medona/archivalAgreement/getByReference
-     */
-    public function readGetByReference($reference);
 }

@@ -1003,7 +1003,7 @@ trait archiveModificationTrait
                 array_merge($organizationController->readDescendantServices((string) $originatorOrgId), $orgs);
             }
         } else {
-            $orgs = \laabs::callService('organization/organization/readDescendantServices', $orgId);
+            $orgs = $organizationController->readDescendantServices($orgId);
         }
 
         $descendantServices = [];
