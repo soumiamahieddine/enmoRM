@@ -140,7 +140,7 @@ interface archiveInterface
      *
      * @action recordsManagement/archive/indexAvailableOriginators
      */
-    public function read_archiveId_Availableoriginators();
+    public function readAvailableoriginators($archiveIds);
 
     /**
      * Read the access rule of archive

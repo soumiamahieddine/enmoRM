@@ -32,9 +32,9 @@ interface adminOriginatorInterface
     /**
      * Get available originators for an archive
      * 
-     * @uses recordsManagement/archive/read_archiveId_Availableoriginators
+     * @uses recordsManagement/archive/readAvailableoriginators
      */
-    public function readRecordsmanagementArchiveAvailableoriginators_archiveId_();
+    public function readRecordsmanagementArchiveAvailableoriginators($archiveIds);
 
     /**
      * @uses recordsManagement/archives/updateOriginator

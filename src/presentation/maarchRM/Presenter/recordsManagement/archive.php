@@ -1349,6 +1349,7 @@ class archive
     protected function readPrivilegesOnArchives()
     {
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+        $hasModificationOriginatorPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/adminOriginator");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
         $hasRestitutionPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
@@ -1357,6 +1358,7 @@ class archive
         $hasModificationRequestPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modificationRequestSend");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
+        $this->view->setSource('hasModificationOriginatorPrivilege', $hasModificationOriginatorPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
         $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
         $this->view->setSource('hasRestitutionPrivilege', $hasRestitutionPrivilege);

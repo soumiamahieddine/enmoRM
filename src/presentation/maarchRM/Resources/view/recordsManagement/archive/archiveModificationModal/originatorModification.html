@@ -1,13 +1,37 @@
 <script>
 	var editOriginator_load = function (archiveId, archiveName, type) {
 
-		var url = '/recordsManagement/archive/availableoriginators/' + archiveId
+		var url = '/recordsManagement/archive/availableoriginators';
 		var type = 'GET';
 
+		let parameters = {
+			archiveIds : [archiveId]
+		}
 		$.ajax({
 			url         : url,
 			type        : type,
-			contentType : 'application/json',
+			data		: parameters,
+			dataType    : 'json',
+			success     : function (response) {
+				displayOrignator(response);
+			},
+			error    : function(response) {
+				gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+			}
+		});
+	}
+
+	var editOriginator_loadMultiple = function (archiveIds) {
+		var url = '/recordsManagement/archive/availableoriginators';
+		var type = 'GET';
+
+		let parameters = {
+			archiveIds : archiveIds
+		}
+		$.ajax({
+			url         : url,
+			type        : type,
+			data		: parameters,
 			dataType    : 'json',
 			success     : function (response) {
 				displayOrignator(response);

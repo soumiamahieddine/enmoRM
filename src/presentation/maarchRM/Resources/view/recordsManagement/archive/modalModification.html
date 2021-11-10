@@ -239,7 +239,7 @@
             $('#archiveModificationForm').find('.modificationForm').css('display', 'none');
 
             try {
-                eval(type+"_loadMultiple()");
+                eval(type+"_loadMultiple(ids)");
                 $('#archiveModificationForm').css('display', '');
             }
             catch(err) {

@@ -980,13 +980,22 @@ trait archiveModificationTrait
      * Get available originators for an archive
      * @param string $archiveId The archive identifier
      *
-     * @return [type]              [description]
+     * @return array $availableOriginatingServices array of organization
      */
-    public function indexAvailableOriginators($archiveId)
+    public function indexAvailableOriginators($archiveIds)
     {
-        $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+        $availableOriginatingServices = null;
 
-        $availableOriginatingServices = $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference);
+        foreach($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            if (is_null($availableOriginatingServices)){
+                $availableOriginatingServices = $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference);
+            } else {
+                array_uintersect($availableOriginatingServices, $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), function($a, $b) {
+                    return strcmp(spl_object_hash($a), spl_object_hash($b));
+                });
+            }
+        }
         
         return $availableOriginatingServices;
     }
