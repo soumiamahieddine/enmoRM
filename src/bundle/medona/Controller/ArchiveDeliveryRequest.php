@@ -189,22 +189,28 @@ class ArchiveDeliveryRequest extends abstractMessage
                 }
             }
 
-            foreach ($communicableArchives as $key => $archives) {
-                while ($this->sdoFactory->exists("medona/message", $unique)) {
-                    $i++;
-                    $unique['reference'] = $reference = $identifier.'_'.$i;
+            if (isset($communicableArchives['notCommunicable']) && !empty($communicableArchives['notCommunicable'])) {
+                throw \laabs::newException("medona/notCommunicableException");
+            }
+
+            if (isset($communicableArchives['communicable']) && !empty($communicableArchives['communicable'])) {
+                foreach ($communicableArchives['communicable'] as $key => $archives) {
+                    while ($this->sdoFactory->exists("medona/message", $unique)) {
+                        $i++;
+                        $unique['reference'] = $reference = $identifier.'_'.$i;
+                    }
+                    $message = $this->send(
+                        $reference,
+                        $archives,
+                        $derogation,
+                        $comment,
+                        $requesterOrgRegNumber,
+                        $archiverOrgRegNumber,
+                        null,
+                        $format
+                    );
+                    $messages[] = $message;
                 }
-                $message = $this->send(
-                    $reference,
-                    $archives,
-                    $derogation,
-                    $comment,
-                    $requesterOrgRegNumber,
-                    $archiverOrgRegNumber,
-                    null,
-                    $format
-                );
-                $messages[] = $message;
             }
         }
 
@@ -225,6 +231,20 @@ class ArchiveDeliveryRequest extends abstractMessage
             if ($communicationDelay->invert != 0) {
                 return false;
             }
+        }
+
+        $hasNonCommunicableDescendants = false;
+        $childrenArchives = $this->sdoFactory->readDescendants('recordsManagement/archive', $archive);
+        if (!empty($childrenArchives)) {
+            foreach ($childrenArchives as $childArchive) {
+                if (!$this->isCommunicable($childArchive)) {
+                    $hasNonCommunicableDescendants = true;
+                }
+            }
+        }
+
+        if ($hasNonCommunicableDescendants) {
+            return false;
         }
 
         return true;

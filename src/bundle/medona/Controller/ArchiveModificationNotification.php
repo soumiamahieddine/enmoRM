@@ -40,7 +40,7 @@ class ArchiveModificationNotification extends ArchiveNotification
      *
      * @return The message generated
      */
-    public function send($reference, $archives = array(), $senderOrg, $recipientOrg, $comment = false, $format = null)
+    public function send($reference, $archives = array(), $senderOrg = null, $recipientOrg = null, $comment = false, $format = null)
     {
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
