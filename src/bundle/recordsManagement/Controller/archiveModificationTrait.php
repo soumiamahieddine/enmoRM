@@ -1067,8 +1067,7 @@ trait archiveModificationTrait
                 continue;
             }
             
-            $isAvailableOriginator = array_search($archive->originatorOrgRegNumber, array_column($this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), 'orgId'));
-            
+            $isAvailableOriginator = array_search($newOriginatorOrg->orgId, array_column($this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), 'orgId'));
             if (!$isAvailableOriginator) {
                 $result["error"][] = $archiveId;
             }
