@@ -78,7 +78,7 @@ class notification
 
         $notification->title = $title;
         $notification->message = $message;
-        $notification->receivers = \laabs\implode(" ", $receivers);
+        $notification->receivers = json_encode($receivers);
 
         $this->sdoFactory->create($notification, "batchProcessing/notification");
 
@@ -96,7 +96,7 @@ class notification
         foreach ($notifications as $notification) {
             $notification->status = self::_PROCESSING_;
             $this->sdoFactory->update($notification, "batchProcessing/notification");
-            $this->notificationDependency->send($notification->title, $notification->message, \laabs\explode(" ", $notification->receivers));
+            $this->notificationDependency->send($notification->title, $notification->message, json_decode($notification->receivers));
             $notification->status = self::_CLOSE_;
             $notification->sendDate = \laabs::newDateTime();
             $notification->sendBy = \laabs::getToken("AUTH")->accountId;
