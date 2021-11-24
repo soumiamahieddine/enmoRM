@@ -136,6 +136,13 @@ interface archiveInterface
     public function read_archiveId_Retentionrule();
 
     /**
+     * Get available orignators for an archive before to modify
+     *
+     * @action recordsManagement/archive/indexAvailableOriginators
+     */
+    public function readAvailableoriginators($archiveIds);
+
+    /**
      * Read the access rule of archive
      *
      * @action recordsManagement/archive/editArchiveAccessRule

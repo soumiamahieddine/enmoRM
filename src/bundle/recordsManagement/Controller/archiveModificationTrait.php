@@ -975,4 +975,111 @@ trait archiveModificationTrait
 
         return true;
     }
+
+    /**
+     * Get available originators for an archive
+     * @param string $archiveId The archive identifier
+     *
+     * @return array $availableOriginatingServices array of organization
+     */
+    public function indexAvailableOriginators($archiveIds)
+    {
+        $availableOriginatingServices = null;
+
+        foreach($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            if (is_null($availableOriginatingServices)){
+                $availableOriginatingServices = $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference);
+            } else {
+                array_uintersect($availableOriginatingServices, $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), function($a, $b) {
+                    return strcmp(spl_object_hash($a), spl_object_hash($b));
+                });
+            }
+        }
+        
+        return $availableOriginatingServices;
+    }
+
+    protected function getDescendantServices($orgId, $archivalAgreementReference)
+    {
+        $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+        $organizationController = \laabs::newController('organization/organization');
+        $orgs = [];
+        if (!is_null($archivalAgreementReference)) {
+            $archivalAgreement = $archivalAgreementController->getByReference($archivalAgreementReference);
+            foreach ($archivalAgreement->originatorOrgIds as $originatorOrgId) {
+                $orgs[] = $organizationController->read((string) $originatorOrgId);
+                array_merge($organizationController->readDescendantServices((string) $originatorOrgId), $orgs);
+            }
+        } else {
+            $orgs = $organizationController->readDescendantServices($orgId);
+        }
+
+        $descendantServices = [];
+        foreach ($orgs as $key => $org) {
+            // May be empty if archivalAgreement originatorOrgId has no descendant service
+            if (!empty($org)) {
+                $descendantServices[$key] = new \stdClass();
+                $descendantServices[$key]->orgId = (string) $org->orgId;
+                $descendantServices[$key]->displayName = $org->displayName;
+            }
+        }
+
+        // sort by alphabetical order of displayName (php 8)
+        usort($descendantServices, function ($a, $b) {
+            return $a->displayName <=> $b->displayName;
+        });
+
+        return $descendantServices;
+    }
+
+    /**
+     * Update originator service of an array of archives
+     *
+     * @param  array  $archiveIds Array of archive identifiers
+     * @param  string $orgId      Organization identified destined to be new originator of archive
+     *
+     */
+    public function updateOriginator($archiveIds, $orgId)
+    {
+        if (!is_array($archiveIds)) {
+            $archiveIds = [$archiveIds];
+        }
+
+        $result = [];
+        $result["success"] = [];
+        $result["error"] = [];
+
+
+        $newOriginatorOrg = $this->sdoFactory->read('organization/organization', $orgId);
+        if ($newOriginatorOrg->enabled == false) {
+            throw new \bundle\recordsManagement\Exception\organizationException(
+                "This organization is disabled."
+            );
+        }
+
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $currentOwnerOrgId = $archive->originatorOwnerOrgId;
+
+            if ($currentOwnerOrgId != $newOriginatorOrg->ownerOrgId) {
+                $result["error"][] = $archiveId;
+                continue;
+            }
+            
+            $isAvailableOriginator = array_search($newOriginatorOrg->orgId, array_column($this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), 'orgId'));
+            if (!$isAvailableOriginator) {
+                $result["error"][] = $archiveId;
+            }
+
+            $archive->originatorOrgRegNumber = $newOriginatorOrg->registrationNumber;
+            $archive->lastModificationDate = \laabs::newTimestamp();
+            $this->sdoFactory->update($archive,'recordsManagement/archive');
+
+            $result["success"][] = $archiveId;
+
+        }
+
+        return $result;
+    }
 }

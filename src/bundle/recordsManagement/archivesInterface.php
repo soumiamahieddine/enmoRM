@@ -469,4 +469,14 @@ interface archivesInterface
      * @action recordsManagement/archive/extractFulltext
      */
     public function readExtractfulltext($maxResults = null, $timeLimit = null);
+
+    /**
+     * Update originator service or archives
+     *
+     * @param  array  $archiveIds Array of archiveIdentifiers
+     * @param  string $orgId      Organization identifier
+     *
+     * @action recordsManagement/archive/updateOriginator
+     */
+    public function updateOriginator($archiveIds, $orgId);
 }

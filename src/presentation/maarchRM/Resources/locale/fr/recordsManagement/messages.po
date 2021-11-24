@@ -378,6 +378,9 @@ msgstr "Demander une modification"
 msgid "Edit access rule"
 msgstr "Modifier la règle de communicabilité"
 
+msgid "Modify originator service"
+msgstr "Modifier le service producteur"
+
 msgid "You not have the permission to view the documents of archive"
 msgstr "Vous n'avez pas la permission de visualiser les documents de cette archive"
 
@@ -1340,3 +1343,6 @@ msgstr "Ajouter le filtre"
 
 msgid "Search in other services"
 msgstr "Rechercher dans d'autres services"
+
+msgid "New originating service"
+msgstr "Nouveau service producteur"

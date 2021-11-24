@@ -1351,6 +1351,7 @@ class archive
     protected function readPrivilegesOnArchives()
     {
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+        $hasModificationOriginatorPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/adminOriginator");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
         $hasRestitutionPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
@@ -1359,6 +1360,7 @@ class archive
         $hasModificationRequestPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modificationRequestSend");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
+        $this->view->setSource('hasModificationOriginatorPrivilege', $hasModificationOriginatorPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
         $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
         $this->view->setSource('hasRestitutionPrivilege', $hasRestitutionPrivilege);
@@ -1429,5 +1431,31 @@ class archive
         $response->setHeader('Content-Disposition', 'attachment; filename="'.\laabs::newId(). '.zip"');
 
         return $file;
+    }
+
+    /**
+     * Serializer JSON for changing originator method
+     * @param array $result
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function setOriginator($result)
+    {
+        $success = count($result['success']);
+        $echec = count($result['error']);
+
+        $this->json->message = '%1$s archive(s) modified.';
+        $this->json->message = $this->translator->getText($this->json->message);
+        $this->json->message = sprintf($this->json->message, $success);
+
+        if ($echec > 0) {
+            $message = '%1$s archive(s) can not be modified.';
+            $message = $this->translator->getText($message);
+            $message = sprintf($message, $echec);
+
+            $this->json->message .= ' '.$message;
+        }
+
+        return $this->json->save();
     }
 }
