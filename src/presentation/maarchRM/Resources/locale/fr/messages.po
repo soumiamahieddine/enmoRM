@@ -294,6 +294,9 @@ msgstr "Retour"
 msgid "View"
 msgstr "Afficher"
 
+msgid "Download"
+msgstr "Télécharger"
+
 msgid "Yes"
 msgstr "Oui"
 
