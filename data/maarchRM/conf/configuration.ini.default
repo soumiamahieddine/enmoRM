@@ -625,7 +625,7 @@ chainWithTimestamp = false;
 ;        'title': 'Integrity check',
 ;        'recipients': ['Info <info@maarch.org>'],
 ;        'message' : 'This is a simple plain text mesage with no variable'
-;    }
+;    },
 ;    {
 ;        'filter': {
 ;            'eventType': 'recordsManagement/integrityCheck'
