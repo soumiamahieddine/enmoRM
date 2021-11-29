@@ -12,7 +12,7 @@ $recipients = [];
 foreach ($originatorUserPositions as $originatorUserPosition) {
     $account = $accountController->get($originatorUserPosition->userAccountId);
 
-    $recipients[] = $account->displayName.' <'.$account->emailAddress.'>';
+    $recipients[] = $account->emailAddress;
 }
 
 return $recipients;
