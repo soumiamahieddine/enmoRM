@@ -76,6 +76,8 @@ class Notification implements \dependency\notification\NotificationInterface
         $mail->SMTPAuth = $this->mailSMTPAuth;
         $mail->SMTPSecure = $this->mailSMTPSecure;
         $mail->SMTPAutoTLS = $this->mailSMTPAutoTLS;
+        $mail->CharSet = "utf-8";
+        $mail->IsHTML(true);
         
         if (empty($receivers)) {
             $mail->addAddress($this->mailAdminReceiver);
