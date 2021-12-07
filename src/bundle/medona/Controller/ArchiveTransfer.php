@@ -115,26 +115,36 @@ class ArchiveTransfer extends abstractMessage
                 $this->sendError("404", 'The parameter %1$s is unknown in the configuration', [$name]);
                 break;
             }
-            $confParam = $confParams[$name];
+        }
 
+        foreach ($confParams as $name => $confParam) {
+            // Default value
+            if (isset($confParam["default"])) {
+                $value = $confParam["default"];
+            }
+
+            if (isset($params[$name]) && $params[$name] !== "") {
+                $value = $params[$name];
+            }
+
+            $params[$name] = $value;
+
+            if ($param == "") {
+                if (isset($confParam["required"]) && $confParam["required"]) {
+                    $this->sendError("404", 'The parameter %1$s is required', [$name]);
+                    
+                }
+                continue;
+            }
+
+            // Default type
             if (!isset($confParam["type"])) {
-                $confParam["type"] = "text";
+                $type = "text";
+            } else {
+                $type = $confParam["type"];
             }
 
-            if (isset($confParam["default"]) && $confParam["type"] != "file" && $param == '') {
-                $params[$name] = $confParam["default"];
-            }
-
-            if (isset($confParam["required"]) && $confParam["required"] && $param == '') {
-                $this->sendError("404", 'The parameter %1$s is required', [$name]);
-                continue;
-            }
-
-            if ($param == '') {
-                continue;
-            }
-
-            switch ($confParam["type"]) {
+            switch ($type) {
                 case 'number':
                     if (!is_numeric($param)) {
                         $this->sendError("405", 'The parameter %1$s needs to be a number', [$name]);
@@ -166,11 +176,13 @@ class ArchiveTransfer extends abstractMessage
                     break;
             }
         }
+        
         if (count($this->errors) > 0) {
             $exception = \laabs::newException('medona/invalidMessageException', "Invalid message", 400);
             $exception->errors = $this->errors;
             throw $exception;
         }
+
         return $params;
     }
 
