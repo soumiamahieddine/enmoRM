@@ -616,6 +616,28 @@ chainJournalByOrganization = false;
 chainWithTimestamp = false;
 ; timestampService = dependency/timestamp/plugins/TsaClient
 
+; Notifications
+;notifications = "[
+;    {
+;        'filter': {
+;            'eventType': 'recordsManagement/integrityCheck'
+;        },
+;        'title': 'Integrity check',
+;        'recipients': ['Info <info@maarch.org>'],
+;        'message' : 'This is a simple plain text mesage with no variable'
+;    },
+;    {
+;        'filter': {
+;            'eventType': 'recordsManagement/integrityCheck'
+;        },
+;        'title': 'Integrity check',
+;        'recipients': '../data/maarchRM/notifications/simple_recipients.php',
+;        'message' : {
+;            'template': '../data/maarchRM/notifications/simple.html',
+;            'sources': '../data/maarchRM/notifications/simple_sources.php'
+;        }
+;    }
+;]"
 
 [organization]
 

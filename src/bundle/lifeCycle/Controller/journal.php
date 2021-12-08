@@ -45,6 +45,8 @@ class journal
 
     protected $journals;
 
+    protected $eventNotifier;
+
     /**
      * Constructor
      * @param \dependency\sdo\Factory $sdoFactory       The sdo factory
@@ -65,6 +67,8 @@ class journal
         foreach ($this->eventFormats as $eventFormat) {
             $eventFormat->format = explode(' ', $eventFormat->format);
         }
+
+        $this->eventNotifier = \laabs::newController("lifeCycle/eventNotifier");
     }
 
     /**
@@ -157,6 +161,8 @@ class journal
         $event->description = vsprintf($eventFormat->message, $arrayToMerge);
 
         $this->sdoFactory->create($event);
+
+        $this->eventNotifier->dispatch($event);
 
         if (!$operationResult && $eventFormat->notification == true) {
             $this->notify($event);
