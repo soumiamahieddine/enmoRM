@@ -74,19 +74,22 @@ archivalProfileType = 2
 ;                         value : value to padd suffix
 ;                         length : padding length
 ;
-archiveIdGenerator = "{
-    'service' : 'recordsManagement/Generator/Sequence',
-    'archiverArchiveIdRules' : {
-        'isAutomaticallyForced' : true,
-        'isInheritedFromParent' : true,
-        'format' : 'FR094080_<date(Y)>_AE<sequence(archiverArchiveIdSequence, 0, 4)>',
-        'contentSuffix' : {
-            'separator' : '_',
-            'value' : '0',
-            'length' : 3
-        }
-    }
-}"
+
+
+; Generator of archiver archiveId
+;archiveIdGenerator = "{
+;    'service' : 'recordsManagement/Generator/Sequence',
+;    'archiverArchiveIdRules' : {
+;        'isAutomaticallyForced' : true,
+;        'isInheritedFromParent' : true,
+;        'format' : 'FR094080_<date(Y)>_AE<sequence(archiverArchiveIdSequence, 0, 4)>',
+;        'contentSuffix' : {
+;            'separator' : '_',
+;            'value' : '0',
+;            'length' : 3
+;        }
+;   }
+;}"
 
 
 ; Default Retention Rule if any retention rule is set up ("dispose" or "preserve")
