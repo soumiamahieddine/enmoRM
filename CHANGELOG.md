@@ -6,12 +6,22 @@
 - `Added` Possibilité d'ajouter des critères supplémentaires lors d'une recherche dans l'écran de gestion.
 - `Added` Possibilité pour les gestionnaires d'archive de regrouper les archives de leur choix dans une collection de favoris afin de simplifier les actions de gestion sur un ensemble d'archives.
 - `Added` Nouveau point de menu pour accéder directement à sa collection de favoris.
-- `Changed` Pour le service d'archive, la date de référence pour le calcul de la date d'élimination d'un dossier est désormais déterminée en fonction de la date du dernier versement de pièce afin de prolonger la conservation des dossiers actifs.
+- `Added` Possibilité de définir la date de référence pour le calcul de la date d'élimination d'un dossier en fonction de la date du dernier versement de pièce afin de prolonger la conservation des dossiers actifs.
 - `Changed` Evolution des champs affichés dans les résultats de recherche de l'écran de gestion.
 - `Fixed` Erreur au lancement de la tâche plannifiée "Intégrité Périodique" par le compte Système.
 - `Fixed` Possibilité de lister les contenus présents dans le répertoire public/web.
 - `Fixed` Compatibilité timestamp pour version de postgres >= 12.
 - `Fixed` Compatibilité PHP 8.0.
+- `Fixed` Contrôle des droits de versement des archives dans profil conteneur lors d'un versement via bordereau MADES.
+- `Fixed` Retrait du bouton de modifition des métadonnées d'archive MADES.
+- `Added` Possibilité de configurer un lien avec serveur AD pour authentification via Kerberos.
+- `Added` Possibilité d'activer la découverte d'un profil d'archive pour d'autre service que le profucteur original (droit d'en connaître).
+- `Fixed` Détection de format puid lors d'un versement MADES.
+- `Fixed` Demande de communication sur plusieurs archives.
+- `Fixed` Recherche par côte d'archive (archiver identifier).
+- `Added` Recherche des digitalResources par critères (via API uniquement).
+- `Fixed` Vérifier la communicabilité des pièces d'archives (sous archive) lors d'une demande de communication.
+- `Changed` Changement du bouton de visualisation d'une ressource en téléchargement direct de la ressource afin d'éviter la lecture par le navigateur.
 
 ## Version 2.7.3
 - `Fixed` Actualisation lors du changement d'organisation après connexion.
