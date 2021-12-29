@@ -55,9 +55,8 @@ refDirectory = "%laabsDirectory%/data/maarchRM/ref"
 ; hashAlgorithm=SHA1
 
 ; Type of archival profile
-; 1 = file only
 ; 2 = descriptionClass/properties + management rules
-; 3 = both
+; 1 or 3 = File and 2
 archivalProfileType = 2
 
 ; Automatic generation of archiverArchiveId on deposit

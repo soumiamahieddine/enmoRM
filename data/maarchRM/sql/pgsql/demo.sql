@@ -144,6 +144,7 @@ INSERT INTO "auth"."servicePrivilege" ("accountId","serviceURI") VALUES
 ('System', 'recordsManagement/archives/deleteDisposablearchives'),
 ('System', 'recordsManagement/archives/updateArchivesretentionrule'),
 ('System', 'recordsManagement/archives/updateIndexfulltext'),
+('System', 'recordsManagement/archives/readExtractfulltext'),
 ('SystemDepositor', 'recordsManagement/archive/create'),
 ('SystemDepositor', 'recordsManagement/archive/createArchiveBatch')
 ;
