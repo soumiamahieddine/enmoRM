@@ -182,14 +182,20 @@ class ArchiveDeliveryRequest extends abstractMessage
 
             $communicableArchives = [];
             foreach ($archives as $archive) {
-                if ($this->isCommunicable($archive)) {
+                if (
+                    $this->isCommunicable($archive)
+                    || $derogation == true
+                ) {
                     $communicableArchives['communicable'][] = $archive;
                 } else {
                     $communicableArchives['notCommunicable'][] = $archive;
                 }
             }
 
-            if (isset($communicableArchives['notCommunicable']) && !empty($communicableArchives['notCommunicable'])) {
+            if (
+                isset($communicableArchives['notCommunicable'])
+                && !empty($communicableArchives['notCommunicable'])
+            ) {
                 throw \laabs::newException("medona/notCommunicableException");
             }
 
