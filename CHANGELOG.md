@@ -2,6 +2,7 @@
 
 ## Version 2.8
 
+- `Added` Connecteur de réception des paquets restitués depuis la plateforme T@ct de API.
 - `Added` Possibilité pour les service producteurs d'indexer le contenu texte des documents archivés afin de pouvoir les rechercher sur l'intégralité des termes.
 - `Added` Possibilité d'ajouter des critères supplémentaires lors d'une recherche dans l'écran de gestion.
 - `Added` Possibilité pour les gestionnaires d'archive de regrouper les archives de leur choix dans une collection de favoris afin de simplifier les actions de gestion sur un ensemble d'archives.
@@ -22,6 +23,9 @@
 - `Fixed` Demande de communication sur plusieurs archives.
 - `Fixed` Recherche par côte d'archive (archiver identifier).
 - `Fixed` Non affichage de la liste des règles de conservation dans l'écran de registre
+- `Fixed` Affichage des dates extrêmes
+- `Fixed` Impossibilité de traduire l'exception auth\UknownUserException
+- `Fixed` Affichage des journaux archivés
 - `Changed` Changement du bouton de visualisation d'une ressource en téléchargement direct de la ressource afin d'éviter la lecture par le navigateur.
 - `Changed` Comportement de la directive archivalProfileType 1 identique désormais à la 3
 
