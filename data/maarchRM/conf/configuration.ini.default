@@ -552,7 +552,7 @@ servicePrivileges = "[
 ;        'description' : 'Chaîner le journal du cycle de vie'
 ;    },
 ;    {
-;        'serviceURI': 'recordsmanagement/archivecompliance/readPeriodic',
+;        'serviceURI': 'recordsManagement/archiveCompliance/readPeriodic',
 ;        'description' : 'Valider l\'intégrité des archives'
 ;    },
 ;    {
