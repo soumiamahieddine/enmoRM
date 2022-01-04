@@ -1,14 +1,39 @@
 # Migration 2.7 vers 2.8
 
-## Vhost
+## Vhost :
 Ajout d'un nouveau bundle Collection pour l'enregistrement d'archives en favoris.
+
+Retrait d'un critère de recherche dans la directive `RewriteCond` permettant de ne plus pouvoir accéder directement au répertoire "public" de l'application.
+
+Ajout d'un exemple de configuration pour la vérification d'authentification via Kerberos.
+
+## Modification dans la configuration :
+Dans la section [recordsManagement], ajout de la directive `actionWithoutCommunicationRule` qui permet de définir le comportement de l'application si une archive ne possède pas de règle de communication. `deny` = ne pas autoriser la demande de communication, `allow` = autoriser la demande de communication.
+
+Dans la section [lifeCycle], ajout de la directive `notifications` qui permet de paramétrer des notifications email en se branchant sur les évènements du cycle de vie de l'application.
+
+Dans la section [batchProcessing], ajout d'une tâche dans la directive `tasks` qui permet d'ajouter la tâche planifiée qui exécute l'extraction FullText.
+
+Dans la section [dependency.fileSystem], ajout de la directive `fullTextServices` qui permet de paramétrer les services qui effectueront l'extraction FullText.
+
+Dans la section [dependency.fileSystem], ajout des directives `tikaJarExecutable` et `tesseractExecutable` qui sont 2 exemples de services permettant l'extraction de texte à partir d'un document ou d'une image.
+
+Dans la section [dependency.repository], modification de la directive `datetimeFormat` pour respecter le format de date iso 8601.
+
+## Modification du menu :
+Ajout du point de menu des favoris dans le fichier `menu.ini`. 
+## Schéma SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.7_V2.8.sql
 
 # Migration 2.6 vers 2.7
 ## Configuration
 
 ## Ajout dans la configuration
 
-Dans la section [recordsManagement], ajout dee la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
+Dans la section [recordsManagement], ajout de la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
 
 Dans la section [medona], ajout de la directive `packageConnectors` qui permet la configuration de connecteurs pour faciliter le versement de paquets externes au format incomplet.
 

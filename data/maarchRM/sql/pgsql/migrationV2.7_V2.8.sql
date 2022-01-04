@@ -6,8 +6,6 @@ CREATE SCHEMA "Collection";
 
 -- Table: "Collection"."Collection"
 
--- DROP TABLE "Collection"."Collection";
-
 CREATE TABLE "Collection"."Collection"
 (
   "collectionId" text NOT NULL,
