@@ -135,7 +135,7 @@ INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES
 ('System', 'audit/event/createChainjournal'),
 ('System', 'batchProcessing/scheduling/updateProcess'),
 ('System', 'lifeCycle/journal/createChainjournal'),
-('System', 'recordsmanagement/archivecompliance/readperiodic'),
+('System', 'recordsmanagement/archivecompliance/readPeriodic'),
 ('System', 'recordsManagement/archives/deleteDisposablearchives'),
 ('System', 'recordsManagement/archives/updateArchivesretentionrule'),
 ('System', 'recordsManagement/archives/updateIndexfulltext')
