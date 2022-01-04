@@ -8,15 +8,15 @@
 - `Added` Possibilité pour les gestionnaires d'archive de regrouper les archives de leur choix dans une collection de favoris afin de simplifier les actions de gestion sur un ensemble d'archives.
 - `Added` Nouveau point de menu pour accéder directement à sa collection de favoris.
 - `Added` Possibilité de définir la date de référence pour le calcul de la date d'élimination d'un dossier en fonction de la date du dernier versement de pièce afin de prolonger la conservation des dossiers actifs.
-- `Added` Possibilité d'activer la découverte d'un profil d'archive pour d'autre service que le profucteur original (droit d'en connaître).
+- `Added` Possibilité d'activer la découverte d'un profil d'archive pour d'autre service que le producteur original (droit d'en connaître).
 - `Added` Recherche des digitalResources par critères (via API uniquement).
 - `Changed` Evolution des champs affichés dans les résultats de recherche de l'écran de gestion.
-- `Fixed` Erreur au lancement de la tâche plannifiée "Intégrité Périodique" par le compte Système.
+- `Fixed` Erreur au lancement de la tâche planifiée "Intégrité Périodique" par le compte Système.
 - `Fixed` Possibilité de lister les contenus présents dans le répertoire public/web.
 - `Fixed` Compatibilité timestamp pour version de postgres >= 12.
 - `Fixed` Compatibilité PHP 8.0.
 - `Fixed` Contrôle des droits de versement des archives dans profil conteneur lors d'un versement via bordereau MADES.
-- `Fixed` Retrait du bouton de modifition des métadonnées d'archive MADES.
+- `Fixed` Retrait du bouton de modification des métadonnées d'archive MADES.
 - `Fixed` Vérifier la communicabilité des pièces d'archives (sous archive) lors d'une demande de communication.
 - `Added` Possibilité de configurer un lien avec serveur AD pour authentification via Kerberos.
 - `Fixed` Détection de format puid lors d'un versement MADES.
@@ -28,6 +28,13 @@
 - `Fixed` Affichage des journaux archivés
 - `Changed` Changement du bouton de visualisation d'une ressource en téléchargement direct de la ressource afin d'éviter la lecture par le navigateur.
 - `Changed` Comportement de la directive archivalProfileType 1 identique désormais à la 3
+
+## Version 2.7.4
+ - `Fixed` Mauvaise ventilation par profil d'archive et service producteur dans l'onglet statistique
+ - `Fixed` Impossibilité de sauvegarder des métadonnées de type datetime via l'écran
+ - `Fixed` Champs obligatoires n'apparaissent plus lors de l'ajout/modification des métadonnées
+ - `Fixed` Mauvais retour lors de la recherche sur les champs description
+ - `Changed` Modification de l'utilisateur attribué lors de la création du schéma medona
 
 ## Version 2.7.3
 - `Fixed` Actualisation lors du changement d'organisation après connexion.
