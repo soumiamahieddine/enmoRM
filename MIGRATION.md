@@ -1,27 +1,60 @@
 # Migration 2.7 vers 2.8
 
 ## Vhost :
-Ajout d'un nouveau bundle Collection pour l'enregistrement d'archives en favoris.
+### Ajout du bundle 'collection'
 
-Retrait d'un critère de recherche dans la directive `RewriteCond` permettant de ne plus pouvoir accéder directement au répertoire "public" de l'application.
+Afin d'accéder aux fonctionnalités relatives aux collections, le bundle `Collection` doit être ajoutée à l'instance dans le fichier vhost.conf :
 
-Ajout d'un exemple de configuration pour la vérification d'authentification via Kerberos.
+```
+SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics;Collection
+```
+
+### Blocage de l'accès au répertoire 'web/public' dans l'URL
+
+Modifications vhost. Retrait de la condition Rewrite. Remplacer : 
+```
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_URI} ^/public [NC]
+
+```
+
+Par :
+```
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f
+```
+
+
+
+### Ajout d'un exemple de configuration pour la vérification d'authentification via Kerberos.
 
 ## Modification dans la configuration :
+### Ajout
 Dans la section [recordsManagement], ajout de la directive `actionWithoutCommunicationRule` qui permet de définir le comportement de l'application si une archive ne possède pas de règle de communication. `deny` = ne pas autoriser la demande de communication, `allow` = autoriser la demande de communication.
 
 Dans la section [lifeCycle], ajout de la directive `notifications` qui permet de paramétrer des notifications email en se branchant sur les évènements du cycle de vie de l'application.
-
-Dans la section [batchProcessing], ajout d'une tâche dans la directive `tasks` qui permet d'ajouter la tâche planifiée qui exécute l'extraction FullText.
 
 Dans la section [dependency.fileSystem], ajout de la directive `fullTextServices` qui permet de paramétrer les services qui effectueront l'extraction FullText.
 
 Dans la section [dependency.fileSystem], ajout des directives `tikaJarExecutable` et `tesseractExecutable` qui sont 2 exemples de services permettant l'extraction de texte à partir d'un document ou d'une image.
 
-Dans la section [dependency.repository], modification de la directive `datetimeFormat` pour respecter le format de date iso 8601.
+### Modification
+Mise à jour de la route de service dans [auth] -> 'servicePrivileges' pour le contrôle d'intégrité qui n'aboutissait pas car la casse était mauvaise.
 
-## Modification du menu :
-Ajout du point de menu des favoris dans le fichier `menu.ini`. 
+Dans la section [dependency.sdo], modification de la directive `datetimeFormat` pour respecter le format de date iso 8601.
+
+Dans la section [batchProcessing], ajout d'une tâche dans la directive `tasks` qui permet d'ajouter la tâche planifiée qui exécute l'extraction FullText.
+## Menu
+### Point de menu Collection / Favoris
+Un point de menu a été ajouté pour accéder directement à la vue de ses archives favorites :  
+ `menu` :
+```
+    {
+        'label' : '',
+        'title' : 'Favoris',
+        'href'  : '/collection',
+        'class' : 'fa fa-star fa-fw'
+    }
+```
 ## Schéma SQL
 
 Voir le fichier spécifique
