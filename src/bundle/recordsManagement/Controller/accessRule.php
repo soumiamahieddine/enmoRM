@@ -65,9 +65,24 @@ class accessRule
      *
      * @return recordsManagement/accessRule The profile object
      */
-    public function edit($code)
+    public function edit($code = null)
     {
-        $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
+        if (is_null($code)) {
+            $defaultCommunicationRule = isset(\laabs::configuration("recordsManagement")['actionWithoutCommunicationRule']) ? \laabs::configuration("recordsManagement")['actionWithoutCommunicationRule'] : null;
+
+            if (!is_null($defaultCommunicationRule) && !in_array($defaultCommunicationRule, ['allow', 'deny'])) {
+                throw new \core\Exception\ConflictException("Missing or wrong default communication Rule");
+            }
+
+            $accessRule = \laabs::newInstance('recordsManagement/accessRule');
+            if ($defaultCommunicationRule == 'allow') {
+                $accessRule->duration = "PD0";
+            } else {
+                $accessRule->duration = "P999999999Y";
+            }
+        } else {
+            $accessRule = $this->sdoFactory->read('recordsManagement/accessRule', $code);
+        }
 
         return $accessRule;
     }

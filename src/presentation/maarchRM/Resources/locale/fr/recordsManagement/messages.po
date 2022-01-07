@@ -220,6 +220,9 @@ msgctxt "org"
 msgid "Originator"
 msgstr "Service Producteur"
 
+msgid "Originator organization"
+msgstr "Service Producteur"
+
 msgid "Archiver"
 msgstr "Service d'Archives"
 
@@ -357,6 +360,9 @@ msgstr "Demander la restitution"
 msgid "Validate restitution"
 msgstr "Valider la restitution"
 
+msgid "Select an originator organization"
+msgstr "Sélectionnez un service producteur"
+
 msgid "Cancel restitution request"
 msgstr "Annuler la demande de restitution"
 
@@ -377,6 +383,9 @@ msgstr "Demander une modification"
 
 msgid "Edit access rule"
 msgstr "Modifier la règle de communicabilité"
+
+msgid "Modify originator service"
+msgstr "Modifier le service producteur"
 
 msgid "You not have the permission to view the documents of archive"
 msgstr "Vous n'avez pas la permission de visualiser les documents de cette archive"
@@ -1319,3 +1328,27 @@ msgstr "Référentiel des personnes et organisations"
 
 msgid "Object"
 msgstr "Objet"
+
+msgid "Archive added to collection."
+msgstr "Archive(s) ajoutée(s) aux favoris."
+
+msgid "Archive removed from collection."
+msgstr "Archive(s) retirée(s) des favoris."
+
+msgid "Remove All Collections"
+msgstr "Supprimer tous les favoris"
+
+msgid "You must select a description field and set corresponding value."
+msgstr "Veuillez choisir un champ et renseigner une valeur associée."
+
+msgid "You must select the type of additional description field to add"
+msgstr "Veuillez choisir le type de critère supplémentaire à ajouter"
+
+msgid "Add filter"
+msgstr "Ajouter le filtre"
+
+msgid "Search in other services"
+msgstr "Rechercher dans d'autres services"
+
+msgid "New originating service"
+msgstr "Nouveau service producteur"

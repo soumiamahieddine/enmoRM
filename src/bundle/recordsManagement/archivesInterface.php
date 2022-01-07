@@ -398,7 +398,14 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/modifyMetadata
      */
-    public function updateMetadata($archiveId,$originatorArchiveId = null,$archiverArchiveId = null,$archiveName = null,$originatingDate=null,$description = null);
+    public function updateMetadata(
+        $archiveId,
+        $originatorArchiveId = null,
+        $archiverArchiveId = null,
+        $archiveName = null,
+        $originatingDate = null,
+        $description = null
+    );
 
     /**
      * List an archive resources and children archives
@@ -415,7 +422,7 @@ interface archivesInterface
      *
      * @action recordsManagement/archiveFilePlanPosition/moveArchiveToFolder
      */
-    public function udpateMovearchivetofolder($archiveId, $folderId=null);
+    public function udpateMovearchivetofolder($archiveId, $folderId = null);
 
     /**
      * Move an archive into a folder
@@ -425,7 +432,7 @@ interface archivesInterface
      *
      * @action recordsManagement/archiveFilePlanPosition/moveArchivesToFolder
      */
-    public function udpateMovearchivestofolder($archiveIds, $fromFolderId=null, $toFolderId=null);
+    public function udpateMovearchivestofolder($archiveIds, $fromFolderId = null, $toFolderId = null);
 
     /**
      * Index full text
@@ -433,7 +440,7 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/indexFullText
      */
-    public function updateIndexfulltext($limit=200);
+    public function updateIndexfulltext($limit = 200);
 
 
     /**
@@ -442,5 +449,34 @@ interface archivesInterface
      *
      * @action recordsManagement/archive/updateArchiveRetentionRule
      */
-    public function updateArchivesretentionrule($limit=500);
+    public function updateArchivesretentionrule($limit = 500);
+
+    /**
+     * Retieve multiple archive from an array of archive Ids
+     *
+     * @param  array $archiveIds Array of archive Identifiers
+     *
+     * @action recordsManagement/archive/readFromIdentifiers
+     */
+    public function readArchives(array $archiveIds);
+
+    /**
+     * Extract full text from resources of flagged archives
+     *
+     * @param int $maxResults Maximum number of archive to extract
+     * @param int $timeLimit  Time limit for extraction
+     *
+     * @action recordsManagement/archive/extractFulltext
+     */
+    public function readExtractfulltext($maxResults = null, $timeLimit = null);
+
+    /**
+     * Update originator service or archives
+     *
+     * @param  array  $archiveIds Array of archiveIdentifiers
+     * @param  string $orgId      Organization identifier
+     *
+     * @action recordsManagement/archive/updateOriginator
+     */
+    public function updateOriginator($archiveIds, $orgId);
 }

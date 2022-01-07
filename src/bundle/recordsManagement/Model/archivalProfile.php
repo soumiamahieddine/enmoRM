@@ -82,6 +82,13 @@ class archivalProfile
     public $retentionStartDate;
 
     /**
+     * The starting date of calculated retention rule based on last deposit date
+     *
+     * @var boolean
+     */
+    public $isRetentionLastDeposit;
+
+    /**
      * The retention rule code 
      *
      * @var string
@@ -150,6 +157,13 @@ class archivalProfile
      * @var json
      */
     public $processingStatuses;
+
+    /**
+     * Is property discoverable by services outside of owner service
+     *
+     * @var boolean
+     */
+    public $isDiscoverable;
 
     /**
      * Get the properties

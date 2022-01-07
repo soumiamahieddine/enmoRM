@@ -41,6 +41,8 @@ class AuthorizationOriginatingAgencyRequest extends AuthorizationRequest
             $requestMessage = $this->read($requestMessage);
         }
 
+        $this->loadData($requestMessage);
+
         $message = \laabs::newInstance('medona/message');
         $message->messageId = \laabs::newId();
         $message->schema = $requestMessage->schema;
@@ -129,8 +131,8 @@ class AuthorizationOriginatingAgencyRequest extends AuthorizationRequest
             $authorizationControlAuthorityRequestController = \laabs::newController('medona/AuthorizationControlAuthorityRequest');
             $authorizationControlAuthorityRequestController->send($requestMessage, $message->recipientOrgRegNumber);
         } else {
-            $requestMessageController = \laabs::newController('medona/'.$requestMessage->type);
-            $requestMessageController->accept($requestMessage);
+            $requestMessageController = \laabs::newController('medona/' . $requestMessage->type);
+            $requestMessageController->accept((string) $requestMessage->messageId);
         }
 
         $this->lifeCycleJournalController->logEvent(

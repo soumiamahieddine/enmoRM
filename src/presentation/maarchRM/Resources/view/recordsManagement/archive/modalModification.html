@@ -30,6 +30,7 @@
     <span id="mtext_flagForTransfer">Flag for transfer</span>
     <span id="mtext_retentionRule">Change disposal rule</span>
     <span id="mtext_accessRule">Edit access rule</span>
+    <span id="mtext_editOriginator">Edit Originating service</span>
     <span id="mtext_flagForDestruction">Flag for destruction</span>
     <span id="mtext_requestModification">Request a modification</span>
     <span id="mtext_cancelDestruction">Cancel destruction</span>
@@ -95,7 +96,8 @@
             requestModification : '/modificationRequest',
             cancelDestruction   : '/recordsManagement/cancelDestruction',
             freeze              : '/recordsManagement/archive/freeze',
-            unfreeze            : '/recordsManagement/archive/unfreeze'
+            unfreeze            : '/recordsManagement/archive/unfreeze',
+            editOriginator      : '/recordsManagement/archive/originator',
         },
         actionsType : {},
         modal : $('#modificationModal'),
@@ -117,19 +119,25 @@
                 this.modal.modal();
             }
 
-            if (type === 'requestCommunication' && $('#' +archiveId).data('iscommunicable') === 1) {
-                $('#derogationTr').show();
-                $('#derogationInputTr').show();
-                $("#derogationTr .toggle").removeClass('btn-default off');
-                $("#derogationTr .toggle").addClass('btn-info');
+            $('#derogationTr').hide();
+            $('#derogationInputTr').hide();
 
-            } else {
-                $('#derogationTr').hide();
-                $('#derogationInputTr').hide();
-            }
-
-            if (type === 'requestModification') {
-                $('#messageFormatTr').hide();
+            switch (type) {
+                case 'requestCommunication':
+                    if ($('#' +archiveId).data('iscommunicable') === 1) {
+                        $('#derogationTr').show();
+                        $('#derogationInputTr').show();
+                        $("#derogationTr .toggle").removeClass('btn-default off');
+                        $("#derogationTr .toggle").addClass('btn-info');
+                    }
+                    break;
+                case 'requestModification':
+                    $('#messageFormatTr').hide();
+                    break;
+                case 'editOriginator':
+                    $('#message').hide();
+                    break;
+                default:
             }
 
             if (!transaction) {
@@ -172,6 +180,37 @@
             });
         },
 
+/*         loadOriginatorOrg : function() {
+            $.ajax({
+                type     : "GET",
+                url      : "http://maarchrm/organization/organization/search?enabled=true",
+                dataType : 'json',
+                success  : function (response) {
+                    var organizations = response;
+                    $('#originatorOrgSelect').find('option').remove();
+                    $.each(organizations, function (key, value) {
+                        $('#originatorOrgSelect').append($('<option>', {
+                            value: value.registrationNumber,
+                            text: value.displayName
+                        }));
+                    });
+
+                    var length = $('#originatorOrgSelect').children('option').length;
+                    if (length === 0) {
+                        $('#originatorOrgSelect').append($('<option>', {
+                            value: '',
+                            text: $('#empty_originatorOrg').html()
+                        }));
+                    }
+
+                    $('#modificationModal').modal();
+                },
+                error   : function (response) {
+                    gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+                }
+            });
+        },
+ */
         loadRule: function(archiveId, archiveName) {
             if (this.modalType ==='accessRule') {
                 url = '/recordsManagement/archive/accessRule/' + archiveId;
@@ -231,7 +270,7 @@
             $('#archiveModificationForm').find('.modificationForm').css('display', 'none');
 
             try {
-                eval(type+"_loadMultiple()");
+                eval(type+"_loadMultiple(ids)");
                 $('#archiveModificationForm').css('display', '');
             }
             catch(err) {
@@ -291,8 +330,6 @@
                 type = 'PUT';
             }
 
-            console.log(this.actionsList[this.modalType]);
-            
             $.ajax({
                 url         : this.actionsList[this.modalType],
                 type        : type,

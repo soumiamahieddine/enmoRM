@@ -166,24 +166,21 @@ class Service
      * 
      * @return object The service object
      */
-    public function newInstance($passedArgs=array())
+    public function newInstance($passedArgs = null, ...$args)
     {
         // Get construction method
         if ($this->hasConstructor()) {
             $constructor = $this->getConstructor();
             $constructorArgs = $constructor->getCallArgs($passedArgs, $this->configuration);
-            $serviceObject = parent::newInstanceArgs($constructorArgs);
 
+            $serviceObject = parent::newInstanceArgs($constructorArgs);
         } elseif ($this->hasMethod($this->getShortName()) && ($method = $this->getMethod($this->getShortName())) && $method->isStatic() && $method->isPublic()) {
             
             $staticFactory = $this->getMethod($this->getShortName());
             $staticFactoryArgs = $staticFactory->getCallArgs($passedArgs, $this->configuration);
             $serviceObject = $staticFactory->callArgs(null, $staticFactoryArgs);
-        
         } else {
-            
             $serviceObject = parent::newInstanceWithoutConstructor();
-        
         }
 
         $this->useTraits($serviceObject, $passedArgs);

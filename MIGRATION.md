@@ -1,9 +1,72 @@
+# Migration 2.7 vers 2.8
+
+## Vhost :
+### Ajout du bundle 'collection'
+
+Afin d'accéder aux fonctionnalités relatives aux collections, le bundle `Collection` doit être ajoutée à l'instance dans le fichier vhost.conf :
+
+```
+SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics;Collection
+```
+
+### Blocage de l'accès au répertoire 'web/public' dans l'URL
+
+Modifications vhost. Retrait de la condition Rewrite. Remplacer : 
+```
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_URI} ^/public [NC]
+
+```
+
+Par :
+```
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f
+```
+
+
+
+### Ajout d'un exemple de configuration pour la vérification d'authentification via Kerberos.
+
+## Modification dans la configuration :
+### Ajout
+Dans la section [recordsManagement], ajout de la directive `actionWithoutCommunicationRule` qui permet de définir le comportement de l'application si une archive ne possède pas de règle de communication. `deny` = ne pas autoriser la demande de communication, `allow` = autoriser la demande de communication.
+
+Dans la section [lifeCycle], ajout de la directive `notifications` qui permet de paramétrer des notifications email en se branchant sur les évènements du cycle de vie de l'application.
+
+Dans la section [dependency.fileSystem], ajout de la directive `fullTextServices` qui permet de paramétrer les services qui effectueront l'extraction FullText.
+
+Dans la section [dependency.fileSystem], ajout des directives `tikaJarExecutable` et `tesseractExecutable` qui sont 2 exemples de services permettant l'extraction de texte à partir d'un document ou d'une image.
+
+### Modification
+Mise à jour de la route de service dans [auth] -> 'servicePrivileges' pour le contrôle d'intégrité qui n'aboutissait pas car la casse était mauvaise.
+
+Dans la section [dependency.sdo], modification de la directive `datetimeFormat` pour respecter le format de date iso 8601.
+
+Dans la section [batchProcessing], ajout d'une tâche dans la directive `tasks` qui permet d'ajouter la tâche planifiée qui exécute l'extraction FullText.
+## Menu
+### Point de menu Collection / Favoris
+Un point de menu a été ajouté pour accéder directement à la vue de ses archives favorites :  
+ `menu` :
+```
+    {
+        'label' : '',
+        'title' : 'Favoris',
+        'href'  : '/collection',
+        'class' : 'fa fa-star fa-fw'
+    }
+```
+## Schéma SQL
+
+Voir le fichier spécifique
+
+    laabs/data/maarchRM/sql/pgsql/migrationV2.7_V2.8.sql
+
 # Migration 2.6 vers 2.7
 ## Configuration
 
 ## Ajout dans la configuration
 
-Dans la section [recordsManagement], ajout dee la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
+Dans la section [recordsManagement], ajout de la directive `archiveIdGenerator` qui permet de configurer la cotation automatique lors d'un versement dans l'application.
 
 Dans la section [medona], ajout de la directive `packageConnectors` qui permet la configuration de connecteurs pour faciliter le versement de paquets externes au format incomplet.
 
@@ -126,9 +189,9 @@ Voir le fichier spécifique
 # Migration 2.5 vers 2.6
 ## Configuration
 ### Lien de téléchargement d'une ressource
-Cette configuration facultative permet au moment de la consultation, de recevoir une uri vers une ressource au lieu du contenu binaire. 
+Cette configuration facultative permet au moment de la consultation, de recevoir une uri vers une ressource au lieu du contenu binaire.
 
-À renseigner dans [recordsManagement] : 
+À renseigner dans [recordsManagement] :
 ```
 exportPath = "%laabsDirectory%/web/tmp"
 ```
@@ -136,8 +199,8 @@ exportPath = "%laabsDirectory%/web/tmp"
 ## Configuration des instances publiées (hôte(s) virtuel(s) http et scripts en ligne de commande)
 
 ### Externalisation du bundle `digitalSafe`
-Le bundle `digitalSafe` qui présente les fonctions relatives à l'usage du produit 
-comme composant de coffre-fort numérique, ajouté en V2.5, a été déplacé dans une nouvelle 
+Le bundle `digitalSafe` qui présente les fonctions relatives à l'usage du produit
+comme composant de coffre-fort numérique, ajouté en V2.5, a été déplacé dans une nouvelle
 extension du même nom.
 
 Les instances ne doivent plus faire référence à ce bundle si l'extension `digitalSafe` n'est pas installée.
@@ -154,14 +217,14 @@ SetEnv LAABS_EXTENSIONS digitalSafe
 ```
 
 ### Nouvelle dépendance technique CSV
-Les fonctions d'import et d'export de référentiel utilisent une nouvelle dépendance qui 
+Les fonctions d'import et d'export de référentiel utilisent une nouvelle dépendance qui
 gère les conversions en CSV. Ladépendance `csv` doit être ajoutée à l'instance :
 
 ```
 SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf;timestamp;csv
 ```
 
-## Configuration 
+## Configuration
 ### Protection CSRF
 Il faut ajouter des routes en liste blanche pour la protection contre les requêtes en Cross-Site Forgery:
 

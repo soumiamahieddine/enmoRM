@@ -158,7 +158,11 @@ class descriptionScheme
         if (isset($schemeProperty->enumeration)) {
             $descriptionField->enumeration = $schemeProperty->enumeration;
             if (isset($schemeProperty->tags['enumNames'])) {
-                @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
+                try {
+                    @eval('$enumNames = '.trim($schemeProperty->tags['enumNames'][0]).';');
+                } catch (\Error $e) {
+                    $enumNames = \laabs\explode(',', substr(trim($schemeProperty->tags['enumNames'][0]), 1, -1));
+                }
                 if (isset($enumNames) && isset($descriptionField->enumeration) && count($enumNames) == count($descriptionField->enumeration)) {
                     $descriptionField->enumNames = $enumNames;
                 }

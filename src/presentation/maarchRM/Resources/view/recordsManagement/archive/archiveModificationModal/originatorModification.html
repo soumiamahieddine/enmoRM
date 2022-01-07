@@ -1,0 +1,75 @@
+<script>
+	var editOriginator_load = function (archiveId, archiveName, type) {
+
+		var url = '/recordsManagement/archive/availableoriginators';
+		var type = 'GET';
+
+		let parameters = {
+			archiveIds : [archiveId]
+		}
+		$.ajax({
+			url         : url,
+			type        : type,
+			data		: parameters,
+			dataType    : 'json',
+			success     : function (response) {
+				displayOrignator(response);
+			},
+			error    : function(response) {
+				gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+			}
+		});
+	}
+
+	var editOriginator_loadMultiple = function (archiveIds) {
+		var url = '/recordsManagement/archive/availableoriginators';
+		var type = 'GET';
+
+		let parameters = {
+			archiveIds : archiveIds
+		}
+		$.ajax({
+			url         : url,
+			type        : type,
+			data		: parameters,
+			dataType    : 'json',
+			success     : function (response) {
+				displayOrignator(response);
+			},
+			error    : function(response) {
+				gritter.show(response.responseJSON.message, response.responseJSON.status, response.responseJSON.errors);
+			}
+		});
+	}
+
+	var displayOrignator = function(originatorTab) {
+
+		$('#selectedOriginator').remove();
+		var selectedOriginatorTr = $('<tr>').attr('id', "selectedOriginator");
+		selectedOriginatorTr.append($('<td>').append($('<strong>').text($('#mtext_editOriginator').text())));
+		var td = $('<td>');
+
+		var availableOriginatingServices = originatorTab;
+		var select = $('<select>').attr('name', "originatorList").attr("id", "originatorList").addClass('form-control');
+		availableOriginatingServices.forEach(org => {
+			select.append($('<option>').val(org.orgId).text(org.displayName));
+		});
+
+		td.append(select);
+		selectedOriginatorTr.append(td);
+
+		$('#modificationModal table tbody').append(selectedOriginatorTr);
+
+        $('#modificationModal').modal();
+	}
+
+	var editOriginator_serialize = function () {
+		var parameter = {};
+
+        parameter.orgId = $('#originatorList').val();
+        parameter.archiveIds = [];
+        parameter.archiveIds.push($('#selectedArchiveId').val());
+        
+        return parameter;
+	}
+</script>

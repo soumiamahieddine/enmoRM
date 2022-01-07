@@ -59,6 +59,15 @@ msgstr "La date de fin est antérieure à la date de début."
 msgid "An owner is already defined."
 msgstr "Un Opérateur d'Archivage est déjà défini."
 
+msgid "This service is declared as an authority control. Remove it from the authority control panel before deleting this role."
+msgstr "Ce service est déclaré comme autorité de contrôle. Veuillez supprimer ce lien (menu Gestion des Autorités de Contrôle) avant de lui ôter ce rôle."
+
+msgid "This service belongs to an archival agreement."
+msgstr "Ce service est dans un accord de versement."
+
+msgid "This service has %s archive(s)."
+msgstr "Ce service possède %s archive(s)."
+
 msgid "Profile %s not found"
 msgstr "Le profil %s n'a pas été trouvé"
 
@@ -262,6 +271,12 @@ msgstr "Une archive gelée ne peut pas être modifiée."
 
 msgid "An archive that does not have the status 'preserved' can't be modified."
 msgstr "Une archive n'ayant pas le statut 'Conservée' ne peut pas être modifiée"
+
+msgid "The new originator organization of the archive must have the same owner organization as the current one."
+msgstr "Le nouveau service producteur de l'archive doit avoir la même organisation racine que le service producteur actuel."
+
+msgid "This organization is disabled."
+msgstr "Ce service est inactif."
 
 msgid "An action is already in progress on this archive."
 msgstr "Une action est déjà en cours sur cette archive."
@@ -496,3 +511,6 @@ msgstr "Mauvais nombre de colonnes dans le csv à la ligne %s"
 
 msgid "User has an unknown security level"
 msgstr "L'utilisateur a un niveau de sécurité non renseigné dans la configuration. Veuillez contacter votre administrateur système"
+
+msgid "User unknown"
+msgstr "Utilisateur inconnu du système"

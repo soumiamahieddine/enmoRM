@@ -277,3 +277,9 @@ msgstr "Voir dans la liste"
 
 msgid "cannot be recursively called"
 msgstr "ne peut pas être appelé récursivement"
+
+msgid "Update when a file is added"
+msgstr "Mettre à jour au versement d'une pièce"
+
+msgid "Discoverable"
+msgstr "Autorise la découverte (hors producteur)"

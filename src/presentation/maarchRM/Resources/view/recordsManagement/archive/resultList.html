@@ -3,14 +3,17 @@
     <h4><span>Your query returns too much results, only first results are displayed.</span></h4>
     <div class="panel panel-primary">
         <input type="hidden" id="transaction" value="[?merge transaction ?]" />
+        <input type="hidden" id="collection" value="[?merge collection.json() ?]" />
         <div class="panel-heading clearfix">
             <div class="pull-left">
                 <?merge hasReachMaxResults.not() ?>
-                <h4><?merge archive.count() ?> archive(s)</h4>
+                <h4><span id="numberResults"><?merge archive.count() ?></span> archive(s)</h4>
                 <?merge hasReachMaxResults ?>
-                <h4><?merge archive.count() ?> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
+                <h4><span id="numberResults"><?merge archive.count() ?></span> archive(s) on <?merge totalResultsWithoutLimit ?> result(s)</h4>
             </div>
             <div class="dropdown pull-right">
+                <?merge isCollectionView.bool() ?>
+                <button class="btn btn-warning" type="button" id="deleteCollections">Remove All Collections</button>
                 <button class="btn btn-warning dropdown-toggle" type="button" id="archiveList_actions" data-toggle="dropdown" aria-expanded="true" title="Actions" disabled="disabled">
                     <i class="fa fa-navicon">&nbsp;</i>&nbsp;Actions
                     <span class="caret"></span>
@@ -28,16 +31,15 @@
                         <th>Originator</th>
                         <th>Profile</th>
                         <th>Deposit date</th>
-                        <th>Disposal date</th>
                         <th>Status</th>
+                        <th><span><i class="fa fa-star-half-full" title="Favoris"></i></span></th>
                         <th style="min-width:150px;"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?merge archive ?>
-                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?]" data-iscommunicable="[?merge .isCommunicable ?]">
+                    <tr id="[?merge .archiveId ?]" name="[?merge .archiveName ?]" class="[?merge .disposable.bool().then('danger') ?] [?merge .hasRights.bool().not().then('text-muted') ?]" data-iscommunicable="[?merge .isCommunicable ?]" data-hasRights="[?merge .hasRights.bool().then('true', 'false') ?]">
                         <td>
-                            <?merge .hasRights.bool() ?>
                             <input type="checkbox"
                                 data-archive-status="[?merge .status ?]"
                                 data-final-disposition='[?merge .finalDisposition ?]'
@@ -46,17 +48,16 @@
                                 value="[?merge .archiveId ?]"/>
                         </td>
                         <td class="archiveName"><?merge .archiveName ?></td>
-                        <td><?merge .archiveId ?></td>
+                        <td><?merge .archiverArchiveId ?></td>
                         <td class="originator"><?merge .originatorOrgName ?></td>
-                        <td class="profile"><?merge .archivalProfileReference ?></td>
+                        <td class="profile"><?merge .archivalProfileName ?></td>
                         <td data-order="[?merge .depositDate.format('Y-m-d H:i:s') ?]"><?merge .depositDate.format('d-m-Y H:i:s') ?></td>
-                        <td data-order="[?merge .disposalDate.format('Y-m-d') ?]"><?merge .disposalDate ?></td>
                         <td class="status"><?merge .statusDesc ?></td>
+                        <td data-isInUserCollection="[?merge .isInUserCollection.bool().then('true', 'false') ?]"><i class="collection fa [?merge .isInUserCollection.bool().then('fa-star orange', 'fa-star-o') ?]"></i></td>
                         <td>
                             <div class="btn-group pull-right">
                                 <!--button type="button" class="btn btn-success btn-sm requestDelivery" id="requestCom" data-archiveid='[?merge .archiveId?]' title="Request of communication"><span class="fa fa-cloud-upload">&nbsp;</span></button-->
-                                <button type="button" class="btn btn-success btn-sm viewArchive" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
-                                <?merge .hasRights.bool().not() @disabled ?>
+                                <button type="button" class="btn btn-success btn-sm viewArchive [?merge .hasRights.bool().not().then('disabled') ?]" title="Info"><span class="fa fa-info-circle">&nbsp;</span></button>
                                 <button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-edit">&nbsp;</i>&nbsp;
                                     <span class="caret"></span>
@@ -71,7 +72,11 @@
     </div>
     <?hinclude recordsManagement/archive/archiveManagement.html ?>
 </div>
-
+<style>
+    .orange {
+        color: orange;
+    }
+</style>
 <script>
     /* MULTIPLE ARCHIVE SELECTION*/
 
@@ -89,6 +94,16 @@
             $("#archiveList_actions").prop('disabled', false);
         } else {
             $("#archiveList_actions").prop('disabled', true);
+        }
+    });
+
+    $('#archiveList_actions').on('click', function () {
+        //use addToCollection because it includes all differents types
+        var archivesSelected = ArchivesAction.getSelectedArchives('addToCollection');
+        if (archivesSelected.hasNoRightsCount > 0) {
+            $('#resultListHtmlAuthorizedMenu').hide();
+        } else {
+            $('#resultListHtmlAuthorizedMenu').show();
         }
     });
 </script>

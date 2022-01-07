@@ -1425,7 +1425,7 @@ INSERT INTO auth."roleMember" ("roleId", "userAccountId") VALUES ('UTILISATEUR',
 INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'audit/event/createChainjournal');
 INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'batchProcessing/scheduling/updateProcess');
 INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'lifeCycle/journal/createChainjournal');
-INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsmanagement/archivecompliance/readperiodic');
+INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsmanagement/archivecompliance/readPeriodic');
 INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/deleteDisposablearchives');
 INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateArchivesretentionrule');
 INSERT INTO auth."servicePrivilege" ("accountId", "serviceURI") VALUES ('System', 'recordsManagement/archives/updateIndexfulltext');

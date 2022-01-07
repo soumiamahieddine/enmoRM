@@ -876,6 +876,10 @@ msgid "importUserAccount"
 msgstr "Comptes utilisateurs"
 msgctxt "userStory"
 
+msgid "adminOriginator"
+msgstr "Modifier le service producteur des archives"
+msgctxt "userStory"
+
 msgid "exportOrganization"
 msgstr "Organisations"
 msgctxt "userStory"

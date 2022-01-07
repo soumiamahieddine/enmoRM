@@ -243,7 +243,7 @@ class message
         $toDate = null,
         $status = null,
         $isIncoming = null,
-        &$queryParams
+        &$queryParams = null
     ) {
         $queryParts = array();
         $currentService = \laabs::getToken("ORGANIZATION");
@@ -1366,5 +1366,16 @@ class message
         }
 
         return $name;
+    }
+
+    public function getArchivesByMessageIdentifier($messageId)
+    {
+        $message = $this->read($messageId);
+        $archives = [];
+        foreach ($message->unitIdentifier as $unitIdentifier) {
+            $archives[] = $this->archiveController->read($unitIdentifier->objectId);
+        }
+
+        return $archives;
     }
 }

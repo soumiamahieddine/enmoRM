@@ -23,7 +23,7 @@ namespace dependency\html;
  *
  * @package Dependency\Html
  * @author  Cyril VAZQUEZ <cyril.vazquez@maarch.org>
- **/ 
+ **/
 trait LocalisationTrait
 {
 
@@ -44,7 +44,7 @@ trait LocalisationTrait
      * Localise the texts
      * @param object $node The context node or null to localise the entire document
      */
-    public function localise($node=null)
+    public function localise($node = null)
     {
         if (!$this->documentElement) {
             return;
@@ -52,7 +52,6 @@ trait LocalisationTrait
         
         $this->translate($node);
         $this->formatDatetime($node);
-        
     }
 
     /**
@@ -60,7 +59,7 @@ trait LocalisationTrait
      * @param object $node    The context node or null to translate the entire document
      * @param string $catalog The catalog uri for translation
      */
-    public function translate($node=null, $catalog=false)
+    public function translate($node = null, $catalog = false)
     {
         if (!$node) {
             $this->translate($this->documentElement);
@@ -107,17 +106,15 @@ trait LocalisationTrait
                 $translatableNode->nodeValue = $struct['prefix']  . $msgstr . $struct['suffix'];
 
                 $this->translatedNodes->attach($translatableNode);
-
             }
         }
         
-        $this->translatePlugins($node, $catalog); 
+        $this->translatePlugins($node, $catalog);
 
         $langAttrs = $this->XPath->query('//*[@lang]/@lang');
         foreach ($langAttrs as $langAttr) {
             $langAttr->value = $this->translator->lang;
         }
-
     }
 
     /**
@@ -129,9 +126,9 @@ trait LocalisationTrait
      * @param string $context   The current context for messages, used in conjunction with node value as the fully qualified message id
      *
      * @return void
-     * @author 
+     * @author
      */
-    public function getTranslatableNodes($node=null, $translate=true, $lang=false, $catalog=false, $context=false)
+    public function getTranslatableNodes($node = null, $translate = true, $lang = false, $catalog = false, $context = false)
     {
         if (!$node) {
             /*foreach ($this->childNodes as $childNode) {
@@ -142,7 +139,7 @@ trait LocalisationTrait
             $node = $this;
         }
         
-        switch($node->nodeType) {
+        switch ($node->nodeType) {
             case \XML_ELEMENT_NODE:
                 if ($node->hasAttribute('lang')) {
                     $lang = $node->getAttribute('lang');
@@ -152,7 +149,7 @@ trait LocalisationTrait
                 if ($node->hasAttribute('translate')) {
                     if ($node->getAttribute('translate') == "yes") {
                         $translate = true;
-                    } 
+                    }
                     if ($node->getAttribute('translate') == "no") {
                         $translate = false;
                     }
@@ -161,7 +158,7 @@ trait LocalisationTrait
                 if ($node->hasAttribute('data-translate-catalog')) {
                     $catalog = $node->getAttribute('data-translate-catalog');
                     //var_dump($node->getNodePath() . " => catalog set to $catalog");
-                } 
+                }
 
                 if ($node->hasAttribute('data-translate-context')) {
                     $context = $node->getAttribute('data-translate-context');
@@ -172,17 +169,17 @@ trait LocalisationTrait
                 if ($translate) {
                     foreach ($node->attributes as $attribute) {
                         if (in_array($attribute->name, array("alt", "title", "placeholder")) && trim($attribute->value) != "") {
-                             //&& !$this->translatableNodes->contains($attribute) 
+                            // && !$this->translatableNodes->contains($attribute)
                             $this->registerTranslatableNode($attribute, $lang, $catalog, $context);
-                        } 
+                        }
                     }
                 }
-
+                // no break;
             case \XML_ELEMENT_NODE:
             case \XML_DOCUMENT_FRAG_NODE:
             case \XML_DOCUMENT_NODE:
                 foreach ($node->childNodes as $childNode) {
-                    switch($childNode->nodeType) {
+                    switch ($childNode->nodeType) {
                         case \XML_ELEMENT_NODE:
                             $this->getTranslatableNodes($childNode, $translate, $lang, $catalog, $context);
                             break;
@@ -191,7 +188,7 @@ trait LocalisationTrait
                             if (trim($childNode->nodeValue, " \t\n\r\0\x0B\xC2\xA0") != ""
                                 && $translate
                                 //&& $lang
-                                //&& $catalog 
+                                //&& $catalog
                                 //&& !$this->translatableNodes->contains($childNode)
                             ) {
                                 $this->registerTranslatableNode($childNode, $lang, $catalog, $context);
@@ -201,7 +198,6 @@ trait LocalisationTrait
                 }
                 break;
         }
-
     }
 
     protected function registerTranslatableNode($node, $lang, $catalog, $context)
@@ -218,16 +214,19 @@ trait LocalisationTrait
         }
         //$this->translatableNodes->attach($node, array('lang' => $lang, 'catalog' => $catalog, 'context' => $context, 'msgid' => $node->nodeValue, 'vars' => $msgvars, 'nodepath' => $node->getNodePath()));
         $nodepath = $node->getNodePath();
+        if (empty($nodepath)) {
+            $nodepath = "?" . mt_rand();
+        }
         $this->translatableNodes[$nodepath] = array('lang' => $lang, 'catalog' => $catalog, 'context' => $context, 'msgid' => $node->nodeValue, 'vars' => $msgvars, 'node' => $node);
     }
 
     /**
      * Retrieve the texts available for translation
      * @param object $node The context node or null to search the entire document
-     * 
+     *
      * @return array The original texts to translate
      */
-    public function getTranslatableTexts($node=null)
+    public function getTranslatableTexts($node = null)
     {
         $translatableTexts = array();
 
@@ -252,7 +251,7 @@ trait LocalisationTrait
      * Translate the plugins
      * @param object $node An html node to save plugins of
      */
-    public function translatePlugins($node=null)
+    public function translatePlugins($node = null)
     {
         $elements = $this->XPath->query("descendant-or-self::*[@class]", $node);
         foreach ($elements as $element) {
@@ -264,7 +263,7 @@ trait LocalisationTrait
      * Format the dates
      * @param object $node The context node or null to check entire document
      */
-    public function formatDatetime($node=null)
+    public function formatDatetime($node = null)
     {
         
         $this->dateNodes = new \SplObjectStorage();
@@ -294,7 +293,6 @@ trait LocalisationTrait
 
             $this->dateNodes->next();
         }
-
     }
 
     /**
@@ -302,20 +300,20 @@ trait LocalisationTrait
      * @param object $node The current node to get translatable nodes of
      *
      * @return void
-     * @author 
+     * @author
      */
-    public function getFormattableDateNodes($node=null)
+    public function getFormattableDateNodes($node = null)
     {
 
         if (!$node) {
             $node = $this->documentElement;
         }
 
-        switch($node->nodeType) {
+        switch ($node->nodeType) {
             case \XML_ELEMENT_NODE:
                 if ($node->hasAttribute('data-datetime-format')) {
                     foreach ($node->childNodes as $childNode) {
-                        switch($childNode->nodeType) {
+                        switch ($childNode->nodeType) {
                             case \XML_ELEMENT_NODE:
                                 $this->getFormattableDateNodes($childNode);
                                 break;
@@ -339,7 +337,7 @@ trait LocalisationTrait
                     }
                 } else {
                     foreach ($node->childNodes as $childNode) {
-                        switch($childNode->nodeType) {
+                        switch ($childNode->nodeType) {
                             case \XML_ELEMENT_NODE:
                                 $this->getFormattableDateNodes($childNode);
                                 break;
@@ -362,9 +360,10 @@ trait LocalisationTrait
                         }
                     }
                 }
+                // no break
             case \XML_DOCUMENT_FRAG_NODE:
                 foreach ($node->childNodes as $childNode) {
-                    switch($childNode->nodeType) {
+                    switch ($childNode->nodeType) {
                         case \XML_ELEMENT_NODE:
                             if ($node->hasAttribute('data-datetime-format')) {
                                 $this->getFormattableDateNodes($childNode);
@@ -389,28 +388,25 @@ trait LocalisationTrait
                     }
                 }
                 break;
-
-            
-
         }
-        if ($node->hasAttribute('data-datetime-format') 
+
+        if ($node->hasAttribute('data-datetime-format')
                     && trim($node->nodeValue) != ""
                     && !$this->dateNodes->contains($node)
         ) {
             $format = $node->getAttribute('data-datetime-format');
             $this->dateNodes->attach($node, array('datetime' => $datetime, 'format' => $format));
-        } 
+        }
 
-        switch($node->nodeType) {
+        switch ($node->nodeType) {
             case \XML_ELEMENT_NODE:
-
                 if ($node->hasAttribute('data-datetime-inputformat')) {
                     $inputFormat = $node->getAttribute('data-datetime-inputformat');
-                } 
+                }
 
                 if ($node->hasAttribute('data-datetime-format')) {
                     $format = true;
-                } 
+                }
 
                 foreach ($node->attributes as $attribute) {
                     $this->getFormattableDateNodes($attribute, $inputFormat, $format);
@@ -436,7 +432,6 @@ trait LocalisationTrait
                 }
                 break;
         }
-
     }
 
 
@@ -452,8 +447,5 @@ trait LocalisationTrait
         }
 
         return array("prefix" => $prefix, "graph" => $graph, "suffix" => $suffix);
-
     }
-
-
 }

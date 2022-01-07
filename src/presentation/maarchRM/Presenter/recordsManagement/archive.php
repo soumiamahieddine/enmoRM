@@ -79,7 +79,7 @@ class archive
             $emptyRole = false;
             $ownerOriginatorOrgs = $this->getOwnerOriginatorsOrgs($currentService);
         }
-
+        $descriptionSchemeNames = \laabs::callService('recordsManagement/descriptionScheme/read_name_Descriptionfields');
         $retentionRuleController = \laabs::newController('recordsManagement/retentionRule');
         $retentionRules = $retentionRuleController->index();
 
@@ -98,13 +98,22 @@ class archive
         if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])) {
             $maxResults = \laabs::configuration('presentation.maarchRM')['maxResults'];
         }
+        $this->translator->setCatalog('recordsManagement/descriptionField');
+        foreach ($descriptionSchemeNames as $descriptionSchemeName) {
+            $descriptionSchemeName->translateType = $this->translator->getText($descriptionSchemeName->type);
+        }
 
+        $dateTimePickerPlugin = \laabs::newService('dependency/html/plugins/dateTimePicker/dateTimePicker', $this->view->getContainer());
+        $dateTimePickerPlugin->translate();
+
+        $this->view->setSource('dateTimePickerParams', $dateTimePickerPlugin->getParameters());
         $this->view->setSource("maxResults", $maxResults);
         $this->view->setSource("retentionRules", $retentionRules);
         $this->view->setSource("emptyRole", $emptyRole);
         $this->view->setSource("profiles", $profiles);
         $this->view->setSource("organizationsOriginator", $ownerOriginatorOrgs);
         $this->view->setSource("deleteDescription", $deleteDescription);
+        $this->view->setSource("descriptionScheme", $descriptionSchemeNames);
 
         $this->view->merge();
 
@@ -125,7 +134,22 @@ class archive
      */
     public function search($archives, $count)
     {
-        $this->view->addContentFile("recordsManagement/archive/resultList.html");
+        $this->presentResultList($archives, $count);
+
+        return $this->view->saveHtml();
+    }
+
+    /**
+     *
+     *
+     * @param array   $archives Array of archive object
+     * @param integer $count    Count of archive object without limit
+     *
+     * @return domElement
+     */
+    public function presentResultList($archives, $count)
+    {
+        $resultList = $this->view->addContentFile("recordsManagement/archive/resultList.html");
 
         $this->view->translate();
 
@@ -156,6 +180,8 @@ class archive
         $orgsByRegNumber = $orgController->orgList();
 
         $currentDate = \laabs::newDate();
+        $collection = \laabs::callService('Collection/Collection/readByUser');
+
         foreach ($archives as $archive) {
             $archive->finalDispositionDesc = $this->view->translator->getText(
                 $archive->finalDisposition,
@@ -168,12 +194,23 @@ class archive
                 "recordsManagement/messages"
             );
 
+
+            $archive->archivalProfileName = null;
+            if (!is_null($archive->archivalProfileReference)) {
+                $archivalProfile = \laabs::callService('recordsManagement/archivalProfile/readByreference_reference_', $archive->archivalProfileReference);
+                $archive->archivalProfileName = $archivalProfile->name;
+            }
+
             if (!empty($archive->disposalDate) && $archive->disposalDate <= $currentDate) {
                 $archive->disposable = true;
             }
 
-            if (empty($archive->disposalDate)
-                && (empty($archive->retentionRuleCode) || empty($archive->retentionDuration))
+            if (
+                empty($archive->disposalDate)
+                && (
+                    empty($archive->retentionRuleCode)
+                    || empty($archive->retentionDuration)
+                )
             ) {
                 $archive->noRetention = true;
             }
@@ -182,7 +219,8 @@ class archive
                 $archive->originatorOrgName = $orgsByRegNumber[$archive->originatorOrgRegNumber]->displayName;
 
                 try {
-                    if ($archive->status == 'disposed'
+                    if (
+                        $archive->status == 'disposed'
                         || $archive->status == 'error'
                         || $archive->status == 'restituted'
                         || $archive->status == 'transfered'
@@ -195,7 +233,6 @@ class archive
                     $archive->hasRights = false;
                 }
             }
-
             $archive->isCommunicable = '2';
             if ($archive->accessRuleComDate) {
                 $communicationDelay = $archive->accessRuleComDate->diff(\laabs::newTimestamp());
@@ -203,19 +240,30 @@ class archive
                     $archive->isCommunicable = '1';
                 }
             }
+
+            $archive->isInUserCollection = false;
+            if (!is_null($collection->archiveIds) && !empty($collection->archiveIds)) {
+                foreach ($collection->archiveIds as $collectedArchiveId) {
+                    if ($collectedArchiveId == $archive->archiveId) {
+                        $archive->isInUserCollection = true;
+                    }
+                }
+            }
         }
 
         $hasReachMaxResults = false;
-        if (isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
-            && count($archives) >= \laabs::configuration('presentation.maarchRM')['maxResults']) {
+        if (
+            isset(\laabs::configuration('presentation.maarchRM')['maxResults'])
+            && count($archives) >= \laabs::configuration('presentation.maarchRM')['maxResults']
+        ) {
             $hasReachMaxResults = true;
         }
 
         $dataTable = $this->view->getElementsByClass("dataTable")->item(0)->plugin['dataTable'];
         $dataTable->setPaginationType("full_numbers");
 
-        $dataTable->setUnsortableColumns(8);
-        $dataTable->setUnsearchableColumns(8);
+        $dataTable->setUnsortableColumns([7, 8]);
+        $dataTable->setUnsearchableColumns([7, 8]);
 
         $dataTable->setUnsortableColumns(0);
         $dataTable->setUnsearchableColumns(0);
@@ -246,7 +294,7 @@ class archive
 
         $this->readPrivilegesOnArchives();
 
-        $packageSchemas = \laabs::configuration("medona")["packageSchemas"];
+        $packageSchemas = isset(\laabs::configuration("medona")["packageSchemas"]) ? \laabs::configuration("medona")["packageSchemas"] : null;
 
         $this->view->setSource('hasReachMaxResults', $hasReachMaxResults);
         $this->view->setSource('maxResults', \laabs::configuration('presentation.maarchRM')['maxResults']);
@@ -256,9 +304,11 @@ class archive
         $this->view->setSource('archive', $archives);
         $this->view->setSource('transaction', $this->transaction);
         $this->view->setSource('packageSchemas', $packageSchemas);
+        $this->view->setSource('collection', $collection);
+
         $this->view->merge();
 
-        return $this->view->saveHtml();
+        return $resultList;
     }
 
     /**
@@ -281,7 +331,7 @@ class archive
 
         \laabs::setResponseType($mimetype);
         $response = \laabs::kernel()->response;
-        $response->setHeader("Content-Disposition", "inline; filename=".$digitalResource->attachment->filename."");
+        $response->setHeader("Content-Disposition", "attachment; filename=".$digitalResource->attachment->filename."");
 
         return $digitalResource->attachment->data;
     }
@@ -420,7 +470,7 @@ class archive
      */
     public function edit($archive)
     {
-        if (!empty($archive->descriptionClass) && $presenter = $this->getPresenter($archive->descriptionClass)) {
+        if (!empty($archive->descriptionClass) && $presenter = $this->getDescriptionPresenter($archive->descriptionClass)) {
             return $presenter->edit($archive);
         }
     }
@@ -1088,8 +1138,8 @@ class archive
         $editMetadata = false;
         if (!empty($archive->descriptionObject)) {
             $this->getDescriptionHtml($archive);
-            // Edit Metadata button is display only if the content is in SEDA 1 & if the archive status is 'preserved'
-            if ($archive->descriptionClass == "archivesPubliques/content" && $archive->status == "preserved") {
+            // Edit Metadata button is display only the archive status is 'preserved'
+            if ($archive->status == "preserved" && (isset($archive->messages) && $archive->messages[0]->schema != "mades")) {
                 $editMetadata = true;
             }
         }
@@ -1299,6 +1349,7 @@ class archive
     protected function readPrivilegesOnArchives()
     {
         $hasModificationPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modify");
+        $hasModificationOriginatorPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/adminOriginator");
         $hasIntegrityCheckPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/checkIntegrity");
         $hasDestructionPrivilege = \laabs::callService('auth/userAccount/readHasprivilege', "destruction/destructionRequest");
         $hasRestitutionPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "restitution/restitutionRequest");
@@ -1307,6 +1358,7 @@ class archive
         $hasModificationRequestPrivilege = $this->transaction && \laabs::callService('auth/userAccount/readHasprivilege', "archiveManagement/modificationRequestSend");
 
         $this->view->setSource('hasModificationPrivilege', $hasModificationPrivilege);
+        $this->view->setSource('hasModificationOriginatorPrivilege', $hasModificationOriginatorPrivilege);
         $this->view->setSource('hasIntegrityCheckPrivilege', $hasIntegrityCheckPrivilege);
         $this->view->setSource('hasDestructionPrivilege', $hasDestructionPrivilege);
         $this->view->setSource('hasRestitutionPrivilege', $hasRestitutionPrivilege);
@@ -1378,4 +1430,31 @@ class archive
 
         return $file;
     }
+
+    /**
+     * Serializer JSON for changing originator method
+     * @param array $result
+     *
+     * @return object JSON object with a status and message parameters
+     */
+    public function setOriginator($result)
+    {
+        $success = count($result['success']);
+        $echec = count($result['error']);
+
+        $this->json->message = '%1$s archive(s) modified.';
+        $this->json->message = $this->translator->getText($this->json->message);
+        $this->json->message = sprintf($this->json->message, $success);
+
+        if ($echec > 0) {
+            $message = '%1$s archive(s) can not be modified.';
+            $message = $this->translator->getText($message);
+            $message = sprintf($message, $echec);
+
+            $this->json->message .= ' '.$message;
+        }
+
+        return $this->json->save();
+    }
+
 }

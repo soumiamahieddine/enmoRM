@@ -147,4 +147,9 @@ EOS;
         $variableScript->appendChild($variableCdataSection);
         $this->element->ownerDocument->getContainer()->appendChild($variableScript);
     }
+
+    public function getParameters()
+    {
+        return json_encode($this->parameters);
+    }
 }

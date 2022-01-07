@@ -96,7 +96,7 @@ trait archiveModificationTrait
                 $retentionRule->retentionDuration = $refRetentionRule->duration;
             }
         }
-        
+
 
         $retentionRuleReceived = $retentionRule;
 
@@ -426,6 +426,13 @@ trait archiveModificationTrait
 
         $archive->lastModificationDate = \laabs::newTimestamp();
 
+        $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+        $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+        if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+            $text = $descriptionController->read($archiveId, false)->text;
+            $fullText = substr($text, strpos($text, PHP_EOL));
+        }
+
         if (!empty($description)) {
             $descriptionObject = $description;
 
@@ -439,7 +446,7 @@ trait archiveModificationTrait
                                 $archiveOldField = $archive->descriptionObject->$fieldName;
                                 sort($archiveNewField);
                                 sort($archiveOldField);
-                                if (is_object($descriptionObject->$fieldName[0])) {
+                                if (is_object($descriptionObject->{$fieldName}[0])) {
                                     foreach ($archiveNewField as $index => $object) {
                                         if ($archiveOldField[$index] != $object) {
                                             throw new \bundle\recordsManagement\Exception\invalidArchiveException(
@@ -470,17 +477,22 @@ trait archiveModificationTrait
                 }
             }
 
-            if (!empty($archive->archivalProfileReference) && is_object($descriptionObject)) {
+            if (!empty($archive->archivalProfileReference)
+                && is_object($descriptionObject)
+                && \laabs::configuration("recordsManagement")['archivalProfileType'] != 1
+            ) {
                 $this->useArchivalProfile($archive->archivalProfileReference);
 
                 $this->validateDescriptionModel($descriptionObject, $this->currentArchivalProfile);
             }
 
-            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
-
             $archive->descriptionObject = $descriptionObject;
 
-            $descriptionController->update($archive);
+            if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+                $descriptionController->update($archive, $fullText);
+            } else {
+                $descriptionController->update($archive);
+            }
         }
 
         $this->sdoFactory->update($archive, 'recordsManagement/archive');
@@ -592,7 +604,6 @@ trait archiveModificationTrait
                     $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
 
                     $operationResult = true;
-
                 } catch (\Exception $e) {
                     $operationResult = false;
                     $archive->fullTextIndexation = "failed";
@@ -684,11 +695,11 @@ trait archiveModificationTrait
                 preg_match('%^[a-zA-Z0-9\\\\/+]*={0,2}$%', $contents):
                 $handler = \laabs::createTempStream(base64_decode($contents));
                 break;
-        
+
             case is_resource($contents):
                 $handler = \core\Encoding\Base64::decode($contents);
         }
-        
+
         $digitalResource = $this->digitalResourceController->createFromStream($handler, $filename);
         $digitalResource->archiveId = $archiveId;
         $digitalResource->resId = \laabs::newId();
@@ -707,7 +718,7 @@ trait archiveModificationTrait
         $this->useServiceLevel('deposit', $archive->serviceLevelReference);
 
         $this->validateDigitalResource($digitalResource);
-    
+
         $transactionControl = !$this->sdoFactory->inTransaction();
 
         if ($transactionControl) {
@@ -720,6 +731,13 @@ trait archiveModificationTrait
                 $archive->storagePath
             );
             $this->digitalResourceController->store($digitalResource);
+
+
+            $serviceLevel = $this->serviceLevelController->getByReference($archive->serviceLevelReference);
+            if (strpos($serviceLevel->control, 'fullTextIndexation') !== false) {
+                $archive->fullTextIndexation = "requested";
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+            }
 
             $this->logAddResource($archive, $digitalResource, true);
         } catch (\Exception $e) {
@@ -815,5 +833,253 @@ trait archiveModificationTrait
                 $format
             );
         }
+    }
+
+    /**
+     * Extract full text script
+     *
+     * @param  int $maxResults Max results number to display
+     * @param  int $timeLimit  Time limit in seconds
+     *
+     * @return [type]              [description]
+     */
+    public function extractFulltext($maxResults = null, $timeLimit = null)
+    {
+        if (!is_null($maxResults) && $maxResults != "null") {
+            $maxResults = intval($maxResults);
+        }
+
+        if (!is_null($timeLimit)) {
+            $timeLimit = intval($timeLimit);
+        }
+
+        $archiveIds = $this->sdoFactory->index(
+            'recordsManagement/archive',
+            'archiveId',
+            'fullTextIndexation=:requested',
+            [
+                'requested' => 'requested'
+            ],
+            null,
+            0,
+            $maxResults
+        );
+
+        $selectedRequested = count($archiveIds);
+
+        $logMessage = ["message" => "%s archives requested selected", "variables"=> $selectedRequested];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        if($selectedRequested < $maxResults) {
+            $archiveIds = array_merge(
+                $archiveIds,
+                $this->sdoFactory->index(
+                    'recordsManagement/archive',
+                    'archiveId',
+                    'fullTextIndexation=:skipped',
+                    [
+                        'skipped' => 'skipped'
+                    ],
+                    null,
+                    0,
+                    $maxResults - $selectedRequested
+                )
+            );
+        }
+
+        $logMessage = ["message" => "%s archives previously skipped selected", "variables"=> count($archiveIds) - $selectedRequested];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $fullTextServices = \laabs::configuration('dependency.fileSystem')['fullTextServices'];
+
+        $archiveExtractedCount = 0;
+        $errors = [];
+        $endTimeScript = microtime(true) + $timeLimit;
+
+        $skipped = 0;
+        $indexed = 0;
+
+        foreach ($archiveIds as $archiveId) {
+            if (!is_null($timeLimit) && ($endTimeScript - microtime(true)) <= 0) {
+                $logMessage = ["message" => "Time Limit reached"];
+                \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+                break;
+            }
+            $fullText = "";
+            $status = "";
+            $digitalResources = $this->digitalResourceController->getResourcesByArchiveId($archiveId);
+            foreach ($digitalResources as $digitalResource) {
+                $puid = $digitalResource->puid;
+
+                if (empty($puid)) {
+                    $errors[] = "File puid has not been detected for " . $digitalResource->filename;
+                    $status = "skipped";
+                    continue;
+                }
+
+                foreach ($fullTextServices as $fulltextServiceConf) {
+                    $options = null;
+                    if (in_array($puid, $fulltextServiceConf['inputFormats'])) {
+                        $fulltextService = \laabs::newService($fulltextServiceConf['serviceName']);
+                        $options = isset($fulltextServiceConf['options']) ? $fulltextServiceConf['options'] : null;
+                    }
+                }
+
+                if (!isset($fulltextService)) {
+                    $status = "skipped";
+                    $errors[] = "File type does not exists has not been configured for extraction for file " . $digitalResource->filename;
+                    continue;
+                }
+
+                $tmpFile = \laabs\tempnam();
+                $tmpStream = fopen($tmpFile, 'w+');
+                $handler = $this->digitalResourceController->contents($digitalResource->resId);
+                stream_copy_to_stream($handler, $tmpStream);
+                rewind($tmpStream);
+                fclose($tmpStream);
+                $fullText .= $fulltextService->getText($tmpFile, $options) . " ";
+                unlink($tmpFile);
+            }
+            $archive = $this->retrieve($archiveId);
+            $descriptionController = $this->useDescriptionController($archive->descriptionClass);
+
+            try {
+                $descriptionController->update($archive, $fullText);
+                if (!empty($status)) {
+                    $archive->fullTextIndexation = $status;
+                    $skipped++;
+                } else {
+                    $archive->fullTextIndexation = "indexed";
+                    $indexed++;
+                }
+                $this->sdoFactory->update($archive, 'recordsManagement/archiveIndexationStatus');
+            } catch (\Exception $e) {
+                throw new Exception("Error Processing Request", 1);
+            }
+
+            // $logMessage = ["message" => "Archive %s extracted", "variables"=> $archive->archiveName];
+            // \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+            $this->logMetadataModification($archive, true);
+            $archiveExtractedCount++;
+        }
+
+        // $logMessage = ["message" => "%s archive(s) processed", "variables"=> $archiveExtractedCount];
+        // \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) indexed", "variables"=> $indexed];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        $logMessage = ["message" => "%s archive(s) skipped", "variables"=> $skipped];
+        \laabs::notify(\bundle\audit\AUDIT_ENTRY_OUTPUT, $logMessage);
+
+        return true;
+    }
+
+    /**
+     * Get available originators for an archive
+     * @param string $archiveId The archive identifier
+     *
+     * @return array $availableOriginatingServices array of organization
+     */
+    public function indexAvailableOriginators($archiveIds)
+    {
+        $availableOriginatingServices = null;
+
+        foreach($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            if (is_null($availableOriginatingServices)){
+                $availableOriginatingServices = $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference);
+            } else {
+                array_uintersect($availableOriginatingServices, $this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), function($a, $b) {
+                    return strcmp(spl_object_hash($a), spl_object_hash($b));
+                });
+            }
+        }
+        
+        return $availableOriginatingServices;
+    }
+
+    protected function getDescendantServices($orgId, $archivalAgreementReference)
+    {
+        $archivalAgreementController = \laabs::newController('medona/archivalAgreement');
+        $organizationController = \laabs::newController('organization/organization');
+        $orgs = [];
+        if (!is_null($archivalAgreementReference)) {
+            $archivalAgreement = $archivalAgreementController->getByReference($archivalAgreementReference);
+            foreach ($archivalAgreement->originatorOrgIds as $originatorOrgId) {
+                $orgs[] = $organizationController->read((string) $originatorOrgId);
+                array_merge($organizationController->readDescendantServices((string) $originatorOrgId), $orgs);
+            }
+        } else {
+            $orgs = $organizationController->readDescendantServices($orgId);
+        }
+
+        $descendantServices = [];
+        foreach ($orgs as $key => $org) {
+            // May be empty if archivalAgreement originatorOrgId has no descendant service
+            if (!empty($org)) {
+                $descendantServices[$key] = new \stdClass();
+                $descendantServices[$key]->orgId = (string) $org->orgId;
+                $descendantServices[$key]->displayName = $org->displayName;
+            }
+        }
+
+        // sort by alphabetical order of displayName (php 8)
+        usort($descendantServices, function ($a, $b) {
+            return $a->displayName <=> $b->displayName;
+        });
+
+        return $descendantServices;
+    }
+
+    /**
+     * Update originator service of an array of archives
+     *
+     * @param  array  $archiveIds Array of archive identifiers
+     * @param  string $orgId      Organization identified destined to be new originator of archive
+     *
+     */
+    public function updateOriginator($archiveIds, $orgId)
+    {
+        if (!is_array($archiveIds)) {
+            $archiveIds = [$archiveIds];
+        }
+
+        $result = [];
+        $result["success"] = [];
+        $result["error"] = [];
+
+
+        $newOriginatorOrg = $this->sdoFactory->read('organization/organization', $orgId);
+        if ($newOriginatorOrg->enabled == false) {
+            throw new \bundle\recordsManagement\Exception\organizationException(
+                "This organization is disabled."
+            );
+        }
+
+        foreach ($archiveIds as $archiveId) {
+            $archive = $this->sdoFactory->read('recordsManagement/archive', $archiveId);
+            $currentOwnerOrgId = $archive->originatorOwnerOrgId;
+
+            if ($currentOwnerOrgId != $newOriginatorOrg->ownerOrgId) {
+                $result["error"][] = $archiveId;
+                continue;
+            }
+            
+            $isAvailableOriginator = array_search($newOriginatorOrg->orgId, array_column($this->getDescendantServices($archive->originatorOwnerOrgId, $archive->archivalAgreementReference), 'orgId'));
+            if (!$isAvailableOriginator) {
+                $result["error"][] = $archiveId;
+            }
+
+            $archive->originatorOrgRegNumber = $newOriginatorOrg->registrationNumber;
+            $archive->lastModificationDate = \laabs::newTimestamp();
+            $this->sdoFactory->update($archive,'recordsManagement/archive');
+
+            $result["success"][] = $archiveId;
+
+        }
+
+        return $result;
     }
 }

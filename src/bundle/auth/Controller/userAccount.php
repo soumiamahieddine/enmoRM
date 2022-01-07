@@ -680,7 +680,7 @@ class userAccount
      */
     public function readUserPositions($accountId)
     {
-        $users = $this->sdoFactory->find("organization/userPosition", "accountId = '$accountId'");
+        $users = $this->sdoFactory->find("organization/userPosition", "userAccountId = '$accountId'");
         $users = \laabs::castMessageCollection($users, 'organization/userPositionTree');
 
         foreach ($users as $user) {

@@ -64,7 +64,7 @@ class Factory
      * @param object  $das     The dependency sdo Das to use
      * @param array   $cluster A cluster definition, array of das parameters
      */
-    public function __construct($trace=3, \dependency\sdo\DasInterface $das, array $cluster=null) 
+    public function __construct($trace=3, \dependency\sdo\DasInterface $das=null, array $cluster=null) 
     {
         $this->trace = $trace;
         

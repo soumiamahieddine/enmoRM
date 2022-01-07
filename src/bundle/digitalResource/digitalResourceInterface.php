@@ -32,4 +32,33 @@ interface digitalResourceInterface {
      * @action digitalResource/digitalResource/isConvertible
      */
     public function updateIsconvertible($digitalResource);
+   
+    /**
+     * Search digital resource
+     * @param string    $archiveId
+     * @param integer   $sizeMin
+     * @param integer   $sizeMax
+     * @param string    $puid
+     * @param string    $mimetype
+     * @param string    $hash
+     * @param string    $hashAlgorithm
+     * @param string    $fileName
+     * @param timestamp $startDate
+     * @param timestamp $endDate
+     *
+     * @action digitalResource/digitalResource/findDocument
+     */
+    public function readFinddocuments(
+        $archiveId = null,
+        $sizeMin = null,
+        $sizeMax = null,
+        $puid = null,
+        $mimetype = null,
+        $hash = null,
+        $hashAlgorithm = null,
+        $fileName = null,
+        $startDate = null,
+        $endDate = null
+    );
+
 }

@@ -111,13 +111,16 @@ class log
      */
     public function contents($res)
     {
-        $journal = explode(PHP_EOL, $res);
+        //$journal = explode(PHP_EOL, $res);
+        $journal = str_getcsv($res, "\n");
         $id = str_getcsv($journal[1]);
         $head = str_getcsv($journal[2]);
 
         $events = [];
         for ($i = 3; $i < count($journal) - 1; $i++) {
-            $events[] = str_getcsv($journal[$i]);
+            if (!empty($journal[$i])) {
+                $events[] = str_getcsv($journal[$i]);
+            }
         }
 
         $type = $journal[0];

@@ -16,8 +16,7 @@
     # when target is not an existing public resource
     RewriteEngine On
 
-    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f [OR]
-    RewriteCond %{REQUEST_URI} ^/public [NC]
+    RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} -f
     RewriteRule .* - [QSA,L]
 
     # Rewrite to dynamic frontal if no file extension
@@ -28,7 +27,7 @@
     # Set environment variables for the application instance
     SetEnv LAABS_INSTANCE_NAME maarchRM
     SetEnv LAABS_APP maarchRM
-    SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics
+    SetEnv LAABS_BUNDLES audit;auth;batchProcessing;contact;digitalResource;lifeCycle;organization;recordsManagement;filePlan;medona;mades;digitalSafe;Statistics;Collection
     SetEnv LAABS_DEPENDENCIES repository;xml;html;localisation;datasource;sdo;json;fileSystem;notification;PDF;csrf;timestamp;csv
     SetEnv LAABS_PRESENTATION maarchRM
     SetEnv SERVICE_CLIENT_TOKEN service
@@ -53,4 +52,21 @@
     SetEnv LAABS_ERROR_URI recordsManagement/welcome/error
 
     SetEnv LAABS_CRYPT_KEY mySecretKey
+
+    ### AUTHENTICATION WITH  KERBEROS ### 
+    
+    # SetEnv LAABS_AUTH_MODES remote;basic;digest
+
+    # <Directory "/var/www/laabs/web">
+    #     <If "'%{HTTP:User-Agent}' !~ m#service(.*)$#">
+    #         AuthType Kerberos
+    #         AuthName "KERBEROS AUTHENTICATION"
+    #         KrbAuthRealms DOMAIN.COM
+    #         KrbServiceName HTTP
+    #         Krb5Keytab /etc/apache2/kerb.keytab
+    #         KrbMethodNegotiate On
+    #         KrbMethodK5Passwd Off
+    #         Require valid-user
+    #     </If>
+    # </Directory>
 </VirtualHost>

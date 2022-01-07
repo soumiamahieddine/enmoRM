@@ -1,0 +1,36 @@
+<table id="originatorOrg" class="table table-condensed modificationForm">
+    <tr>
+        <td><strong>Originator organization</strong><span style="color:red">*</span</td>
+        <td>
+            <select id="originatorOrgSelect">
+                <option value="">Select an originator organization</option>
+            </select>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    var originatorOrg_serialize = function() {
+        var parameter = {}
+        if ($('#originatorOrgSelect').find('option:selected').val()) {
+            parameter.registrationNumber = $('#originatorOrgSelect').find('option:selected').val();
+        }
+        
+        if (!parameter.registrationNumber) {
+            gritter.show($('#empty_text').html(), false);
+            return -1;
+        }
+
+        return parameter;
+    }
+
+    var originatorOrg_load = function(archiveId, archiveName, type) {
+        $('#originatorOrg').css('display', '');
+        ModificationModal.loadOriginatorOrg();
+    }
+
+    var originatorOrg_loadMultiple = function() {
+        $('#originatorOrg').css('display', '');
+        ModificationModal.loadOriginatorOrg();
+    }
+</script>

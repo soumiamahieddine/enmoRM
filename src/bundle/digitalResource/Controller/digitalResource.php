@@ -76,6 +76,93 @@ class digitalResource
     }
 
     /**
+     * Search digital resource
+     * @param string    $archiveId
+     * @param integer   $sizeMin
+     * @param integer   $sizeMax
+     * @param string    $puid
+     * @param string    $mimetype
+     * @param string    $hash
+     * @param string    $hashAlgorithm
+     * @param string    $fileName
+     * @param timestamp $startDate
+     * @param timestamp $endDate
+     */
+    public function findDocument(
+        $archiveId = null,
+        $sizeMin = null,
+        $sizeMax = null,
+        $puid = null,
+        $mimetype = null,
+        $hash = null,
+        $hashAlgorithm = null,
+        $fileName = null,
+        $startDate = null,
+        $endDate = null
+    ) {
+        $queryParts = array();
+        $queryParams = array();
+
+        if ($archiveId != null) {
+            $queryParams['archiveId'] = $archiveId;
+            $queryParts['archiveId'] = "archiveId = :archiveId";
+        }
+
+        if ($sizeMin) {
+            $queryParams['sizeMin'] = $sizeMin;
+            $queryParts['size'] = "size >= :sizeMin";
+        }
+        
+        if ($sizeMax) {
+            $queryParams['sizeMax'] = $sizeMax;
+            $queryParts['size'] = "size <= :sizeMax";
+        }
+
+        if ($puid != null) {
+            $queryParams['puid'] = $puid;
+            $queryParts['puid'] = "puid = :puid";
+        }
+
+        if ($mimetype != null) {
+            $queryParams['mimetype'] = $mimetype;
+            $queryParts['mimetype'] = "mimetype = :mimetype";
+        }
+
+        if ($hash != null) {
+            $queryParams['hash'] = $hash;
+            $queryParts['hash'] = "hash = :hash";
+        }
+
+        if ($hashAlgorithm != null) {
+            $queryParams['hashAlgorithm'] = $hashAlgorithm;
+            $queryParts['hashAlgorithm'] = "hashAlgorithm = :hashAlgorithm";
+        }
+
+        if ($fileName != null) {
+            if (strpos($fileName,'*')!== false) {
+                $queryParams['fileName'] = str_replace('*','%',$fileName);
+                $queryParts['fileName'] = "fileName ~ :fileName";
+            } else {
+                $queryParams['fileName'] = $fileName;
+                $queryParts['fileName'] = "fileName = :fileName";
+            }
+        }
+        
+        if ($startDate) {
+            $queryParams['startDate'] = $startDate;
+            $queryParts['created'] = "created >= :startDate";
+        }
+        
+        if ($endDate) {
+            $queryParams['endDate'] = $endDate;
+            $queryParts['created'] = "created <= :endDate";
+        }
+
+        $queryString = implode(' AND ', $queryParts);
+        return $resources = $this->sdoFactory->find("digitalResource/digitalResource", $queryString, $queryParams);
+    }
+
+    /**
      * Get file information about one file
      * @param string $filename The file name
      *
@@ -785,7 +872,7 @@ class digitalResource
         $digitalResources = $this->sdoFactory->find("digitalResource/digitalResource", "archiveId='$archiveId' AND relatedResId=null");
 
         if (count($digitalResources)) {
-            $fullTextService = \laabs::newService('dependency/fileSystem/plugins/tika');
+            $fullTextService = \laabs::newService('dependency/fileSystem/plugins/Tika');
 
             foreach ($digitalResources as $digitalResource) {
                 $contents = $this->contents($digitalResource->resId);

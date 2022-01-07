@@ -240,26 +240,26 @@ trait archiveAccessTrait
         $processingStatus = null
     ) {
         $archiveArgs = [
-            'archiveId' => $archiveId,
-            'profileReference' => $profileReference,
-            'status' => $status,
-            'archiveName' => $archiveName,
-            'agreementReference' => $agreementReference,
-            'archiveExpired' => $archiveExpired,
-            'finalDisposition' => $finalDisposition,
+            'archiveId'              => $archiveId,
+            'profileReference'       => $profileReference,
+            'status'                 => $status,
+            'archiveName'            => $archiveName,
+            'agreementReference'     => $agreementReference,
+            'archiveExpired'         => $archiveExpired,
+            'finalDisposition'       => $finalDisposition,
             'originatorOrgRegNumber' => $originatorOrgRegNumber,
-            'originatorOwnerOrgId' => $originatorOwnerOrgId,
-            'originatorArchiveId' => $originatorArchiveId,
-            'originatingDate' => $originatingDate,
-            'filePlanPosition' => $filePlanPosition,
-            'hasParent' => $hasParent,
-            'partialRetentionRule' => $partialRetentionRule,
-            'retentionRuleCode' => $retentionRuleCode,
-            'depositStartDate' => $depositStartDate,
-            'depositEndDate' => $depositEndDate,
-            'originatingDate' => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
-            'archiverArchiveId' => $archiverArchiveId,
-            'processingStatus' => $processingStatus
+            'originatorOwnerOrgId'   => $originatorOwnerOrgId,
+            'originatorArchiveId'    => $originatorArchiveId,
+            'originatingDate'        => $originatingDate,
+            'filePlanPosition'       => $filePlanPosition,
+            'hasParent'              => $hasParent,
+            'partialRetentionRule'   => $partialRetentionRule,
+            'retentionRuleCode'      => $retentionRuleCode,
+            'depositStartDate'       => $depositStartDate,
+            'depositEndDate'         => $depositEndDate,
+            'originatingDate'        => [$originatingStartDate, $originatingEndDate], // [0] startDate, [1] endDate
+            'archiverArchiveId'      => $archiverArchiveId,
+            'processingStatus'       => $processingStatus
         ];
 
         if (!$filePlanPosition) {
@@ -620,7 +620,6 @@ trait archiveAccessTrait
                 foreach ($archive->digitalResources as $i => $digitalResource) {
                     $archive->digitalResources[$i] = $this->digitalResourceController->retrieve($digitalResource->resId);
                 }
-
             } elseif ($loadResourcesInfo) {
                 foreach ($archive->digitalResources as $i => $digitalResource) {
                     $archive->digitalResources[$i] = $this->digitalResourceController->info($digitalResource->resId);
@@ -978,11 +977,11 @@ trait archiveAccessTrait
 
         $queryParts = [];
         if (!empty($args['archiveName'])) {
-            $queryParts[] = "archiveName='*".$args['archiveName']."*'";
+            $queryParts[] = "archiveName='*" . $args['archiveName'] . "*'";
         }
         if (!empty($args['profileReference'])) {
             $queryParts['archivalProfileReference'] = "archivalProfileReference = :archivalProfileReference";
-            $queryParams['archivalProfileReference']=$args['profileReference'];
+            $queryParams['archivalProfileReference'] = $args['profileReference'];
         }
         if (!empty($args['agreementReference'])) {
             $queryParts['archivalAgreementReference'] = "archivalAgreementReference=:archivalAgreementReference";
@@ -1017,7 +1016,7 @@ trait archiveAccessTrait
         }
         if (!empty($args['finalDisposition'])) {
             $queryParts['finalDisposition'] = "finalDisposition= :finalDisposition";
-            $queryParams['finalDisposition'] =$args['finalDisposition'];
+            $queryParams['finalDisposition'] = $args['finalDisposition'];
         }
         if (!empty($args['originatorOrgRegNumber'])) {
             $queryParts[] = "originatorOrgRegNumber= :originatorOrgRegNumber";
@@ -1137,15 +1136,32 @@ trait archiveAccessTrait
             }
         }
 
-        $queryParts['originator'] = "originatorOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
-        $queryParts['archiver'] = "archiverOrgRegNumber=['".implode("', '", $userServiceOrgRegNumbers)."']";
-        $queryParts['user'] = "(userOrgRegNumbers = '".$currentService->registrationNumber."' OR userOrgRegNumbers = '".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber." *' OR userOrgRegNumbers = '* ".$currentService->registrationNumber."')";
+        $queryParts['originator'] = "originatorOrgRegNumber=['" . implode("', '", $userServiceOrgRegNumbers) . "']";
+        $queryParts['archiver'] = "archiverOrgRegNumber=['" . implode("', '", $userServiceOrgRegNumbers) . "']";
+        $queryParts['user'] = "(userOrgRegNumbers = '" . $currentService->registrationNumber .
+            "' OR userOrgRegNumbers = '" . $currentService->registrationNumber .
+            " *' OR userOrgRegNumbers = '* " . $currentService->registrationNumber .
+            " *' OR userOrgRegNumbers = '* " . $currentService->registrationNumber . "')";
         //$queryParts['depositor'] = "depositorOrgRegNumber=['". implode("', '", $userServiceOrgRegNumbers) ."']";
 
-        $queryParts['accessRule'] = "(originatorOwnerOrgId = '".$currentService->ownerOrgId
-            ."' AND (accessRuleComDate <= '$currentDateString'))";
+        $discoverableProfiles = $this->archivalProfileController->index(null, 'isDiscoverable=true');
 
-        return "(".implode(" OR ", $queryParts).")";
+
+        $discoverableProfilesIdentifiers =  array_map(
+            function ($profile) {
+                return "'" . $profile->reference . "'";
+            },
+            $discoverableProfiles
+        );
+
+        $queryParts['accessRule'] = "(originatorOwnerOrgId = '" . $currentService->ownerOrgId
+            . "' AND (
+                (accessRuleComDate <= '$currentDateString')
+                OR (archivalProfileReference = [" .  \laabs\implode(", ", $discoverableProfilesIdentifiers) . "])
+            )
+        )";
+
+        return "(" . implode(" OR ", $queryParts) . ")";
     }
 
     /**
@@ -1354,15 +1370,19 @@ trait archiveAccessTrait
         $userServices[] = $currentUserService->registrationNumber;
 
         // OWNER access
-        if (!is_null($currentUserService->orgRoleCodes)
-            && \laabs\in_array('owner', $currentUserService->orgRoleCodes)) {
+        if (
+            !is_null($currentUserService->orgRoleCodes)
+            && \laabs\in_array('owner', $currentUserService->orgRoleCodes)
+        ) {
             return true;
         }
 
         // ARCHIVER access
-        if (!is_null($currentUserService->orgRoleCodes)
+        if (
+            !is_null($currentUserService->orgRoleCodes)
             && \laabs\in_array('archiver', $currentUserService->orgRoleCodes)
-            && $archive->archiverOrgRegNumber === $currentUserService->registrationNumber) {
+            && $archive->archiverOrgRegNumber === $currentUserService->registrationNumber
+        ) {
             return true;
         }
 
@@ -1374,9 +1394,13 @@ trait archiveAccessTrait
         }
 
         // COMMUNICATION ACCESS
-        if (!is_null($archive->accessRuleComDate)
-            && ($isCommunication)
-            && ($archive->accessRuleComDate <= $currentDate)) {
+        if (
+            $isCommunication
+            && (
+                is_null($archive->accessRuleComDate)
+                || $archive->accessRuleComDate <= $currentDate
+            )
+        ) {
             return true;
         }
 
@@ -1405,12 +1429,13 @@ trait archiveAccessTrait
         } elseif (!empty($archive->archivalProfileReference)) {
             $archivalProfile = $this->archivalProfileController->getByReference($archive->archivalProfileReference);
             $accessRuleCode = $archivalProfile->accessRuleCode;
+        } elseif (isset(\laabs::configuration("recordsManagement")['actionWithoutCommunicationRule'])) {
+            $accessRuleCode = null;
         } else {
             return;
         }
-        if (!empty($accessRuleCode)) {
-            $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
-        }
+
+        $archive->accessRule = $this->accessRuleController->edit($accessRuleCode);
     }
 
     /**
@@ -1461,7 +1486,7 @@ trait archiveAccessTrait
         $unitIdentifiers = $this->sdoFactory->find('medona/unitIdentifier', "objectId='$archiveId'");
 
         foreach ($unitIdentifiers as $unitIdentifier) {
-            $queryString [] ="messageId='$unitIdentifier->messageId'";
+            $queryString [] = "messageId='$unitIdentifier->messageId'";
         }
 
         if (count($unitIdentifiers) != 0) {
@@ -1589,5 +1614,24 @@ trait archiveAccessTrait
 
         $handler = fopen($zipfile, 'r');
         return $handler;
+    }
+
+    /**
+     * Retrieve archive from array of archiveIds
+     *
+     * @param  array  $archiveIds Array of archive identifier
+     *
+     * @return [type]             [description]
+     */
+    public function readFromIdentifiers(array $archiveIds = null)
+    {
+        $archives = [];
+        if (!is_null($archiveIds)) {
+            $list = '"'.implode('", "', $archiveIds).'"';
+            $where = '= ['.$list.']';
+            $archives = $this->sdoFactory->find('recordsManagement/archive', 'archiveId ' . $where);
+        }
+
+        return $archives;
     }
 }

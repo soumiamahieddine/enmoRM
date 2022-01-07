@@ -70,8 +70,15 @@ trait FactoryReaderTrait
      *
      * @return array An array of object index values matching the query and ordered as index
      */
-    public function index($className, $properties=null, $queryString=false, $queryParams=array(), $keyfields=null, $offset=0, $length=null)
-    {
+    public function index(
+        $className,
+        $properties = null,
+        $queryString = false,
+        $queryParams = array(),
+        $keyfields = null,
+        $offset = 0,
+        $length = null
+    ) {
         $query = new \core\Language\Query();
         $query->setCode(LAABS_T_READ);
 
@@ -87,15 +94,13 @@ trait FactoryReaderTrait
         // Find index and add properties
         switch (true) {
             case is_string($properties) && $properties == "*":
-            case empty($properties) :
+            case empty($properties):
                 $properties = array();
-                break; 
-
+                break;
             case is_string($properties) && $properties != "*":
                 $properties = array($properties);
-                // Continue 
-
-            case is_array($properties) :
+                // Continue
+            case is_array($properties):
                 foreach ($properties as $propertyName) {
                     $property = $class->getProperty($propertyName);
                     $query->addProperty($property);
@@ -111,9 +116,16 @@ trait FactoryReaderTrait
                 break;
         }
 
+        if ($offset) {
+            $query->setOffset($offset);
+        }
+
+        if ($length) {
+            $query->setLength($length);
+        }
+
         if ($queryString) {
             $lqlString = "(" . $queryString .")";
-
             $parser = new \core\Language\Parser();
             $assert = $parser->parseAssert($lqlString, $query);
             $query->addAssert($assert);
