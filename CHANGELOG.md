@@ -19,6 +19,8 @@
 - `Fixed` Retrait du bouton de modification des métadonnées d'archive MADES.
 - `Fixed` Vérifier la communicabilité des pièces d'archives (sous archive) lors d'une demande de communication.
 - `Added` Possibilité de configurer un lien avec serveur AD pour authentification via Kerberos.
+- `Added` Possibilité de configurer des notifications email personnalisées lors d'évènements du cycle de vie.
+- `Added` Possibilité de modifier le service producteur d'une archive.
 - `Fixed` Détection de format puid lors d'un versement MADES.
 - `Fixed` Demande de communication sur plusieurs archives.
 - `Fixed` Recherche par côte d'archive (archiver identifier).
