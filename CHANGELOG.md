@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## Version 2.8.1
- - `Fixed` Impossible de modifier son mot de passe pour un utilisateur nouvellement crée
+ - `Fixed` Impossible de modifier son mot de passe pour un utilisateur nouvellement créé
 
 ## Version 2.8
 
