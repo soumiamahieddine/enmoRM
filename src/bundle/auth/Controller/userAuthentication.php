@@ -91,7 +91,7 @@ class userAuthentication
         }
 
         if ($userAccount->passwordChangeRequired == true) {
-            \laabs::setToken('TEMP-AUTH', $accountToken, $tokenDuration);
+            \laabs::setToken('TEMP-AUTH', $userLogin, $tokenDuration);
             \laabs::unsetToken('AUTH');
             throw \laabs::newException('auth/userPasswordChangeRequestException');
         }
