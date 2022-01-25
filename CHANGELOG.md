@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## Version 2.8.1
+ - `Fixed` Impossible de modifier son mot de passe pour un utilisateur nouvellement créé
+
 ## Version 2.8
 
 - `Added` Connecteur de réception des paquets restitués depuis la plateforme T@ct de API.
