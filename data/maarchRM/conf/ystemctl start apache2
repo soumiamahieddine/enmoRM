@@ -1,0 +1,13 @@
+[0;1;31m●[0m apache2.service - The Apache HTTP Server
+   Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enabled)
+   Active: [0;1;31mfailed[0m (Result: exit-code) since Sat 2022-04-23 09:41:39 EDT; 1min 31s ago
+     Docs: https://httpd.apache.org/docs/2.4/
+  Process: 4556 ExecStart=/usr/sbin/apachectl start [0;1;31m(code=exited, status=1/FAILURE)[0m
+
+Apr 23 09:41:39 debian systemd[1]: Starting The Apache HTTP Server...
+Apr 23 09:41:39 debian apachectl[4556]: apache2: Syntax error on line 225 of /etc/apache2/apache2.conf: Syntax error on line 1 of /etc/apache2/sites-enabled/maarchRMAP.conf: Could not open configuration file /var/www/laabs/src/ext/archivesPubliques/data/conf/vhost.conf: No such file or directory
+Apr 23 09:41:39 debian apachectl[4556]: Action 'start' failed.
+Apr 23 09:41:39 debian apachectl[4556]: The Apache error log may have more information.
+Apr 23 09:41:39 debian systemd[1]: [0;1;39m[0;1;31m[0;1;39mapache2.service: Control process exited, code=exited, status=1/FAILURE[0m
+Apr 23 09:41:39 debian systemd[1]: [0;1;39m[0;1;31m[0;1;39mapache2.service: Failed with result 'exit-code'.[0m
+Apr 23 09:41:39 debian systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start The Apache HTTP Server.[0m
